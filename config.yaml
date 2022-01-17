@@ -1,0 +1,25 @@
+# Data Retrieval
+# Available Sources: YAHOO, TD_AMERITRADE
+DATA_SOURCE: YAHOO
+
+# Not needed if you use YAHOO
+API_KEY: Your_API_Key
+
+# Which Ticker should be the reference for performance?
+REFERENCE_TICKER: SPY
+
+# What is the lowest Percentile you want to see?
+MIN_PERCENTILE: 70
+
+# Do you want all listed stocks?
+USE_ALL_LISTED_STOCKS: true
+
+# If USE_ALL_LISTED_STOCKS is false: Only those stocks are considered which are included in the enabled indices
+NQ100: true
+SP500: true
+SP400: true
+SP600: true
+
+# Program behavior
+# Should the program wait for you to hit enter to exit?
+EXIT_WAIT_FOR_ENTER: true
