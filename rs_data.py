@@ -152,29 +152,35 @@ def load_prices_from_tda(securities, api_key):
 def get_yf_data(security, start_date, end_date):
         escaped_ticker = security["ticker"].replace(".","-")
         df = yf.download(escaped_ticker, start=start_date, end=end_date)
-        yahoo_response = df.to_dict()
-        timestamps = list(yahoo_response["Open"].keys())
-        timestamps = list(map(lambda timestamp: int(timestamp.timestamp()), timestamps))
-        opens = list(yahoo_response["Open"].values())
-        closes = list(yahoo_response["Close"].values())
-        lows = list(yahoo_response["Low"].values())
-        highs = list(yahoo_response["High"].values())
-        volumes = list(yahoo_response["Volume"].values())
+        #todays_liquidity = (df["Adj Close"].count()-1) * (df["averageVolume"].count()-1)
+        #data_top = df.head()
+        #print(data_top)
         ticker_data = {}
-        candles = []
+        if((df["Adj Close"].count()-1) > 9):
+            #print("this stock's close price is less than $9 consider filtering out ")
+            yahoo_response = df.to_dict() 
+            timestamps = list(yahoo_response["Open"].keys())
+            timestamps = list(map(lambda timestamp: int(timestamp.timestamp()), timestamps))
+            opens = list(yahoo_response["Open"].values())
+            closes = list(yahoo_response["Close"].values())
+            lows = list(yahoo_response["Low"].values())
+            highs = list(yahoo_response["High"].values())
+            volumes = list(yahoo_response["Volume"].values())
+            ticker_data = {}
+            candles = []
 
-        for i in range(0, len(opens)):
-            candle = {}
-            candle["open"] = opens[i]
-            candle["close"] = closes[i]
-            candle["low"] = lows[i]
-            candle["high"] = highs[i]
-            candle["volume"] = volumes[i]
-            candle["datetime"] = timestamps[i]
-            candles.append(candle)
+            for i in range(0, len(opens)):
+                candle = {}
+                candle["open"] = opens[i]
+                candle["close"] = closes[i]
+                candle["low"] = lows[i]
+                candle["high"] = highs[i]
+                candle["volume"] = volumes[i]
+                candle["datetime"] = timestamps[i]
+                candles.append(candle)
 
-        ticker_data["candles"] = candles
-        enrich_ticker_data(ticker_data, security)
+            ticker_data["candles"] = candles
+            enrich_ticker_data(ticker_data, security)
         return ticker_data
 
 def load_prices_from_yahoo(securities):
