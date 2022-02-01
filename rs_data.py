@@ -156,7 +156,7 @@ def get_yf_data(security, start_date, end_date):
         #data_top = df.head()
         #print(data_top)
         ticker_data = {}
-        if((df["Adj Close"].count()-1) > 9):
+        if((df["Adj Close"].count()-1) > 15):
             #print("this stock's close price is less than $9 consider filtering out ")
             yahoo_response = df.to_dict() 
             timestamps = list(yahoo_response["Open"].keys())

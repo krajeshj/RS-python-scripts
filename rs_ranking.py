@@ -59,7 +59,7 @@ def relative_strength(closes: pd.Series, closes_ref: pd.Series):
         rs3 = quarters_rs(closes,closes_ref,3)
         rs4 = quarters_rs(closes,closes_ref,4)
         rs = 0.4*rs1 + 0.2*rs2 + 0.2*rs3 + 0.2*rs4
-        rs = int(rs*100) / 100 # round to 2 decimals
+        #rs = int(rs*10000) / 100 # round to 2 decimals
         return rs
     except:
         print("Exception in relative strength - rs = 0")
@@ -109,7 +109,7 @@ def quarters_rs(closes: pd.Series, closes_ref: pd.Series, n):
         final_rs_n = rs_n
 
         #return final_rs_n.tail(1).item()
-        print("rs_data quarters_rs return value : ", final_rs_n)
+        #print("rs_data quarters_rs return value : ", final_rs_n)
 
         
         return final_rs_n
@@ -158,10 +158,10 @@ def rankings():
     dfs = []
     suffix = ''
     df = pd.DataFrame(relative_strengths, columns=[TITLE_RANK, TITLE_TICKER, TITLE_SECTOR, TITLE_UNIVERSE, TITLE_RS, TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M])
-    df[TITLE_PERCENTILE] = pd.qcut(df[TITLE_RS], 100, labels=False, duplicates='drop' )
-    df[TITLE_1M] = pd.qcut(df[TITLE_1M], 100, labels=False,duplicates='drop')
-    df[TITLE_3M] = pd.qcut(df[TITLE_3M], 100, labels=False,duplicates='drop')
-    df[TITLE_6M] = pd.qcut(df[TITLE_6M], 100, labels=False,duplicates='drop')
+    df[TITLE_PERCENTILE] = pd.qcut(df[TITLE_RS], 100, precision=64, labels=False )
+    df[TITLE_1M] = pd.qcut(df[TITLE_1M], 100, precision=64, labels=False,duplicates='drop')
+    df[TITLE_3M] = pd.qcut(df[TITLE_3M], 100, precision=64,labels=False,duplicates='drop')
+    df[TITLE_6M] = pd.qcut(df[TITLE_6M], 100, precision=64, labels=False,duplicates='drop')
     df = df.sort_values(([TITLE_RS]), ascending=False)
     df[TITLE_RANK] = ranks
     out_tickers_count = 0
