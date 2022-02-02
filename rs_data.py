@@ -157,10 +157,10 @@ def get_yf_data(security, start_date, end_date):
         #print(data_top)
         df.describe()
         ticker_data = {}
-        volume=df["Volume"].rolling(50).mean()
+        volume=df["Volume"].tail(50).mean(skipna=True)
         print("Average volume is ", volume)
 
-        if(((df["Adj Close"].count()-1) > 15) and (volume > 500000)).all() :
+        if(((df["Adj Close"].count()-1) > 15) and (volume > 500000)) :
         #if((df["Adj Close"].count()-1) > 15 ):
            
             #print("this stock's close price is less than $9 consider filtering out ")
