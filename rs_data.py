@@ -155,8 +155,14 @@ def get_yf_data(security, start_date, end_date):
         #todays_liquidity = (df["Adj Close"].count()-1) * (df["averageVolume"].count()-1)
         #data_top = df.head()
         #print(data_top)
+        df.describe()
         ticker_data = {}
-        if((df["Adj Close"].count()-1) > 15):
+        volume=df["Volume"].rolling(50).mean()
+        print("Average volume is ", volume)
+
+        if(((df["Adj Close"].count()-1) > 15) and (volume > 500000)).all() :
+        #if((df["Adj Close"].count()-1) > 15 ):
+           
             #print("this stock's close price is less than $9 consider filtering out ")
             yahoo_response = df.to_dict() 
             timestamps = list(yahoo_response["Open"].keys())
