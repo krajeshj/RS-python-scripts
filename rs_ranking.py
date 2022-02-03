@@ -158,7 +158,7 @@ def rankings():
     dfs = []
     suffix = ''
     df = pd.DataFrame(relative_strengths, columns=[TITLE_RANK, TITLE_TICKER, TITLE_SECTOR, TITLE_UNIVERSE, TITLE_RS, TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M])
-    df[TITLE_PERCENTILE] = pd.qcut(df[TITLE_RS], 100, precision=64, labels=False )
+    df[TITLE_PERCENTILE] = pd.qcut(df[TITLE_RS], 100, precision=64, labels=False,duplicates='drop' )
     df[TITLE_1M] = pd.qcut(df[TITLE_1M], 100, precision=64, labels=False,duplicates='drop')
     df[TITLE_3M] = pd.qcut(df[TITLE_3M], 100, precision=64,labels=False,duplicates='drop')
     df[TITLE_6M] = pd.qcut(df[TITLE_6M], 100, precision=64, labels=False,duplicates='drop')
