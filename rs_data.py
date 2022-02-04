@@ -167,7 +167,7 @@ def get_yf_data(security, start_date, end_date):
         sma50=df["Adj Close"].tail(50).mean(skipna=True)
 
 
-        if((price_today > 15) and (volume > 500000) and (price_today > sma200) and (sma50 > sma200) and (price_today > sma50)) :
+        if((price_today > 15) and (volume > 500000) and (price_today > sma200) and (sma50 > sma200)) :
         #if((df["Adj Close"].count()-1) > 15 ):
            
             #print("this stock's close price is less than $9 consider filtering out ")
