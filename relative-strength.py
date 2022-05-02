@@ -1,3 +1,5 @@
+# originally from skyte's github
+
 import rs_data
 import rs_ranking
 import sys
