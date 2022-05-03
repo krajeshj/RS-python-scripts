@@ -149,11 +149,11 @@ def rankings():
             continue
         try:
             closes = list(map(lambda candle: candle["close"], json[ticker]["candles"]))
-            print("This is calculation for  ticker - ",ticker)
+            #print("This is calculation for  ticker - ", ticker)
             closes_ref = list(map(lambda candle: candle["close"], ref["candles"]))
             industry = TICKER_INFO_DICT[ticker]["info"]["industry"] if json[ticker]["industry"] == "unknown" else json[ticker]["industry"]
             sector = TICKER_INFO_DICT[ticker]["info"]["sector"] if json[ticker]["sector"] == "unknown" else json[ticker]["sector"]
-            if closes:
+            if len(closes) >= 6*20 and industry != "n/a" and len(industry.strip()) > 0:
                 closes_series = pd.Series(closes)
                 closes_ref_series = pd.Series(closes_ref)
                 rs = relative_strength(closes_series, closes_ref_series)
