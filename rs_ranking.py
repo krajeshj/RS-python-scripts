@@ -148,8 +148,11 @@ def rankings():
         if not cfg("NQ100") and json[ticker]["universe"] == "Nasdaq 100":
             continue
         try:
+            #closes = list(map(lambda candle: candle["close"], json[ticker]["candles"]))
+            print("This is calculation for  ticker - ", ticker)                
+
             closes = list(map(lambda candle: candle["close"], json[ticker]["candles"]))
-            #print("This is calculation for  ticker - ", ticker)
+
             closes_ref = list(map(lambda candle: candle["close"], ref["candles"]))
             industry = TICKER_INFO_DICT[ticker]["info"]["industry"] if json[ticker]["industry"] == "unknown" else json[ticker]["industry"]
             sector = TICKER_INFO_DICT[ticker]["info"]["sector"] if json[ticker]["sector"] == "unknown" else json[ticker]["sector"]
@@ -191,8 +194,9 @@ def rankings():
 
                 #ranks.append(len(ranks)+1)
                 #relative_strengths.append((0, ticker, json[ticker]["sector"], json[ticker]["universe"], rs, tmp_percentile, rs1m, rs3m, rs6m))
-        except KeyError:
+        except :
             print(f'Ticker {ticker} has corrupted data.')
+            continue
     dfs = []
     suffix = ''
     df = pd.DataFrame(relative_strengths, columns=[TITLE_RANK, TITLE_TICKER, TITLE_SECTOR, TITLE_INDUSTRY, TITLE_UNIVERSE, TITLE_RS, TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M])

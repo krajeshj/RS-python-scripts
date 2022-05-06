@@ -175,10 +175,11 @@ def create_price_history_file(tickers_dict):
     with open(PRICE_DATA_OUTPUT, "w") as fp:
         json.dump(tickers_dict, fp)
 
-def enrich_ticker_data(ticker_response, security):
+def enrich_ticker_data(ticker_response, security, skip_calc = 0):
     ticker_response["sector"] = security["sector"]
     ticker_response["industry"] = security["industry"]
     ticker_response["universe"] = security["universe"]
+    ticker_response["skip_calc"] = skip_calc
 
 def tda_params(apikey, period_type="year", period=2, frequency_type="daily", frequency=1):
     """Returns tuple of api get params. Uses clenow default values."""
@@ -251,8 +252,8 @@ def get_yf_data(security, start_date, end_date):
         #print(data_top)
         df.describe()
         ticker_data = {}
-        volume=df["Volume"].tail(50).mean(skipna=True)
-        print("Average volume is ", volume)
+        Avg_volume=df["Volume"].tail(50).mean(skipna=True)
+        print("Average volume is ", Avg_volume)
         try:
             price_today = df["Adj Close"].tail(1).item()
         except:
@@ -262,8 +263,9 @@ def get_yf_data(security, start_date, end_date):
         sma21=df["Adj Close"].tail(21).mean(skipna=True)
 
 
-        #if((price_today > 15) and (volume > 250000) and (price_today > sma200)  ):
-        if((df["Adj Close"].count()-1) > 12 ):
+        #if((df["Adj Close"].count()-1) > 12  and (volume > 250000) and (price_today > sma200)  ):
+        #if((df["Adj Close"].count()-1) > 11  and (Avg_volume > 250000)   ):
+        if((df["Adj Close"].count()-1) > 7 ):
             #print("this stock's close price is less than $9 consider filtering out ")
             yahoo_response = df.to_dict() 
             timestamps = list(yahoo_response["Open"].keys())
