@@ -140,10 +140,11 @@ def rankings():
     ref = json[REFERENCE_TICKER]
     for ticker in json:
         try :
-            if json[ticker]["skip_calc"] == 1:
-                print(" Skipping calculation for  ticker - ", ticker)  
+            if json[ticker]["skip_calc"] == 0:
+                print(" Starting calculation for  ticker - ", ticker)  
         except:
-            continue              
+                print(" Skipping calculation for  ticker - ", ticker)  
+                continue              
         if not cfg("SP500") and json[ticker]["universe"] == "S&P 500":
             continue
         if not cfg("SP400") and json[ticker]["universe"] == "S&P 400":
