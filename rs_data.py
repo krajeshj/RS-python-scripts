@@ -263,10 +263,8 @@ def get_yf_data(security, start_date, end_date):
         sma21=df["Adj Close"].tail(21).mean(skipna=True)
 
 
-        #if((df["Adj Close"].count()-1) > 12  and (volume > 250000) and (price_today > sma200)  ):
-        #if((df["Adj Close"].count()-1) > 11  and (Avg_volume > 250000)   ):
-        if((df["Adj Close"].count()-1) > 7 ):
-            #print("this stock's close price is less than $9 consider filtering out ")
+        if((df["Adj Close"].count()-1) > 9  and (Avg_volume > 300000)   ):
+             #print("this stock's close price is less than $9 consider filtering out ")
             yahoo_response = df.to_dict() 
             timestamps = list(yahoo_response["Open"].keys())
             timestamps = list(map(lambda timestamp: int(timestamp.timestamp()), timestamps))
@@ -290,7 +288,10 @@ def get_yf_data(security, start_date, end_date):
 
             ticker_data["candles"] = candles
             enrich_ticker_data(ticker_data, security)
-            return ticker_data
+        else:
+            enrich_ticker_data(ticker_data, security,skip_calc=1)
+
+        return ticker_data
 
 def load_prices_from_yahoo(securities, info = {}):
     print("*** Loading Stocks from Yahoo Finance ***")
