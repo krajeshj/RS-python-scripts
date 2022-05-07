@@ -9,7 +9,7 @@ API_KEY: Your_API_Key
 REFERENCE_TICKER: SPY
 
 # What is the lowest Percentile you want to see?
-MIN_PERCENTILE: 80
+MIN_PERCENTILE: 85
 
 # Do you want all listed stocks?
 USE_ALL_LISTED_STOCKS: true
@@ -22,4 +22,4 @@ SP600: true
 
 # Program behavior
 # Should the program wait for you to hit enter to exit?
-EXIT_WAIT_FOR_ENTER: true
+EXIT_WAIT_FOR_ENTER: false

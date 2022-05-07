@@ -139,6 +139,11 @@ def rankings():
     stock_rs = {}
     ref = json[REFERENCE_TICKER]
     for ticker in json:
+        try :
+            if json[ticker]["skip_calc"] == 1:
+                print(" Skipping calculation for  ticker - ", ticker)  
+        except:
+            continue              
         if not cfg("SP500") and json[ticker]["universe"] == "S&P 500":
             continue
         if not cfg("SP400") and json[ticker]["universe"] == "S&P 400":
@@ -243,7 +248,9 @@ def rankings():
     df_industries[TITLE_3M] = df_industries[TITLE_3M].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
     df_industries[TITLE_6M] = df_industries[TITLE_6M].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
     df_industries[TITLE_TICKERS] = df_industries.apply(lambda row: getTickers(industries, row[TITLE_INDUSTRY]), axis=1)
-    df_industries = df_industries.sort_values(([TITLE_RS]), ascending=False)
+    #df_industries = df_industries.sort_values(([TITLE_RS]), ascending=False)
+    df_industries = df_industries.sort_values(([TITLE_PERCENTILE]), ascending=False)
+
     ind_ranks = ind_ranks[:len(df_industries)]
     df_industries[TITLE_RANK] = ind_ranks
 
