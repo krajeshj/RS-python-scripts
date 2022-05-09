@@ -175,7 +175,7 @@ def create_price_history_file(tickers_dict):
     with open(PRICE_DATA_OUTPUT, "w") as fp:
         json.dump(tickers_dict, fp)
 
-def enrich_ticker_data(ticker_response, security, skip_calc = 0):
+def enrich_ticker_data(ticker_response, security, skip_calc):
     ticker_response["sector"] = security["sector"]
     ticker_response["industry"] = security["industry"]
     ticker_response["universe"] = security["universe"]
@@ -264,7 +264,7 @@ def get_yf_data(security, start_date, end_date):
 
 
         if((df["Adj Close"].count()-1) > 9  and (Avg_volume > 300000)   ):
-             #print("this stock's close price is less than $9 consider filtering out ")
+            #print("this stock's close price is less than $9 consider filtering out ")
             yahoo_response = df.to_dict() 
             timestamps = list(yahoo_response["Open"].keys())
             timestamps = list(map(lambda timestamp: int(timestamp.timestamp()), timestamps))
@@ -287,9 +287,12 @@ def get_yf_data(security, start_date, end_date):
                 candles.append(candle)
 
             ticker_data["candles"] = candles
-            enrich_ticker_data(ticker_data, security)
+            skip_calc = 0
+            enrich_ticker_data(ticker_data, security,skip_calc)
         else:
-            enrich_ticker_data(ticker_data, security,skip_calc=1)
+            print("this stock's close price is less than $9 consider filtering out ")
+            skip_calc = 1    
+            enrich_ticker_data(ticker_data, security, skip_calc)
 
         return ticker_data
 
