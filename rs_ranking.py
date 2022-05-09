@@ -140,69 +140,73 @@ def rankings():
     ref = json[REFERENCE_TICKER]
     for ticker in json:
         try :
-            if json[ticker]["skip_calc"] == 0:
+            if  json[ticker]["skip_calc"] == 0:
                 print(" Starting calculation for  ticker - ", ticker)  
+                if not cfg("SP500") and json[ticker]["universe"] == "S&P 500":
+                    continue
+                if not cfg("SP400") and json[ticker]["universe"] == "S&P 400":
+                    continue
+                if not cfg("SP600") and json[ticker]["universe"] == "S&P 600":
+                    continue
+                if not cfg("NQ100") and json[ticker]["universe"] == "Nasdaq 100":
+                    continue
+                #try:
+                #closes = list(map(lambda candle: candle["close"], json[ticker]["candles"]))
+                print("This is calculation for  ticker - ", ticker)                
+
+                closes = list(map(lambda candle: candle["close"], json[ticker]["candles"]))
+
+                closes_ref = list(map(lambda candle: candle["close"], ref["candles"]))
+                industry = TICKER_INFO_DICT[ticker]["info"]["industry"] if json[ticker]["industry"] == "unknown" else json[ticker]["industry"]
+                sector = TICKER_INFO_DICT[ticker]["info"]["sector"] if json[ticker]["sector"] == "unknown" else json[ticker]["sector"]
+                if len(closes) >= 6*20 and industry != "n/a" and len(industry.strip()) > 0:
+                    closes_series = pd.Series(closes)
+                    closes_ref_series = pd.Series(closes_ref)
+                    rs = relative_strength(closes_series, closes_ref_series)
+                    month = 20
+                    tmp_percentile = 100
+                    rs1m = relative_strength(closes_series.head(-1*month), closes_ref_series.head(-1*month))
+                    rs3m = relative_strength(closes_series.head(-3*month), closes_ref_series.head(-3*month))
+                    rs6m = relative_strength(closes_series.head(-6*month), closes_ref_series.head(-6*month))
+                                    # if rs is too big assume there is faulty price data
+                    print(f'Ticker {ticker} has {rs}.')
+                    #if rs < 8000:
+                    if rs < 5:
+
+                        # stocks output
+                        ranks.append(len(ranks)+1)
+                        relative_strengths.append((0, ticker, sector, industry, json[ticker]["universe"], rs, tmp_percentile, rs1m, rs3m, rs6m))
+                        stock_rs[ticker] = rs
+
+                        # industries output
+                        if industry not in industries:
+                            industries[industry] = {
+                                "info": (0, industry, sector, 0, 99, 1, 3, 6),
+                                TITLE_RS: [],
+                                TITLE_1M: [],
+                                TITLE_3M: [],
+                                TITLE_6M: [],
+                                TITLE_TICKERS: []
+                            }
+                            ind_ranks.append(len(ind_ranks)+1)
+                        industries[industry][TITLE_RS].append(rs)
+                        industries[industry][TITLE_1M].append(rs1m)
+                        industries[industry][TITLE_3M].append(rs3m)
+                        industries[industry][TITLE_6M].append(rs6m)
+                        industries[industry][TITLE_TICKERS].append(ticker)
+
+
+
+                        #ranks.append(len(ranks)+1)
+                        #relative_strengths.append((0, ticker, json[ticker]["sector"], json[ticker]["universe"], rs, tmp_percentile, rs1m, rs3m, rs6m))
+            else:
+                print(f'Ticker {ticker} filtered out')
+                continue
         except:
-                print(" Skipping calculation for  ticker - ", ticker)  
-                continue              
-        if not cfg("SP500") and json[ticker]["universe"] == "S&P 500":
-            continue
-        if not cfg("SP400") and json[ticker]["universe"] == "S&P 400":
-            continue
-        if not cfg("SP600") and json[ticker]["universe"] == "S&P 600":
-            continue
-        if not cfg("NQ100") and json[ticker]["universe"] == "Nasdaq 100":
-            continue
-        try:
-            #closes = list(map(lambda candle: candle["close"], json[ticker]["candles"]))
-            print("This is calculation for  ticker - ", ticker)                
-
-            closes = list(map(lambda candle: candle["close"], json[ticker]["candles"]))
-
-            closes_ref = list(map(lambda candle: candle["close"], ref["candles"]))
-            industry = TICKER_INFO_DICT[ticker]["info"]["industry"] if json[ticker]["industry"] == "unknown" else json[ticker]["industry"]
-            sector = TICKER_INFO_DICT[ticker]["info"]["sector"] if json[ticker]["sector"] == "unknown" else json[ticker]["sector"]
-            if len(closes) >= 6*20 and industry != "n/a" and len(industry.strip()) > 0:
-                closes_series = pd.Series(closes)
-                closes_ref_series = pd.Series(closes_ref)
-                rs = relative_strength(closes_series, closes_ref_series)
-                month = 20
-                tmp_percentile = 100
-                rs1m = relative_strength(closes_series.head(-1*month), closes_ref_series.head(-1*month))
-                rs3m = relative_strength(closes_series.head(-3*month), closes_ref_series.head(-3*month))
-                rs6m = relative_strength(closes_series.head(-6*month), closes_ref_series.head(-6*month))
-                                # if rs is too big assume there is faulty price data
-                print(f'Ticker {ticker} has {rs}.')
-                if rs < 8000:
-                    # stocks output
-                    ranks.append(len(ranks)+1)
-                    relative_strengths.append((0, ticker, sector, industry, json[ticker]["universe"], rs, tmp_percentile, rs1m, rs3m, rs6m))
-                    stock_rs[ticker] = rs
-
-                    # industries output
-                    if industry not in industries:
-                        industries[industry] = {
-                            "info": (0, industry, sector, 0, 99, 1, 3, 6),
-                            TITLE_RS: [],
-                            TITLE_1M: [],
-                            TITLE_3M: [],
-                            TITLE_6M: [],
-                            TITLE_TICKERS: []
-                        }
-                        ind_ranks.append(len(ind_ranks)+1)
-                    industries[industry][TITLE_RS].append(rs)
-                    industries[industry][TITLE_1M].append(rs1m)
-                    industries[industry][TITLE_3M].append(rs3m)
-                    industries[industry][TITLE_6M].append(rs6m)
-                    industries[industry][TITLE_TICKERS].append(ticker)
-
-
-
-                #ranks.append(len(ranks)+1)
-                #relative_strengths.append((0, ticker, json[ticker]["sector"], json[ticker]["universe"], rs, tmp_percentile, rs1m, rs3m, rs6m))
-        except :
             print(f'Ticker {ticker} has corrupted data.')
             continue
+            
+                      
     dfs = []
     suffix = ''
     df = pd.DataFrame(relative_strengths, columns=[TITLE_RANK, TITLE_TICKER, TITLE_SECTOR, TITLE_INDUSTRY, TITLE_UNIVERSE, TITLE_RS, TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M])
