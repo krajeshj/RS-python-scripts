@@ -201,7 +201,7 @@ def print_data_progress(ticker, universe, idx, securities, error_text, elapsed_s
         remaining_string = f'{remaining.minutes}m {remaining.seconds}s'
     else:
         remaining_string = "?"
-    print(f'{ticker} from {universe}{error_text} ({idx+1} / {len(securities)}). Elapsed: {elapsed.minutes}m {elapsed.seconds}s. Remaining: {remaining_string}.')
+    #print(f'{ticker} from {universe}{error_text} ({idx+1} / {len(securities)}). Elapsed: {elapsed.minutes}m {elapsed.seconds}s. Remaining: {remaining_string}.')
 
 def get_remaining_seconds(all_load_times, idx, len):
     load_time_ma = pd.Series(all_load_times).rolling(np.minimum(idx+1, 25)).mean().tail(1).item()
@@ -253,7 +253,7 @@ def get_yf_data(security, start_date, end_date):
         df.describe()
         ticker_data = {}
         Avg_volume=df["Volume"].tail(50).mean(skipna=True)
-        print("Average volume is ", Avg_volume)
+        #print("Average volume is ", Avg_volume)
         try:
             price_today = df["Adj Close"].tail(1).item()
         except:
@@ -263,7 +263,7 @@ def get_yf_data(security, start_date, end_date):
         sma21=df["Adj Close"].tail(21).mean(skipna=True)
 
 
-        if((df["Adj Close"].count()-1) > 9  and (Avg_volume > 300000)   ):
+        if(((df["Adj Close"].count()-1) > 9 ) and (Avg_volume > 300000) and ((df["Adj Close"].count()-1) > sma200 )):
             #print("this stock's close price is less than $9 consider filtering out ")
             yahoo_response = df.to_dict() 
             timestamps = list(yahoo_response["Open"].keys())
@@ -290,7 +290,7 @@ def get_yf_data(security, start_date, end_date):
             skip_calc = 0
             enrich_ticker_data(ticker_data, security,skip_calc)
         else:
-            print("this stock's close price is less than $9 consider filtering out ")
+            #print("this stock's close price is less than $9 consider filtering out ")
             skip_calc = 1    
             enrich_ticker_data(ticker_data, security, skip_calc)
 
