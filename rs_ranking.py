@@ -171,7 +171,7 @@ def rankings():
                                     # if rs is too big assume there is faulty price data
                     print(f'Ticker {ticker} has {rs}.')
                     #if rs < 8000:
-                    if ( closes_series.iloc[-1] > 12):
+                    if (( closes_series.iloc[-1] > 12) ):
 
                         # stocks output
                         ranks.append(len(ranks)+1)
