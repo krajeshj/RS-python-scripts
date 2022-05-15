@@ -4,7 +4,7 @@ on:
   # push:
     # branches: [ main ]
   schedule:
-    - cron: "35 16,23 * * *"
+    - cron: "43 16,23 * * *"
 
 jobs:
       build:
@@ -20,7 +20,7 @@ jobs:
           - name: execute py script # aggregate current data
             run: |
               python -m pip install -r requirements.txt
-              python relative-strength.py 
+              python relative-strength.py true
           - name: push to log git
             run: |
               git clone https://krajeshj:${{ secrets.PAT }}@github.com/krajeshj/RS-python-scripts.git
