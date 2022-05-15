@@ -263,7 +263,7 @@ def get_yf_data(security, start_date, end_date):
         sma21=df["Adj Close"].tail(21).mean(skipna=True)
 
 
-        if(((df["Adj Close"].count()-1) > 9 ) and (Avg_volume > 300000) and ((df["Adj Close"].count()-1) > sma200 )):
+        if(((df["Adj Close"].count()-1) > 9 ) and (Avg_volume > 300000) ):
             #print("this stock's close price is less than $9 consider filtering out ")
             yahoo_response = df.to_dict() 
             timestamps = list(yahoo_response["Open"].keys())
