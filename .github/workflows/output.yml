@@ -4,7 +4,7 @@ on:
   # push:
     # branches: [ main ]
   schedule:
-    - cron: "47 16,23 * * *"
+    - cron: "13 16,20 * * *"
 
 jobs:
       build:
@@ -23,7 +23,7 @@ jobs:
               python relative-strength.py true
           - name: push to log git
             run: |
-              git clone https://krajeshj:${{ secrets.PAT }}@github.com/krajeshj/RS-python-scripts.git
+              git clone https://krajeshj:${{ secrets.RS_DAILY_LOG_PAT }}@github.com/krajeshj/RS-python-scripts.git
               rm ./RS-Daily-Log/output/* && cp -a ./output/. ./RS-Daily-Log/output
               cd RS-Daily-Log
               git config user.name "CI" && git config user.email "ci@github.com"
