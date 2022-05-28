@@ -141,7 +141,7 @@ def rankings():
     for ticker in json:
         try :
             if  json[ticker]["skip_calc"] == 0:
-                print(" Starting calculation for  ticker - ", ticker)  
+                #print(" Starting calculation for  ticker - ", ticker)  
                 if not cfg("SP500") and json[ticker]["universe"] == "S&P 500":
                     continue
                 if not cfg("SP400") and json[ticker]["universe"] == "S&P 400":
@@ -152,7 +152,7 @@ def rankings():
                     continue
                 #try:
                 #closes = list(map(lambda candle: candle["close"], json[ticker]["candles"]))
-                print("This is calculation for  ticker - ", ticker)                
+                #print("This is calculation for  ticker - ", ticker)                
 
                 closes = list(map(lambda candle: candle["close"], json[ticker]["candles"]))
 
@@ -169,7 +169,7 @@ def rankings():
                     rs3m = relative_strength(closes_series.head(-3*month), closes_ref_series.head(-3*month))
                     rs6m = relative_strength(closes_series.head(-6*month), closes_ref_series.head(-6*month))
                                     # if rs is too big assume there is faulty price data
-                    print(f'Ticker {ticker} has {rs}.')
+                    #print(f'Ticker {ticker} has {rs}.')
                     #if rs < 8000:
                     if (( closes_series.iloc[-1] > 12) ):
 
@@ -225,7 +225,7 @@ def rankings():
     df.to_csv(os.path.join(DIR, "output", f'rs_stocks{suffix}.csv'), index = False)
 
     dfs.append(df)
-    print(f'Ticker {ticker} data has been added.')
+    #print(f'Ticker {ticker} data has been added.')
 # industries
     def getDfView(industry_entry):
         return industry_entry["info"]
