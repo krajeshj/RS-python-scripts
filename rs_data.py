@@ -17,6 +17,7 @@ import re
 from ftplib import FTP
 from io import StringIO
 from time import sleep
+import sys
 
 from datetime import date
 from datetime import datetime
@@ -175,11 +176,13 @@ def create_price_history_file(tickers_dict):
     with open(PRICE_DATA_OUTPUT, "w") as fp:
         json.dump(tickers_dict, fp)
 
-def enrich_ticker_data(ticker_response, security, skip_calc):
+def enrich_ticker_data(ticker_response, security, skip_calc, mm_criteria):
     ticker_response["sector"] = security["sector"]
     ticker_response["industry"] = security["industry"]
     ticker_response["universe"] = security["universe"]
     ticker_response["skip_calc"] = skip_calc
+    ticker_response["minervini"] = int(mm_criteria)
+ 
 
 def tda_params(apikey, period_type="year", period=2, frequency_type="daily", frequency=1):
     """Returns tuple of api get params. Uses clenow default values."""
@@ -259,9 +262,37 @@ def get_yf_data(security, start_date, end_date):
         except:
             price_today = 1.77
         sma200=df["Adj Close"].tail(200).mean(skipna=True)
+        sma150=df["Adj Close"].tail(150).mean(skipna=True)
+
         sma50=df["Adj Close"].tail(50).mean(skipna=True)
         sma21=df["Adj Close"].tail(21).mean(skipna=True)
 
+        
+        #print(m3_sma200_rolling_df.describe())
+        #print(m3_sma200_trend_df.columns())
+
+        #print(m3_sma200_rolling_df.iloc[-1])
+        #print(m3_sma200_rolling_df.iloc[-22])
+        try:
+            m1_p_ge_150_and_p_ge_200 = (( df["Adj Close"].tail(1).item() > sma150 ) and (df["Adj Close"].tail(1).item() > sma200 ))
+            m2_sma150_ge_sma200 = sma150 > sma200
+            m3_sma200_rolling_df= df["Adj Close"].rolling(window=200).mean(skipna=True)
+            m3_sma200_22day_in_uptrend = (m3_sma200_rolling_df.iloc[-1] > m3_sma200_rolling_df.iloc[-22])
+            m4_sma50_ge_sma150_n_200 = ( sma50 > sma150 ) and (sma50 > sma200)
+            m5_p_ge_52wk_min = ( price_today > (1.25 * df["Adj Close"].tail(253).min()))
+            m6_p_near_52wk_hi = (abs(  ((price_today - df["Adj Close"].tail(253).max())*100) / (df["Adj Close"].tail(253).max())) < 25)
+            mm_criteria = m1_p_ge_150_and_p_ge_200 and m2_sma150_ge_sma200 and m3_sma200_22day_in_uptrend and m4_sma50_ge_sma150_n_200 and m5_p_ge_52wk_min and m6_p_near_52wk_hi
+            #print("Meets all mm_criteria", mm_criteria)
+        except:
+            m1_p_ge_150_and_p_ge_200 = False
+            m2_sma150_ge_sma200 = False
+            m3_sma200_22day_in_uptrend = False
+            mm_criteria = False
+ 
+
+ 
+ 
+        
 
         if(((df["Adj Close"].count()-1) > 9 ) and (Avg_volume > 300000) ):
             #print("this stock's close price is less than $9 consider filtering out ")
@@ -288,11 +319,11 @@ def get_yf_data(security, start_date, end_date):
 
             ticker_data["candles"] = candles
             skip_calc = 0
-            enrich_ticker_data(ticker_data, security,skip_calc)
+            enrich_ticker_data(ticker_data, security,skip_calc, mm_criteria)
         else:
             #print("this stock's close price is less than $9 consider filtering out ")
             skip_calc = 1    
-            enrich_ticker_data(ticker_data, security, skip_calc)
+            enrich_ticker_data(ticker_data, security, skip_calc, mm_criteria)
 
         return ticker_data
 

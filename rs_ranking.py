@@ -34,6 +34,7 @@ TICKER_INFO_DICT = read_json(TICKER_INFO_FILE)
 TITLE_RANK = "Rank"
 TITLE_TICKER = "Ticker"
 TITLE_TICKERS ="Tickers"
+TITLE_MINERVINI="Minervini"
 TITLE_SECTOR = "Sector"
 TITLE_INDUSTRY = "Industry"
 TITLE_UNIVERSE = "Universe" if not ALL_STOCKS else "Exchange"
@@ -140,7 +141,7 @@ def rankings():
     ref = json[REFERENCE_TICKER]
     for ticker in json:
         try :
-            if  json[ticker]["skip_calc"] == 0:
+            if  ((json[ticker]["skip_calc"] == 0)):
                 #print(" Starting calculation for  ticker - ", ticker)  
                 if not cfg("SP500") and json[ticker]["universe"] == "S&P 500":
                     continue
@@ -175,7 +176,8 @@ def rankings():
 
                         # stocks output
                         ranks.append(len(ranks)+1)
-                        relative_strengths.append((0, ticker, sector, industry, json[ticker]["universe"], rs, tmp_percentile, rs1m, rs3m, rs6m))
+                        #relative_strengths.append((0, ticker, sector, industry, json[ticker]["universe"], rs, tmp_percentile, rs1m, rs3m, rs6m))
+                        relative_strengths.append((0, ticker, json[ticker]["minervini"], sector, industry, json[ticker]["universe"], rs, tmp_percentile, rs1m, rs3m, rs6m))                     
                         stock_rs[ticker] = rs
 
                         # industries output
@@ -208,8 +210,9 @@ def rankings():
             
                       
     dfs = []
+    dfs_mnrvni = []
     suffix = ''
-    df = pd.DataFrame(relative_strengths, columns=[TITLE_RANK, TITLE_TICKER, TITLE_SECTOR, TITLE_INDUSTRY, TITLE_UNIVERSE, TITLE_RS, TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M])
+    df = pd.DataFrame(relative_strengths, columns=[TITLE_RANK, TITLE_TICKER, TITLE_MINERVINI, TITLE_SECTOR, TITLE_INDUSTRY, TITLE_UNIVERSE, TITLE_RS, TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M])
     df[TITLE_PERCENTILE] = pd.qcut(df[TITLE_RS], 100, precision=64, labels=False,duplicates='drop' )
     df[TITLE_1M] = pd.qcut(df[TITLE_1M], 100, precision=64, labels=False,duplicates='drop')
     df[TITLE_3M] = pd.qcut(df[TITLE_3M], 100, precision=64,labels=False,duplicates='drop')
@@ -218,14 +221,19 @@ def rankings():
     df[TITLE_RANK] = ranks
     out_tickers_count = 0
     for index, row in df.iterrows():
-        if row[TITLE_PERCENTILE] >= MIN_PERCENTILE:
+        if ((row[TITLE_PERCENTILE] >= MIN_PERCENTILE)):
             out_tickers_count = out_tickers_count + 1
     df = df.head(out_tickers_count)
+    # drop rows which don't meet Minervini criteria
+    dfm = df[df['Minervini'] == 1]
 
     df.to_csv(os.path.join(DIR, "output", f'rs_stocks{suffix}.csv'), index = False)
+    dfm.to_csv(os.path.join(DIR, "output", f'rs_stocks_minervini.csv'), index = False)
 
     dfs.append(df)
-    #print(f'Ticker {ticker} data has been added.')
+    dfs_mnrvni.append(dfm)
+
+    print(f'Ticker {ticker} data has been added.')
 # industries
     def getDfView(industry_entry):
         return industry_entry["info"]
@@ -239,6 +247,8 @@ def rankings():
         return stock_rs[ticker]
     def getTickers(industries, industry):
         return ",".join(sorted(industries[industry][TITLE_TICKERS], key=rs_for_stock, reverse=True))
+
+            
 
     # remove industries with only one stock
     filtered_industries = filter(lambda i: len(i[TITLE_TICKERS]) > 1, list(industries.values()))
