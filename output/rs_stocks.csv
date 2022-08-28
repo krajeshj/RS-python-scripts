@@ -1,7 +1,7 @@
 Rank,Ticker,Minervini,Sector,Industry,Exchange,Relative Strength,Percentile,1 Month Ago,3 Months Ago,6 Months Ago
 1,RYTM,7,Healthcare,Biotechnology,NASDAQ,4.603337345816934,99,97,0,18
 2,TH,8,Energy,Oil & Gas Equipment & Services,NASDAQ,3.417903051258203,99,99,98,90
-3,BPT,6,Energy,Oil & Gas Refining & Marketing,NYSE,2.875720291701187,99,99,99,99
+3,BPT,7,Energy,Oil & Gas Refining & Marketing,NYSE,2.875720291701187,99,99,99,99
 4,COGT,7,Healthcare,Biotechnology,NASDAQ,2.743700211978819,99,98,9,15
 5,ALT,7,Healthcare,Biotechnology,NASDAQ,2.719724986001494,99,99,5,7
 6,CEIX,8,Energy,Thermal Coal,NYSE,2.6123674174531297,99,99,99,99
@@ -78,7 +78,7 @@ Rank,Ticker,Minervini,Sector,Industry,Exchange,Relative Strength,Percentile,1 Mo
 77,ONEM,5,Healthcare,Health Information Services,NASDAQ,1.551522353978863,95,97,4,1
 78,IEA,8,Industrials,Engineering & Construction,NASDAQ,1.5442812682041265,95,96,16,57
 79,EQNR,8,Energy,Oil & Gas Integrated,NYSE,1.5422426676150678,95,96,94,95
-80,MOD,7,Consumer Cyclical,Auto Parts,NYSE,1.5419911001572457,95,94,74,15
+80,MOD,7,Consumer Cyclical,Auto Parts,NYSE,1.5419911001572457,95,94,74,14
 81,SQM,8,Basic Materials,Chemicals,NYSE,1.5401704964543548,95,98,97,94
 82,LNG,8,Energy,Oil & Gas Midstream,NYSE MKT,1.53994906828707,95,94,92,96
 83,SM,7,Energy,Oil & Gas E&P,NYSE,1.5346903194612986,95,96,98,98
@@ -111,7 +111,7 @@ Rank,Ticker,Minervini,Sector,Industry,Exchange,Relative Strength,Percentile,1 Mo
 110,COP,7,Energy,Oil & Gas E&P,NYSE,1.4498772372610689,93,90,96,97
 111,FMTX,4,Healthcare,Biotechnology,NASDAQ,1.4479283683343467,93,11,1,1
 112,ALNY,7,Healthcare,Biotechnology,NASDAQ,1.4477170797669698,93,55,17,61
-113,HES,8,Energy,Oil & Gas E&P,NYSE,1.44728075064098,93,91,95,91
+113,HES,8,Energy,Oil & Gas E&P,NYSE,1.44728075064098,93,91,95,92
 114,CYTK,8,Healthcare,Biotechnology,NASDAQ,1.4472647342581748,93,89,91,93
 115,NOG,8,Energy,Oil & Gas E&P,NYSE,1.4434510369000757,93,92,96,96
 116,SKYT,5,Technology,Semiconductors,NASDAQ,1.4417666047832927,93,95,2,3
@@ -127,7 +127,7 @@ Rank,Ticker,Minervini,Sector,Industry,Exchange,Relative Strength,Percentile,1 Mo
 126,ESTE,6,Energy,Oil & Gas E&P,NYSE,1.4072568718763436,92,89,98,97
 127,AAWW,6,Industrials,Airports & Air Services,NASDAQ,1.4072055129404255,92,71,41,74
 128,CALM,8,Consumer Defensive,Farm Products,NASDAQ,1.4068207907664256,92,89,89,88
-129,MIRM,8,Healthcare,Biotechnology,NASDAQ,1.4050931643121047,92,95,93,94
+129,MIRM,8,Healthcare,Biotechnology,NASDAQ,1.4050931643121047,92,95,94,94
 130,PLAB,8,Technology,Semiconductor Equipment & Materials,NASDAQ,1.4041013444538715,92,98,94,91
 131,SLVM,7,Basic Materials,Paper & Paper Products,NYSE,1.401300475069967,92,91,98,86
 132,WOLF,5,Technology,Semiconductors,NYSE,1.3883608177739974,92,29,20,41
@@ -243,7 +243,7 @@ Rank,Ticker,Minervini,Sector,Industry,Exchange,Relative Strength,Percentile,1 Mo
 242,PBR,8,Energy,Oil & Gas Integrated,NYSE,1.2568358302726328,86,86,85,93
 243,TCOM,6,Consumer Cyclical,Travel Services,NASDAQ,1.2567621485239948,86,65,17,14
 244,NOV,7,Energy,Oil & Gas Equipment & Services,NYSE,1.2556979258693457,86,85,93,96
-245,PAA,8,Energy,Oil & Gas Midstream,NASDAQ,1.255060697212458,86,76,86,81
+245,PAA,7,Energy,Oil & Gas Midstream,NASDAQ,1.255060697212458,86,76,86,81
 246,EPAM,4,Technology,Information Technology Services,NYSE,1.2534481098633103,86,36,60,0
 247,STLD,7,Basic Materials,Steel,NASDAQ,1.2526697055832692,85,83,90,89
 248,FWONK,8,Communication Services,Broadcasting,NASDAQ,1.2524070351075829,85,88,86,78
