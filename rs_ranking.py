@@ -225,7 +225,7 @@ def rankings():
             out_tickers_count = out_tickers_count + 1
     df = df.head(out_tickers_count)
     # drop rows which don't meet Minervini criteria
-    dfm = df[df['Minervini'] > 5]
+    dfm = df[df['Minervini'] > 6]
 
     df.to_csv(os.path.join(DIR, "output", f'rs_stocks{suffix}.csv'), index = False)
     dfm.to_csv(os.path.join(DIR, "output", f'rs_stocks_minervini.csv'), index = False)
