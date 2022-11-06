@@ -227,6 +227,17 @@ def rankings():
     # drop rows which don't meet Minervini criteria
     dfm = df[df['Minervini'] > 6]
 
+    #sort dfm 7-8 Then by Rank 
+    dfm = dfm.sort_values(([TITLE_MINERVINI,  TITLE_RANK]), ascending=[False,True])
+    
+
+    #dfm = dfm.groupby(([TITLE_SECTOR])).apply(lambda x: x.sort_values('Relative Strength'))
+
+
+
+    #dfm = dfmm.sort_values(([TITLE_RANK]), ascending=True)
+
+
     df.to_csv(os.path.join(DIR, "output", f'rs_stocks{suffix}.csv'), index = False)
     dfm.to_csv(os.path.join(DIR, "output", f'rs_stocks_minervini.csv'), index = False)
 
@@ -259,10 +270,10 @@ def rankings():
     df_industries[TITLE_6M] = df_industries.apply(lambda row: getRsAverage(industries, row[TITLE_INDUSTRY], TITLE_6M), axis=1)
 
     df_industries[TITLE_PERCENTILE] = df_industries[TITLE_RS].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
-    df_industries[TITLE_1M] = df_industries[TITLE_1M].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
-    df_industries[TITLE_3M] = df_industries[TITLE_3M].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
-    df_industries[TITLE_6M] = df_industries[TITLE_6M].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
-    df_industries[TITLE_TICKERS] = df_industries.apply(lambda row: getTickers(industries, row[TITLE_INDUSTRY]), axis=1)
+    df_industries[TITLE_1M]         = df_industries[TITLE_1M].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
+    df_industries[TITLE_3M]         = df_industries[TITLE_3M].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
+    df_industries[TITLE_6M]         = df_industries[TITLE_6M].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
+    df_industries[TITLE_TICKERS]    = df_industries.apply(lambda row: getTickers(industries, row[TITLE_INDUSTRY]), axis=1)
     #df_industries = df_industries.sort_values(([TITLE_RS]), ascending=False)
     df_industries = df_industries.sort_values(([TITLE_PERCENTILE]), ascending=False)
 
