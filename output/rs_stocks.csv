@@ -50,7 +50,7 @@ Rank,Ticker,Minervini,Sector,Industry,Exchange,Relative Strength,Percentile,1 Mo
 49,ISEE,7,Healthcare,Biotechnology,NASDAQ,1.7301311643223987,97,97,74,64
 50,GLNG,8,Energy,Oil & Gas Midstream,NASDAQ,1.7298539964816313,97,97,98,98
 51,KRTX,7,Healthcare,Biotechnology,NASDAQ,1.712140830985968,97,98,99,56
-52,ARLP,7,Energy,Thermal Coal,NASDAQ,1.7049636308885074,96,98,98,99
+52,ARLP,8,Energy,Thermal Coal,NASDAQ,1.7049636308885074,96,98,98,99
 53,HES,8,Energy,Oil & Gas E&P,NYSE,1.6992615535421767,96,95,89,95
 54,DCPH,6,Healthcare,Biotechnology,NASDAQ,1.6898903401260037,96,96,94,39
 55,PTEN,7,Energy,Oil & Gas Drilling,NASDAQ,1.6868865636840313,96,91,95,97
@@ -69,7 +69,7 @@ Rank,Ticker,Minervini,Sector,Industry,Exchange,Relative Strength,Percentile,1 Mo
 68,COGT,6,Healthcare,Biotechnology,NASDAQ,1.6288493049689623,96,97,99,5
 69,LNTH,5,Healthcare,Diagnostics & Research,NASDAQ,1.626067802030311,95,98,99,99
 70,TEN,8,Consumer Cyclical,Auto Parts,NYSE,1.6222783745886273,95,86,93,93
-71,MPC,8,Energy,Oil & Gas Refining & Marketing,NYSE,1.6203968061868954,95,96,90,96
+71,MPC,8,Energy,Oil & Gas Refining & Marketing,NYSE,1.6203968061868954,95,96,90,95
 72,VAL,8,Energy,Oil & Gas Equipment & Services,NYSE,1.6200657250605575,95,96,91,99
 73,UNM,8,Financial Services,Insurance—Life,NYSE,1.6193657194839668,95,95,91,91
 74,CAH,8,Healthcare,Medical Distribution,NYSE,1.6169672211807695,95,92,88,81
@@ -96,7 +96,7 @@ Rank,Ticker,Minervini,Sector,Industry,Exchange,Relative Strength,Percentile,1 Mo
 95,VRDN,5,Healthcare,Biotechnology,NASDAQ,1.5578704030879418,94,93,58,28
 96,IMO,7,Energy,Oil & Gas Integrated,NYSE MKT,1.5528255962885638,94,87,86,96
 97,AR,7,Energy,Oil & Gas E&P,NYSE,1.550021725587668,94,94,99,99
-98,HCC,8,Basic Materials,Coking Coal,NYSE,1.5478891016508054,94,85,90,96
+98,HCC,6,Basic Materials,Coking Coal,NYSE,1.5478891016508054,94,85,90,96
 99,HAE,8,Healthcare,Medical Instruments & Supplies,NYSE,1.5455584529129371,94,92,90,71
 100,LBRT,7,Energy,Oil & Gas Equipment & Services,NYSE,1.54339656391508,94,89,82,93
 101,WNC,6,Industrials,Farm & Heavy Construction Machinery,NYSE,1.5425160026957014,94,81,82,44
@@ -121,7 +121,7 @@ Rank,Ticker,Minervini,Sector,Industry,Exchange,Relative Strength,Percentile,1 Mo
 120,CALX,8,Technology,Software—Application,NYSE,1.505345220266849,92,94,89,13
 121,DVN,8,Energy,Oil & Gas E&P,NYSE,1.5046350532846033,92,97,94,99
 122,TWNK,8,Consumer Defensive,Packaged Foods,NASDAQ,1.500917245212098,92,87,81,92
-123,ARRY,6,Technology,Solar,NASDAQ,1.499339159966101,92,95,99,5
+123,ARRY,6,Technology,Solar,NASDAQ,1.499339159966101,92,95,99,6
 124,PSN,8,Industrials,Specialty Industrial Machinery,NYSE,1.4968421605472224,92,86,86,81
 125,EOG,8,Energy,Oil & Gas E&P,NYSE,1.4967231247116766,92,92,81,95
 126,EPAC,8,Industrials,Specialty Industrial Machinery,NYSE,1.4965062108909308,92,76,63,64
@@ -131,7 +131,7 @@ Rank,Ticker,Minervini,Sector,Industry,Exchange,Relative Strength,Percentile,1 Mo
 130,FGEN,7,Healthcare,Biotechnology,NASDAQ,1.4883374914064964,92,91,86,12
 131,PCG,8,Utilities,Utilities—Regulated Electric,NYSE,1.4843976021488294,92,94,70,83
 132,CF,8,Basic Materials,Agricultural Inputs,NYSE,1.4832809482862435,92,94,95,98
-133,ABMD,5,Healthcare,Medical Devices,NASDAQ,1.4825804406301133,92,49,58,36
+133,ABMD,5,Healthcare,Medical Devices,NASDAQ,1.4825804406301133,92,50,58,36
 134,UTHR,8,Healthcare,Biotechnology,NASDAQ,1.4822632360953956,92,73,79,58
 135,FANG,8,Energy,Oil & Gas E&P,NASDAQ,1.4779082282276965,92,90,86,93
 136,EVOP,8,Technology,Software—Infrastructure,NASDAQ,1.475919619546122,92,96,94,51
@@ -151,7 +151,7 @@ Rank,Ticker,Minervini,Sector,Industry,Exchange,Relative Strength,Percentile,1 Mo
 150,CELH,6,Consumer Defensive,Beverages—Non-Alcoholic,NASDAQ,1.4481986480894156,91,94,97,46
 151,SM,8,Energy,Oil & Gas E&P,NYSE,1.4472887623061317,91,95,94,96
 152,LW,8,Consumer Defensive,Packaged Foods,NYSE,1.443959515906863,91,91,90,66
-153,GILD,8,Healthcare,Drug Manufacturers—General,NASDAQ,1.4432465747008707,91,72,42,63
+153,GILD,8,Healthcare,Drug Manufacturers—General,NASDAQ,1.4432465747008707,91,72,42,64
 154,ATGE,8,Consumer Defensive,Education & Training Services,NYSE,1.442936565376546,90,84,88,77
 155,HQY,8,Healthcare,Health Information Services,NASDAQ,1.4423869852423459,90,88,52,56
 156,VIVO,7,Healthcare,Diagnostics & Research,NASDAQ,1.4407065643313828,90,93,95,87
@@ -186,7 +186,7 @@ Rank,Ticker,Minervini,Sector,Industry,Exchange,Relative Strength,Percentile,1 Mo
 185,WHD,6,Energy,Oil & Gas Equipment & Services,NYSE,1.4007428043057577,89,76,49,90
 186,DAWN,6,Healthcare,Biotechnology,NASDAQ,1.4002127304299212,89,90,99,3
 187,NTNX,6,Technology,Software—Infrastructure,NASDAQ,1.3992172212044687,89,75,2,20
-188,OII,5,Energy,Oil & Gas Equipment & Services,NYSE,1.3976215970302905,88,24,8,36
+188,OII,5,Energy,Oil & Gas Equipment & Services,NYSE,1.3976215970302905,88,24,8,35
 189,ATEN,8,Technology,Software—Infrastructure,NYSE,1.3975418466033807,88,82,71,90
 190,WRB,8,Financial Services,Insurance—Property & Casualty,NYSE,1.3965235593693035,88,85,77,92
 191,EXLS,8,Technology,Information Technology Services,NASDAQ,1.3959455325349488,88,87,92,87
