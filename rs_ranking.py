@@ -172,7 +172,7 @@ def rankings():
                                     # if rs is too big assume there is faulty price data
                     #print(f'Ticker {ticker} has {rs}.')
                     #if rs < 8000:
-                    if (( closes_series.iloc[-1] > 12) ):
+                    if (( closes_series.iloc[-1] > 12)):
 
                         # stocks output
                         ranks.append(len(ranks)+1)
@@ -221,12 +221,17 @@ def rankings():
     df[TITLE_RANK] = ranks
     out_tickers_count = 0
     for index, row in df.iterrows():
-        if ((row[TITLE_PERCENTILE] >= MIN_PERCENTILE)):
+        if ((row[TITLE_PERCENTILE] >= MIN_PERCENTILE) ):
             out_tickers_count = out_tickers_count + 1
     df = df.head(out_tickers_count)
     # drop rows which don't meet Minervini criteria
-    dfm = df[df['Minervini'] > 6]
-
+    # drop rows which have 6m/3m RS ranking less than 25
+    dfm1 = df[df['Minervini'] > 6  ]
+    dfm2 = dfm1[ dfm1['6 Months Ago'] > 25 ]
+    dfm = dfm2[ dfm2['3 Months Ago'] > 25 ]
+    
+    
+    
     #sort dfm 7-8 Then by Rank 
     dfm = dfm.sort_values(([TITLE_MINERVINI,  TITLE_RANK]), ascending=[False,True])
     
