@@ -6,6 +6,7 @@ import bs4 as bs
 import datetime as dt
 import os
 import pandas_datareader.data as web
+import pandas_datareader as pdr
 import pickle
 import requests
 import yaml
@@ -250,9 +251,13 @@ def load_prices_from_tda(securities, api_key):
 def get_yf_data(security, start_date, end_date):
         escaped_ticker = security["ticker"].replace(".","-")
         df = yf.download(escaped_ticker, start=start_date, end=end_date)
+       
+
         #todays_liquidity = (df["Adj Close"].count()-1) * (df["averageVolume"].count()-1)
-        #data_top = df.head()
-        #print(data_top)
+        data_top = df.head()
+        print(data_top)
+        
+        
         mm_count = 0
         df.describe()
         ticker_data = {}
@@ -285,21 +290,26 @@ def get_yf_data(security, start_date, end_date):
             m6_p_ge_52wk_min = ( price_today > (1.25 * df["Adj Close"].tail(253).min()))
             m7_p_near_52wk_hi = (abs(  ((price_today - df["Adj Close"].tail(253).max())*100) / (df["Adj Close"].tail(253).max())) < 25)
             m8_rs_ge_85 = True
+
             mm_criteria = m1_p_ge_150_n_200 and m2_sma150_ge_sma200 and m3_sma200_22day_in_uptrend and m4_sma50_ge_sma150_n_200 and m5_p_ge_sma50 and  m6_p_ge_52wk_min and m7_p_near_52wk_hi
             #print("Meets all mm_criteria", mm_criteria)
             mm_count = int(m8_rs_ge_85) + int(m1_p_ge_150_n_200) + int(m2_sma150_ge_sma200) + int(m3_sma200_22day_in_uptrend) + int(m4_sma50_ge_sma150_n_200) + int(m5_p_ge_sma50) + int(m7_p_near_52wk_hi) + int(m6_p_ge_52wk_min)
+            # market cap greater than 1Biliion 
+            marketCap_series = pdr.get_quote_yahoo(security["ticker"])['marketCap'] 
+            marketCap = marketCap_series.iloc[0]
         except:
             m1_p_ge_150_n_200 = False
             m2_sma150_ge_sma200 = False
             m3_sma200_22day_in_uptrend = False
             mm_criteria = False
+            marketCap = 0
  
 
  
  
         
 
-        if(((df["Adj Close"].count()-1) > 9 ) and (Avg_volume > 300000) ):
+        if(((df["Adj Close"].count()-1) > 9 ) and (Avg_volume > 300000) and (marketCap > 1000000000)):
             #print("this stock's close price is less than $9 consider filtering out ")
             yahoo_response = df.to_dict() 
             timestamps = list(yahoo_response["Open"].keys())
