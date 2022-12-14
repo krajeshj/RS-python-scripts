@@ -8,6 +8,7 @@ from scipy.stats import linregress
 import yaml
 from rs_data import TD_API, cfg, read_json
 from functools import reduce
+import csv
 
 DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -235,6 +236,7 @@ def rankings():
     #sort dfm 7-8 Then by Rank 
     dfm = dfm.sort_values(([TITLE_MINERVINI,  TITLE_RANK]), ascending=[False,True])
     
+    
 
     #dfm = dfm.groupby(([TITLE_SECTOR])).apply(lambda x: x.sort_values('Relative Strength'))
 
@@ -250,6 +252,17 @@ def rankings():
     dfs_mnrvni.append(dfm)
 
     print(f'Ticker {ticker} data has been added.')
+    
+    list_of_dfm_tickers = dfm[TITLE_TICKER].to_list()
+    #print(f"'{list_of_dfm_tickers}'")
+
+    list_of_dfm_tickers = "',".join(map(str,list_of_dfm_tickers))
+
+    print(f"'{list_of_dfm_tickers}'")
+ 
+    with open(os.path.join(DIR, "output", f'Minervini_list.csv'), 'w' )as f:
+        write = csv.writer(f)
+        f.writelines(list_of_dfm_tickers)
 # industries
     def getDfView(industry_entry):
         return industry_entry["info"]

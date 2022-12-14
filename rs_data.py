@@ -254,8 +254,8 @@ def get_yf_data(security, start_date, end_date):
        
 
         #todays_liquidity = (df["Adj Close"].count()-1) * (df["averageVolume"].count()-1)
-        data_top = df.head()
-        print(data_top)
+        #data_top = df.head()
+        #print(data_top)
         
         
         mm_count = 0
