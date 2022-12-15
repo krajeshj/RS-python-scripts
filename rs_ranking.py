@@ -256,7 +256,7 @@ def rankings():
     list_of_dfm_tickers = dfm[TITLE_TICKER].to_list()
     #print(f"'{list_of_dfm_tickers}'")
 
-    list_of_dfm_tickers = "',".join(map(str,list_of_dfm_tickers))
+    list_of_dfm_tickers = ", ".join(map(str,list_of_dfm_tickers))
 
     print(f"'{list_of_dfm_tickers}'")
  
