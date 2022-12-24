@@ -260,7 +260,7 @@ def rankings():
 
         list_of_dfm_tickers = ", ".join(map(str,list_of_dfm_tickers))
 
-        print(f"'{list_of_dfm_tickers}'")
+        #print(f"'{list_of_dfm_tickers}'")
     
         with open(os.path.join(DIR, "output", f'Minervini_list.csv'), 'w' )as f:
             write = csv.writer(f)
