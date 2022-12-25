@@ -252,8 +252,8 @@ def rankings():
     dfs_mnrvni.append(dfm)
 
     print(f'Ticker {ticker} data has been added.')
-
-    try : 
+    '''
+    try: 
     
         list_of_dfm_tickers = dfm[TITLE_TICKER].to_list()
         #print(f"'{list_of_dfm_tickers}'")
@@ -267,6 +267,8 @@ def rankings():
             f.writelines(list_of_dfm_tickers)
     except:
         print(f'Minervini_list not created')
+    '''
+
 # industries
     def getDfView(industry_entry):
         return industry_entry["info"]
