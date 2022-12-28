@@ -203,7 +203,7 @@ def rankings():
                         #ranks.append(len(ranks)+1)
                         #relative_strengths.append((0, ticker, json[ticker]["sector"], json[ticker]["universe"], rs, tmp_percentile, rs1m, rs3m, rs6m))
             else:
-                print(f'Ticker {ticker} filtered out')
+                #print(f'Ticker {ticker} filtered out')
                 continue
         except:
             print(f'Ticker {ticker} has corrupted data.')
@@ -268,7 +268,7 @@ def rankings():
     except:
         print(f'Minervini_list not created')
     '''
-
+    print("Heartbeat 1 \n")
 # industries
     def getDfView(industry_entry):
         return industry_entry["info"]
@@ -283,7 +283,8 @@ def rankings():
     def getTickers(industries, industry):
         return ",".join(sorted(industries[industry][TITLE_TICKERS], key=rs_for_stock, reverse=True))
 
-            
+    print("Heartbeat 2 \n")
+       
 
     # remove industries with only one stock
     filtered_industries = filter(lambda i: len(i[TITLE_TICKERS]) > 1, list(industries.values()))
@@ -292,6 +293,8 @@ def rankings():
     df_industries[TITLE_1M] = df_industries.apply(lambda row: getRsAverage(industries, row[TITLE_INDUSTRY], TITLE_1M), axis=1)
     df_industries[TITLE_3M] = df_industries.apply(lambda row: getRsAverage(industries, row[TITLE_INDUSTRY], TITLE_3M), axis=1)
     df_industries[TITLE_6M] = df_industries.apply(lambda row: getRsAverage(industries, row[TITLE_INDUSTRY], TITLE_6M), axis=1)
+    
+    print("Heartbeat 3 \n")
 
     df_industries[TITLE_PERCENTILE] = df_industries[TITLE_RS].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
     df_industries[TITLE_1M]         = df_industries[TITLE_1M].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
@@ -300,12 +303,15 @@ def rankings():
     df_industries[TITLE_TICKERS]    = df_industries.apply(lambda row: getTickers(industries, row[TITLE_INDUSTRY]), axis=1)
     #df_industries = df_industries.sort_values(([TITLE_RS]), ascending=False)
     df_industries = df_industries.sort_values(([TITLE_PERCENTILE]), ascending=False)
+    print("Heartbeat 4 \n")
 
     ind_ranks = ind_ranks[:len(df_industries)]
     df_industries[TITLE_RANK] = ind_ranks
+    print("Heartbeat 5 \n")
 
     df_industries.to_csv(os.path.join(DIR, "output", f'rs_industries{suffix}.csv'), index = False)
     dfs.append(df_industries)
+    print("Heartbeat 6 \n")
 
     return dfs
 
