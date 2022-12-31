@@ -252,7 +252,7 @@ def rankings():
     dfs_mnrvni.append(dfm)
 
     print(f'Ticker {ticker} data has been added.')
-    '''
+    
     try: 
     
         list_of_dfm_tickers = dfm[TITLE_TICKER].to_list()
@@ -267,7 +267,7 @@ def rankings():
             f.writelines(list_of_dfm_tickers)
     except:
         print(f'Minervini_list not created')
-    '''
+    
     print("Heartbeat 1 \n")
 # industries
     def getDfView(industry_entry):
@@ -300,7 +300,7 @@ def rankings():
     df_industries[TITLE_1M]         = df_industries[TITLE_1M].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
     df_industries[TITLE_3M]         = df_industries[TITLE_3M].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
     df_industries[TITLE_6M]         = df_industries[TITLE_6M].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
-    ### problematic KRJ FIXIT ASAP df_industries[TITLE_TICKERS]    = df_industries.apply(lambda row: getTickers(industries, row[TITLE_INDUSTRY]), axis=1)
+    df_industries[TITLE_TICKERS]    = df_industries.apply(lambda row: getTickers(industries, row[TITLE_INDUSTRY]), axis=1)
     #df_industries = df_industries.sort_values(([TITLE_RS]), ascending=False)
     df_industries = df_industries.sort_values(([TITLE_PERCENTILE]), ascending=False)
     print("Heartbeat 4 \n")
