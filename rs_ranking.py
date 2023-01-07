@@ -281,7 +281,10 @@ def rankings():
     def rs_for_stock(ticker):
         return stock_rs[ticker]
     def getTickers(industries, industry):
-        return ",".join(sorted(industries[industry][TITLE_TICKERS], key=rs_for_stock, reverse=True))
+        return ",".join(sorted(industries[industry][new_func()], key=rs_for_stock, reverse=True))
+
+    def new_func():
+        return TITLE_TICKERS
 
     print("Heartbeat 2 \n")
        
