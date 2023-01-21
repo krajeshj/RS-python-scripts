@@ -299,12 +299,19 @@ def rankings():
     
     print("Heartbeat 3 \n")
 
-    df_industries[TITLE_PERCENTILE] = df_industries[TITLE_RS].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
-    df_industries[TITLE_1M]         = df_industries[TITLE_1M].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
-    df_industries[TITLE_3M]         = df_industries[TITLE_3M].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
-    df_industries[TITLE_6M]         = df_industries[TITLE_6M].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
-    df_industries[TITLE_TICKERS]    = df_industries.apply(lambda row: getTickers(industries, row[TITLE_INDUSTRY]), axis=1)
-    #df_industries = df_industries.sort_values(([TITLE_RS]), ascending=False)
+    #df_industries[TITLE_PERCENTILE] = df_industries[TITLE_RS].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
+    #df_industries[TITLE_1M]         = df_industries[TITLE_1M].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
+    #df_industries[TITLE_3M]         = df_industries[TITLE_3M].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
+    #df_industries[TITLE_6M]         = df_industries[TITLE_6M].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
+    #df_industries[TITLE_TICKERS]    = df_industries.apply(lambda row: getTickers(industries, row[TITLE_INDUSTRY]), axis=1)
+    ##df_industries = df_industries.sort_values(([TITLE_RS]), ascending=False)
+    df_industries[TITLE_PERCENTILE] = pd.qcut(df_industries[TITLE_RS], 100, labels=False, duplicates="drop")
+    df_industries[TITLE_1M] = pd.qcut(df_industries[TITLE_1M], 100, labels=False, duplicates="drop")
+    df_industries[TITLE_3M] = pd.qcut(df_industries[TITLE_3M], 100, labels=False, duplicates="drop")
+    df_industries[TITLE_6M] = pd.qcut(df_industries[TITLE_6M], 100, labels=False, duplicates="drop")
+    df_industries[TITLE_TICKERS] = df_industries.apply(lambda row: getTickers(industries, row[TITLE_INDUSTRY]), axis=1)
+    df_industries = df_industries.sort_values(([TITLE_RS]), ascending=False)
+    
     df_industries = df_industries.sort_values(([TITLE_PERCENTILE]), ascending=False)
     print("Heartbeat 4 \n")
 
