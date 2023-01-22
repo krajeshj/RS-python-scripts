@@ -227,9 +227,11 @@ def rankings():
     df = df.head(out_tickers_count)
     # drop rows which don't meet Minervini criteria
     # drop rows which have 6m/3m RS ranking less than 25
-    dfm1 = df[df['Minervini'] > 6  ]
-    dfm2 = dfm1[ dfm1['6 Months Ago'] > 25 ]
-    dfm = dfm2[ dfm2['3 Months Ago'] > 25 ]
+    dfm = df[df['Minervini'] > 6  ]
+
+    #dfm1 = df[df['Minervini'] > 6  ]
+    #dfm2 = dfm1[ dfm1['6 Months Ago'] > 25 ]
+    #dfm = dfm2[ dfm2['3 Months Ago'] > 25 ]
     
     
     
