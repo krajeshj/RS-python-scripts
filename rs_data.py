@@ -262,9 +262,10 @@ def get_yf_data(security, start_date, end_date):
         df.describe()
         ticker_data = {}
         Avg_volume=df["Volume"].tail(50).mean(skipna=True)
-        #print("Average volume is ", Avg_volume)
+        print("Average volume is ", Avg_volume)
         try:
             price_today = df["Adj Close"].tail(1).item()
+            print("Price today", price_today)
         except:
             price_today = df["Adj Close"].tail(5).mean(skipna=True)
 
@@ -294,9 +295,7 @@ def get_yf_data(security, start_date, end_date):
             mm_criteria = m1_p_ge_150_n_200 and m2_sma150_ge_sma200 and m3_sma200_22day_in_uptrend and m4_sma50_ge_sma150_n_200 and m5_p_ge_sma50 and  m6_p_ge_52wk_min and m7_p_near_52wk_hi
             #print("Meets all mm_criteria", mm_criteria)
             mm_count = int(m8_rs_ge_85) + int(m1_p_ge_150_n_200) + int(m2_sma150_ge_sma200) + int(m3_sma200_22day_in_uptrend) + int(m4_sma50_ge_sma150_n_200) + int(m5_p_ge_sma50) + int(m7_p_near_52wk_hi) + int(m6_p_ge_52wk_min)
-            # market cap greater than 1Biliion 
-            marketCap_series = pdr.get_quote_yahoo(security["ticker"])['marketCap'] 
-            marketCap = marketCap_series.iloc[0]
+            
         except:
             m1_p_ge_150_n_200 = False
             m2_sma150_ge_sma200 = False
@@ -309,7 +308,8 @@ def get_yf_data(security, start_date, end_date):
  
         
 
-        if(((df["Adj Close"].count()-1) > 9 ) and (Avg_volume > 300000) and (marketCap > 1000000000)):
+        #if(((df["Adj Close"].count()-1) > 9 ) and (Avg_volume > 300000) and (marketCap > 500000000)):
+        if((price_today > 9) and (Avg_volume > 300000) and (price_today * Avg_volume > 500000000)):
             #print("this stock's close price is less than $9 consider filtering out ")
             yahoo_response = df.to_dict() 
             timestamps = list(yahoo_response["Open"].keys())
@@ -336,7 +336,7 @@ def get_yf_data(security, start_date, end_date):
             skip_calc = 0
             enrich_ticker_data(ticker_data, security,skip_calc, mm_count)
         else:
-            #print("this stock's close price is less than $9 consider filtering out ")
+            print("this stock's close price is less than $9 consider filtering out ")
             skip_calc = 1    
             enrich_ticker_data(ticker_data, security, skip_calc, mm_count)
 
