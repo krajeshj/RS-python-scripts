@@ -154,7 +154,7 @@ def rankings():
                     continue
                 #try:
                 #closes = list(map(lambda candle: candle["close"], json[ticker]["candles"]))
-                #print("This is calculation for  ticker - ", ticker)                
+                print("This is calculation for  ticker - ", ticker)                
 
                 closes = list(map(lambda candle: candle["close"], json[ticker]["candles"]))
 
@@ -197,6 +197,7 @@ def rankings():
                         industries[industry][TITLE_3M].append(rs3m)
                         industries[industry][TITLE_6M].append(rs6m)
                         industries[industry][TITLE_TICKERS].append(ticker)
+                        print(f'Ticker {ticker} included')
 
 
 
@@ -228,6 +229,7 @@ def rankings():
     # drop rows which don't meet Minervini criteria
     # drop rows which have 6m/3m RS ranking less than 25
     dfm = df[df['Minervini'] > 6  ]
+    print(df.head())
 
     #dfm1 = df[df['Minervini'] > 6  ]
     #dfm2 = dfm1[ dfm1['6 Months Ago'] > 25 ]
@@ -249,20 +251,21 @@ def rankings():
 
     df.to_csv(os.path.join(DIR, "output", f'rs_stocks{suffix}.csv'), index = False)
     dfm.to_csv(os.path.join(DIR, "output", f'rs_stocks_minervini.csv'), index = False)
+    try:
+        dfs.append(df)
+        dfs_mnrvni.append(dfm)
+        print(f'Ticker {ticker} data has been added.')
+    except:
+        print(f'Ticker {ticker} coukd not be added.')
 
-    dfs.append(df)
-    dfs_mnrvni.append(dfm)
-
-    print(f'Ticker {ticker} data has been added.')
     
     try: 
-    
         list_of_dfm_tickers = dfm[TITLE_TICKER].to_list()
         #print(f"'{list_of_dfm_tickers}'")
 
         list_of_dfm_tickers = ", ".join(map(str,list_of_dfm_tickers))
 
-        #print(f"'{list_of_dfm_tickers}'")
+        print(f"'{list_of_dfm_tickers}'")
     
         with open(os.path.join(DIR, "output", f'Minervini_list.csv'), 'w' )as f:
             write = csv.writer(f)
@@ -288,8 +291,7 @@ def rankings():
     def new_func():
         return TITLE_TICKERS
 
-    print("Heartbeat 2 \n")
-       
+        
 
     # remove industries with only one stock
     filtered_industries = filter(lambda i: len(i[TITLE_TICKERS]) > 1, list(industries.values()))
@@ -299,8 +301,7 @@ def rankings():
     df_industries[TITLE_3M] = df_industries.apply(lambda row: getRsAverage(industries, row[TITLE_INDUSTRY], TITLE_3M), axis=1)
     df_industries[TITLE_6M] = df_industries.apply(lambda row: getRsAverage(industries, row[TITLE_INDUSTRY], TITLE_6M), axis=1)
     
-    print("Heartbeat 3 \n")
-
+ 
     #df_industries[TITLE_PERCENTILE] = df_industries[TITLE_RS].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
     #df_industries[TITLE_1M]         = df_industries[TITLE_1M].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
     #df_industries[TITLE_3M]         = df_industries[TITLE_3M].transform(lambda x: pd.qcut(x.rank(method='first'), 100, labels=False))
@@ -315,16 +316,13 @@ def rankings():
     #df_industries = df_industries.sort_values(([TITLE_RS]), ascending=False)
     
     df_industries = df_industries.sort_values(([TITLE_PERCENTILE]), ascending=False)
-    print("Heartbeat 4 \n")
-
+ 
     ind_ranks = ind_ranks[:len(df_industries)]
     df_industries[TITLE_RANK] = ind_ranks
-    print("Heartbeat 5 \n")
-
+ 
     df_industries.to_csv(os.path.join(DIR, "output", f'rs_industries{suffix}.csv'), index = False)
     dfs.append(df_industries)
-    print("Heartbeat 6 \n")
-
+ 
     return dfs
 
 
