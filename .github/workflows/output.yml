@@ -1,6 +1,4 @@
 name: Output
-runs:
-  using: 'node16'
 on:
   push:
   schedule:
@@ -17,7 +15,7 @@ jobs:
           #- name: Use Node.js
           #  uses: actions/setup-node@v3
             with:
-              node-version: '16'            
+              node-version: 'repository'            
           - name: setup python
             uses: actions/setup-python@v2
             with:
