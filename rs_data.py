@@ -62,7 +62,8 @@ REFERENCE_TICKER = cfg("REFERENCE_TICKER")
 DATA_SOURCE = cfg("DATA_SOURCE")
 
 def read_json(json_file):
-    with open(json_file, "r", encoding="utf-8") as fp:
+    #with open(json_file, "r", encoding="utf-8") as fp:
+    with open(json_file, "r") as fp:
         #return json.load(fp)
         return json.loads(fp.read())
 
