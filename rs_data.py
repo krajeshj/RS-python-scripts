@@ -303,6 +303,7 @@ def get_yf_data(security, start_date, end_date):
             m2_sma150_ge_sma200 = False
             m3_sma200_22day_in_uptrend = False
             mm_criteria = False
+            MarketCap=0
  
 
  
