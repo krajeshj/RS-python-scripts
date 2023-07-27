@@ -310,6 +310,7 @@ def get_yf_data(security, start_date, end_date):
         
 
         if((price_today > 9) and (Avg_volume > 300000) ):
+            yahoo_response = df.to_dict() 
             timestamps = list(map(lambda timestamp: int(timestamp.timestamp()), timestamps))
             opens = list(yahoo_response["Open"].values())
             closes = list(yahoo_response["Close"].values())
