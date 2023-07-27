@@ -303,18 +303,13 @@ def get_yf_data(security, start_date, end_date):
             m2_sma150_ge_sma200 = False
             m3_sma200_22day_in_uptrend = False
             mm_criteria = False
-            marketCap = 0
  
 
  
  
         
 
-        #if(((df["Adj Close"].count()-1) > 9 ) and (Avg_volume > 300000) and (marketCap > 500000000)):
-        if((price_today > 9) and (Avg_volume > 300000) and (price_today * Avg_volume > 500000000)):
-            #print("this stock's close price is less than $9 consider filtering out ")
-            yahoo_response = df.to_dict() 
-            timestamps = list(yahoo_response["Open"].keys())
+        if((price_today > 9) and (Avg_volume > 300000) ):
             timestamps = list(map(lambda timestamp: int(timestamp.timestamp()), timestamps))
             opens = list(yahoo_response["Open"].values())
             closes = list(yahoo_response["Close"].values())
