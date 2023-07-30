@@ -154,7 +154,7 @@ def rankings():
                     continue
                 #try:
                 #closes = list(map(lambda candle: candle["close"], json[ticker]["candles"]))
-                print("This is calculation for  ticker - ", ticker)                
+                #print("This is calculation for  ticker - ", ticker)                
 
                 closes = list(map(lambda candle: candle["close"], json[ticker]["candles"]))
 
@@ -197,7 +197,7 @@ def rankings():
                         industries[industry][TITLE_3M].append(rs3m)
                         industries[industry][TITLE_6M].append(rs6m)
                         industries[industry][TITLE_TICKERS].append(ticker)
-                        print(f'Ticker {ticker} included')
+                        #print(f'Ticker {ticker} included')
 
 
 
@@ -214,7 +214,8 @@ def rankings():
     dfs = []
     dfs_mnrvni = []
     suffix = ''
-    df = pd.DataFrame(relative_strengths, columns=[TITLE_RANK, TITLE_TICKER, TITLE_MINERVINI, TITLE_SECTOR, TITLE_INDUSTRY, TITLE_UNIVERSE, TITLE_RS, TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M])
+    df = pd.DataFrame(relative_strengths, columns=[TITLE_RANK, TITLE_TICKER, TITLE_MINERVINI, TITLE_SECTOR, TITLE_INDUSTRY, TITLE_UNIVERSE,  TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M, TITLE_RS])
+ 
     df[TITLE_PERCENTILE] = pd.qcut(df[TITLE_RS], 100, precision=64, labels=False,duplicates='drop' )
     df[TITLE_1M] = pd.qcut(df[TITLE_1M], 100, precision=64, labels=False,duplicates='drop')
     df[TITLE_3M] = pd.qcut(df[TITLE_3M], 100, precision=64,labels=False,duplicates='drop')
@@ -295,7 +296,8 @@ def rankings():
 
     # remove industries with only one stock
     filtered_industries = filter(lambda i: len(i[TITLE_TICKERS]) > 1, list(industries.values()))
-    df_industries = pd.DataFrame(map(getDfView, filtered_industries), columns=[TITLE_RANK, TITLE_INDUSTRY, TITLE_SECTOR, TITLE_RS, TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M])
+    df_industries = pd.DataFrame(map(getDfView, filtered_industries), columns=[TITLE_RANK, TITLE_INDUSTRY, TITLE_SECTOR, TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M, TITLE_RS])
+ 
     df_industries[TITLE_RS] = df_industries.apply(lambda row: getRsAverage(industries, row[TITLE_INDUSTRY], TITLE_RS), axis=1)
     df_industries[TITLE_1M] = df_industries.apply(lambda row: getRsAverage(industries, row[TITLE_INDUSTRY], TITLE_1M), axis=1)
     df_industries[TITLE_3M] = df_industries.apply(lambda row: getRsAverage(industries, row[TITLE_INDUSTRY], TITLE_3M), axis=1)
