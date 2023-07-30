@@ -23,6 +23,59 @@ import sys
 from datetime import date
 from datetime import datetime
 
+import requests
+
+
+def get_yahoo_cookie():
+    cookie = None
+
+    user_agent_key = "User-Agent"
+    user_agent_value = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+    user_agent_value = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 Firefox/112.0"
+
+    headers = {user_agent_key: user_agent_value}
+    response = requests.get(
+        "https://fc.yahoo.com", headers=headers, allow_redirects=True
+    )
+
+    if not response.cookies:
+        raise Exception("Failed to obtain Yahoo auth cookie.")
+
+    cookie = list(response.cookies)[0]
+
+    return cookie
+
+
+def get_yahoo_crumb(cookie):
+    crumb = None
+
+    user_agent_key = "User-Agent"
+    user_agent_value = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+
+    headers = {user_agent_key: user_agent_value}
+
+    crumb_response = requests.get(
+        "https://query1.finance.yahoo.com/v1/test/getcrumb",
+        headers=headers,
+        cookies={cookie.name: cookie.value},
+        allow_redirects=True,
+    )
+    crumb = crumb_response.text
+
+    if crumb is None:
+        raise Exception("Failed to retrieve Yahoo crumb.")
+
+    return crumb
+
+
+# Usage
+#cookie = get_yahoo_cookie()
+#crumb = get_yahoo_crumb(cookie)
+
+
+
+
+
 DIR = os.path.dirname(os.path.realpath(__file__))
 
 if not os.path.exists(os.path.join(DIR, 'data')):
@@ -250,6 +303,19 @@ def load_prices_from_tda(securities, api_key):
     create_price_history_file(tickers_dict)
 
 
+def get_market_cap(ticker_symbol):
+    try:
+        str(ticker_symbol)
+        #stock_data = yf.Ticker(ticker_symbol)
+        #market_cap = stock_data.info['marketCap']
+        # Get the market capitalization
+        market_cap = int(pdr.get_quote_yahoo(ticker_symbol)['marketCap'])
+        return market_cap
+    except Exception as e:
+        print(f"Error fetching market capitalization for {ticker_symbol}: {e}")
+        return 0
+
+
 def get_yf_data(security, start_date, end_date):
         escaped_ticker = security["ticker"].replace(".","-")
         df = yf.download(escaped_ticker, start=start_date, end=end_date)
@@ -262,14 +328,24 @@ def get_yf_data(security, start_date, end_date):
         
         mm_count = 0
         df.describe()
+        df.head()
         ticker_data = {}
         Avg_volume=df["Volume"].tail(50).mean(skipna=True)
-        print("Average volume is ", Avg_volume)
+        #print("Average volume is ", Avg_volume)
         try:
             price_today = df["Adj Close"].tail(1).item()
-            print("Price today", price_today)
+            #print("Price today", price_today)
         except:
             price_today = df["Adj Close"].tail(5).mean(skipna=True)
+
+        #try:
+        #   mkt_cap_today = get_market_cap(escaped_ticker)
+        #   print ("market cap was found for", escaped_ticker, "it was", mkt_cap_today)
+        #except:
+        #    print ("Mkt cap for ", escaped_ticker, "is", mkt_cap_today)
+
+            
+
 
         sma200=df["Adj Close"].tail(200).mean(skipna=True)
         sma150=df["Adj Close"].tail(150).mean(skipna=True)
@@ -311,7 +387,13 @@ def get_yf_data(security, start_date, end_date):
         
 
         if((price_today > 9) and (Avg_volume > 300000) ):
+            
+            ticker_data = {}
+            ticker = security["ticker"]
+            escaped_ticker = escape_ticker(ticker)
+            df = yf.download(escaped_ticker, start=start_date, end=end_date, auto_adjust=True)            
             yahoo_response = df.to_dict() 
+            timestamps = list(yahoo_response["Open"].keys())
             timestamps = list(map(lambda timestamp: int(timestamp.timestamp()), timestamps))
             opens = list(yahoo_response["Open"].values())
             closes = list(yahoo_response["Close"].values())
@@ -335,7 +417,7 @@ def get_yf_data(security, start_date, end_date):
             skip_calc = 0
             enrich_ticker_data(ticker_data, security,skip_calc, mm_count)
         else:
-            print("this stock's close price is less than $9 consider filtering out ")
+            print("this stock's close price is less than $9 or volume is < 300K or mkt cap < 500M")
             skip_calc = 1    
             enrich_ticker_data(ticker_data, security, skip_calc, mm_count)
 
