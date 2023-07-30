@@ -16,6 +16,7 @@ import dateutil.relativedelta
 import numpy as np
 import re
 from ftplib import FTP
+from yahoo_fin.stock_info import get_quote_table
 from io import StringIO
 from time import sleep
 import sys
@@ -24,57 +25,6 @@ from datetime import date
 from datetime import datetime
 
 import requests
-
-
-def get_yahoo_cookie():
-    cookie = None
-
-    user_agent_key = "User-Agent"
-    user_agent_value = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
-    user_agent_value = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 Firefox/112.0"
-
-    headers = {user_agent_key: user_agent_value}
-    response = requests.get(
-        "https://fc.yahoo.com", headers=headers, allow_redirects=True
-    )
-
-    if not response.cookies:
-        raise Exception("Failed to obtain Yahoo auth cookie.")
-
-    cookie = list(response.cookies)[0]
-
-    return cookie
-
-
-def get_yahoo_crumb(cookie):
-    crumb = None
-
-    user_agent_key = "User-Agent"
-    user_agent_value = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
-
-    headers = {user_agent_key: user_agent_value}
-
-    crumb_response = requests.get(
-        "https://query1.finance.yahoo.com/v1/test/getcrumb",
-        headers=headers,
-        cookies={cookie.name: cookie.value},
-        allow_redirects=True,
-    )
-    crumb = crumb_response.text
-
-    if crumb is None:
-        raise Exception("Failed to retrieve Yahoo crumb.")
-
-    return crumb
-
-
-# Usage
-#cookie = get_yahoo_cookie()
-#crumb = get_yahoo_crumb(cookie)
-
-
-
-
 
 DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -302,18 +252,53 @@ def load_prices_from_tda(securities, api_key):
 
     create_price_history_file(tickers_dict)
 
+def convert_string_to_numeric(value_str):
+    value_str = value_str.upper()
+    multipliers = {
+        'K': 1_000,
+        'M': 1_000_000,
+        'B': 1_000_000_000,
+        'BN': 1_000_000_000,
+        'BILLION': 1_000_000_000,
+        'T': 1_000_000_000_000,
+    }
 
-def get_market_cap(ticker_symbol):
+    for key, multiplier in multipliers.items():
+        if key in value_str:
+            numeric_value = float(value_str.replace(key, '').strip()) * multiplier
+            return numeric_value
+
     try:
-        str(ticker_symbol)
-        #stock_data = yf.Ticker(ticker_symbol)
-        #market_cap = stock_data.info['marketCap']
-        # Get the market capitalization
-        market_cap = int(pdr.get_quote_yahoo(ticker_symbol)['marketCap'])
-        return market_cap
+        numeric_value = float(value_str)
+        return numeric_value
+    except ValueError:
+        print(f"Error: Unable to convert '{value_str}' to a numeric value.")
+        return None
+
+
+def get_market_cap(ticker):
+    try:
+        quote_table = get_quote_table(ticker)
+        market_cap = quote_table["Market Cap"]
+        return convert_string_to_numeric(market_cap)
     except Exception as e:
-        print(f"Error fetching market capitalization for {ticker_symbol}: {e}")
-        return 0
+        print(f"Error occurred while fetching data: {e}")
+        return 1000
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+   
+   
 
 
 def get_yf_data(security, start_date, end_date):
@@ -338,11 +323,11 @@ def get_yf_data(security, start_date, end_date):
         except:
             price_today = df["Adj Close"].tail(5).mean(skipna=True)
 
-        #try:
-        #   mkt_cap_today = get_market_cap(escaped_ticker)
-        #   print ("market cap was found for", escaped_ticker, "it was", mkt_cap_today)
-        #except:
-        #    print ("Mkt cap for ", escaped_ticker, "is", mkt_cap_today)
+        try:
+            mkt_cap_today = get_market_cap(escaped_ticker)
+            print ("market cap was found for", escaped_ticker, "it was", mkt_cap_today)
+        except:
+            print ("Mkt cap for ", escaped_ticker, "is", mkt_cap_today)
 
             
 
@@ -386,7 +371,7 @@ def get_yf_data(security, start_date, end_date):
  
         
 
-        if((price_today > 9) and (Avg_volume > 300000) ):
+        if((price_today > 9) and (Avg_volume > 300000) and ( mkt_cap_today > 1_000_000_000)):
             
             ticker_data = {}
             ticker = security["ticker"]
@@ -417,7 +402,7 @@ def get_yf_data(security, start_date, end_date):
             skip_calc = 0
             enrich_ticker_data(ticker_data, security,skip_calc, mm_count)
         else:
-            print("this stock's close price is less than $9 or volume is < 300K or mkt cap < 500M")
+            print("this stock's close price is less than $9 or volume is < 300K or mkt cap ")
             skip_calc = 1    
             enrich_ticker_data(ticker_data, security, skip_calc, mm_count)
 
