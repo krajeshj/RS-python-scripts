@@ -325,7 +325,7 @@ def get_yf_data(security, start_date, end_date):
 
         try:
             mkt_cap_today = get_market_cap(escaped_ticker)
-            print ("market cap was found for", escaped_ticker, "it was", mkt_cap_today)
+            #print ("market cap was found for", escaped_ticker, "it was", mkt_cap_today)
         except:
             print ("Mkt cap for ", escaped_ticker, "is", mkt_cap_today)
 
@@ -402,7 +402,7 @@ def get_yf_data(security, start_date, end_date):
             skip_calc = 0
             enrich_ticker_data(ticker_data, security,skip_calc, mm_count)
         else:
-            print("this stock's close price is less than $9 or volume is < 300K or mkt cap ")
+            #print("this stock's close price is less than $9 or volume is < 300K or mkt cap ")
             skip_calc = 1    
             enrich_ticker_data(ticker_data, security, skip_calc, mm_count)
 
