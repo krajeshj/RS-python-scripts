@@ -253,9 +253,17 @@ def load_prices_from_tda(securities, api_key):
     create_price_history_file(tickers_dict)
 
 def convert_string_to_numeric(value_str):
-    # first covert to a string 
-    str(value_str)
+    if not isinstance(value_str, str):
+        # If value_str is not a string, assume it's already a numeric value
+        try:
+            numeric_value = float(value_str)
+            return numeric_value
+        except ValueError:
+            print(f"Error: Unable to convert '{value_str}' to a numeric value.")
+            return None
+
     value_str = value_str.upper()
+
     multipliers = {
         'K': 1_000,
         'M': 1_000_000,
