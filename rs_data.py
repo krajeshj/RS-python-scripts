@@ -253,6 +253,8 @@ def load_prices_from_tda(securities, api_key):
     create_price_history_file(tickers_dict)
 
 def convert_string_to_numeric(value_str):
+    # first covert to a string 
+    str(value_str)
     value_str = value_str.upper()
     multipliers = {
         'K': 1_000,
