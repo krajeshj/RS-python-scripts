@@ -283,7 +283,7 @@ def get_market_cap(ticker):
         return convert_string_to_numeric(market_cap)
     except Exception as e:
         print(f"Error occurred while fetching data: {e}")
-        return 1000
+        return 1000000001
 
 
 
