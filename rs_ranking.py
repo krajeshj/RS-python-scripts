@@ -214,7 +214,7 @@ def rankings():
     dfs = []
     dfs_mnrvni = []
     suffix = ''
-    df = pd.DataFrame(relative_strengths, columns=[TITLE_RANK, TITLE_TICKER, TITLE_MINERVINI, TITLE_SECTOR, TITLE_INDUSTRY, TITLE_UNIVERSE,  TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M, TITLE_RS])
+    df = pd.DataFrame(relative_strengths, columns=[TITLE_RANK, TITLE_TICKER, TITLE_MINERVINI, TITLE_SECTOR, TITLE_INDUSTRY, TITLE_UNIVERSE, TITLE_RS, TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M])
  
     df[TITLE_PERCENTILE] = pd.qcut(df[TITLE_RS], 100, precision=64, labels=False,duplicates='drop' )
     df[TITLE_1M] = pd.qcut(df[TITLE_1M], 100, precision=64, labels=False,duplicates='drop')
@@ -242,12 +242,10 @@ def rankings():
     dfm = dfm.sort_values(([TITLE_MINERVINI,  TITLE_RANK]), ascending=[False,True])
     
     
-
-    #dfm = dfm.groupby(([TITLE_SECTOR])).apply(lambda x: x.sort_values('Relative Strength'))
-
-
-
-    #dfm = dfmm.sort_values(([TITLE_RANK]), ascending=True)
+    print(df.head())
+ 
+    print(dfm.head())
+ 
 
 
     df.to_csv(os.path.join(DIR, "output", f'rs_stocks{suffix}.csv'), index = False)
@@ -296,7 +294,7 @@ def rankings():
 
     # remove industries with only one stock
     filtered_industries = filter(lambda i: len(i[TITLE_TICKERS]) > 1, list(industries.values()))
-    df_industries = pd.DataFrame(map(getDfView, filtered_industries), columns=[TITLE_RANK, TITLE_INDUSTRY, TITLE_SECTOR, TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M, TITLE_RS])
+    df_industries = pd.DataFrame(map(getDfView, filtered_industries), columns=[TITLE_RANK, TITLE_INDUSTRY, TITLE_SECTOR, TITLE_RS,  TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M])
  
     df_industries[TITLE_RS] = df_industries.apply(lambda row: getRsAverage(industries, row[TITLE_INDUSTRY], TITLE_RS), axis=1)
     df_industries[TITLE_1M] = df_industries.apply(lambda row: getRsAverage(industries, row[TITLE_INDUSTRY], TITLE_1M), axis=1)
