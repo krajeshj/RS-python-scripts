@@ -26,6 +26,7 @@ jobs:
               python relative-strength.py true false 
           - name: push to log git
             run: |
+              git config credential.helper manager
               git clone https://krajeshj:${{ secrets.RS_DAILY_LOG_PAT }}@github.com/krajeshj/RS-python-scripts.git
               rm ./RS-Daily-Log/output/* && cp -a ./output/. ./RS-Daily-Log/output
               cd RS-Daily-Log
