@@ -355,12 +355,12 @@ def get_yf_data(security, start_date, end_date):
                 df.head()
                 df.tail()
                 print("Error: 'Adj Close' column not found in DataFrame.")        
-            price_today = df["Adj Close"].tail(1).item()
+            price_today = df['Adj Close'].tail(1).item()
             #print("Price today", price_today)
         except:
             df.describe()
             df.head()
-            price_today = df["Adj Close"].tail(5).mean(skipna=True)
+            price_today = df['Adj Close'].tail(5).mean(skipna=True)
         """
         try:
             mkt_cap_today = get_market_cap(escaped_ticker)
