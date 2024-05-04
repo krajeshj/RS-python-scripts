@@ -329,7 +329,7 @@ def get_market_cap(ticker):
 
 
 def get_yf_data(security, start_date, end_date):
-      """  escaped_ticker = security["ticker"].replace(".","-")
+        """  escaped_ticker = security["ticker"].replace(".","-")
         df = yf.download(escaped_ticker, start=start_date, end=end_date)
        
 
@@ -392,12 +392,7 @@ def get_yf_data(security, start_date, end_date):
             m3_sma200_22day_in_uptrend = False
             mm_criteria = False
             MarketCap=0
- 
-
- 
- 
-        
-"""
+        """
         #if((price_today > 9) and (Avg_volume > 300000) and ( mkt_cap_today > 1_000_000_000)):
         #if((price_today > 9) and (Avg_volume > 300000) ):
         if(True):  
