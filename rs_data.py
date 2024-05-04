@@ -329,6 +329,8 @@ def get_market_cap(ticker):
 
 
 def get_yf_data(security, start_date, end_date):
+        
+        """
         escaped_ticker = security["ticker"].replace(".","-")
         df = yf.download(escaped_ticker, start=start_date, end=end_date, auto_adjust=True)            
 
@@ -361,7 +363,7 @@ def get_yf_data(security, start_date, end_date):
             df.describe()
             df.head()
             price_today = df['Adj Close'].tail(5).mean(skipna=True)
-        """
+        
         try:
             mkt_cap_today = get_market_cap(escaped_ticker)
             #print ("market cap was found for", escaped_ticker, "it was", mkt_cap_today)
