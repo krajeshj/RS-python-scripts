@@ -458,16 +458,16 @@ def load_prices_from_yahoo(securities, info = {}):
         tickers_dict[ticker] = ticker_data
     write_price_history_file(tickers_dict)
 
-def save_data(source, securities, api_key):
+def save_data(source, securities, api_key, info = {}):
     if source == "YAHOO":
-        load_prices_from_yahoo(securities)
+        load_prices_from_yahoo(securities, info)
     elif source == "TD_AMERITRADE":
-        load_prices_from_tda(securities, api_key)
+        load_prices_from_tda(securities, api_key, info)
 
 
 def main(forceTDA = False, api_key = API_KEY):
     dataSource = DATA_SOURCE if not forceTDA else "TD_AMERITRADE"
-    save_data(dataSource, SECURITIES, api_key)
+    save_data(dataSource, SECURITIES, api_key, {"forceTDA": forceTDA})
     write_ticker_info_file(TICKER_INFO_DICT)
 
 if __name__ == "__main__":
