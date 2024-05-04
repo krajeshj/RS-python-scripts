@@ -400,8 +400,9 @@ def get_yf_data(security, start_date, end_date):
  
         
 
-        if((price_today > 9) and (Avg_volume > 300000) and ( mkt_cap_today > 1_000_000_000)):
-            
+        #if((price_today > 9) and (Avg_volume > 300000) and ( mkt_cap_today > 1_000_000_000)):
+        if((price_today > 9) and (Avg_volume > 300000) ):
+          
             ticker_data = {}
             ticker = security["ticker"]
             escaped_ticker = escape_ticker(ticker)
