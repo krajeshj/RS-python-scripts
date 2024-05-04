@@ -414,7 +414,6 @@ def get_yf_data(security, start_date, end_date):
             lows = list(yahoo_response["Low"].values())
             highs = list(yahoo_response["High"].values())
             volumes = list(yahoo_response["Volume"].values())
-            ticker_data = {}
             candles = []
 
             for i in range(0, len(opens)):
