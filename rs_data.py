@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# Rajesh 
 import requests
 import json
 import time
@@ -67,8 +68,8 @@ DATA_SOURCE = cfg("DATA_SOURCE")
 def read_json(json_file):
     #with open(json_file, "r", encoding="utf-8") as fp:
     with open(json_file, "r") as fp:
-        #return json.load(fp)
-        return json.loads(fp.read())
+        return json.load(fp)
+        #return json.loads(fp.read())
 
 API_KEY = cfg("API_KEY")
 TD_API = "https://api.tdameritrade.com/v1/marketdata/%s/pricehistory"
@@ -234,6 +235,7 @@ def load_prices_from_tda(securities, api_key):
     load_times = []
 
     for idx, sec in enumerate(securities):
+        ticker = sec["ticker"]
         r_start = time.time()
         response = requests.get(
                 TD_API % sec["ticker"],
