@@ -349,6 +349,8 @@ def get_yf_data(security, start_date, end_date):
             price_today = df["Adj Close"].tail(1).item()
             #print("Price today", price_today)
         except:
+            df.describe()
+            df.head()
             price_today = df["Adj Close"].tail(5).mean(skipna=True)
         """
         try:
