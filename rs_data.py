@@ -329,8 +329,9 @@ def get_market_cap(ticker):
 
 
 def get_yf_data(security, start_date, end_date):
-        """  escaped_ticker = security["ticker"].replace(".","-")
-        df = yf.download(escaped_ticker, start=start_date, end=end_date)
+        escaped_ticker = security["ticker"].replace(".","-")
+        df = yf.download(escaped_ticker, start=start_date, end=end_date, auto_adjust=True)            
+
        
 
         #todays_liquidity = (df["Adj Close"].count()-1) * (df["averageVolume"].count()-1)
@@ -343,13 +344,13 @@ def get_yf_data(security, start_date, end_date):
         df.head()
         ticker_data = {}
         Avg_volume=df["Volume"].tail(50).mean(skipna=True)
-        #print("Average volume is ", Avg_volume)
+        print("Average volume is ", Avg_volume)
         try:
             price_today = df["Adj Close"].tail(1).item()
             #print("Price today", price_today)
         except:
             price_today = df["Adj Close"].tail(5).mean(skipna=True)
-
+        """
         try:
             mkt_cap_today = get_market_cap(escaped_ticker)
             #print ("market cap was found for", escaped_ticker, "it was", mkt_cap_today)
