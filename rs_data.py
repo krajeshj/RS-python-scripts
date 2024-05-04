@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# Rajesh 
 import requests
 import json
 import time
@@ -7,7 +6,7 @@ import bs4 as bs
 import datetime as dt
 import os
 import pandas_datareader.data as web
-import pandas_datareader as pdr
+#import pandas_datareader as pdr
 import pickle
 import requests
 import yaml
@@ -17,7 +16,7 @@ import dateutil.relativedelta
 import numpy as np
 import re
 from ftplib import FTP
-from yahoo_fin.stock_info import get_quote_table
+# from yahoo_fin.stock_info import get_quote_table
 from io import StringIO
 from time import sleep
 import sys
@@ -25,7 +24,6 @@ import sys
 from datetime import date
 from datetime import datetime
 
-import requests
 
 DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -331,7 +329,7 @@ def get_market_cap(ticker):
 
 
 def get_yf_data(security, start_date, end_date):
-        escaped_ticker = security["ticker"].replace(".","-")
+      """  escaped_ticker = security["ticker"].replace(".","-")
         df = yf.download(escaped_ticker, start=start_date, end=end_date)
        
 
@@ -399,7 +397,7 @@ def get_yf_data(security, start_date, end_date):
  
  
         
-
+"""
         #if((price_today > 9) and (Avg_volume > 300000) and ( mkt_cap_today > 1_000_000_000)):
         #if((price_today > 9) and (Avg_volume > 300000) ):
         if(True):  
