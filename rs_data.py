@@ -66,8 +66,8 @@ REFERENCE_TICKER = cfg("REFERENCE_TICKER")
 DATA_SOURCE = cfg("DATA_SOURCE")
 
 def read_json(json_file):
-    #with open(json_file, "r", encoding="utf-8") as fp:
-    with open(json_file, "r") as fp:
+    with open(json_file, "r", encoding="utf-8") as fp:
+    #with open(json_file, "r") as fp:
         return json.load(fp)
         #return json.loads(fp.read())
 
@@ -211,7 +211,7 @@ def print_data_progress(ticker, universe, idx, securities, error_text, elapsed_s
         remaining_string = f'{remaining.minutes}m {remaining.seconds}s'
     else:
         remaining_string = "?"
-    #print(f'{ticker} from {universe}{error_text} ({idx+1} / {len(securities)}). Elapsed: {elapsed.minutes}m {elapsed.seconds}s. Remaining: {remaining_string}.')
+    print(f'{ticker} from {universe}{error_text} ({idx+1} / {len(securities)}). Elapsed: {elapsed.minutes}m {elapsed.seconds}s. Remaining: {remaining_string}.')
 
 def get_remaining_seconds(all_load_times, idx, len):
     load_time_ma = pd.Series(all_load_times).rolling(np.minimum(idx+1, 25)).mean().tail(1).item()
@@ -226,6 +226,17 @@ def get_info_from_dict(dict, key):
     # fix unicode
     # value = value.replace("\u2014", " ")
     return value
+def load_ticker_info(ticker, info_dict):
+    escaped_ticker = escape_ticker(ticker)
+    info = yf.Ticker(escaped_ticker)
+    ticker_info = {
+        "info": {
+            "industry": get_info_from_dict(info.info, "industry"),
+            "sector": get_info_from_dict(info.info, "sector")
+        }
+    }
+    info_dict[ticker] = ticker_info
+
 def load_prices_from_tda(securities, api_key):
     print("*** Loading Stocks from TD Ameritrade ***")
     headers = {"Cache-Control" : "no-cache"}
