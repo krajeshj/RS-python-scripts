@@ -342,10 +342,17 @@ def get_yf_data(security, start_date, end_date):
         mm_count = 0
         df.describe()
         df.head()
+        df.columns
         ticker_data = {}
         Avg_volume=df["Volume"].tail(50).mean(skipna=True)
         print("Average volume is ", Avg_volume)
         try:
+            if "Adj Close" in df.columns:
+                # Retrieve "Adj Close" column data
+                adj_close = df["Adj Close"]
+                print(adj_close)
+            else:
+                print("Error: 'Adj Close' column not found in DataFrame.")        
             price_today = df["Adj Close"].tail(1).item()
             #print("Price today", price_today)
         except:
