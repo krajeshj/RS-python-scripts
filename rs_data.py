@@ -422,6 +422,8 @@ def get_yf_data(security, start_date, end_date):
 
             ticker_data["candles"] = candles
             skip_calc = 0
+            """ remove me when FIXME"""
+            mm_count = 8
             enrich_ticker_data(ticker_data, security,skip_calc, mm_count)
         else:
             #print("this stock's close price is less than $9 or volume is < 300K or mkt cap ")
