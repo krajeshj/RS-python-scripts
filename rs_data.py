@@ -238,21 +238,27 @@ def load_prices_from_tda(securities, api_key):
         ticker = sec["ticker"]
         r_start = time.time()
         response = requests.get(
-                TD_API % sec["ticker"],
+                TD_API % ticker,
                 params=params,
                 headers=headers
         )
+        ticker_data = response.json()
+        if not ticker in TICKER_INFO_DICT:
+            new_entries = new_entries + 1
+            load_ticker_info(ticker, TICKER_INFO_DICT)
+            if new_entries % 25 == 0:
+                write_ticker_info_file(TICKER_INFO_DICT)
+        ticker_data["industry"] = TICKER_INFO_DICT[ticker]["info"]["industry"]
         now = time.time()
         current_load_time = now - r_start
         load_times.append(current_load_time)
         remaining_seconds = get_remaining_seconds(load_times, idx, len(securities))
-        ticker_data = response.json()
         enrich_ticker_data(ticker_data, sec)
         tickers_dict[sec["ticker"]] = ticker_data
         error_text = f' Error with code {response.status_code}' if response.status_code != 200 else ''
         print_data_progress(sec["ticker"], sec["universe"], idx, securities, error_text, now - start, remaining_seconds)
 
-    create_price_history_file(tickers_dict)
+    write_price_history_file(tickers_dict)
 
 def convert_string_to_numeric(value_str):
     if not isinstance(value_str, str):
