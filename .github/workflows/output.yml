@@ -27,7 +27,7 @@ jobs:
           - name: push to log git
             run: |
               git config credential.helper manager
-              git clone https://krajeshj:${{ secrets.RS_DAILY_LOG_PAT }}@github.com/krajeshj/RS-python-scripts.git
+              git clone https://krajeshj:${{ secrets.RS_STOCKS_2024 }}@github.com/krajeshj/RS-python-scripts.git
               rm ./RS-Daily-Log/output/* && cp -a ./output/. ./RS-Daily-Log/output
               cd RS-Daily-Log
               git config user.name "CI" && git config user.email "ci@github.com"
