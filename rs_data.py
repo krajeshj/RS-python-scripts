@@ -340,7 +340,7 @@ def get_yf_data(security, start_date, end_date):
         #data_top = df.head()
         #print(data_top)
         
-        
+         
         mm_count = 0
         df.describe()
         df.head()
