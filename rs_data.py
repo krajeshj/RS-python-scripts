@@ -238,7 +238,7 @@ def load_ticker_info(ticker, info_dict):
             }
         }
         info_dict[ticker] = ticker_info
-     except Exception as e:
+    except Exception as e:
         print(f"Error fetching data for {escaped_ticker}: {e}")
         return None
 
