@@ -226,14 +226,21 @@ def get_info_from_dict(dict, key):
     return value
 def load_ticker_info(ticker, info_dict):
     escaped_ticker = escape_ticker(ticker)
-    info = yf.Ticker(escaped_ticker)
-    ticker_info = {
-        "info": {
-            "industry": get_info_from_dict(info.info, "industry"),
-            "sector": get_info_from_dict(info.info, "sector")
+    try: 
+        #fetch data for symbol
+        info = yf.Ticker(escaped_ticker)
+        if info.empty:
+            raise ValueError(f"No data found for symbol: {escaped_ticker}")
+        ticker_info = {
+            "info": {
+                "industry": get_info_from_dict(info.info, "industry"),
+                "sector": get_info_from_dict(info.info, "sector")
+            }
         }
-    }
-    info_dict[ticker] = ticker_info
+        info_dict[ticker] = ticker_info
+     except Exception as e:
+        print(f"Error fetching data for {escaped_ticker}: {e}")
+        return None
 
 def load_prices_from_tda(securities, api_key):
     print("*** Loading Stocks from TD Ameritrade ***")
