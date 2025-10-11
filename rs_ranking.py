@@ -327,6 +327,18 @@ def rankings():
     df_sorted_rmv.to_csv(os.path.join(DIR, "output", "rs_stocks_by_rmv.csv"), index=False)
     print(f"\nAll stocks sorted by RMV (lowest first): {len(df_sorted_rmv)} stocks")
     print(df_sorted_rmv[[TITLE_RANK, TITLE_TICKER, TITLE_RMV, TITLE_RS, TITLE_SECTOR, TITLE_INDUSTRY]].head(10))
+    
+    # Create rmv_rs.csv with all requested columns, filtered for RMV <= 0.15
+    df_rmv_rs = df[df[TITLE_RMV] <= 0.15].copy()
+    if not df_rmv_rs.empty:
+        df_rmv_rs = df_rmv_rs.sort_values(TITLE_RMV, ascending=True)
+        # Select columns: RMV, Ticker, Minervini, Sector, Industry, Percentile, Relative Strength, 1 Month Ago
+        df_rmv_rs_output = df_rmv_rs[[TITLE_RMV, TITLE_TICKER, TITLE_MINERVINI, TITLE_SECTOR, TITLE_INDUSTRY, TITLE_PERCENTILE, TITLE_RS, TITLE_1M]].copy()
+        df_rmv_rs_output.to_csv(os.path.join(DIR, "output", "rmv_rs.csv"), index=False)
+        print(f"\nRMV-RS list (RMV <= 0.15): {len(df_rmv_rs_output)} stocks")
+        print(df_rmv_rs_output.head(10))
+    else:
+        print("\nNo stocks found with RMV <= 0.15 for rmv_rs.csv")
     try:
         dfs.append(df)
         dfs_mnrvni.append(dfm)
