@@ -10,17 +10,17 @@ def check_python_version():
     print(f"Python version: {version.major}.{version.minor}.{version.micro}")
     
     if version.major < 3:
-        print("❌ Python 3 is required")
+        print("X Python 3 is required")
         return False
     elif version.major == 3 and version.minor < 8:
-        print("❌ Python 3.8+ is required")
+        print("X Python 3.8+ is required")
         return False
     elif version.major == 3 and version.minor == 8:
-        print("⚠️  Python 3.8 detected - some packages may have compatibility issues")
+        print("! Python 3.8 detected - some packages may have compatibility issues")
         print("   Consider upgrading to Python 3.9+ for better compatibility")
         return True
     else:
-        print("✅ Python version is compatible")
+        print("OK Python version is compatible")
         return True
 
 def check_required_packages():
@@ -46,9 +46,9 @@ def check_required_packages():
                 import yaml
             else:
                 __import__(package)
-            print(f"✅ {package}")
+            print(f"OK {package}")
         except ImportError as e:
-            print(f"❌ {package}: {e}")
+            print(f"X {package}: {e}")
             failed_imports.append(package)
     
     return len(failed_imports) == 0, failed_imports
@@ -62,9 +62,9 @@ if __name__ == "__main__":
     
     print("\n=== Summary ===")
     if version_ok and packages_ok:
-        print("✅ All checks passed! The program should work correctly.")
+        print("OK All checks passed! The program should work correctly.")
     else:
-        print("❌ Some issues found:")
+        print("X Some issues found:")
         if not version_ok:
             print("   - Python version incompatible")
         if not packages_ok:
