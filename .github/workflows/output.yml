@@ -20,14 +20,9 @@ jobs:
         run: |
           python -m pip install -r requirements.txt
           python relative-strength.py true false 
-      - name: push to log git 
+      - name: commit and push results
         run: |
-          git config credential.helper manager 
-          git clone https://krajeshj:${{ secrets.RS_STOCKS_2024 }}@github.com/krajeshj/RS-python-scripts.git
-          git restore --source=HEAD :/
-          rm ./RS-Daily-Log/output/* && cp -a ./output/. ./RS-Daily-Log/output
-          cd RS-Daily-Log
-          git config user.name "CI" && git config user.email "ci@github.com"
-          git add --all
-          git commit -m "CI output update" || echo "nothing to commit"
-          git push || echo "nothing to push"
+          git config user.name "GitHub Actions" && git config user.email "actions@github.com"
+          git add output/*.csv
+          git commit -m "Update RS analysis results - $(date)" || echo "No changes to commit"
+          git push || echo "Nothing to push"
