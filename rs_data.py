@@ -10,7 +10,13 @@ import pandas_datareader.data as web
 import pickle
 import requests
 import yaml
-import yfinance as yf
+try:
+    import yfinance as yf
+except ImportError as e:
+    print(f"Error importing yfinance: {e}")
+    print("This may be due to Python version compatibility issues.")
+    print("Please ensure you're using Python 3.9+ or install compatible versions.")
+    raise
 import pandas as pd
 import dateutil.relativedelta
 import numpy as np
