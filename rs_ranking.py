@@ -44,6 +44,7 @@ TITLE_1M = "1 Month Ago"
 TITLE_3M = "3 Months Ago"
 TITLE_6M = "6 Months Ago"
 TITLE_RS = "Relative Strength"
+TITLE_RMV = "RMV"
 
 if not os.path.exists('output'):
     os.makedirs('output')
@@ -51,6 +52,62 @@ if not os.path.exists('output'):
 def read_json(json_file):
     with open(json_file, "r") as fp:
         return json.load(fp)
+
+def calculate_rmv(closes: pd.Series, lookback_period: int = 15):
+    """
+    Calculate Relative Market Volatility (RMV) over a lookback period.
+    
+    Steps:
+    1. Determine the lookback period (default: 15 days)
+    2. Calculate daily volatility using standard deviation of price changes
+    3. Smooth the volatility by averaging over the lookback period
+    4. Calculate RMV as current volatility / smoothed volatility
+    
+    Args:
+        closes: Pandas Series of closing prices
+        lookback_period: Number of days to look back (default: 15)
+    
+    Returns:
+        RMV value (float)
+    """
+    try:
+        if len(closes) < lookback_period + 1:
+            return 1.0  # Default to 1.0 if insufficient data
+        
+        # Calculate daily price changes (returns)
+        price_changes = closes.pct_change().dropna()
+        
+        if len(price_changes) < lookback_period:
+            return 1.0
+        
+        # Calculate daily volatility (standard deviation of price changes)
+        daily_volatility = price_changes.rolling(window=lookback_period).std()
+        
+        # Get current volatility (most recent day)
+        current_volatility = daily_volatility.iloc[-1]
+        
+        # Calculate smoothed volatility (average of daily volatilities over lookback period)
+        smoothed_volatility = daily_volatility.tail(lookback_period).mean()
+        
+        # Avoid division by zero
+        if smoothed_volatility == 0 or pd.isna(smoothed_volatility):
+            return 1.0
+        
+        # Calculate RMV
+        rmv = current_volatility / smoothed_volatility
+        
+        # Handle NaN or infinite values
+        if pd.isna(rmv) or np.isinf(rmv):
+            return 1.0
+        
+        # Cap RMV at reasonable values (0.01 to 10.0)
+        rmv = max(0.01, min(10.0, rmv))
+        
+        return round(rmv, 4)
+        
+    except Exception as e:
+        print(f"Error calculating RMV: {e}")
+        return 1.0
 
 def relative_strength_orig(closes: pd.Series, closes_ref: pd.Series):
     rs_stock = strength(closes)
@@ -165,6 +222,7 @@ def rankings():
                     closes_series = pd.Series(closes)
                     closes_ref_series = pd.Series(closes_ref)
                     rs = relative_strength(closes_series, closes_ref_series)
+                    rmv = calculate_rmv(closes_series)
                     month = 20
                     tmp_percentile = 100
                     rs1m = relative_strength(closes_series.head(-1*month), closes_ref_series.head(-1*month))
@@ -178,7 +236,7 @@ def rankings():
                         # stocks output
                         ranks.append(len(ranks)+1)
                         #relative_strengths.append((0, ticker, sector, industry, json[ticker]["universe"], rs, tmp_percentile, rs1m, rs3m, rs6m))
-                        relative_strengths.append((0, ticker, json[ticker]["minervini"], sector, industry, json[ticker]["universe"], rs, tmp_percentile, rs1m, rs3m, rs6m))                     
+                        relative_strengths.append((0, ticker, json[ticker]["minervini"], sector, industry, json[ticker]["universe"], rs, tmp_percentile, rs1m, rs3m, rs6m, rmv))                     
                         stock_rs[ticker] = rs
 
                         # industries output
@@ -214,7 +272,7 @@ def rankings():
     dfs = []
     dfs_mnrvni = []
     suffix = ''
-    df = pd.DataFrame(relative_strengths, columns=[TITLE_RANK, TITLE_TICKER, TITLE_MINERVINI, TITLE_SECTOR, TITLE_INDUSTRY, TITLE_UNIVERSE, TITLE_RS, TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M])
+    df = pd.DataFrame(relative_strengths, columns=[TITLE_RANK, TITLE_TICKER, TITLE_MINERVINI, TITLE_SECTOR, TITLE_INDUSTRY, TITLE_UNIVERSE, TITLE_RS, TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M, TITLE_RMV])
  
     df[TITLE_PERCENTILE] = pd.qcut(df[TITLE_RS], 100, precision=64, labels=False,duplicates='drop' )
     df[TITLE_1M] = pd.qcut(df[TITLE_1M], 100, precision=64, labels=False,duplicates='drop')
@@ -250,6 +308,25 @@ def rankings():
 
     df.to_csv(os.path.join(DIR, "output", f'rs_stocks{suffix}.csv'), index = False)
     dfm.to_csv(os.path.join(DIR, "output", f'rs_stocks_minervini.csv'), index = False)
+    
+    # Create low RMV list (RMV <= 0.15, sorted by RMV ascending)
+    df_low_rmv = df[df[TITLE_RMV] <= 0.15].copy()
+    if not df_low_rmv.empty:
+        df_low_rmv = df_low_rmv.sort_values(TITLE_RMV, ascending=True)
+        df_low_rmv[TITLE_RANK] = range(1, len(df_low_rmv) + 1)  # Re-rank by RMV
+        df_low_rmv.to_csv(os.path.join(DIR, "output", "rs_stocks_low_rmv.csv"), index=False)
+        print(f"\nLow RMV stocks (RMV <= 0.15): {len(df_low_rmv)} stocks")
+        print(df_low_rmv[[TITLE_RANK, TITLE_TICKER, TITLE_RMV, TITLE_RS, TITLE_SECTOR, TITLE_INDUSTRY]].head(10))
+    else:
+        print("\nNo stocks found with RMV <= 0.15")
+    
+    # Also create a list showing all stocks sorted by RMV (for reference)
+    df_sorted_rmv = df.copy()
+    df_sorted_rmv = df_sorted_rmv.sort_values(TITLE_RMV, ascending=True)
+    df_sorted_rmv[TITLE_RANK] = range(1, len(df_sorted_rmv) + 1)  # Re-rank by RMV
+    df_sorted_rmv.to_csv(os.path.join(DIR, "output", "rs_stocks_by_rmv.csv"), index=False)
+    print(f"\nAll stocks sorted by RMV (lowest first): {len(df_sorted_rmv)} stocks")
+    print(df_sorted_rmv[[TITLE_RANK, TITLE_TICKER, TITLE_RMV, TITLE_RS, TITLE_SECTOR, TITLE_INDUSTRY]].head(10))
     try:
         dfs.append(df)
         dfs_mnrvni.append(dfm)
