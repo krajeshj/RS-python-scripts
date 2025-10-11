@@ -16,7 +16,7 @@ import dateutil.relativedelta
 import numpy as np
 import re
 from ftplib import FTP
-# from yahoo_fin.stock_info import get_quote_table
+from yahoo_fin.stock_info import get_quote_table
 from io import StringIO
 from time import sleep
 import sys
@@ -416,11 +416,41 @@ def get_yf_data(security, start_date, end_date):
         """
         #if((price_today > 9) and (Avg_volume > 300000) and ( mkt_cap_today > 1_000_000_000)):
         #if((price_today > 9) and (Avg_volume > 300000) ):
-        if(True):  
+        try:
             ticker_data = {}
             ticker = security["ticker"]
             escaped_ticker = escape_ticker(ticker)
-            df = yf.download(escaped_ticker, start=start_date, end=end_date, auto_adjust=True)            
+            
+            # Add small delay to avoid rate limiting
+            time.sleep(0.1)
+            
+            df = yf.download(escaped_ticker, start=start_date, end=end_date, auto_adjust=True, progress=False)            
+            
+            # Check if we got valid data
+            if df.empty:
+                print(f"No data received for {escaped_ticker}")
+                ticker_data["candles"] = []
+                skip_calc = 1
+                mm_count = 0
+                enrich_ticker_data(ticker_data, security, skip_calc, mm_count)
+                return ticker_data
+            
+            # Handle multi-level columns from yfinance
+            if isinstance(df.columns, pd.MultiIndex):
+                # Flatten multi-level columns to single level
+                df.columns = df.columns.get_level_values(0)
+            
+            # Check if we have the required columns
+            required_columns = ['Open', 'High', 'Low', 'Close', 'Volume']
+            missing_columns = [col for col in required_columns if col not in df.columns]
+            if missing_columns:
+                print(f"Missing columns for {escaped_ticker}: {missing_columns}")
+                ticker_data["candles"] = []
+                skip_calc = 1
+                mm_count = 0
+                enrich_ticker_data(ticker_data, security, skip_calc, mm_count)
+                return ticker_data
+            
             yahoo_response = df.to_dict() 
             timestamps = list(yahoo_response["Open"].keys())
             timestamps = list(map(lambda timestamp: int(timestamp.timestamp()), timestamps))
@@ -446,9 +476,13 @@ def get_yf_data(security, start_date, end_date):
             """ remove me when FIXME"""
             mm_count = 8
             enrich_ticker_data(ticker_data, security,skip_calc, mm_count)
-        else:
-            #print("this stock's close price is less than $9 or volume is < 300K or mkt cap ")
-            skip_calc = 1    
+            
+        except Exception as e:
+            print(f"Error downloading data for {escaped_ticker}: {e}")
+            ticker_data = {}
+            ticker_data["candles"] = []
+            skip_calc = 1
+            mm_count = 0
             enrich_ticker_data(ticker_data, security, skip_calc, mm_count)
 
         return ticker_data

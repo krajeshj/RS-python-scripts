@@ -294,7 +294,13 @@ def rankings():
 
     # remove industries with only one stock
     filtered_industries = filter(lambda i: len(i[TITLE_TICKERS]) > 1, list(industries.values()))
-    df_industries = pd.DataFrame(map(getDfView, filtered_industries), columns=[TITLE_RANK, TITLE_INDUSTRY, TITLE_SECTOR, TITLE_RS,  TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M])
+    filtered_industries_list = list(filtered_industries)
+    
+    if len(filtered_industries_list) == 0:
+        print("No industries with multiple stocks found. Skipping industry analysis.")
+        return dfs
+    
+    df_industries = pd.DataFrame(map(getDfView, filtered_industries_list), columns=[TITLE_RANK, TITLE_INDUSTRY, TITLE_SECTOR, TITLE_RS,  TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M])
  
     df_industries[TITLE_RS] = df_industries.apply(lambda row: getRsAverage(industries, row[TITLE_INDUSTRY], TITLE_RS), axis=1)
     df_industries[TITLE_1M] = df_industries.apply(lambda row: getRsAverage(industries, row[TITLE_INDUSTRY], TITLE_1M), axis=1)
