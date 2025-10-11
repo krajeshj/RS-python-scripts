@@ -1,0 +1,16 @@
+name: Test Workflow
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Test
+        run: |
+          echo "Workflow is working!"
+          echo "Current time: $(date)"
+          echo "Commit: ${{ github.sha }}"
