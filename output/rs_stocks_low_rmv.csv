@@ -1,34 +1,36 @@
 Rank,Ticker,Minervini,Sector,Industry,Exchange,Relative Strength,Percentile,1 Month Ago,3 Months Ago,6 Months Ago,RMV
-1,PCTTU,8,Industrials,Pollution & Treatment Controls,NASDAQ,1.171708279383226,85,89,97,27,0.0
-2,SPNS,8,Technology,Software—Application,NASDAQ,1.3429894606384978,92,90,30,41,1.27
-3,PRO,8,Technology,Software—Application,NYSE,1.1687463630078592,85,82,2,9,1.66
-4,HSII,8,Industrials,Staffing & Employment Services,NASDAQ,1.207586919465948,87,84,57,60,1.77
-5,EA,8,Communication Services,Electronic Gaming & Multimedia,NASDAQ,1.1721659957880637,85,86,80,69,1.99
-6,ODP,8,Consumer Cyclical,Specialty Retail,NASDAQ,1.2380660822242164,88,88,11,7,2.17
-7,MRUS,8,Healthcare,Biotechnology,NASDAQ,1.6787838456022768,96,96,92,23,2.43
-8,GHLD,8,Financial Services,Mortgage Finance,NYSE,1.1864952857498952,86,75,93,28,2.48
-9,PINC,8,Healthcare,Health Information Services,NASDAQ,1.1855847072556347,86,86,67,84,2.52
-10,HI,8,Industrials,Specialty Industrial Machinery,NYSE,1.2385402416354707,88,50,4,3,2.83
-11,FORTY,8,Technology,Information Technology Services,NASDAQ,1.358449443472256,92,87,89,81,2.85
-12,PLYM,8,Real Estate,REIT—Industrial,NYSE,1.2571390257604973,89,84,10,20,6.88
-13,TCI,8,Real Estate,Real Estate Services,NYSE,1.1968824549319952,86,83,91,86,7.55
-14,PUK,8,Financial Services,Insurance—Life,NYSE,1.215011664340662,87,87,91,93,9.28
-15,BCV,8,Financial Services,Asset Management,NYSE MKT,1.1704466145164876,85,81,77,73,9.83
-16,KF,8,Financial Services,Asset Management,NYSE,1.3897028673747933,93,87,87,48,10.09
-17,DB,8,Financial Services,Banks—Regional,NYSE,1.310770221454876,91,93,97,97,10.2
-18,SWKH,8,Financial Services,Asset Management,NASDAQ,1.1807590524729696,85,78,88,94,10.5
-19,BCS,8,Financial Services,Banks—Diversified,NYSE,1.1704647454188684,85,86,92,94,10.59
-20,CSGS,8,Technology,Software—Infrastructure,NASDAQ,1.1902215864552494,86,63,64,88,10.77
-21,KEN,8,Utilities,Utilities—Regulated Electric,NYSE,1.4288325455311153,94,88,95,94,10.81
-22,KEP,8,Utilities,Utilities—Regulated Electric,NYSE,1.3602338261458697,92,87,96,91,11.06
-23,EMF,8,Financial Services,Asset Management,NYSE,1.186152046971927,86,82,81,77,11.1
-24,SBS,8,Utilities,Utilities—Regulated Water,NYSE,1.2032143228614294,87,85,76,90,11.58
-25,TIMB,8,Communication Services,Telecom Services,NYSE,1.2481860822393558,88,87,92,88,11.65
-26,BCH,8,Financial Services,Banks—Regional,NYSE,1.1879350548635796,86,71,73,94,12.09
-27,OTEX,8,Technology,Software—Application,NASDAQ,1.1759242725745658,85,84,59,36,12.5
-28,CYBR,8,Technology,Software—Infrastructure,NASDAQ,1.2483031211728082,88,89,81,80,12.84
-29,WILC,8,Consumer Defensive,Food Distribution,NASDAQ,1.1935422438494128,86,86,96,93,12.93
-30,WF,8,Financial Services,Banks—Regional,NYSE,1.2300180580690971,88,89,95,85,13.3
-31,BBVA,8,Financial Services,Banks—Diversified,NYSE,1.3105335221673837,91,92,96,96,14.34
-32,MCK,8,Healthcare,Medical Distribution,NYSE,1.1827635879213765,85,73,65,83,14.66
-33,ASML,8,Technology,Semiconductor Equipment & Materials,NASDAQ,1.29063355386382,90,83,34,41,14.68
+1,SENEB,8,Consumer Defensive,Packaged Foods,NASDAQ,1.1978122090237102,85,85,91,94,0.0
+2,PCTTU,8,Industrials,Pollution & Treatment Controls,NASDAQ,1.223547179757512,87,87,96,19,0.0
+3,SPNS,8,Technology,Software—Application,NASDAQ,1.3175627709348179,91,91,93,33,1.14
+4,ODP,8,Consumer Cyclical,Specialty Retail,NASDAQ,1.2200829391625316,87,90,31,6,1.86
+5,GHLD,8,Financial Services,Mortgage Finance,NYSE,1.206492881207589,86,83,94,51,2.19
+6,FORTY,8,Technology,Information Technology Services,NASDAQ,1.338356037667857,91,92,92,83,2.35
+7,MRUS,8,Healthcare,Biotechnology,NASDAQ,1.6893370690616187,97,96,94,20,2.55
+8,PLYM,8,Real Estate,REIT—Industrial,NYSE,1.2719322521660534,89,83,8,23,5.52
+9,TCI,8,Real Estate,Real Estate Services,NYSE,1.2196520337773888,87,86,94,86,6.55
+10,ING,8,Financial Services,Banks—Diversified,NYSE,1.200423103829637,86,83,92,93,6.84
+11,CSGS,8,Technology,Software—Infrastructure,NASDAQ,1.1891806057312955,85,66,57,87,8.31
+12,PUK,8,Financial Services,Insurance—Life,NYSE,1.2340404720453761,88,87,92,93,9.01
+13,NWG,8,Financial Services,Banks—Diversified,NYSE,1.1883207983498156,85,85,91,96,9.08
+14,BBVA,8,Financial Services,Banks—Diversified,NYSE,1.370483157237427,92,91,95,95,9.62
+15,BCS,8,Financial Services,Banks—Diversified,NYSE,1.1882611912373295,85,86,92,94,9.78
+16,RNA,8,Healthcare,Biotechnology,NASDAQ,1.609778426286611,96,93,87,16,9.8
+17,EMF,8,Financial Services,Asset Management,NYSE,1.1885476379385649,85,81,79,72,10.07
+18,DB,8,Financial Services,Banks—Regional,NYSE,1.346672949581209,91,93,97,97,10.18
+19,KEN,8,Utilities,Utilities—Regulated Electric,NYSE,1.4656465557064133,94,91,95,94,10.67
+20,SBS,8,Utilities,Utilities—Regulated Water,NYSE,1.222892470540189,87,83,78,89,10.92
+21,KEP,8,Utilities,Utilities—Regulated Electric,NYSE,1.400983720958512,93,86,96,94,11.11
+22,TIMB,8,Communication Services,Telecom Services,NYSE,1.2896704967170056,90,87,89,84,11.25
+23,WILC,8,Consumer Defensive,Food Distribution,NASDAQ,1.23395852545808,88,87,96,92,11.3
+24,SWKH,8,Financial Services,Asset Management,NASDAQ,1.2287189265694487,87,89,87,95,11.61
+25,MT,8,Basic Materials,Steel,NYSE,1.191642039111126,85,86,83,87,11.65
+26,CYBR,8,Technology,Software—Infrastructure,NASDAQ,1.2257307585989388,87,89,82,71,12.03
+27,BCH,8,Financial Services,Banks—Regional,NYSE,1.241561759161275,88,77,68,93,12.26
+28,LOGI,8,Technology,Computer Hardware,NASDAQ,1.203559134448571,86,75,64,30,12.36
+29,WF,8,Financial Services,Banks—Regional,NYSE,1.212271439594367,86,85,95,85,12.57
+30,NTES,8,Communication Services,Internet Content & Information,NASDAQ,1.1866641344866444,85,88,86,89,12.98
+31,ASML,8,Technology,Semiconductor Equipment & Materials,NASDAQ,1.276759444539267,89,75,34,34,13.67
+32,AMX,8,Communication Services,Telecom Services,NYSE,1.2587210612806274,88,86,75,72,14.13
+33,BSAC,8,Financial Services,Banks—Regional,NYSE,1.210848941211368,86,81,65,91,14.26
+34,ESLT,8,Industrials,Aerospace & Defense,NASDAQ,1.2530421415960085,88,92,96,98,14.55
+35,AVDL,8,Healthcare,Drug Manufacturers—Specialty & Generic,NASDAQ,1.449760447910633,94,90,82,18,14.79
