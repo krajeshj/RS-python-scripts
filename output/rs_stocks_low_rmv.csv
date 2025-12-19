@@ -1,46 +1,41 @@
 Rank,Ticker,Minervini,Sector,Industry,Exchange,Relative Strength,Percentile,1 Month Ago,3 Months Ago,6 Months Ago,RMV
-1,BBLGW,8,Healthcare,Medical Devices,NASDAQ,1.4193687724230308,92,74,0,0,0.11
-2,FORTY,8,Technology,Information Technology Services,NASDAQ,1.416136465086911,92,92,89,91,0.95
-3,MRUS,8,Healthcare,Biotechnology,NASDAQ,1.6228618722669093,95,96,86,69,1.45
-4,CDTX,8,Healthcare,Biotechnology,NASDAQ,6.402194323964424,99,99,99,99,2.14
-5,EXAS,8,Healthcare,Diagnostics & Research,NASDAQ,1.7737337536174511,97,90,23,54,2.56
-6,RNA,8,Healthcare,Biotechnology,NASDAQ,1.8986635849697207,98,96,80,9,2.97
-7,ING,8,Financial Services,Banks—Diversified,NYSE,1.225883635698151,86,84,86,84,7.28
-8,AVDL,8,Healthcare,Drug Manufacturers—Specialty & Generic,NASDAQ,1.7020189201879994,96,97,93,18,7.3
-9,NWG,8,Financial Services,Banks—Diversified,NYSE,1.2564569717349436,87,81,76,93,7.97
-10,PUK,8,Financial Services,Insurance—Life,NYSE,1.2400100995992624,86,86,87,91,8.31
-11,DB,8,Financial Services,Banks—Regional,NYSE,1.2828226634764046,88,88,94,96,8.35
-12,BCS,8,Financial Services,Banks—Diversified,NYSE,1.295361922663262,89,83,87,93,8.53
-13,BBVA,8,Financial Services,Banks—Diversified,NYSE,1.414310929280904,92,91,92,93,9.51
-14,TD,8,Financial Services,Banks—Diversified,NYSE,1.2651113259870783,88,83,80,86,10.02
-15,KF,8,Financial Services,Asset Management,NYSE,1.2598966269140353,88,92,84,84,10.26
-16,CM,8,Financial Services,Banks—Diversified,NYSE,1.219512651172622,85,85,80,84,10.27
-17,ROST,8,Consumer Cyclical,Apparel Retail,NASDAQ,1.2162909748653736,85,67,47,18,10.51
-18,KEP,8,Utilities,Utilities—Regulated Electric,NYSE,1.5827688574293846,95,94,89,98,10.78
-19,WF,8,Financial Services,Banks—Regional,NYSE,1.2137081946577013,85,86,91,95,11.43
-20,BCH,8,Financial Services,Banks—Regional,NYSE,1.2544509844385459,87,89,66,85,11.52
-21,CAH,8,Healthcare,Medical Distribution,NYSE,1.2955244154994356,89,92,54,92,11.7
-22,HQL,8,Financial Services,Asset Management,NYSE,1.218840716234865,85,87,60,36,12.0
-23,MT,8,Basic Materials,Steel,NYSE,1.3434173373746783,90,86,81,83,12.02
-24,JNJ,8,Healthcare,Drug Manufacturers—General,NYSE,1.2157091120438817,85,81,65,34,12.15
-25,KEN,8,Utilities,Utilities—Regulated Electric,NYSE,1.6418172160456599,95,95,90,95,12.8
-26,RYAAY,8,Industrials,Airlines,NASDAQ,1.2529464405745245,87,73,59,85,13.34
-27,ARGX,8,Healthcare,Biotechnology,NASDAQ,1.2215167806107912,85,91,79,37,13.6
-28,SWKH,8,Financial Services,Asset Management,NASDAQ,1.28508097943063,89,88,78,95,13.61
-29,GM,8,Consumer Cyclical,Auto Manufacturers,NYSE,1.3891808694037093,92,84,69,48,13.66
-30,ISTR,8,Financial Services,Banks—Regional,NASDAQ,1.2275830830452341,86,69,73,61,13.71
-31,TNL,8,Consumer Cyclical,Travel Services,NYSE,1.2394160313440803,86,71,79,70,13.77
-32,BWFG,8,Financial Services,Banks—Regional,NASDAQ,1.2446537354402742,86,82,89,84,13.77
-33,MRSN,8,Healthcare,Biotechnology,NASDAQ,2.685035993102392,99,98,0,0,13.8
-34,C,8,Financial Services,Banks—Diversified,NYSE,1.2364233873722514,86,80,88,87,13.93
-35,GMAB,8,Healthcare,Biotechnology,NASDAQ,1.2576812012665988,87,87,85,22,14.07
-36,CMA,8,Financial Services,Banks—Regional,NYSE,1.276193722755398,88,75,67,49,14.2
-37,MCY,8,Financial Services,Insurance—Property & Casualty,NYSE,1.242842905276604,86,87,82,64,14.22
-38,WILC,8,Consumer Defensive,Food Distribution,NASDAQ,1.4214099685361476,92,89,82,93,14.32
-39,FRAF,8,Financial Services,Banks—Regional,NASDAQ,1.3289297270082685,90,82,90,62,14.35
-40,LVS,8,Consumer Cyclical,Resorts & Casinos,NYSE,1.2681647574473351,88,88,75,45,14.37
-41,OUT,8,Real Estate,REIT—Specialty,NYSE,1.3125181076249146,89,84,65,41,14.42
-42,MYE,8,Consumer Cyclical,Packaging & Containers,NYSE,1.2578239726915827,87,84,79,79,14.44
-43,GSL,8,Industrials,Marine Shipping,NYSE,1.210618942994856,85,89,86,69,14.48
-44,ASX,8,Technology,Semiconductors,NYSE,1.297861026663641,89,91,70,52,14.58
-45,UTHR,8,Healthcare,Biotechnology,NASDAQ,1.3108655560594555,89,91,85,12,14.87
+1,BBLGW,8,Healthcare,Medical Devices,NASDAQ,1.414682407603975,92,74,0,0,0.0
+2,MRUS,8,Healthcare,Biotechnology,NASDAQ,1.5966911643661357,95,96,88,70,1.46
+3,CDTX,8,Healthcare,Biotechnology,NASDAQ,5.349640769855235,99,99,99,99,2.18
+4,EXAS,8,Healthcare,Diagnostics & Research,NASDAQ,1.7526374567965928,97,95,25,52,2.53
+5,RNA,8,Healthcare,Biotechnology,NASDAQ,1.886346754873506,97,96,84,10,2.85
+6,AVDL,8,Healthcare,Drug Manufacturers—Specialty & Generic,NASDAQ,1.6919192993083643,96,97,93,14,3.47
+7,FORTY,8,Technology,Information Technology Services,NASDAQ,1.5010813407331491,93,92,89,94,4.83
+8,NWG,8,Financial Services,Banks—Diversified,NYSE,1.256935114853046,87,81,78,92,7.59
+9,ING,8,Financial Services,Banks—Diversified,NYSE,1.2437161115186839,86,82,87,85,7.86
+10,PUK,8,Financial Services,Insurance—Life,NYSE,1.2459617733888018,86,85,87,88,8.24
+11,BCS,8,Financial Services,Banks—Diversified,NYSE,1.318201941325062,90,83,87,92,8.49
+12,DB,8,Financial Services,Banks—Regional,NYSE,1.3194156787516704,90,89,94,95,8.79
+13,BBVA,8,Financial Services,Banks—Diversified,NYSE,1.4524410686190254,93,91,93,92,9.66
+14,TD,8,Financial Services,Banks—Diversified,NYSE,1.278782791266099,88,83,78,87,10.19
+15,CM,8,Financial Services,Banks—Diversified,NYSE,1.2169186923187265,85,83,80,85,10.34
+16,KEP,8,Utilities,Utilities—Regulated Electric,NYSE,1.5343342600187004,94,93,89,98,10.42
+17,ROST,8,Consumer Cyclical,Apparel Retail,NASDAQ,1.2155599943240651,85,69,57,17,10.52
+18,WF,8,Financial Services,Banks—Regional,NYSE,1.2204356375877763,85,86,91,95,11.2
+19,KF,8,Financial Services,Asset Management,NYSE,1.2945649961130565,89,92,85,86,11.57
+20,CAH,8,Healthcare,Medical Distribution,NYSE,1.3108676970323967,89,92,63,92,11.92
+21,RYAAY,8,Industrials,Airlines,NASDAQ,1.2899851558875992,88,73,66,87,12.07
+22,MT,8,Basic Materials,Steel,NYSE,1.337869364509674,90,88,82,83,12.22
+23,BCH,8,Financial Services,Banks—Regional,NYSE,1.2700520610305708,88,89,72,86,12.35
+24,KEN,8,Utilities,Utilities—Regulated Electric,NYSE,1.693022365305085,96,95,90,96,12.78
+25,SWKH,8,Financial Services,Asset Management,NASDAQ,1.2705685662207955,88,88,80,94,13.13
+26,MRSN,8,Healthcare,Biotechnology,NASDAQ,2.7204147858079004,99,98,0,0,13.38
+27,TNL,8,Consumer Cyclical,Travel Services,NYSE,1.2294906995644501,85,72,80,69,13.73
+28,C,8,Financial Services,Banks—Diversified,NYSE,1.24024850711684,86,82,87,86,13.79
+29,ISTR,8,Financial Services,Banks—Regional,NASDAQ,1.216645055999449,85,69,74,55,13.87
+30,GSL,8,Industrials,Marine Shipping,NYSE,1.2230259223211224,85,89,87,69,13.91
+31,CMA,8,Financial Services,Banks—Regional,NYSE,1.292355465091215,89,78,69,53,14.06
+32,GM,8,Consumer Cyclical,Auto Manufacturers,NYSE,1.3945043644555397,92,84,71,47,14.06
+33,GMAB,8,Healthcare,Biotechnology,NASDAQ,1.2456978444117763,86,87,87,25,14.19
+34,MYE,8,Consumer Cyclical,Packaging & Containers,NYSE,1.2735523952293886,88,85,80,77,14.32
+35,LVS,8,Consumer Cyclical,Resorts & Casinos,NYSE,1.2803973527631094,88,87,74,36,14.33
+36,WILC,8,Consumer Defensive,Food Distribution,NASDAQ,1.4415172191768213,92,91,76,94,14.49
+37,MCY,8,Financial Services,Insurance—Property & Casualty,NYSE,1.2192557644983588,85,87,82,72,14.5
+38,OUT,8,Real Estate,REIT—Specialty,NYSE,1.2975292870905633,89,83,54,41,14.54
+39,BWFG,8,Financial Services,Banks—Regional,NASDAQ,1.2770452572797037,88,83,90,84,14.68
+40,ASX,8,Technology,Semiconductors,NYSE,1.2994425465886676,89,90,69,48,14.78
