@@ -15,7 +15,7 @@ jobs:
       - name: setup python
         uses: actions/setup-python@v4 # updated to node16
         with: 
-          python-version: 3.9
+          python-version: 3.11
       - name: execute py script # aggregate current data
         run: |
           python -m pip install -r requirements.txt
