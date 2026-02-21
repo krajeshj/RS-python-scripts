@@ -1,0 +1,133 @@
+{
+    "last_updated": "2026-02-21 19:04:24",
+    "stocks": [
+        {
+            "rank": 1,
+            "ticker": "TERN",
+            "rs": 5.48,
+            "rmv": 43.57,
+            "industry": "Biotechnology",
+            "sector": "Healthcare",
+            "highlights": "Not Extended, Controlled Volatility"
+        },
+        {
+            "rank": 2,
+            "ticker": "GLTO",
+            "rs": 4.98,
+            "rmv": 79.07,
+            "industry": "Biotechnology",
+            "sector": "Healthcare",
+            "highlights": "Strong Trend Alignment"
+        },
+        {
+            "rank": 3,
+            "ticker": "SOGP",
+            "rs": 4.61,
+            "rmv": 44.7,
+            "industry": "unknown",
+            "sector": "unknown",
+            "highlights": "VCP Contraction, Not Extended, Strong Trend Alignment, Controlled Volatility"
+        },
+        {
+            "rank": 4,
+            "ticker": "SNSE",
+            "rs": 3.59,
+            "rmv": 100.0,
+            "industry": "Biotechnology",
+            "sector": "Healthcare",
+            "highlights": "Strong Trend Alignment"
+        },
+        {
+            "rank": 5,
+            "ticker": "BNR",
+            "rs": 3.52,
+            "rmv": 63.22,
+            "industry": "Diagnostics & Research",
+            "sector": "Healthcare",
+            "highlights": "VCP Contraction"
+        },
+        {
+            "rank": 6,
+            "ticker": "CAPR",
+            "rs": 3.4,
+            "rmv": 51.73,
+            "industry": "Biotechnology",
+            "sector": "Healthcare",
+            "highlights": "High Relative Strength"
+        }
+    ],
+    "industries": [
+        {
+            "rank": 1,
+            "industry": "Gold",
+            "sector": "Basic Materials",
+            "rs": 1.77,
+            "tickers": [
+                "CDE",
+                "SA",
+                "EGO",
+                "EQX",
+                "ORLA"
+            ]
+        },
+        {
+            "rank": 2,
+            "industry": "Biotechnology",
+            "sector": "Healthcare",
+            "rs": 1.76,
+            "tickers": [
+                "TERN",
+                "GLTO",
+                "SNSE",
+                "CAPR",
+                "KOD"
+            ]
+        },
+        {
+            "rank": 3,
+            "industry": "Communication Equipment",
+            "sector": "Technology",
+            "rs": 1.53,
+            "tickers": [
+                "CIEN",
+                "VIAV",
+                "BKTI",
+                "DGII",
+                "PI"
+            ]
+        },
+        {
+            "rank": 4,
+            "industry": "Metal Fabrication",
+            "sector": "Industrials",
+            "rs": 1.52,
+            "tickers": [
+                "ATI",
+                "RYI"
+            ]
+        },
+        {
+            "rank": 5,
+            "industry": "Scientific & Technical Instruments",
+            "sector": "Technology",
+            "rs": 1.5,
+            "tickers": [
+                "COHR",
+                "KEYS",
+                "VNT"
+            ]
+        },
+        {
+            "rank": 6,
+            "industry": "Semiconductor Equipment & Materials",
+            "sector": "Technology",
+            "rs": 1.47,
+            "tickers": [
+                "IPGP",
+                "PLAB",
+                "KLAC",
+                "VECO"
+            ]
+        }
+    ]
+}
