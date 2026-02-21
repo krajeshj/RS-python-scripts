@@ -59,6 +59,8 @@ TITLE_SPY_OK = "SPY Trend OK"
 TITLE_CAND_HIGH = "Candidate High-Win"
 TITLE_CAND_FLIP = "Candidate Flip"
 TITLE_SOURCE = "Source"
+TITLE_CANSLIM = "CANSLIM"
+TITLE_DTE = "DaysToEarnings"
 
 # RMV thresholds calibrated to your RMV formula (volatility_pct*7)
 CONTROLLED_RMV_MAX = 45   # avg daily range <= ~6.4%
@@ -308,6 +310,10 @@ def _export_web_data(df_stocks, df_industries):
             "sector": s[TITLE_SECTOR],
             "highlights": _get_highlights(s),
             "source": s.get(TITLE_SOURCE, "AI Scanner"),
+            "canslim": s.get(TITLE_CANSLIM, {}),
+            "days_to_earnings": int(s.get(TITLE_DTE, -1)),
+            "rs_1m_pct": int(s.get("rs_1m_pct", 50)),
+            "is_restricted": bool(s.get("is_restricted", False)),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
             "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s.get(TITLE_TICKER, 'SPY')}&ty=c&ta=0&p=d&s=l"
         })
@@ -391,6 +397,26 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
         sector = ticker_data.get("sector", "unknown")
         universe = ticker_data.get("universe", "unknown")
 
+        # CANSLIM & Earnings
+        meta = ticker_data.get("info", {})
+        eps_c = meta.get("eps_growth_curr", 0) > 0.20
+        eps_a = meta.get("eps_growth_annual", 0) > 0.20
+        
+        high_52w = float(tdf["High"].tail(252).max())
+        new_high = latest_daily["Close"] > (high_52w * 0.95)
+        
+        supply_demand = latest_daily["Volume"] > latest_daily["vol20"]
+        
+        # Days to earnings
+        earnings_date_str = meta.get("earnings_date", "n/a")
+        days_to_earnings = -1
+        if earnings_date_str != "n/a":
+            try:
+                edate = datetime.strptime(earnings_date_str, '%Y-%m-%d')
+                days_to_earnings = (edate - datetime.now()).days
+            except:
+                pass
+
         return (
             ticker, minervini_stage2, sector, industry, universe,
             rs, 0, rs1m, rs3m, rs6m, rmv,
@@ -402,7 +428,17 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
             bool(latest_daily["not_extended"]),
             bool(flip_setup),
             bool(spy_ok),
-            ticker_data.get("source", "AI Scanner")
+            ticker_data.get("source", "AI Scanner"),
+            {
+                "c": bool(eps_c),
+                "a": bool(eps_a),
+                "n": bool(new_high),
+                "s": bool(supply_demand),
+                "l": False, # Will be set in main rankings
+                "i": rs > 1.2, # Proxy: RS > 1.2 is strong institutional support
+                "m": bool(spy_ok)
+            },
+            days_to_earnings
         )
     except Exception as e:
         # print(f"Error processing {ticker}: {e}")
@@ -457,17 +493,15 @@ def rankings(test_mode=False, test_tickers=None):
                 results.append(res)
 
     for res in results:
-        ticker, mm, sector, industry, universe, rs, pct, rs1m, rs3m, rs6m, rmv, close, atr, ptc, contr, brk, nextend, flip, sok, source = res
+        ticker, mm, sector, industry, universe, rs, pct, rs1m, rs3m, rs6m, rmv, close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte = res
         
         if industry == "n/a" or not industry: continue
-        if industry in EXCLUDE_INDUSTRIES: 
-            # print(f"Excluding {ticker} due to restricted industry: {industry}")
-            continue
+        is_restricted = industry in EXCLUDE_INDUSTRIES
         
         relative_strengths.append((
             0, ticker, mm, sector, industry, universe,
             rs, pct, rs1m, rs3m, rs6m, rmv,
-            close, atr, ptc, contr, brk, nextend, flip, sok, source
+            close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, is_restricted
         ))
         stock_rs[ticker] = rs
 
@@ -489,7 +523,7 @@ def rankings(test_mode=False, test_tickers=None):
         TITLE_RANK, TITLE_TICKER, TITLE_MINERVINI, TITLE_SECTOR, TITLE_INDUSTRY, TITLE_UNIVERSE,
         TITLE_RS, TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M, TITLE_RMV,
         TITLE_CLOSE, TITLE_ATR_PCT, TITLE_PTC, TITLE_CONTRACTION, TITLE_BREAKOUT,
-        TITLE_NOT_EXT, TITLE_FLIP, TITLE_SPY_OK, TITLE_SOURCE
+        TITLE_NOT_EXT, TITLE_FLIP, TITLE_SPY_OK, TITLE_SOURCE, TITLE_CANSLIM, TITLE_DTE, "is_restricted"
     ])
 
     if df.empty:
@@ -497,10 +531,17 @@ def rankings(test_mode=False, test_tickers=None):
         return dfs
 
     # Percentile bins
-    df[TITLE_PERCENTILE] = pd.qcut(df[TITLE_RS], 100, precision=64, labels=False, duplicates='drop')
-    df[TITLE_1M] = pd.qcut(df[TITLE_1M], 100, precision=64, labels=False, duplicates='drop')
-    df[TITLE_3M] = pd.qcut(df[TITLE_3M], 100, precision=64, labels=False, duplicates='drop')
-    df[TITLE_6M] = pd.qcut(df[TITLE_6M], 100, precision=64, labels=False, duplicates='drop')
+    df[TITLE_PERCENTILE] = pd.qcut(df[TITLE_RS], 100, precision=64, labels=False, duplicates='drop') + 1
+    df["rs_1m_pct"] = pd.qcut(df[TITLE_1M], 100, precision=64, labels=False, duplicates='drop') + 1
+    df[TITLE_3M] = pd.qcut(df[TITLE_3M], 100, precision=64, labels=False, duplicates='drop') + 1
+    df[TITLE_6M] = pd.qcut(df[TITLE_6M], 100, precision=64, labels=False, duplicates='drop') + 1
+
+    # Finalize CANSLIM 'L'
+    def _finalize_canslim(r):
+        c = r[TITLE_CANSLIM]
+        c["l"] = r[TITLE_PERCENTILE] >= 80
+        return c
+    df[TITLE_CANSLIM] = df.apply(_finalize_canslim, axis=1)
 
     df = df.sort_values(([TITLE_RS]), ascending=False)
     df[TITLE_RANK] = range(1, len(df) + 1)

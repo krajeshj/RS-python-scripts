@@ -261,8 +261,8 @@ def get_info_from_dict(dict, key):
     return value
 def load_ticker_info_batch(tickers, info_dict):
     """Fetches ticker info in parallel."""
-    print(f"Fetching metadata for {len(tickers)} tickers in parallel...")
-    with ThreadPoolExecutor(max_workers=10) as executor:
+    print(f"Fetching metadata and fundamentals for {len(tickers)} tickers in parallel...")
+    with ThreadPoolExecutor(max_workers=5) as executor:
         future_to_ticker = {executor.submit(load_ticker_info, t, {}): t for t in tickers}
         for future in as_completed(future_to_ticker):
             ticker = future_to_ticker[future]
@@ -277,15 +277,32 @@ def load_ticker_info(ticker, info_dict_ignored):
     """Fetches info for a single ticker. Returns a dict to be merged."""
     escaped_ticker = escape_ticker(ticker)
     try: 
-        info = yf.Ticker(escaped_ticker).info
+        t = yf.Ticker(escaped_ticker)
+        info = t.info
         if not info:
             return None
+        
+        # Get earnings date safely
+        earnings_date = "n/a"
+        try:
+            calendar = t.calendar
+            if calendar is not None and 'Earnings Date' in calendar:
+                dates = calendar['Earnings Date']
+                if dates and len(dates) > 0:
+                    earnings_date = dates[0].strftime('%Y-%m-%d')
+        except:
+            pass
+
         return {
             ticker: {
                 "info": {
                     "industry": get_info_from_dict(info, "industry"),
                     "sector": get_info_from_dict(info, "sector"),
-                    "marketCap": info.get("marketCap", 0)
+                    "marketCap": info.get("marketCap", 0),
+                    "earnings_date": earnings_date,
+                    "eps_growth_curr": info.get("earningsQuarterlyGrowth", 0),
+                    "eps_growth_annual": info.get("earningsGrowth", 0),
+                    "revenue_growth": info.get("revenueGrowth", 0)
                 }
             }
         }
