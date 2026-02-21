@@ -1,0 +1,136 @@
+{
+    "last_updated": "2026-02-21 18:46:39",
+    "stocks": [
+        {
+            "rank": 1,
+            "ticker": "AXTI",
+            "rs": 9.12,
+            "rmv": 100.0,
+            "industry": "Semiconductor Equipment & Materials",
+            "sector": "Technology",
+            "highlights": "Confirmed Breakout, Strong Trend Alignment"
+        },
+        {
+            "rank": 2,
+            "ticker": "HYMC",
+            "rs": 8.43,
+            "rmv": 98.3,
+            "industry": "Other Precious Metals & Mining",
+            "sector": "Basic Materials",
+            "highlights": "Strong Trend Alignment"
+        },
+        {
+            "rank": 3,
+            "ticker": "SLGL",
+            "rs": 5.74,
+            "rmv": 73.15,
+            "industry": "Biotechnology",
+            "sector": "Healthcare",
+            "highlights": "Strong Trend Alignment"
+        },
+        {
+            "rank": 4,
+            "ticker": "TERN",
+            "rs": 5.48,
+            "rmv": 43.57,
+            "industry": "Biotechnology",
+            "sector": "Healthcare",
+            "highlights": "Not Extended, Controlled Volatility"
+        },
+        {
+            "rank": 5,
+            "ticker": "LITE",
+            "rs": 5.0,
+            "rmv": 68.12,
+            "industry": "Communication Equipment",
+            "sector": "Technology",
+            "highlights": "Strong Trend Alignment"
+        },
+        {
+            "rank": 6,
+            "ticker": "GLTO",
+            "rs": 4.98,
+            "rmv": 79.07,
+            "industry": "Biotechnology",
+            "sector": "Healthcare",
+            "highlights": "Strong Trend Alignment"
+        }
+    ],
+    "industries": [
+        {
+            "rank": 1,
+            "industry": "Silver",
+            "sector": "Basic Materials",
+            "rs": 2.21,
+            "tickers": [
+                "AG",
+                "EXK",
+                "PAAS",
+                "FSM"
+            ]
+        },
+        {
+            "rank": 2,
+            "industry": "Other Precious Metals & Mining",
+            "sector": "Basic Materials",
+            "rs": 3.57,
+            "tickers": [
+                "HYMC",
+                "MUX",
+                "BVN",
+                "PPTA"
+            ]
+        },
+        {
+            "rank": 3,
+            "industry": "Gold",
+            "sector": "Basic Materials",
+            "rs": 1.8,
+            "tickers": [
+                "HL",
+                "IAG",
+                "CDE",
+                "NGD",
+                "GOLD"
+            ]
+        },
+        {
+            "rank": 4,
+            "industry": "Semiconductor Equipment & Materials",
+            "sector": "Technology",
+            "rs": 1.98,
+            "tickers": [
+                "AXTI",
+                "ICHR",
+                "TER",
+                "UCTT",
+                "ACMR"
+            ]
+        },
+        {
+            "rank": 5,
+            "industry": "Uranium",
+            "sector": "Energy",
+            "rs": 1.78,
+            "tickers": [
+                "UUUU",
+                "UEC",
+                "CCJ",
+                "NXE",
+                "LEU"
+            ]
+        },
+        {
+            "rank": 6,
+            "industry": "Aluminum",
+            "sector": "Basic Materials",
+            "rs": 1.77,
+            "tickers": [
+                "CENX",
+                "CSTM",
+                "AA",
+                "KALU"
+            ]
+        }
+    ]
+}
