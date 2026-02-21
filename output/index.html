@@ -365,7 +365,8 @@
     <script>
         async function loadData() {
             try {
-                const response = await fetch('web_data.json');
+                // Add cache-busting to avoid old JSON
+                const response = await fetch(`web_data.json?t=${new Date().getTime()}`);
                 const data = await response.json();
 
                 document.getElementById('last-updated').textContent = `Last Processed: ${data.last_updated}`;
@@ -378,7 +379,7 @@
                             <div class="rank-badge">RANK #${stock.rank}</div>
                         </div>
                         <div class="chart-container">
-                            <img src="${stock.finviz_chart_url}" class="chart-img" loading="lazy" alt="${stock.ticker} Chart">
+                            <img src="${stock.finviz_chart_url}&t=${new Date().getTime()}" class="chart-img" loading="lazy" alt="${stock.ticker} Chart">
                         </div>
                         <div class="metrics">
                             <div class="metric">
