@@ -460,6 +460,9 @@ def rankings(test_mode=False, test_tickers=None):
         ticker, mm, sector, industry, universe, rs, pct, rs1m, rs3m, rs6m, rmv, close, atr, ptc, contr, brk, nextend, flip, sok, source = res
         
         if industry == "n/a" or not industry: continue
+        if industry in EXCLUDE_INDUSTRIES: 
+            # print(f"Excluding {ticker} due to restricted industry: {industry}")
+            continue
         
         relative_strengths.append((
             0, ticker, mm, sector, industry, universe,
