@@ -78,6 +78,7 @@
             font-weight: 800;
             letter-spacing: -0.02em;
             background: linear-gradient(135deg, var(--text) 30%, var(--accent2));
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -192,6 +193,25 @@
             font-weight: 700;
             letter-spacing: 0.05em;
             border: 1px solid rgba(108, 92, 231, 0.2);
+            white-space: nowrap;
+        }
+
+        .source-badge {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text2);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .source-tip {
+            background: rgba(0, 230, 118, 0.1);
+            color: var(--green);
+            border-color: rgba(0, 230, 118, 0.2);
         }
 
         .ticker {
@@ -200,6 +220,35 @@
             color: var(--cyan);
             letter-spacing: -0.02em;
             font-family: var(--mono);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .ticker:hover {
+            color: var(--accent2);
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 140px;
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            margin-top: 4px;
+        }
+
+        .chart-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.9) contrast(1.1) saturate(1.2);
+            transition: transform 0.3s;
+        }
+
+        .card:hover .chart-img {
+            transform: scale(1.05);
+            filter: brightness(1);
         }
 
         .metrics {
@@ -336,7 +385,8 @@
     <script>
         async function loadData() {
             try {
-                const response = await fetch('web_data.json');
+                // Add cache-busting to avoid old JSON
+                const response = await fetch(`web_data.json?t=${new Date().getTime()}`);
                 const data = await response.json();
 
                 document.getElementById('last-updated').textContent = `Last Processed: ${data.last_updated}`;
@@ -345,8 +395,14 @@
                 stocksGrid.innerHTML = data.stocks.map((stock, index) => `
                     <div class="card" style="animation-delay: ${index * 0.1}s">
                         <div class="card-header">
-                            <div class="ticker">${stock.ticker}</div>
-                            <div class="rank-badge">RANK #${stock.rank}</div>
+                            <a href="${stock.tradingview_url}" target="_blank" class="ticker">${stock.ticker}</a>
+                            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                                <div class="rank-badge">RANK #${stock.rank}</div>
+                                <div class="source-badge ${stock.source !== 'AI Scanner' ? 'source-tip' : ''}">${stock.source}</div>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <img src="${stock.finviz_chart_url}&t=${new Date().getTime()}" class="chart-img" loading="lazy" alt="${stock.ticker} Chart">
                         </div>
                         <div class="metrics">
                             <div class="metric">

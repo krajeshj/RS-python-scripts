@@ -1,135 +1,214 @@
 {
-    "last_updated": "2026-02-21 19:30:41",
+    "last_updated": "2026-02-21 19:59:48",
     "stocks": [
         {
             "rank": 1,
-            "ticker": "AXTI",
-            "rs": 9.12,
-            "rmv": 100.0,
+            "ticker": "LRCX",
+            "rs": 2.07,
+            "rmv": 36.95,
             "industry": "Semiconductor Equipment & Materials",
             "sector": "Technology",
-            "highlights": "Confirmed Breakout, Strong Trend Alignment"
+            "highlights": "VCP Contraction, Strong Trend Alignment, Controlled Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": false,
+                "l": true,
+                "i": true,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "rs_1m_pct": 98,
+            "is_restricted": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=LRCX",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=LRCX&ty=c&ta=0&p=d&s=l"
         },
         {
             "rank": 2,
-            "ticker": "HYMC",
-            "rs": 8.43,
-            "rmv": 98.3,
-            "industry": "Other Precious Metals & Mining",
-            "sector": "Basic Materials",
-            "highlights": "Strong Trend Alignment"
+            "ticker": "AMAT",
+            "rs": 1.81,
+            "rmv": 35.03,
+            "industry": "Semiconductor Equipment & Materials",
+            "sector": "Technology",
+            "highlights": "Strong Trend Alignment, Controlled Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": false,
+                "l": true,
+                "i": true,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "rs_1m_pct": 92,
+            "is_restricted": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=AMAT",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AMAT&ty=c&ta=0&p=d&s=l"
         },
         {
             "rank": 3,
-            "ticker": "SLGL",
-            "rs": 5.74,
-            "rmv": 73.15,
-            "industry": "Biotechnology",
-            "sector": "Healthcare",
-            "highlights": "Strong Trend Alignment"
+            "ticker": "INTC",
+            "rs": 1.48,
+            "rmv": 41.19,
+            "industry": "Semiconductors",
+            "sector": "Technology",
+            "highlights": "VCP Contraction, Not Extended, Controlled Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": false,
+                "l": true,
+                "i": true,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "rs_1m_pct": 96,
+            "is_restricted": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=INTC",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=INTC&ty=c&ta=0&p=d&s=l"
         },
         {
             "rank": 4,
-            "ticker": "TERN",
-            "rs": 5.48,
-            "rmv": 43.57,
-            "industry": "Biotechnology",
-            "sector": "Healthcare",
-            "highlights": "Not Extended, Controlled Volatility"
+            "ticker": "KLAC",
+            "rs": 1.47,
+            "rmv": 31.93,
+            "industry": "Semiconductor Equipment & Materials",
+            "sector": "Technology",
+            "highlights": "VCP Contraction, Not Extended, Strong Trend Alignment, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": false,
+                "l": true,
+                "i": true,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "rs_1m_pct": 94,
+            "is_restricted": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=KLAC",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=KLAC&ty=c&ta=0&p=d&s=l"
         },
         {
             "rank": 5,
-            "ticker": "LITE",
-            "rs": 5.0,
-            "rmv": 68.12,
-            "industry": "Communication Equipment",
+            "ticker": "ADI",
+            "rs": 1.38,
+            "rmv": 23.24,
+            "industry": "Semiconductors",
             "sector": "Technology",
-            "highlights": "Strong Trend Alignment"
+            "highlights": "Strong Trend Alignment, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": true,
+                "l": true,
+                "i": true,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "rs_1m_pct": 86,
+            "is_restricted": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=ADI",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ADI&ty=c&ta=0&p=d&s=l"
         },
         {
             "rank": 6,
-            "ticker": "GLTO",
-            "rs": 4.98,
-            "rmv": 79.07,
-            "industry": "Biotechnology",
-            "sector": "Healthcare",
-            "highlights": "Strong Trend Alignment"
+            "ticker": "GOOGL",
+            "rs": 1.32,
+            "rmv": 22.33,
+            "industry": "Internet Content & Information",
+            "sector": "Communication Services",
+            "highlights": "Not Extended, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": true,
+                "l": true,
+                "i": true,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "rs_1m_pct": 88,
+            "is_restricted": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=GOOGL",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GOOGL&ty=c&ta=0&p=d&s=l"
         }
     ],
     "industries": [
         {
             "rank": 1,
-            "industry": "Silver",
-            "sector": "Basic Materials",
-            "rs": 2.21,
+            "industry": "Semiconductor Equipment & Materials",
+            "sector": "Technology",
+            "rs": 1.78,
             "tickers": [
-                "AG",
-                "EXK",
-                "PAAS",
-                "FSM"
+                "LRCX",
+                "AMAT",
+                "KLAC"
             ]
         },
         {
             "rank": 2,
-            "industry": "Other Precious Metals & Mining",
-            "sector": "Basic Materials",
-            "rs": 3.57,
+            "industry": "Semiconductors",
+            "sector": "Technology",
+            "rs": 1.33,
             "tickers": [
-                "HYMC",
-                "MUX",
-                "BVN",
-                "PPTA"
+                "MU",
+                "INTC",
+                "ADI",
+                "AMD",
+                "TXN"
             ]
         },
         {
             "rank": 3,
-            "industry": "Gold",
-            "sector": "Basic Materials",
-            "rs": 1.8,
+            "industry": "Beverages\u2014Non-Alcoholic",
+            "sector": "Consumer Defensive",
+            "rs": 1.12,
             "tickers": [
-                "HL",
-                "IAG",
-                "CDE",
-                "NGD",
-                "GOLD"
+                "MNST",
+                "PEP"
             ]
         },
         {
             "rank": 4,
-            "industry": "Semiconductor Equipment & Materials",
-            "sector": "Technology",
-            "rs": 1.98,
+            "industry": "Internet Content & Information",
+            "sector": "Communication Services",
+            "rs": 1.12,
             "tickers": [
-                "AXTI",
-                "ICHR",
-                "TER",
-                "UCTT",
-                "ACMR"
+                "GOOGL",
+                "META"
             ]
         },
         {
             "rank": 5,
-            "industry": "Uranium",
-            "sector": "Energy",
-            "rs": 1.78,
+            "industry": "Biotechnology",
+            "sector": "Healthcare",
+            "rs": 1.04,
             "tickers": [
-                "UUUU",
-                "UEC",
-                "CCJ",
-                "NXE",
-                "LEU"
+                "REGN",
+                "VRTX"
             ]
         },
         {
             "rank": 6,
-            "industry": "Aluminum",
-            "sector": "Basic Materials",
-            "rs": 1.77,
+            "industry": "Specialty Industrial Machinery",
+            "sector": "Industrials",
+            "rs": 0.86,
             "tickers": [
-                "CENX",
-                "CSTM",
-                "AA",
-                "KALU"
+                "HON",
+                "ROP"
             ]
         }
     ]
