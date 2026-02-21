@@ -192,6 +192,25 @@
             font-weight: 700;
             letter-spacing: 0.05em;
             border: 1px solid rgba(108, 92, 231, 0.2);
+            white-space: nowrap;
+        }
+
+        .source-badge {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text2);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .source-tip {
+            background: rgba(0, 230, 118, 0.1);
+            color: var(--green);
+            border-color: rgba(0, 230, 118, 0.2);
         }
 
         .ticker {
@@ -376,7 +395,10 @@
                     <div class="card" style="animation-delay: ${index * 0.1}s">
                         <div class="card-header">
                             <a href="${stock.tradingview_url}" target="_blank" class="ticker">${stock.ticker}</a>
-                            <div class="rank-badge">RANK #${stock.rank}</div>
+                            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                                <div class="rank-badge">RANK #${stock.rank}</div>
+                                <div class="source-badge ${stock.source !== 'AI Scanner' ? 'source-tip' : ''}">${stock.source}</div>
+                            </div>
                         </div>
                         <div class="chart-container">
                             <img src="${stock.finviz_chart_url}&t=${new Date().getTime()}" class="chart-img" loading="lazy" alt="${stock.ticker} Chart">

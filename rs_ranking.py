@@ -58,6 +58,7 @@ TITLE_FLIP = "Flip Setup"
 TITLE_SPY_OK = "SPY Trend OK"
 TITLE_CAND_HIGH = "Candidate High-Win"
 TITLE_CAND_FLIP = "Candidate Flip"
+TITLE_SOURCE = "Source"
 
 # RMV thresholds calibrated to your RMV formula (volatility_pct*7)
 CONTROLLED_RMV_MAX = 45   # avg daily range <= ~6.4%
@@ -306,6 +307,7 @@ def _export_web_data(df_stocks, df_industries):
             "industry": s[TITLE_INDUSTRY],
             "sector": s[TITLE_SECTOR],
             "highlights": _get_highlights(s),
+            "source": s.get(TITLE_SOURCE, "AI Scanner"),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
             "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s.get(TITLE_TICKER, 'SPY')}&ty=c&ta=0&p=d&s=l"
         })
@@ -399,7 +401,8 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
             bool(latest_daily["confirmed_breakout"]),
             bool(latest_daily["not_extended"]),
             bool(flip_setup),
-            bool(spy_ok)
+            bool(spy_ok),
+            ticker_data.get("source", "AI Scanner")
         )
     except Exception as e:
         # print(f"Error processing {ticker}: {e}")
@@ -423,6 +426,12 @@ def rankings(test_mode=False, test_tickers=None):
         # Filter tickers by universe/config before parallelizing
         tickers_to_process = []
         for t in json_data.keys():
+            # Always include manual tips
+            source = json_data[t].get("source", "AI Scanner")
+            if source != "AI Scanner":
+                tickers_to_process.append(t)
+                continue
+
             u = json_data[t].get("universe", "")
             if u == "S&P 500" and not cfg("SP500"): continue
             if u == "S&P 400" and not cfg("SP400"): continue
@@ -448,14 +457,14 @@ def rankings(test_mode=False, test_tickers=None):
                 results.append(res)
 
     for res in results:
-        ticker, mm, sector, industry, universe, rs, pct, rs1m, rs3m, rs6m, rmv, close, atr, ptc, contr, brk, nextend, flip, sok = res
+        ticker, mm, sector, industry, universe, rs, pct, rs1m, rs3m, rs6m, rmv, close, atr, ptc, contr, brk, nextend, flip, sok, source = res
         
         if industry == "n/a" or not industry: continue
         
         relative_strengths.append((
             0, ticker, mm, sector, industry, universe,
             rs, pct, rs1m, rs3m, rs6m, rmv,
-            close, atr, ptc, contr, brk, nextend, flip, sok
+            close, atr, ptc, contr, brk, nextend, flip, sok, source
         ))
         stock_rs[ticker] = rs
 
@@ -477,7 +486,7 @@ def rankings(test_mode=False, test_tickers=None):
         TITLE_RANK, TITLE_TICKER, TITLE_MINERVINI, TITLE_SECTOR, TITLE_INDUSTRY, TITLE_UNIVERSE,
         TITLE_RS, TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M, TITLE_RMV,
         TITLE_CLOSE, TITLE_ATR_PCT, TITLE_PTC, TITLE_CONTRACTION, TITLE_BREAKOUT,
-        TITLE_NOT_EXT, TITLE_FLIP, TITLE_SPY_OK
+        TITLE_NOT_EXT, TITLE_FLIP, TITLE_SPY_OK, TITLE_SOURCE
     ])
 
     if df.empty:

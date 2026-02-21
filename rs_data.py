@@ -141,6 +141,21 @@ def get_tickers_from_wikipedia(tickers):
         tickers.update(get_securities('https://en.wikipedia.org/wiki/List_of_S%26P_600_companies', 2, universe="S&P 600"))
     return tickers
 
+def load_manual_tips():
+    """Loads manual tips from tips.yaml."""
+    tips_file = os.path.join(DIR, "tips.yaml")
+    if not os.path.exists(tips_file):
+        return []
+    try:
+        with open(tips_file, 'r') as f:
+            tips = yaml.safe_load(f)
+            if not tips:
+                return []
+            return tips
+    except Exception as e:
+        print(f"Error loading tips.yaml: {e}")
+        return []
+
 def exchange_from_symbol(symbol):
     if symbol == "Q":
         return "NASDAQ"
@@ -507,7 +522,33 @@ def save_data(source, securities, api_key, info = {}):
 
 def main(forceTDA = False, api_key = API_KEY):
     dataSource = DATA_SOURCE if not forceTDA else "TD_AMERITRADE"
-    save_data(dataSource, SECURITIES, api_key, {"forceTDA": forceTDA})
+    
+    # Load manual tips and add them to securities
+    tips = load_manual_tips()
+    all_securities = list(SECURITIES)
+    
+    # Track which tickers are manual tips for later info fetching
+    manual_tickers = []
+    for tip in tips:
+        ticker = tip["ticker"]
+        # Create security object if not already present
+        if not any(s["ticker"] == ticker for s in all_securities):
+            all_securities.append({
+                "ticker": ticker,
+                "sector": UNKNOWN,
+                "industry": UNKNOWN,
+                "universe": "Manual Tip",
+                "source": tip.get("source", "Manual Tip")
+            })
+            manual_tickers.append(ticker)
+        else:
+            # Update source for existing security if it's in tips
+            for s in all_securities:
+                if s["ticker"] == ticker:
+                    s["source"] = tip.get("source", "Manual Tip")
+                    break
+
+    save_data(dataSource, all_securities, api_key, {"forceTDA": forceTDA})
     write_ticker_info_file(TICKER_INFO_DICT)
 
 if __name__ == "__main__":
