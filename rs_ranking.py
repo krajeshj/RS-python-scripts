@@ -305,7 +305,9 @@ def _export_web_data(df_stocks, df_industries):
             "rmv": s[TITLE_RMV],
             "industry": s[TITLE_INDUSTRY],
             "sector": s[TITLE_SECTOR],
-            "highlights": _get_highlights(s)
+            "highlights": _get_highlights(s),
+            "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s[TITLE_TICKER]}",
+            "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s[TITLE_TICKER]}&ty=c&ta=0&p=d&s=l"
         })
 
     # Format top 6 industries

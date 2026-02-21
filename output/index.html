@@ -200,6 +200,35 @@
             color: var(--cyan);
             letter-spacing: -0.02em;
             font-family: var(--mono);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .ticker:hover {
+            color: var(--accent2);
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 140px;
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            margin-top: 4px;
+        }
+
+        .chart-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.9) contrast(1.1) saturate(1.2);
+            transition: transform 0.3s;
+        }
+
+        .card:hover .chart-img {
+            transform: scale(1.05);
+            filter: brightness(1);
         }
 
         .metrics {
@@ -345,8 +374,11 @@
                 stocksGrid.innerHTML = data.stocks.map((stock, index) => `
                     <div class="card" style="animation-delay: ${index * 0.1}s">
                         <div class="card-header">
-                            <div class="ticker">${stock.ticker}</div>
+                            <a href="${stock.tradingview_url}" target="_blank" class="ticker">${stock.ticker}</a>
                             <div class="rank-badge">RANK #${stock.rank}</div>
+                        </div>
+                        <div class="chart-container">
+                            <img src="${stock.finviz_chart_url}" class="chart-img" loading="lazy" alt="${stock.ticker} Chart">
                         </div>
                         <div class="metrics">
                             <div class="metric">
