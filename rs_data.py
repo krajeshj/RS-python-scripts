@@ -143,16 +143,15 @@ def get_resolved_securities():
 
 def get_tickers_from_wikipedia(tickers):
     if cfg("NQ100"):
-        print("Using hardcoded Nasdaq 100 list for testing...")
-        nq100_subset = [
-            "AAPL", "MSFT", "AMZN", "NVDA", "GOOGL", "META", "TSLA", "AVGO", "COST", "PEP",
-            "ADBE", "LIN", "AMD", "NFLX", "TMUS", "CSCO", "INTU", "AMAT", "CMCSA", "TXN",
-            "QCOM", "ISRG", "HON", "BKNG", "AMGN", "VRTX", "INTC", "ADP", "SBUX", "PANW",
-            "REGN", "MDLZ", "GILD", "ADI", "LRCX", "PDD", "MU", "SNPS", "KLAC", "CDNS",
-            "MAR", "CSX", "PYPL", "ORLY", "MNST", "MELI", "ROP", "NXPI", "ADSK", "TEAM"
-        ]
-        for t in nq100_subset:
-            tickers[t] = {"ticker": t, "sector": UNKNOWN, "industry": UNKNOWN, "universe": "Nasdaq 100"}
+        # Nasdaq 100 is usually the first wikitable. table_pos=1.
+        nq_secs = get_securities('https://en.wikipedia.org/wiki/Nasdaq-100', 1, 1, universe="Nasdaq 100")
+        if not nq_secs:
+            print("Using fallback Nasdaq 100 list...")
+            fallback = ["AAPL", "MSFT", "AMZN", "NVDA", "GOOGL", "META", "TSLA", "AVGO", "COST", "PEP"]
+            for t in fallback:
+                tickers[t] = {"ticker": t, "sector": UNKNOWN, "industry": UNKNOWN, "universe": "Nasdaq 100"}
+        else:
+            tickers.update(nq_secs)
     if cfg("SP500"):
         tickers.update(get_securities('http://en.wikipedia.org/wiki/List_of_S%26P_500_companies', sector_offset=3, universe="S&P 500"))
     if cfg("SP400"):
@@ -240,6 +239,7 @@ def enrich_ticker_data(ticker_response, security, skip_calc, mm_count):
     ticker_response["sector"] = security["sector"]
     ticker_response["industry"] = security["industry"]
     ticker_response["universe"] = security["universe"]
+    ticker_response["source"] = security.get("source", "AI Scanner")
     ticker_response["skip_calc"] = skip_calc
     ticker_response["minervini"] = int(mm_count)
  
@@ -530,7 +530,10 @@ def load_prices_from_yahoo(securities, info = {}):
         
         if full_df is not None and escaped in full_df.columns.levels[0]:
             ticker_df = full_df[escaped].dropna(subset=['Close'])
-            ticker_data = _process_yf_df(ticker_df, security)
+            if ticker_df.empty:
+                ticker_data = get_yf_data(security, start_date, today)
+            else:
+                ticker_data = _process_yf_df(ticker_df, security)
         else:
             ticker_data = get_yf_data(security, start_date, today)
         

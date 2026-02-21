@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-02-21 11:58:56",
+    "last_updated": "2026-02-21 12:18:59",
     "stocks": [
         {
             "rank": 1,
@@ -20,13 +20,37 @@
                 "m": true
             },
             "days_to_earnings": -1,
-            "rs_1m_pct": 98,
+            "rs_1m_pct": 97,
             "is_restricted": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=LRCX",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=LRCX&ty=c&ta=0&p=d&s=l"
         },
         {
             "rank": 2,
+            "ticker": "WBD",
+            "rs": 1.93,
+            "rmv": 11.57,
+            "industry": "Entertainment",
+            "sector": "Communication Services",
+            "highlights": "Not Extended, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": false,
+                "l": true,
+                "i": true,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "rs_1m_pct": 96,
+            "is_restricted": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=WBD",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=WBD&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 3,
             "ticker": "AMAT",
             "rs": 1.81,
             "rmv": 35.03,
@@ -50,7 +74,31 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AMAT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 3,
+            "rank": 4,
+            "ticker": "ASML",
+            "rs": 1.6,
+            "rmv": 23.6,
+            "industry": "Semiconductor Equipment & Materials",
+            "sector": "Technology",
+            "highlights": "VCP Contraction, Strong Trend Alignment, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": false,
+                "l": true,
+                "i": true,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "rs_1m_pct": 94,
+            "is_restricted": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=ASML",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ASML&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 5,
             "ticker": "INTC",
             "rs": 1.48,
             "rmv": 41.19,
@@ -68,13 +116,13 @@
                 "m": true
             },
             "days_to_earnings": -1,
-            "rs_1m_pct": 96,
+            "rs_1m_pct": 95,
             "is_restricted": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=INTC",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=INTC&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 4,
+            "rank": 6,
             "ticker": "KLAC",
             "rs": 1.47,
             "rmv": 31.93,
@@ -92,123 +140,132 @@
                 "m": true
             },
             "days_to_earnings": -1,
-            "rs_1m_pct": 94,
+            "rs_1m_pct": 93,
             "is_restricted": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=KLAC",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=KLAC&ty=c&ta=0&p=d&s=l"
-        },
+        }
+    ],
+    "tips": [
         {
-            "rank": 5,
-            "ticker": "ADI",
-            "rs": 1.38,
-            "rmv": 23.24,
+            "rank": "TIP",
+            "ticker": "NVDA",
+            "rs": 1.07,
+            "rmv": 24.36,
             "industry": "Semiconductors",
             "sector": "Technology",
-            "highlights": "Strong Trend Alignment, Ultra Low Volatility",
-            "source": "AI Scanner",
-            "canslim": {
-                "c": false,
-                "a": false,
-                "n": true,
-                "s": true,
-                "l": true,
-                "i": true,
-                "m": true
-            },
-            "days_to_earnings": -1,
-            "rs_1m_pct": 86,
-            "is_restricted": false,
-            "tradingview_url": "https://www.tradingview.com/chart/?symbol=ADI",
-            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ADI&ty=c&ta=0&p=d&s=l"
-        },
-        {
-            "rank": 6,
-            "ticker": "GOOGL",
-            "rs": 1.32,
-            "rmv": 22.33,
-            "industry": "Internet Content & Information",
-            "sector": "Communication Services",
-            "highlights": "Not Extended, Ultra Low Volatility",
-            "source": "AI Scanner",
+            "highlights": "Not Extended, Strong Trend Alignment, Ultra Low Volatility",
+            "source": "Friend's Tip",
             "canslim": {
                 "c": false,
                 "a": false,
                 "n": false,
                 "s": true,
-                "l": true,
-                "i": true,
+                "l": false,
+                "i": false,
                 "m": true
             },
             "days_to_earnings": -1,
-            "rs_1m_pct": 88,
+            "rs_1m_pct": 70,
             "is_restricted": false,
-            "tradingview_url": "https://www.tradingview.com/chart/?symbol=GOOGL",
-            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GOOGL&ty=c&ta=0&p=d&s=l"
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=NVDA",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=NVDA&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": "TIP",
+            "ticker": "TSLA",
+            "rs": 1.04,
+            "rmv": 24.41,
+            "industry": "Auto Manufacturers",
+            "sector": "Consumer Cyclical",
+            "highlights": "VCP Contraction, Not Extended, Ultra Low Volatility",
+            "source": "Twitter",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": false,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "rs_1m_pct": 76,
+            "is_restricted": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=TSLA",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TSLA&ty=c&ta=0&p=d&s=l"
         }
     ],
     "industries": [
         {
             "rank": 1,
-            "industry": "Semiconductor Equipment & Materials",
+            "industry": "Computer Hardware",
             "sector": "Technology",
-            "rs": 1.78,
+            "rs": 2.89,
             "tickers": [
-                "LRCX",
-                "AMAT",
-                "KLAC"
+                "WDC",
+                "STX"
             ]
         },
         {
             "rank": 2,
-            "industry": "Semiconductors",
+            "industry": "Semiconductor Equipment & Materials",
             "sector": "Technology",
-            "rs": 1.33,
+            "rs": 1.73,
             "tickers": [
-                "MU",
-                "INTC",
-                "ADI",
-                "AMD",
-                "TXN"
+                "LRCX",
+                "AMAT",
+                "ASML",
+                "KLAC"
             ]
         },
         {
             "rank": 3,
-            "industry": "Beverages\u2014Non-Alcoholic",
-            "sector": "Consumer Defensive",
-            "rs": 1.12,
+            "industry": "Semiconductors",
+            "sector": "Technology",
+            "rs": 1.26,
             "tickers": [
-                "MNST",
-                "PEP"
+                "MU",
+                "INTC",
+                "MPWR",
+                "ADI",
+                "MCHP"
             ]
         },
         {
             "rank": 4,
-            "industry": "Internet Content & Information",
+            "industry": "Entertainment",
             "sector": "Communication Services",
-            "rs": 1.12,
+            "rs": 1.09,
             "tickers": [
-                "GOOGL",
-                "META"
+                "WBD",
+                "CMCSA",
+                "CHTR",
+                "NFLX"
             ]
         },
         {
             "rank": 5,
             "industry": "Biotechnology",
             "sector": "Healthcare",
-            "rs": 1.04,
+            "rs": 1.05,
             "tickers": [
+                "INSM",
                 "REGN",
-                "VRTX"
+                "VRTX",
+                "ALNY"
             ]
         },
         {
             "rank": 6,
-            "industry": "Specialty Industrial Machinery",
-            "sector": "Industrials",
-            "rs": 0.86,
+            "industry": "Beverages\u2014Non-Alcoholic",
+            "sector": "Consumer Defensive",
+            "rs": 1.05,
             "tickers": [
-                "HON",
-                "ROP"
+                "MNST",
+                "CCEP",
+                "PEP",
+                "KDP"
             ]
         }
     ]

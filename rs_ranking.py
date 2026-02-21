@@ -321,6 +321,27 @@ def _export_web_data(df_stocks, df_industries):
             "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s.get(TITLE_TICKER, 'SPY')}&ty=c&ta=0&p=d&s=l"
         })
 
+    # Format all manual tips separately for the dedicated "Tips" section
+    manual_tips_df = df_stocks[df_stocks[TITLE_SOURCE] != "AI Scanner"]
+    formatted_tips = []
+    for _, s in manual_tips_df.iterrows():
+        formatted_tips.append({
+            "rank": "TIP",
+            "ticker": s[TITLE_TICKER],
+            "rs": round(s[TITLE_RS], 2),
+            "rmv": s[TITLE_RMV],
+            "industry": s[TITLE_INDUSTRY],
+            "sector": s[TITLE_SECTOR],
+            "highlights": _get_highlights(s),
+            "source": s.get(TITLE_SOURCE, "Manual Tip"),
+            "canslim": s.get(TITLE_CANSLIM, {}),
+            "days_to_earnings": int(s.get(TITLE_DTE, -1)),
+            "rs_1m_pct": int(s.get("rs_1m_pct", 50)),
+            "is_restricted": bool(s.get("is_restricted", False)),
+            "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
+            "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s.get(TITLE_TICKER, 'SPY')}&ty=c&ta=0&p=d&s=l"
+        })
+
     # Format top 6 industries
     top_6_ind = df_industries.head(6)
     formatted_industries = []
@@ -336,6 +357,7 @@ def _export_web_data(df_stocks, df_industries):
     web_data = {
         "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "stocks": formatted_stocks,
+        "tips": formatted_tips,
         "industries": formatted_industries
     }
 
@@ -549,12 +571,8 @@ def rankings(test_mode=False, test_tickers=None):
     df = df.sort_values(([TITLE_RS]), ascending=False)
     df[TITLE_RANK] = range(1, len(df) + 1)
 
-    # trim to MIN_PERCENTILE
-    out_tickers_count = 0
-    for _, row in df.iterrows():
-        if row[TITLE_PERCENTILE] >= MIN_PERCENTILE:
-            out_tickers_count += 1
-    df = df.head(out_tickers_count)
+    # trim to MIN_PERCENTILE (but keep ALL manual tips)
+    df = df[(df[TITLE_PERCENTILE] >= MIN_PERCENTILE) | (df[TITLE_SOURCE] != "AI Scanner")]
 
     # Minervini subset
     dfm = df[df[TITLE_MINERVINI] > 6]
@@ -662,6 +680,9 @@ def rankings(test_mode=False, test_tickers=None):
     def getTickers(industries_dict, industry_name):
         return ",".join(sorted(industries_dict[industry_name][TITLE_TICKERS], key=rs_for_stock, reverse=True))
 
+    # Web Dashboard Export (always run before potential early return)
+    _export_web_data(df, pd.DataFrame(columns=[TITLE_INDUSTRY, TITLE_SECTOR, TITLE_RS, TITLE_TICKERS]))
+
     # remove industries with only one stock
     filtered_industries = filter(lambda i: len(i[TITLE_TICKERS]) > 1, list(industries.values()))
     filtered_industries_list = list(filtered_industries)
@@ -690,8 +711,10 @@ def rankings(test_mode=False, test_tickers=None):
 
     df_industries.to_csv(os.path.join(DIR, "output", f'rs_industries{suffix}.csv'), index=False)
 
-    # Web Dashboard Export
+    # Final Web Dashboard Export (refreshed with industries if they exist)
     _export_web_data(df, df_industries)
+
+    return [df, df_industries]
 
     return [df, df_industries]
 

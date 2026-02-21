@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Candidates Dashboard</title>
+    <title>Stock Selection Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -22,6 +22,8 @@
             --accent2: #a29bfe;
             --green: #00e676;
             --cyan: #00e5ff;
+            --orange: #ff9100;
+            --red: #ff5252;
             --glass: rgba(18, 18, 40, .72);
             --glass-b: 12px;
             --radius: 16px;
@@ -104,6 +106,39 @@
             box-shadow: 0 0 8px var(--green);
         }
 
+        .dashboard-tools {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .toggle-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-btn.active {
+            background: var(--accent);
+            border-color: var(--accent2);
+        }
+
+        .toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
         .section-header {
             display: flex;
             flex-direction: column;
@@ -147,7 +182,6 @@
         .card {
             background: var(--glass);
             backdrop-filter: blur(var(--glass-b));
-            -webkit-backdrop-filter: blur(var(--glass-b));
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 1.5rem;
@@ -157,12 +191,13 @@
             flex-direction: column;
             gap: 1rem;
             animation: fadeUp 0.5s ease backwards;
+            position: relative;
         }
 
         @keyframes fadeUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(15px);
             }
 
             to {
@@ -184,34 +219,10 @@
             align-items: flex-start;
         }
 
-        .rank-badge {
-            background: rgba(108, 92, 231, 0.15);
-            color: var(--accent2);
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            border: 1px solid rgba(108, 92, 231, 0.2);
-            white-space: nowrap;
-        }
-
-        .source-badge {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text2);
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            border: 1px solid var(--border);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .source-tip {
-            background: rgba(0, 230, 118, 0.1);
-            color: var(--green);
-            border-color: rgba(0, 230, 118, 0.2);
+        .ticker-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
         .ticker {
@@ -228,27 +239,112 @@
             color: var(--accent2);
         }
 
-        .chart-container {
-            width: 100%;
-            height: 140px;
-            background: var(--surface);
+        .rs-pct-badge {
+            font-size: 0.65rem;
+            background: rgba(0, 229, 255, 0.1);
+            color: var(--cyan);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .stats-top {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .rank-badge {
+            background: rgba(108, 92, 231, 0.15);
+            color: var(--accent2);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border: 1px solid rgba(108, 92, 231, 0.2);
+        }
+
+        .source-badge {
+            font-size: 0.6rem;
+            color: var(--text2);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+            opacity: 0.7;
+        }
+
+        /* Chart container with link */
+        .chart-link {
+            display: block;
             border-radius: var(--radius-sm);
             overflow: hidden;
             border: 1px solid var(--border);
-            margin-top: 4px;
+            position: relative;
+            background: var(--surface);
+            height: 160px;
+        }
+
+        .chart-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(108, 92, 231, 0.2);
+            opacity: 0;
+            transition: opacity 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: white;
+            gap: 8px;
+            backdrop-filter: blur(2px);
+        }
+
+        .chart-link:hover .chart-overlay {
+            opacity: 1;
         }
 
         .chart-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: brightness(0.9) contrast(1.1) saturate(1.2);
+            filter: brightness(0.9) contrast(1.1);
             transition: transform 0.3s;
         }
 
-        .card:hover .chart-img {
+        .chart-link:hover .chart-img {
             transform: scale(1.05);
-            filter: brightness(1);
+        }
+
+        /* CANSLIM Letters */
+        .canslim-tray {
+            display: flex;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        .canslim-letter {
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 800;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text2);
+            border: 1px solid var(--border);
+        }
+
+        .canslim-letter.active {
+            background: var(--green);
+            color: var(--bg);
+            border-color: var(--green);
+            box-shadow: 0 0 10px rgba(0, 230, 118, 0.3);
         }
 
         .metrics {
@@ -267,7 +363,7 @@
         }
 
         .metric-label {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: var(--text2);
             text-transform: uppercase;
             letter-spacing: 0.1em;
@@ -294,20 +390,50 @@
         }
 
         .highlight-tag {
-            background: rgba(0, 229, 255, 0.06);
+            background: rgba(0, 229, 255, 0.05);
             color: var(--cyan);
             padding: 4px 10px;
             border-radius: 8px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
             border: 1px solid rgba(0, 229, 255, 0.15);
+        }
+
+        .earnings-alert {
+            background: rgba(255, 145, 0, 0.1);
+            color: var(--orange);
+            border: 1px solid rgba(255, 145, 0, 0.2);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: -4px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.8;
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.02);
+            }
+
+            100% {
+                opacity: 0.8;
+            }
         }
 
         .industry-card {
             border-left: 4px solid var(--accent);
         }
 
-        .industry-card .ticker-row {
+        .ticker-row {
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
@@ -333,7 +459,10 @@
             grid-column: 1 / -1;
         }
 
-        /* Scrollbar styles */
+        .hidden {
+            display: none !important;
+        }
+
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -346,10 +475,6 @@
             background: var(--border);
             border-radius: 10px;
         }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text2);
-        }
     </style>
 </head>
 
@@ -361,95 +486,169 @@
             <div id="last-updated" class="last-updated">Updating...</div>
         </header>
 
+        <div class="dashboard-tools">
+            <button id="toggle-speculative" class="toggle-btn active">
+                <span>🛡️ Speculative Filter</span>
+                <small id="spec-status">ON (Hiding Biotechs/Speculative)</small>
+            </button>
+            <div class="meta-info">Showing top liquidity & strength</div>
+        </div>
+
+        <section id="tips-section" class="hidden">
+            <div class="section-header">
+                <h2 class="section-title">💡 Market Tips & Alerts</h2>
+                <p class="section-sub">Manually curated opportunities from your watchlists</p>
+            </div>
+            <div id="tips-grid" class="grid"></div>
+        </section>
+
         <section>
             <div class="section-header">
-                <h2 class="section-title">✨ Top 6 Stock Candidates</h2>
-                <p class="section-sub">Highest relative strength with controlled volatility</p>
+                <h2 class="section-title">✨ Top 6 Alpha Leaders</h2>
+                <p class="section-sub">Highest technical strength with strictly controlled volatility</p>
             </div>
             <div id="stocks-grid" class="grid">
-                <div class="loading">Analyzing market data...</div>
+                <div class="loading">Analyzing market conditions...</div>
             </div>
         </section>
 
         <section>
             <div class="section-header">
-                <h2 class="section-title">📊 Top 6 Industry Groups</h2>
-                <p class="section-sub">Identifying clusters of institutional strength</p>
+                <h2 class="section-title">📊 Sector Leadership</h2>
+                <p class="section-sub">Identifying institutional capital flow clusters</p>
             </div>
             <div id="industries-grid" class="grid">
-                <div class="loading">Identifying strength...</div>
+                <div class="loading">Scanning sectors...</div>
             </div>
         </section>
     </div>
 
     <script>
-        async function loadData() {
+        let allData = null;
+        let hideSpeculative = true;
+
+        async function init() {
             try {
-                // Add cache-busting to avoid old JSON
-                const response = await fetch(`web_data.json?t=${new Date().getTime()}`);
-                const data = await response.json();
+                const response = await fetch(`web_data.json?t=${Date.now()}`);
+                allData = await response.json();
 
-                document.getElementById('last-updated').textContent = `Last Processed: ${data.last_updated}`;
+                document.getElementById('last-updated').textContent = `Sync: ${allData.last_updated}`;
 
-                const stocksGrid = document.getElementById('stocks-grid');
-                stocksGrid.innerHTML = data.stocks.map((stock, index) => `
-                    <div class="card" style="animation-delay: ${index * 0.1}s">
-                        <div class="card-header">
-                            <a href="${stock.tradingview_url}" target="_blank" class="ticker">${stock.ticker}</a>
-                            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
-                                <div class="rank-badge">RANK #${stock.rank}</div>
-                                <div class="source-badge ${stock.source !== 'AI Scanner' ? 'source-tip' : ''}">${stock.source}</div>
-                            </div>
-                        </div>
-                        <div class="chart-container">
-                            <img src="${stock.finviz_chart_url}&t=${new Date().getTime()}" class="chart-img" loading="lazy" alt="${stock.ticker} Chart">
-                        </div>
-                        <div class="metrics">
-                            <div class="metric">
-                                <span class="metric-label">RS</span>
-                                <span class="metric-value">${stock.rs}</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric-label">RMV</span>
-                                <span class="metric-value">${stock.rmv}</span>
-                            </div>
-                        </div>
-                        <div class="meta-info">
-                            ${stock.industry} &bull; ${stock.sector}
-                        </div>
-                        <div class="highlights">
-                            ${stock.highlights.split(', ').map(h => `<span class="highlight-tag">${h}</span>`).join('')}
-                        </div>
-                    </div>
-                `).join('');
+                document.getElementById('toggle-speculative').addEventListener('click', () => {
+                    hideSpeculative = !hideSpeculative;
+                    const btn = document.getElementById('toggle-speculative');
+                    btn.classList.toggle('active');
+                    document.getElementById('spec-status').textContent = hideSpeculative ? 'ON (Hiding Biotechs/Speculative)' : 'OFF (Showing All)';
+                    render();
+                });
 
-                const industriesGrid = document.getElementById('industries-grid');
-                industriesGrid.innerHTML = data.industries.map((ind, index) => `
-                    <div class="card industry-card" style="animation-delay: ${index * 0.1}s">
-                        <div class="card-header">
-                            <div class="ticker" style="font-size: 1.125rem; color: var(--text)">${ind.industry}</div>
-                            <div class="rank-badge">RANK #${ind.rank}</div>
-                        </div>
-                        <div class="metrics">
-                            <div class="metric">
-                                <span class="metric-label">Avg RS</span>
-                                <span class="metric-value">${ind.rs}</span>
-                            </div>
-                        </div>
-                        <div class="meta-info">${ind.sector}</div>
-                        <div class="ticker-row">
-                            ${ind.tickers.map(t => `<span class="ticker-tag">${t}</span>`).join('')}
-                        </div>
-                    </div>
-                `).join('');
-
-            } catch (error) {
-                console.error('Error loading data:', error);
-                document.getElementById('stocks-grid').innerHTML = '<div class="loading">Error loading market data. Please run rs_ranking.py first.</div>';
+                render();
+            } catch (err) {
+                console.error(err);
+                document.getElementById('stocks-grid').innerHTML = '<div class="loading">Live data connection failed. Check rs_ranking.py outputs.</div>';
             }
         }
 
-        loadData();
+        function createCanslimTray(canslim) {
+            if (!canslim) return '';
+            const letters = ['C', 'A', 'N', 'S', 'L', 'I', 'M'];
+            return `<div class="canslim-tray">
+                ${letters.map(l => {
+                const active = canslim[l.toLowerCase()];
+                return `<div class="canslim-letter ${active ? 'active' : ''}" title="${l}">${l}</div>`;
+            }).join('')}
+            </div>`;
+        }
+
+        function renderStock(s, idx) {
+            const earningsBadge = (s.days_to_earnings >= 0 && s.days_to_earnings <= 14)
+                ? `<div class="earnings-alert">📅 EARNINGS IN ${s.days_to_earnings}D</div>`
+                : '';
+
+            return `
+                <div class="card ${s.is_restricted ? 'speculative' : ''} ${hideSpeculative && s.is_restricted ? 'hidden' : ''}" style="animation-delay: ${idx * 0.05}s">
+                    <div class="card-header">
+                        <div class="ticker-group">
+                            <a href="${s.tradingview_url}" target="_blank" class="ticker">${s.ticker}</a>
+                            <div class="rs-pct-badge">RS 1M: ${s.rs_1m_pct}%</div>
+                            ${createCanslimTray(s.canslim)}
+                        </div>
+                        <div class="stats-top">
+                            <div class="rank-badge">RANK #${s.rank}</div>
+                            <div class="source-badge">${s.source}</div>
+                        </div>
+                    </div>
+                    
+                    ${earningsBadge}
+
+                    <a href="${s.tradingview_url}" target="_blank" class="chart-link">
+                        <img src="${s.finviz_chart_url}&t=${Date.now()}" class="chart-img" loading="lazy" alt="${s.ticker}">
+                        <div class="chart-overlay">
+                            <span>Open Live Chart</span>
+                            <span>↗️</span>
+                        </div>
+                    </a>
+
+                    <div class="metrics">
+                        <div class="metric">
+                            <span class="metric-label">Relative Strength</span>
+                            <span class="metric-value">${s.rs}</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Volatility (RMV)</span>
+                            <span class="metric-value">${s.rmv}</span>
+                        </div>
+                    </div>
+
+                    <div class="meta-info">${s.industry} &bull; ${s.sector}</div>
+                    
+                    <div class="highlights">
+                        ${s.highlights.split(', ').map(h => `<span class="highlight-tag">${h}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function render() {
+            if (!allData) return;
+
+            // Render Stocks
+            const stocksGrid = document.getElementById('stocks-grid');
+            stocksGrid.innerHTML = allData.stocks.map((s, i) => renderStock(s, i)).join('');
+
+            // Render Tips Section
+            const tips = allData.tips || [];
+            const tipsSection = document.getElementById('tips-section');
+            if (tips.length > 0) {
+                tipsSection.classList.remove('hidden');
+                document.getElementById('tips-grid').innerHTML = tips.map((s, i) => renderStock(s, i)).join('');
+            } else {
+                tipsSection.classList.add('hidden');
+            }
+
+            // Render Industries
+            const indGrid = document.getElementById('industries-grid');
+            indGrid.innerHTML = allData.industries.map((ind, i) => `
+                <div class="card industry-card" style="animation-delay: ${i * 0.1}s">
+                    <div class="card-header">
+                        <div class="ticker" style="font-size: 1.1rem; color: var(--text)">${ind.industry}</div>
+                        <div class="rank-badge">RANK #${ind.rank}</div>
+                    </div>
+                    <div class="metrics">
+                        <div class="metric">
+                            <span class="metric-label">Group RS Avg</span>
+                            <span class="metric-value">${ind.rs}</span>
+                        </div>
+                    </div>
+                    <div class="meta-info">${ind.sector}</div>
+                    <div class="ticker-row">
+                        ${ind.tickers.map(t => `<span class="ticker-tag">${t}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        init();
     </script>
 </body>
 
