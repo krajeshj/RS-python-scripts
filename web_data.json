@@ -1,14 +1,14 @@
 {
-    "last_updated": "2026-02-21 19:05:59",
+    "last_updated": "2026-02-21 19:30:41",
     "stocks": [
         {
             "rank": 1,
-            "ticker": "QMMM",
-            "rs": 45.48,
-            "rmv": 0.0,
-            "industry": "unknown",
-            "sector": "unknown",
-            "highlights": "Not Extended, Ultra Low Volatility"
+            "ticker": "AXTI",
+            "rs": 9.12,
+            "rmv": 100.0,
+            "industry": "Semiconductor Equipment & Materials",
+            "sector": "Technology",
+            "highlights": "Confirmed Breakout, Strong Trend Alignment"
         },
         {
             "rank": 2,
@@ -21,114 +21,115 @@
         },
         {
             "rank": 3,
-            "ticker": "RAPT",
-            "rs": 4.15,
-            "rmv": 1.64,
+            "ticker": "SLGL",
+            "rs": 5.74,
+            "rmv": 73.15,
             "industry": "Biotechnology",
             "sector": "Healthcare",
-            "highlights": "VCP Contraction, Strong Trend Alignment, Ultra Low Volatility"
+            "highlights": "Strong Trend Alignment"
         },
         {
             "rank": 4,
-            "ticker": "BNR",
-            "rs": 3.52,
-            "rmv": 63.22,
-            "industry": "Diagnostics & Research",
+            "ticker": "TERN",
+            "rs": 5.48,
+            "rmv": 43.57,
+            "industry": "Biotechnology",
             "sector": "Healthcare",
-            "highlights": "VCP Contraction"
+            "highlights": "Not Extended, Controlled Volatility"
         },
         {
             "rank": 5,
-            "ticker": "BIOA",
-            "rs": 3.35,
-            "rmv": 52.61,
-            "industry": "unknown",
-            "sector": "unknown",
+            "ticker": "LITE",
+            "rs": 5.0,
+            "rmv": 68.12,
+            "industry": "Communication Equipment",
+            "sector": "Technology",
             "highlights": "Strong Trend Alignment"
         },
         {
             "rank": 6,
-            "ticker": "WDC",
-            "rs": 3.32,
-            "rmv": 62.18,
-            "industry": "Computer Hardware",
-            "sector": "Technology",
+            "ticker": "GLTO",
+            "rs": 4.98,
+            "rmv": 79.07,
+            "industry": "Biotechnology",
+            "sector": "Healthcare",
             "highlights": "Strong Trend Alignment"
         }
     ],
     "industries": [
         {
             "rank": 1,
-            "industry": "Other Precious Metals & Mining",
+            "industry": "Silver",
             "sector": "Basic Materials",
-            "rs": 5.18,
+            "rs": 2.21,
             "tickers": [
-                "HYMC",
-                "BVN"
+                "AG",
+                "EXK",
+                "PAAS",
+                "FSM"
             ]
         },
         {
             "rank": 2,
-            "industry": "Uranium",
-            "sector": "Energy",
-            "rs": 1.81,
+            "industry": "Other Precious Metals & Mining",
+            "sector": "Basic Materials",
+            "rs": 3.57,
             "tickers": [
-                "UUUU",
-                "UEC",
-                "CCJ",
-                "LEU"
+                "HYMC",
+                "MUX",
+                "BVN",
+                "PPTA"
             ]
         },
         {
             "rank": 3,
             "industry": "Gold",
             "sector": "Basic Materials",
-            "rs": 1.74,
+            "rs": 1.8,
             "tickers": [
-                "GOLD",
-                "SBSW",
-                "WPM",
-                "OR",
-                "CMCL"
+                "HL",
+                "IAG",
+                "CDE",
+                "NGD",
+                "GOLD"
             ]
         },
         {
             "rank": 4,
-            "industry": "unknown",
-            "sector": "unknown",
-            "rs": 1.53,
+            "industry": "Semiconductor Equipment & Materials",
+            "sector": "Technology",
+            "rs": 1.98,
             "tickers": [
-                "QMMM",
-                "BIOA",
-                "PACS",
-                "MAZE",
-                "LVLU"
+                "AXTI",
+                "ICHR",
+                "TER",
+                "UCTT",
+                "ACMR"
             ]
         },
         {
             "rank": 5,
-            "industry": "Semiconductors",
-            "sector": "Technology",
-            "rs": 1.51,
+            "industry": "Uranium",
+            "sector": "Energy",
+            "rs": 1.78,
             "tickers": [
-                "MU",
-                "AMKR",
-                "DIOD",
-                "TXN",
-                "NXPI"
+                "UUUU",
+                "UEC",
+                "CCJ",
+                "NXE",
+                "LEU"
             ]
         },
         {
             "rank": 6,
-            "industry": "Biotechnology",
-            "sector": "Healthcare",
-            "rs": 1.47,
+            "industry": "Aluminum",
+            "sector": "Basic Materials",
+            "rs": 1.77,
             "tickers": [
-                "RAPT",
-                "NBTX",
-                "DBVT",
-                "TYRA",
-                "STOK"
+                "CENX",
+                "CSTM",
+                "AA",
+                "KALU"
             ]
         }
     ]
