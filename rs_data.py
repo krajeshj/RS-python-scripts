@@ -23,6 +23,7 @@ import numpy as np
 import re
 from ftplib import FTP
 from yahoo_fin.stock_info import get_quote_table
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from io import StringIO
 from time import sleep
 import sys
@@ -243,22 +244,38 @@ def get_info_from_dict(dict, key):
     # fix unicode
     # value = value.replace("\u2014", " ")
     return value
-def load_ticker_info(ticker, info_dict):
+def load_ticker_info_batch(tickers, info_dict):
+    """Fetches ticker info in parallel."""
+    print(f"Fetching metadata for {len(tickers)} tickers in parallel...")
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        future_to_ticker = {executor.submit(load_ticker_info, t, {}): t for t in tickers}
+        for future in as_completed(future_to_ticker):
+            ticker = future_to_ticker[future]
+            try:
+                res = future.result()
+                if res:
+                    info_dict.update(res)
+            except Exception as e:
+                print(f"Error fetching metadata for {ticker}: {e}")
+
+def load_ticker_info(ticker, info_dict_ignored):
+    """Fetches info for a single ticker. Returns a dict to be merged."""
     escaped_ticker = escape_ticker(ticker)
     try: 
-        #fetch data for symbol
-        info = yf.Ticker(escaped_ticker)
-        if info.empty:
-            raise ValueError(f"No data found for symbol: {escaped_ticker}")
-        ticker_info = {
-            "info": {
-                "industry": get_info_from_dict(info.info, "industry"),
-                "sector": get_info_from_dict(info.info, "sector")
+        info = yf.Ticker(escaped_ticker).info
+        if not info:
+            return None
+        return {
+            ticker: {
+                "info": {
+                    "industry": get_info_from_dict(info, "industry"),
+                    "sector": get_info_from_dict(info, "sector"),
+                    "marketCap": info.get("marketCap", 0)
+                }
             }
         }
-        info_dict[ticker] = ticker_info
     except Exception as e:
-        print(f"Error fetching data for {escaped_ticker}: {e}")
+        # print(f"Error fetching metadata for {escaped_ticker}: {e}")
         return None
 
 def load_prices_from_tda(securities, api_key):
@@ -330,13 +347,23 @@ def convert_string_to_numeric(value_str):
 
 
 def get_market_cap(ticker):
+    """
+    Fetches market cap for a ticker. 
+    In a high-performance environment, it's better to fetch these in bulk
+    or use a more efficient API than yahoo_fin for large universes.
+    """
     try:
-        quote_table = get_quote_table(ticker)
-        market_cap = quote_table["Market Cap"]
-        return convert_string_to_numeric(market_cap)
-    except Exception as e:
-        print(f"Error occurred while fetching data: {e}")
-        return 1000000001
+        # Ticker info often contains market cap, check cache first if we ever add it there
+        quote = yf.Ticker(ticker).info
+        return quote.get("marketCap", 1000000001)
+    except Exception:
+        try:
+            quote_table = get_quote_table(ticker)
+            market_cap = quote_table.get("Market Cap", "0")
+            return convert_string_to_numeric(market_cap)
+        except Exception as e:
+            print(f"Error fetching Market Cap for {ticker}: {e}")
+            return 1000000001
 
 
 
@@ -355,177 +382,120 @@ def get_market_cap(ticker):
 
 
 def get_yf_data(security, start_date, end_date):
-        
-        """
-        escaped_ticker = security["ticker"].replace(".","-")
-        df = yf.download(escaped_ticker, start=start_date, end=end_date, auto_adjust=True)            
+    """
+    Fetches data for a single security. 
+    Note: For better performance, use batch downloading in load_prices_from_yahoo instead.
+    """
+    try:
+        ticker = security["ticker"]
+        escaped_ticker = escape_ticker(ticker)
+        df = yf.download(escaped_ticker, start=start_date, end=end_date, auto_adjust=True, progress=False)
+        return _process_yf_df(df, security)
+    except Exception as e:
+        print(f"Error downloading data for {security.get('ticker')}: {e}")
+        return _empty_ticker_data(security)
 
-       
+def _process_yf_df(df, security):
+    ticker_data = {}
+    if df.empty:
+        return _empty_ticker_data(security)
 
-        #todays_liquidity = (df["Adj Close"].count()-1) * (df["averageVolume"].count()-1)
-        #data_top = df.head()
-        #print(data_top)
-        
-         
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = df.columns.get_level_values(0)
+
+    required_columns = ['Open', 'High', 'Low', 'Close', 'Volume']
+    missing_columns = [col for col in required_columns if col not in df.columns]
+    if missing_columns:
+        return _empty_ticker_data(security)
+
+    # Minervini Criteria (Optimized)
+    try:
+        c = df['Close']
+        sma50 = c.rolling(50).mean().iloc[-1]
+        sma150 = c.rolling(150).mean().iloc[-1]
+        sma200 = c.rolling(200).mean().iloc[-1]
+        sma200_22 = c.rolling(200).mean().iloc[-22] if len(c) >= 222 else 0
+        low_52w = c.tail(252).min()
+        high_52w = c.tail(252).max()
+        price = c.iloc[-1]
+
         mm_count = 0
-        df.describe()
-        df.head()
-        ticker_data = {}
-        Avg_volume=df["Volume"].tail(50).mean(skipna=True)
-        print("Average volume is ", Avg_volume)
-        try:
-            if "Adj Close" in df.columns:
-                # Retrieve "Adj Close" column data
-                adj_close = df['Adj Close']
-                print(adj_close)
-            else:
-                df.describe()
-                df.head()
-                df.tail()
-                print("Error: 'Adj Close' column not found in DataFrame.")        
-            price_today = df['Adj Close'].tail(1).item()
-            #print("Price today", price_today)
-        except:
-            df.describe()
-            df.head()
-            price_today = df['Adj Close'].tail(5).mean(skipna=True)
-        
-        try:
-            mkt_cap_today = get_market_cap(escaped_ticker)
-            #print ("market cap was found for", escaped_ticker, "it was", mkt_cap_today)
-        except:
-            print ("Mkt cap for ", escaped_ticker, "is", mkt_cap_today)
+        if price > sma150 and price > sma200: mm_count += 1
+        if sma150 > sma200: mm_count += 1
+        if sma200 > sma200_22: mm_count += 1
+        if sma50 > sma150 and sma50 > sma200: mm_count += 1
+        if price > sma50: mm_count += 1
+        if price > 1.25 * low_52w: mm_count += 1
+        if price >= 0.75 * high_52w: mm_count += 1
+        mm_count += 1 # Base RS criterion
+    except:
+        mm_count = 0
 
-            
+    # Vectorized conversion to list of dicts
+    df_candles = df[required_columns].copy()
+    df_candles['datetime'] = df_candles.index.map(lambda x: int(x.timestamp()))
+    
+    df_dict = df_candles.rename(columns={
+        'Open': 'open', 'High': 'high', 'Low': 'low', 'Close': 'close', 'Volume': 'volume'
+    })
+    
+    ticker_data["candles"] = df_dict.to_dict('records')
+    enrich_ticker_data(ticker_data, security, skip_calc=0, mm_count=mm_count)
+    return ticker_data
 
-
-        sma200=df["Adj Close"].tail(200).mean(skipna=True)
-        sma150=df["Adj Close"].tail(150).mean(skipna=True)
-
-        sma50=df["Adj Close"].tail(50).mean(skipna=True)
-        sma21=df["Adj Close"].tail(21).mean(skipna=True)
-
-        
-        #print(m3_sma200_rolling_df.describe())
-        #print(m3_sma200_trend_df.columns())
-
-        #print(m3_sma200_rolling_df.iloc[-1])
-        #print(m3_sma200_rolling_df.iloc[-22])
-        try:
-            m1_p_ge_150_n_200 = (( df["Adj Close"].tail(1).item() > sma150 ) and (df["Adj Close"].tail(1).item() > sma200 ))
-            m2_sma150_ge_sma200 = sma150 > sma200
-            m3_sma200_rolling_df= df["Adj Close"].rolling(window=200).mean(skipna=True)
-            m3_sma200_22day_in_uptrend = (m3_sma200_rolling_df.iloc[-1] > m3_sma200_rolling_df.iloc[-22])
-            m4_sma50_ge_sma150_n_200 = ( sma50 > sma150 ) and (sma50 > sma200)
-            m5_p_ge_sma50 = (price_today > sma50)
-            m6_p_ge_52wk_min = ( price_today > (1.25 * df["Adj Close"].tail(253).min()))
-            m7_p_near_52wk_hi = (abs(  ((price_today - df["Adj Close"].tail(253).max())*100) / (df["Adj Close"].tail(253).max())) < 25)
-            m8_rs_ge_85 = True
-
-            mm_criteria = m1_p_ge_150_n_200 and m2_sma150_ge_sma200 and m3_sma200_22day_in_uptrend and m4_sma50_ge_sma150_n_200 and m5_p_ge_sma50 and  m6_p_ge_52wk_min and m7_p_near_52wk_hi
-            #print("Meets all mm_criteria", mm_criteria)
-            mm_count = int(m8_rs_ge_85) + int(m1_p_ge_150_n_200) + int(m2_sma150_ge_sma200) + int(m3_sma200_22day_in_uptrend) + int(m4_sma50_ge_sma150_n_200) + int(m5_p_ge_sma50) + int(m7_p_near_52wk_hi) + int(m6_p_ge_52wk_min)
-            
-        except:
-            m1_p_ge_150_n_200 = False
-            m2_sma150_ge_sma200 = False
-            m3_sma200_22day_in_uptrend = False
-            mm_criteria = False
-            MarketCap=0
-        """
-        #if((price_today > 9) and (Avg_volume > 300000) and ( mkt_cap_today > 1_000_000_000)):
-        #if((price_today > 9) and (Avg_volume > 300000) ):
-        try:
-            ticker_data = {}
-            ticker = security["ticker"]
-            escaped_ticker = escape_ticker(ticker)
-            
-            # Add small delay to avoid rate limiting
-            time.sleep(0.1)
-            
-            df = yf.download(escaped_ticker, start=start_date, end=end_date, auto_adjust=True, progress=False)            
-            
-            # Check if we got valid data
-            if df.empty:
-                print(f"No data received for {escaped_ticker}")
-                ticker_data["candles"] = []
-                skip_calc = 1
-                mm_count = 0
-                enrich_ticker_data(ticker_data, security, skip_calc, mm_count)
-                return ticker_data
-            
-            # Handle multi-level columns from yfinance
-            if isinstance(df.columns, pd.MultiIndex):
-                # Flatten multi-level columns to single level
-                df.columns = df.columns.get_level_values(0)
-            
-            # Check if we have the required columns
-            required_columns = ['Open', 'High', 'Low', 'Close', 'Volume']
-            missing_columns = [col for col in required_columns if col not in df.columns]
-            if missing_columns:
-                print(f"Missing columns for {escaped_ticker}: {missing_columns}")
-                ticker_data["candles"] = []
-                skip_calc = 1
-                mm_count = 0
-                enrich_ticker_data(ticker_data, security, skip_calc, mm_count)
-                return ticker_data
-            
-            yahoo_response = df.to_dict() 
-            timestamps = list(yahoo_response["Open"].keys())
-            timestamps = list(map(lambda timestamp: int(timestamp.timestamp()), timestamps))
-            opens = list(yahoo_response["Open"].values())
-            closes = list(yahoo_response["Close"].values())
-            lows = list(yahoo_response["Low"].values())
-            highs = list(yahoo_response["High"].values())
-            volumes = list(yahoo_response["Volume"].values())
-            candles = []
-
-            for i in range(0, len(opens)):
-                candle = {}
-                candle["open"] = opens[i]
-                candle["close"] = closes[i]
-                candle["low"] = lows[i]
-                candle["high"] = highs[i]
-                candle["volume"] = volumes[i]
-                candle["datetime"] = timestamps[i]
-                candles.append(candle)
-
-            ticker_data["candles"] = candles
-            skip_calc = 0
-            """ remove me when FIXME"""
-            mm_count = 8
-            enrich_ticker_data(ticker_data, security,skip_calc, mm_count)
-            
-        except Exception as e:
-            print(f"Error downloading data for {escaped_ticker}: {e}")
-            ticker_data = {}
-            ticker_data["candles"] = []
-            skip_calc = 1
-            mm_count = 0
-            enrich_ticker_data(ticker_data, security, skip_calc, mm_count)
-
-        return ticker_data
+def _empty_ticker_data(security):
+    ticker_data = {"candles": []}
+    enrich_ticker_data(ticker_data, security, skip_calc=1, mm_count=0)
+    return ticker_data
 
 def load_prices_from_yahoo(securities, info = {}):
-    print("*** Loading Stocks from Yahoo Finance ***")
+    print("*** Loading Stocks from Yahoo Finance (Batch mode) ***")
     today = date.today()
     start = time.time()
-    start_date = today - dt.timedelta(days=1*365+183) # 183 = 6 months
+    start_date = today - dt.timedelta(days=1*365+183) # 18 months
+    
     tickers_dict = {}
-    load_times = []
+    all_tickers = [sec["ticker"] for sec in securities]
+    escaped_tickers = [escape_ticker(t) for t in all_tickers]
+    
+    # Batch download
+    print(f"Downloading data for {len(escaped_tickers)} tickers...")
+    try:
+        full_df = yf.download(escaped_tickers, start=start_date, end=today, auto_adjust=True, group_by='ticker', progress=True)
+    except Exception as e:
+        print(f"Batch download failed: {e}. Falling back to sequential.")
+        full_df = None
+
+    # Metadata check
+    missing_metadata = [t for t in all_tickers if t not in TICKER_INFO_DICT]
+    if missing_metadata:
+        load_ticker_info_batch(missing_metadata, TICKER_INFO_DICT)
+        write_ticker_info_file(TICKER_INFO_DICT)
+
     for idx, security in enumerate(securities):
         ticker = security["ticker"]
-        r_start = time.time()
-        ticker_data = get_yf_data(security, start_date, today)
-        # if not ticker in TICKER_INFO_DICT:
-        #     load_ticker_info(ticker, TICKER_INFO_DICT)
-        # ticker_data["industry"] = TICKER_INFO_DICT[ticker]["info"]["industry"]
-        now = time.time()
-        current_load_time = now - r_start
-        load_times.append(current_load_time)
-        remaining_seconds = remaining_seconds = get_remaining_seconds(load_times, idx, len(securities))
-        print_data_progress(ticker, security["universe"], idx, securities, "", time.time() - start, remaining_seconds)
+        escaped = escape_ticker(ticker)
+        
+        if full_df is not None and escaped in full_df.columns.levels[0]:
+            ticker_df = full_df[escaped].dropna(subset=['Close'])
+            ticker_data = _process_yf_df(ticker_df, security)
+        else:
+            ticker_data = get_yf_data(security, start_date, today)
+        
+        # Inject metadata if available
+        if ticker in TICKER_INFO_DICT:
+            ticker_data["industry"] = TICKER_INFO_DICT[ticker]["info"]["industry"]
+            ticker_data["sector"] = TICKER_INFO_DICT[ticker]["info"]["sector"]
+            ticker_data["marketCap"] = TICKER_INFO_DICT[ticker]["info"].get("marketCap", 0)
+
         tickers_dict[ticker] = ticker_data
+        
+        if (idx + 1) % 50 == 0 or idx == len(securities) - 1:
+            elapsed = time.time() - start
+            avg_time = elapsed / (idx + 1)
+            remaining = avg_time * (len(securities) - (idx + 1))
+            print(f"Processed {idx+1}/{len(securities)}. Elapsed: {int(elapsed)}s. Est. remaining: {int(remaining)}s")
+
     write_price_history_file(tickers_dict)
 
 def save_data(source, securities, api_key, info = {}):

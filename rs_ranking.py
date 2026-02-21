@@ -9,6 +9,7 @@ from datetime import datetime
 from functools import reduce
 
 from rs_data import cfg, read_json as read_json_from_rs_data
+from concurrent.futures import ProcessPoolExecutor, as_completed
 
 DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -333,134 +334,139 @@ def _export_web_data(df_stocks, df_industries):
 # -------------------------
 # Main rankings
 # -------------------------
+def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_stage2):
+    """Worker function for parallel processing."""
+    try:
+        if ticker_data.get("skip_calc", 1) != 0:
+            return None
+
+        # Universe filters are handled in the main loop to avoid passing config
+        candles = ticker_data["candles"]
+        if not candles or len(candles) < 120:
+            return None
+
+        # Optimization: pre-calculate series
+        closes_series = pd.Series([c["close"] for c in candles])
+        if closes_series.iloc[-1] <= 12:
+            return None
+
+        highs_series = pd.Series([c["high"] for c in candles])
+        lows_series = pd.Series([c["low"] for c in candles])
+        closes_ref_series = pd.Series([c["close"] for i, c in enumerate(ref_candles) if i < len(candles)]) # Basic alignment
+
+        rs = relative_strength(closes_series, closes_ref_series)
+        rmv = calculate_rmv(closes_series, highs_series, lows_series)
+
+        month = 20
+        rs1m = relative_strength(closes_series.head(-month), closes_ref_series.head(-month))
+        rs3m = relative_strength(closes_series.head(-3 * month), closes_ref_series.head(-3 * month))
+        rs6m = relative_strength(closes_series.head(-6 * month), closes_ref_series.head(-6 * month))
+
+        tdf = _to_df_from_candles(candles)
+        if tdf is None or len(tdf) < 200:
+            return None
+        
+        tdf = _compute_daily_features(tdf)
+        wdf = _compute_weekly(tdf)
+        if wdf is None or len(wdf) < 12:
+            return None
+
+        latest_daily = tdf.iloc[-1]
+        latest_weekly = wdf.iloc[-1]
+        ptc = _compute_ptc(latest_daily, latest_weekly)
+
+        flip_setup = (
+            ptc == 5 and
+            (abs(latest_daily["Close"] - latest_daily["ma50"]) / latest_daily["ma50"] < 0.02) and
+            (tdf["atr14"].iloc[-1] < tdf["atr14"].iloc[-6]) and
+            (latest_daily["Volume"] < latest_daily["vol20"])
+        )
+
+        # Use industry/sector from ticker_data or metadata
+        industry = ticker_data.get("industry", "unknown")
+        sector = ticker_data.get("sector", "unknown")
+        universe = ticker_data.get("universe", "unknown")
+
+        return (
+            ticker, minervini_stage2, sector, industry, universe,
+            rs, 0, rs1m, rs3m, rs6m, rmv,
+            float(latest_daily["Close"]),
+            float(latest_daily["atr14_pct"]) if pd.notna(latest_daily["atr14_pct"]) else np.nan,
+            int(ptc),
+            bool(latest_daily["contraction"]),
+            bool(latest_daily["confirmed_breakout"]),
+            bool(latest_daily["not_extended"]),
+            bool(flip_setup),
+            bool(spy_ok)
+        )
+    except Exception as e:
+        # print(f"Error processing {ticker}: {e}")
+        return None
+
 def rankings(test_mode=False, test_tickers=None):
     """Returns a dataframe with percentile rankings for relative strength + signals."""
     json_data = read_json(PRICE_DATA)
     relative_strengths = []
-    ranks = []
     industries = {}
-    ind_ranks = []
     stock_rs = {}
 
     ref = json_data[REFERENCE_TICKER]
-
-    # SPY regime filter from reference ticker candles
     ref_df = _to_df_from_candles(ref["candles"])
     ref_df = _compute_daily_features(ref_df) if ref_df is not None else None
     spy_ok = _spy_trend_ok(ref_df) if ref_df is not None and len(ref_df) >= 210 else True
 
-    # Test mode subset
     if test_mode and test_tickers:
         tickers_to_process = [t for t in test_tickers if t in json_data]
-        print(f"Test mode: Processing {len(tickers_to_process)} tickers: {tickers_to_process}")
     else:
-        tickers_to_process = json_data.keys()
+        # Filter tickers by universe/config before parallelizing
+        tickers_to_process = []
+        for t in json_data.keys():
+            u = json_data[t].get("universe", "")
+            if u == "S&P 500" and not cfg("SP500"): continue
+            if u == "S&P 400" and not cfg("SP400"): continue
+            if u == "S&P 600" and not cfg("SP600"): continue
+            if u == "Nasdaq 100" and not cfg("NQ100"): continue
+            tickers_to_process.append(t)
 
-    for ticker in tickers_to_process:
-        try:
-            if json_data[ticker].get("skip_calc", 1) != 0:
-                continue
+    print(f"Analyzing {len(tickers_to_process)} tickers in parallel...")
+    
+    results = []
+    with ProcessPoolExecutor() as executor:
+        futures = {
+            executor.submit(
+                _process_single_ticker, 
+                t, json_data[t], ref["candles"], spy_ok, 
+                json_data[t].get("minervini", 0)
+            ): t for t in tickers_to_process if t != REFERENCE_TICKER
+        }
+        
+        for future in as_completed(futures):
+            res = future.result()
+            if res:
+                results.append(res)
 
-            # Universe filters
-            if not cfg("SP500") and json_data[ticker]["universe"] == "S&P 500":
-                continue
-            if not cfg("SP400") and json_data[ticker]["universe"] == "S&P 400":
-                continue
-            if not cfg("SP600") and json_data[ticker]["universe"] == "S&P 600":
-                continue
-            if not cfg("NQ100") and json_data[ticker]["universe"] == "Nasdaq 100":
-                continue
+    for res in results:
+        ticker, mm, sector, industry, universe, rs, pct, rs1m, rs3m, rs6m, rmv, close, atr, ptc, contr, brk, nextend, flip, sok = res
+        
+        if industry == "n/a" or not industry: continue
+        
+        relative_strengths.append((
+            0, ticker, mm, sector, industry, universe,
+            rs, pct, rs1m, rs3m, rs6m, rmv,
+            close, atr, ptc, contr, brk, nextend, flip, sok
+        ))
+        stock_rs[ticker] = rs
 
-            candles = json_data[ticker]["candles"]
-            if not candles or len(candles) < 6 * 20:
-                continue
-
-            closes = list(map(lambda c: c["close"], candles))
-            highs = list(map(lambda c: c["high"], candles))
-            lows = list(map(lambda c: c["low"], candles))
-            closes_ref = list(map(lambda c: c["close"], ref["candles"]))
-
-            industry = TICKER_INFO_DICT[ticker]["info"]["industry"] if json_data[ticker]["industry"] == "unknown" else json_data[ticker]["industry"]
-            sector = TICKER_INFO_DICT[ticker]["info"]["sector"] if json_data[ticker]["sector"] == "unknown" else json_data[ticker]["sector"]
-
-            if industry == "n/a" or len(str(industry).strip()) == 0:
-                continue
-
-            closes_series = pd.Series(closes)
-            highs_series = pd.Series(highs)
-            lows_series = pd.Series(lows)
-            closes_ref_series = pd.Series(closes_ref)
-
-            rs = relative_strength(closes_series, closes_ref_series)
-            rmv = calculate_rmv(closes_series, highs_series, lows_series)
-
-            month = 20
-            tmp_percentile = 100
-            rs1m = relative_strength(closes_series.head(-1 * month), closes_ref_series.head(-1 * month))
-            rs3m = relative_strength(closes_series.head(-3 * month), closes_ref_series.head(-3 * month))
-            rs6m = relative_strength(closes_series.head(-6 * month), closes_ref_series.head(-6 * month))
-
-            # Basic price filter
-            if closes_series.iloc[-1] <= 12:
-                continue
-
-            # Compute signals from candle dataframe (needs datetime)
-            tdf = _to_df_from_candles(candles)
-            if tdf is None or len(tdf) < 220:
-                continue
-            tdf = _compute_daily_features(tdf)
-            wdf = _compute_weekly(tdf)
-            if wdf is None or len(wdf) < 12:
-                continue
-
-            latest_daily = tdf.iloc[-1]
-            latest_weekly = wdf.iloc[-1]
-            ptc = _compute_ptc(latest_daily, latest_weekly)
-
-            flip_setup = (
-                ptc == 5 and
-                (abs(latest_daily["Close"] - latest_daily["ma50"]) / latest_daily["ma50"] < 0.02) and
-                (tdf["atr14"].iloc[-1] < tdf["atr14"].iloc[-6]) and
-                (latest_daily["Volume"] < latest_daily["vol20"])
-            )
-
-            # stocks output
-            ranks.append(len(ranks) + 1)
-            relative_strengths.append((
-                0, ticker, json_data[ticker]["minervini"], sector, industry, json_data[ticker]["universe"],
-                rs, tmp_percentile, rs1m, rs3m, rs6m, rmv,
-                float(latest_daily["Close"]),
-                float(latest_daily["atr14_pct"]) if pd.notna(latest_daily["atr14_pct"]) else np.nan,
-                int(ptc),
-                bool(latest_daily["contraction"]),
-                bool(latest_daily["confirmed_breakout"]),
-                bool(latest_daily["not_extended"]),
-                bool(flip_setup),
-                bool(spy_ok),
-            ))
-            stock_rs[ticker] = rs
-
-            # industries output
-            if industry not in industries:
-                industries[industry] = {
-                    "info": (0, industry, sector, 0, 99, 1, 3, 6),
-                    TITLE_RS: [],
-                    TITLE_1M: [],
-                    TITLE_3M: [],
-                    TITLE_6M: [],
-                    TITLE_TICKERS: []
-                }
-                ind_ranks.append(len(ind_ranks) + 1)
-
-            industries[industry][TITLE_RS].append(rs)
-            industries[industry][TITLE_1M].append(rs1m)
-            industries[industry][TITLE_3M].append(rs3m)
-            industries[industry][TITLE_6M].append(rs6m)
-            industries[industry][TITLE_TICKERS].append(ticker)
-
-        except Exception:
-            print(f'Ticker {ticker} has corrupted data.')
-            continue
+        if industry not in industries:
+            industries[industry] = {
+                "info": (0, industry, sector, 0, 99, 1, 3, 6),
+                TITLE_RS: [], TITLE_1M: [], TITLE_3M: [], TITLE_6M: [], TITLE_TICKERS: []
+            }
+        industries[industry][TITLE_RS].append(rs)
+        industries[industry][TITLE_1M].append(rs1m)
+        industries[industry][TITLE_3M].append(rs3m)
+        industries[industry][TITLE_6M].append(rs6m)
+        industries[industry][TITLE_TICKERS].append(ticker)
 
     dfs = []
     suffix = ''
@@ -483,7 +489,7 @@ def rankings(test_mode=False, test_tickers=None):
     df[TITLE_6M] = pd.qcut(df[TITLE_6M], 100, precision=64, labels=False, duplicates='drop')
 
     df = df.sort_values(([TITLE_RS]), ascending=False)
-    df[TITLE_RANK] = ranks
+    df[TITLE_RANK] = range(1, len(df) + 1)
 
     # trim to MIN_PERCENTILE
     out_tickers_count = 0
