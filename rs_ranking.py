@@ -628,8 +628,7 @@ def rankings(test_mode=False, test_tickers=None):
 
     df_industries = df_industries.sort_values(([TITLE_PERCENTILE]), ascending=False)
 
-    ind_ranks = ind_ranks[:len(df_industries)]
-    df_industries[TITLE_RANK] = ind_ranks
+    df_industries[TITLE_RANK] = range(1, len(df_industries) + 1)
 
     df_industries.to_csv(os.path.join(DIR, "output", f'rs_industries{suffix}.csv'), index=False)
 
