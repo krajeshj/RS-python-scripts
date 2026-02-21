@@ -5,6 +5,7 @@ import json
 import os
 import csv
 import yaml
+from datetime import datetime
 from functools import reduce
 
 from rs_data import cfg, read_json as read_json_from_rs_data
@@ -250,6 +251,84 @@ def _spy_trend_ok(ref_df_daily):
     last = d.iloc[-1]
     return bool(last["Close"] > last["ma50"] and last["ma50"] > last["ma200"])
 
+
+# -------------------------
+# Web Export Helpers
+# -------------------------
+def _get_highlights(row):
+    highlights = []
+    if row.get(TITLE_BREAKOUT): highlights.append("Confirmed Breakout")
+    if row.get(TITLE_CONTRACTION): highlights.append("VCP Contraction")
+    if row.get(TITLE_FLIP): highlights.append("Flip Setup")
+    if row.get(TITLE_NOT_EXT): highlights.append("Not Extended")
+    if row.get(TITLE_PTC, 0) >= 7: highlights.append("Strong Trend Alignment")
+    if row.get(TITLE_RMV, 100) <= ULTRA_RMV_MAX: highlights.append("Ultra Low Volatility")
+    elif row.get(TITLE_RMV, 100) <= CONTROLLED_RMV_MAX: highlights.append("Controlled Volatility")
+    
+    if not highlights:
+        highlights.append("High Relative Strength")
+    return ", ".join(highlights)
+
+def _export_web_data(df_stocks, df_industries):
+    """Exports top 6 stocks and top 6 industries to web_data.json"""
+    # Select top 6 stocks: priority High-Win, then Flip, then RS
+    top_stocks = []
+    
+    # 1. High Win
+    high_win = df_stocks[df_stocks[TITLE_CAND_HIGH]].sort_values(TITLE_RS, ascending=False).head(6)
+    top_stocks.extend(high_win.to_dict('records'))
+    
+    # 2. If < 6, add Flip
+    if len(top_stocks) < 6:
+        needed = 6 - len(top_stocks)
+        existing_tickers = [s[TITLE_TICKER] for s in top_stocks]
+        flips = df_stocks[df_stocks[TITLE_CAND_FLIP] & ~df_stocks[TITLE_TICKER].isin(existing_tickers)]
+        flips = flips.sort_values(TITLE_RS, ascending=False).head(needed)
+        top_stocks.extend(flips.to_dict('records'))
+        
+    # 3. If still < 6, add Top RS
+    if len(top_stocks) < 6:
+        needed = 6 - len(top_stocks)
+        existing_tickers = [s[TITLE_TICKER] for s in top_stocks]
+        top_rs = df_stocks[~df_stocks[TITLE_TICKER].isin(existing_tickers)]
+        top_rs = top_rs.sort_values(TITLE_RS, ascending=False).head(needed)
+        top_stocks.extend(top_rs.to_dict('records'))
+
+    # Format stocks output
+    formatted_stocks = []
+    for i, s in enumerate(top_stocks):
+        formatted_stocks.append({
+            "rank": i + 1,
+            "ticker": s[TITLE_TICKER],
+            "rs": round(s[TITLE_RS], 2),
+            "rmv": s[TITLE_RMV],
+            "industry": s[TITLE_INDUSTRY],
+            "sector": s[TITLE_SECTOR],
+            "highlights": _get_highlights(s)
+        })
+
+    # Format top 6 industries
+    top_6_ind = df_industries.head(6)
+    formatted_industries = []
+    for i, (_, row) in enumerate(top_6_ind.iterrows()):
+        formatted_industries.append({
+            "rank": i + 1,
+            "industry": row[TITLE_INDUSTRY],
+            "sector": row[TITLE_SECTOR],
+            "rs": round(row[TITLE_RS], 2),
+            "tickers": row[TITLE_TICKERS].split(',')[:5] # Show top 5 tickers
+        })
+
+    web_data = {
+        "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "stocks": formatted_stocks,
+        "industries": formatted_industries
+    }
+
+    output_path = os.path.join(DIR, "output", "web_data.json")
+    with open(output_path, 'w') as f:
+        json.dump(web_data, f, indent=4)
+    print(f"Web data exported to {output_path}")
 
 # -------------------------
 # Main rankings
@@ -547,6 +626,9 @@ def rankings(test_mode=False, test_tickers=None):
     df_industries[TITLE_RANK] = ind_ranks
 
     df_industries.to_csv(os.path.join(DIR, "output", f'rs_industries{suffix}.csv'), index=False)
+
+    # Web Dashboard Export
+    _export_web_data(df, df_industries)
 
     return [df, df_industries]
 
