@@ -83,7 +83,7 @@ if not os.path.exists('output'):
 
 
 def read_json(json_file):
-    with open(json_file, "r") as fp:
+    with open(json_file, "r", encoding="utf-8") as fp:
         return json.load(fp)
 
 
@@ -290,11 +290,14 @@ def _export_web_data(df_stocks, df_industries):
         flips = flips.sort_values(TITLE_RS, ascending=False).head(needed)
         top_stocks.extend(flips.to_dict('records'))
         
-    # 3. If still < 6, add Top RS
+    # 3. If still < 6, add Top RS (ensuring low RMV)
     if len(top_stocks) < 6:
         needed = 6 - len(top_stocks)
         existing_tickers = [s[TITLE_TICKER] for s in top_stocks]
-        top_rs = df_stocks[~df_stocks[TITLE_TICKER].isin(existing_tickers)]
+        top_rs = df_stocks[
+            ~df_stocks[TITLE_TICKER].isin(existing_tickers) & 
+            (df_stocks[TITLE_RMV] <= CONTROLLED_RMV_MAX)
+        ]
         top_rs = top_rs.sort_values(TITLE_RS, ascending=False).head(needed)
         top_stocks.extend(top_rs.to_dict('records'))
 

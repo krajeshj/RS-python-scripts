@@ -1,132 +1,214 @@
 {
-    "last_updated": "2026-02-21 19:04:24",
+    "last_updated": "2026-02-21 11:58:56",
     "stocks": [
         {
             "rank": 1,
-            "ticker": "TERN",
-            "rs": 5.48,
-            "rmv": 43.57,
-            "industry": "Biotechnology",
-            "sector": "Healthcare",
-            "highlights": "Not Extended, Controlled Volatility"
+            "ticker": "LRCX",
+            "rs": 2.07,
+            "rmv": 36.95,
+            "industry": "Semiconductor Equipment & Materials",
+            "sector": "Technology",
+            "highlights": "VCP Contraction, Strong Trend Alignment, Controlled Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": false,
+                "l": true,
+                "i": true,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "rs_1m_pct": 98,
+            "is_restricted": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=LRCX",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=LRCX&ty=c&ta=0&p=d&s=l"
         },
         {
             "rank": 2,
-            "ticker": "GLTO",
-            "rs": 4.98,
-            "rmv": 79.07,
-            "industry": "Biotechnology",
-            "sector": "Healthcare",
-            "highlights": "Strong Trend Alignment"
+            "ticker": "AMAT",
+            "rs": 1.81,
+            "rmv": 35.03,
+            "industry": "Semiconductor Equipment & Materials",
+            "sector": "Technology",
+            "highlights": "Strong Trend Alignment, Controlled Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": false,
+                "l": true,
+                "i": true,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "rs_1m_pct": 92,
+            "is_restricted": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=AMAT",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AMAT&ty=c&ta=0&p=d&s=l"
         },
         {
             "rank": 3,
-            "ticker": "SOGP",
-            "rs": 4.61,
-            "rmv": 44.7,
-            "industry": "unknown",
-            "sector": "unknown",
-            "highlights": "VCP Contraction, Not Extended, Strong Trend Alignment, Controlled Volatility"
+            "ticker": "INTC",
+            "rs": 1.48,
+            "rmv": 41.19,
+            "industry": "Semiconductors",
+            "sector": "Technology",
+            "highlights": "VCP Contraction, Not Extended, Controlled Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": false,
+                "l": true,
+                "i": true,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "rs_1m_pct": 96,
+            "is_restricted": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=INTC",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=INTC&ty=c&ta=0&p=d&s=l"
         },
         {
             "rank": 4,
-            "ticker": "SNSE",
-            "rs": 3.59,
-            "rmv": 100.0,
-            "industry": "Biotechnology",
-            "sector": "Healthcare",
-            "highlights": "Strong Trend Alignment"
+            "ticker": "KLAC",
+            "rs": 1.47,
+            "rmv": 31.93,
+            "industry": "Semiconductor Equipment & Materials",
+            "sector": "Technology",
+            "highlights": "VCP Contraction, Strong Trend Alignment, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": false,
+                "l": true,
+                "i": true,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "rs_1m_pct": 94,
+            "is_restricted": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=KLAC",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=KLAC&ty=c&ta=0&p=d&s=l"
         },
         {
             "rank": 5,
-            "ticker": "BNR",
-            "rs": 3.52,
-            "rmv": 63.22,
-            "industry": "Diagnostics & Research",
-            "sector": "Healthcare",
-            "highlights": "VCP Contraction"
+            "ticker": "ADI",
+            "rs": 1.38,
+            "rmv": 23.24,
+            "industry": "Semiconductors",
+            "sector": "Technology",
+            "highlights": "Strong Trend Alignment, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": true,
+                "l": true,
+                "i": true,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "rs_1m_pct": 86,
+            "is_restricted": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=ADI",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ADI&ty=c&ta=0&p=d&s=l"
         },
         {
             "rank": 6,
-            "ticker": "CAPR",
-            "rs": 3.4,
-            "rmv": 51.73,
-            "industry": "Biotechnology",
-            "sector": "Healthcare",
-            "highlights": "High Relative Strength"
+            "ticker": "GOOGL",
+            "rs": 1.32,
+            "rmv": 22.33,
+            "industry": "Internet Content & Information",
+            "sector": "Communication Services",
+            "highlights": "Not Extended, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": true,
+                "l": true,
+                "i": true,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "rs_1m_pct": 88,
+            "is_restricted": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=GOOGL",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GOOGL&ty=c&ta=0&p=d&s=l"
         }
     ],
     "industries": [
         {
             "rank": 1,
-            "industry": "Gold",
-            "sector": "Basic Materials",
-            "rs": 1.77,
+            "industry": "Semiconductor Equipment & Materials",
+            "sector": "Technology",
+            "rs": 1.78,
             "tickers": [
-                "CDE",
-                "SA",
-                "EGO",
-                "EQX",
-                "ORLA"
+                "LRCX",
+                "AMAT",
+                "KLAC"
             ]
         },
         {
             "rank": 2,
-            "industry": "Biotechnology",
-            "sector": "Healthcare",
-            "rs": 1.76,
+            "industry": "Semiconductors",
+            "sector": "Technology",
+            "rs": 1.33,
             "tickers": [
-                "TERN",
-                "GLTO",
-                "SNSE",
-                "CAPR",
-                "KOD"
+                "MU",
+                "INTC",
+                "ADI",
+                "AMD",
+                "TXN"
             ]
         },
         {
             "rank": 3,
-            "industry": "Communication Equipment",
-            "sector": "Technology",
-            "rs": 1.53,
+            "industry": "Beverages\u2014Non-Alcoholic",
+            "sector": "Consumer Defensive",
+            "rs": 1.12,
             "tickers": [
-                "CIEN",
-                "VIAV",
-                "BKTI",
-                "DGII",
-                "PI"
+                "MNST",
+                "PEP"
             ]
         },
         {
             "rank": 4,
-            "industry": "Metal Fabrication",
-            "sector": "Industrials",
-            "rs": 1.52,
+            "industry": "Internet Content & Information",
+            "sector": "Communication Services",
+            "rs": 1.12,
             "tickers": [
-                "ATI",
-                "RYI"
+                "GOOGL",
+                "META"
             ]
         },
         {
             "rank": 5,
-            "industry": "Scientific & Technical Instruments",
-            "sector": "Technology",
-            "rs": 1.5,
+            "industry": "Biotechnology",
+            "sector": "Healthcare",
+            "rs": 1.04,
             "tickers": [
-                "COHR",
-                "KEYS",
-                "VNT"
+                "REGN",
+                "VRTX"
             ]
         },
         {
             "rank": 6,
-            "industry": "Semiconductor Equipment & Materials",
-            "sector": "Technology",
-            "rs": 1.47,
+            "industry": "Specialty Industrial Machinery",
+            "sector": "Industrials",
+            "rs": 0.86,
             "tickers": [
-                "IPGP",
-                "PLAB",
-                "KLAC",
-                "VECO"
+                "HON",
+                "ROP"
             ]
         }
     ]
