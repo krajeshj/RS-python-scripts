@@ -332,7 +332,7 @@ def _fetch_single_ticker_info(ticker, max_retries=3):
     return ticker, {"info": {"name": ticker, "industry": "unknown", "sector": "unknown", "marketCap": 0}}
 
 def load_ticker_info_batch(tickers, current_info_dict):
-    """Fetches metadata sequentially with inter-request delay and aggressive backoff."""
+    """Fetches metadata with 2-worker parallelism and aggressive backoff on 429."""
     if not tickers:
         return
 
@@ -340,21 +340,25 @@ def load_ticker_info_batch(tickers, current_info_dict):
     if not needed:
         return
 
-    print(f"Fetching metadata for {len(needed)} tickers (sequential, backoff 5s/15s/45s)...")
+    print(f"Fetching metadata for {len(needed)} tickers (2 workers, backoff 5s/15s/45s)...")
     BATCH_SIZE = 25
 
     for batch_start in range(0, len(needed), BATCH_SIZE):
         batch = needed[batch_start:batch_start + BATCH_SIZE]
-        for i, t in enumerate(batch):
-            ticker, result = _fetch_single_ticker_info(t)
-            current_info_dict[ticker] = result
-            if i < len(batch) - 1:
-                time.sleep(0.5)  # 500ms between each request
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            futures = {executor.submit(_fetch_single_ticker_info, t): t for t in batch}
+            for future in as_completed(futures):
+                try:
+                    ticker, result = future.result()
+                    current_info_dict[ticker] = result
+                except Exception as e:
+                    t = futures[future]
+                    current_info_dict[t] = {"info": {"name": t, "industry": "unknown", "sector": "unknown", "marketCap": 0}}
 
         done = min(batch_start + BATCH_SIZE, len(needed))
         print(f"  Processed {done}/{len(needed)} tickers...")
         if done < len(needed):
-            time.sleep(5)  # 5s pause between batches
+            time.sleep(2)  # 2s pause between batches
 
 
 def load_prices_from_tda(securities, api_key):
