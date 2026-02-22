@@ -322,8 +322,8 @@ def _fetch_single_ticker_info(ticker, max_retries=3):
         except Exception as e:
             err_str = str(e)
             if "Too Many Requests" in err_str or "429" in err_str:
-                wait = (2 ** attempt) + random.uniform(0, 1)
-                print(f"  Rate limited on {ticker}, retrying in {wait:.1f}s (attempt {attempt+1}/{max_retries})")
+                wait = (5 * (3 ** attempt)) + random.uniform(0, 2)
+                print(f"  Rate limited on {ticker}, backing off {wait:.0f}s (attempt {attempt+1}/{max_retries})")
                 time.sleep(wait)
             else:
                 print(f"  Error fetching info for {ticker}: {e}")
@@ -332,7 +332,7 @@ def _fetch_single_ticker_info(ticker, max_retries=3):
     return ticker, {"info": {"name": ticker, "industry": "unknown", "sector": "unknown", "marketCap": 0}}
 
 def load_ticker_info_batch(tickers, current_info_dict):
-    """Fetches metadata for tickers with controlled parallelism and backoff."""
+    """Fetches metadata sequentially with inter-request delay and aggressive backoff."""
     if not tickers:
         return
 
@@ -340,25 +340,21 @@ def load_ticker_info_batch(tickers, current_info_dict):
     if not needed:
         return
 
-    print(f"Fetching metadata for {len(needed)} tickers (3 workers, backoff enabled)...")
-    BATCH_SIZE = 50
+    print(f"Fetching metadata for {len(needed)} tickers (sequential, backoff 5s/15s/45s)...")
+    BATCH_SIZE = 25
 
     for batch_start in range(0, len(needed), BATCH_SIZE):
         batch = needed[batch_start:batch_start + BATCH_SIZE]
-        with ThreadPoolExecutor(max_workers=3) as executor:
-            futures = {executor.submit(_fetch_single_ticker_info, t): t for t in batch}
-            for future in as_completed(futures):
-                try:
-                    ticker, result = future.result()
-                    current_info_dict[ticker] = result
-                except Exception as e:
-                    t = futures[future]
-                    print(f"  Unexpected error for {t}: {e}")
-                    current_info_dict[t] = {"info": {"name": t, "industry": "unknown", "sector": "unknown", "marketCap": 0}}
+        for i, t in enumerate(batch):
+            ticker, result = _fetch_single_ticker_info(t)
+            current_info_dict[ticker] = result
+            if i < len(batch) - 1:
+                time.sleep(0.5)  # 500ms between each request
 
-        if batch_start + BATCH_SIZE < len(needed):
-            time.sleep(0.3)
-            print(f"  Processed {min(batch_start + BATCH_SIZE, len(needed))}/{len(needed)} tickers...")
+        done = min(batch_start + BATCH_SIZE, len(needed))
+        print(f"  Processed {done}/{len(needed)} tickers...")
+        if done < len(needed):
+            time.sleep(5)  # 5s pause between batches
 
 
 def load_prices_from_tda(securities, api_key):

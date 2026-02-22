@@ -352,15 +352,15 @@
                 const response = await fetch(`web_data.json?t=${Date.now()}`);
                 const data = await response.json();
                 render(data.tips || []);
+
+                // Local date
+                if (data.last_updated) {
+                    const d = new Date(data.last_updated);
+                    document.getElementById('last-updated').textContent = `Sync: ${d.toLocaleString()}`;
+                }
             } catch (err) {
                 console.error(err);
                 document.getElementById('tips-container').innerHTML = '<div class="loading">No tips data found. Run a full scan to update.</div>';
-            }
-
-            // Local date
-            if (data && data.last_updated) {
-                const d = new Date(data.last_updated);
-                document.getElementById('last-updated').textContent = `Sync: ${d.toLocaleString()}`;
             }
 
             // Load saved PAT from local storage if exists
