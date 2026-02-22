@@ -98,7 +98,7 @@ PULSE_TICKERS = [
     "SLV", "HYG", "USO", "^VIX", "TAN", "GDX", "SLX", "GLD", "XLB", "TQQQ", 
     "IGV", "IEO", "XLE", "XLY", "^NDX", "QQQ", "^IXIC", "FDN", "^TYX", "XLK", 
     "FFTY", "SPY", "^SPX", "GXC", "SKYY", "^TNX", "QQQE", "XLU", "RSP", "SMH", 
-    "IBUY", "XLI", "XAR", "DX-Y.NYB", "GPN", "MDY", "SOXX", "IBB", "IIF", "XLF", 
+    "IBUY", "XLI", "XAR", "UUP", "GPN", "MDY", "SOXX", "IBB", "IIF", "XLF", 
     "BTC-USD", "XHB", "IWM", "IWO", "XBI", "KBE", "KRE"
 ]
 
@@ -328,8 +328,8 @@ def _fetch_single_ticker_info(ticker, max_retries=3):
             return ticker, {
                 "info": {
                     "name": info.get("shortName", info.get("longName", ticker)),
-                    "industry": info.get("industry", "Index/ETF" if "^" in ticker or ticker == "DX-Y.NYB" else "unknown"),
-                    "sector": info.get("sector", "Market Pulse" if "^" in ticker or ticker == "DX-Y.NYB" else "unknown"),
+                    "industry": info.get("industry", "Index/ETF" if "^" in ticker else "unknown"),
+                    "sector": info.get("sector", "Market Pulse" if "^" in ticker else "unknown"),
                     "marketCap": info.get("marketCap", 0)
                 }
             }
