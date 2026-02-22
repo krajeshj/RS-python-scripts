@@ -614,7 +614,7 @@ def save_data(source, securities, api_key, info = {}):
         load_prices_from_tda(securities, api_key, info)
 
 
-def main(forceTDA_legacy=None, api_key_legacy=None):
+def main(forceTDA_legacy=None, api_key_legacy=None, full_scan_legacy=None):
     parser = argparse.ArgumentParser(description='RS Data Fetcher')
     parser.add_argument('--full', action='store_true', help='Scan all listed stocks')
     parser.add_argument('--test', action='store_true', help='Scan test set (NQ100)')
@@ -627,7 +627,7 @@ def main(forceTDA_legacy=None, api_key_legacy=None):
     dataSource = DATA_SOURCE if not forceTDA else "TD_AMERITRADE"
     
     # Determine scan scope
-    full_scan = None
+    full_scan = full_scan_legacy
     if args.full: full_scan = True
     if args.test: full_scan = False
 
