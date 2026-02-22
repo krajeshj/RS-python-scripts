@@ -448,7 +448,7 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
         })
 
     # Format Market Pulse Section
-    pulse_tickers = ["QQQ", "QQQE", "SPY", "RSP", "IWO", "IWM"] # High priority at top
+    pulse_tickers = ["DIA", "SPY", "RSP", "QQQ", "QQQE", "MDY", "IWM"] # Markets at top
     pulse_df = df_stocks[df_stocks[TITLE_UNIVERSE] == "Market Pulse"]
     
     formatted_pulse = []
@@ -704,7 +704,11 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
         sector_stages[sector]["total"] += 1
         sector_stages[sector]["tickers"].append({"t": ticker, "rs": rs})
         
-        if industry == "n/a" or not industry: continue
+        if (industry == "n/a" or not industry):
+            if universe == "Market Pulse":
+                industry = "Index/ETF"  # Keep pulse tickers with a default industry
+            else:
+                continue
         is_restricted = industry in EXCLUDE_INDUSTRIES
         
         relative_strengths.append((

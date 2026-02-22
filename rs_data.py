@@ -95,11 +95,11 @@ REF_TICKER = {"ticker": REFERENCE_TICKER, "sector": "--- Reference ---", "indust
 UNKNOWN = "unknown"
 
 PULSE_TICKERS = [
-    "SLV", "HYG", "USO", "^VIX", "TAN", "GDX", "SLX", "GLD", "XLB", "TQQQ", 
-    "IGV", "IEO", "XLE", "XLY", "^NDX", "QQQ", "^IXIC", "FDN", "^TYX", "XLK", 
-    "FFTY", "SPY", "^SPX", "GXC", "SKYY", "^TNX", "QQQE", "XLU", "RSP", "SMH", 
-    "IBUY", "XLI", "XAR", "UUP", "GPN", "MDY", "SOXX", "IBB", "IIF", "XLF", 
-    "BTC-USD", "XHB", "IWM", "IWO", "XBI", "KBE", "KRE"
+    # Markets
+    "DIA", "SPY", "RSP", "QQQ", "QQQE", "MDY", "IWM",
+    # Key Sectors
+    "XLF", "SMH", "IYT", "XTN", "ITB", "XHB", "MAGS", "IBIT", "ETHA",
+    "SLV", "GDX", "TAN", "GPN", "IBUY", "XLK", "XLU", "FDN", "USO", "XLE", "IGV"
 ]
 
 def get_securities(url, ticker_pos = 1, table_pos = 1, sector_offset = 1, industry_offset = 1, universe = "N/A"):
