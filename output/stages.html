@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stage Analysis - Rajesh's Stock Screener</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #12121e;
+            --bg2: #09090f;
+            --surface: #1e1e2d;
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #e4e4ef;
+            --text2: #8a8aa3;
+            --s1: #7f8c8d;
+            --s2: #38b6ff;
+            /* Bright Blue */
+            --s3: #ffde59;
+            /* Yellow */
+            --s4: #ff5757;
+            /* Pink/Red */
+            --green: #00e676;
+            --radius: 12px;
+            --font: 'Outfit', sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font);
+            background-color: var(--bg2);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--text);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            color: var(--text2);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--s2);
+        }
+
+        /* Market Overview Section */
+        .overview {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .overview-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        .dist-bar-large {
+            height: 12px;
+            width: 100%;
+            display: flex;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .legend-item {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .legend-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text2);
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .legend-value {
+            font-family: var(--mono);
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+
+        /* Sector Table */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            padding: 1rem 2rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text2);
+            border-bottom: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        td {
+            padding: 1.25rem 2rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.95rem;
+        }
+
+        .sector-name {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .count {
+            font-size: 0.8rem;
+            color: var(--text2);
+            margin-left: 6px;
+        }
+
+        .dist-cell {
+            min-width: 180px;
+        }
+
+        .mini-bar {
+            height: 8px;
+            width: 100%;
+            display: flex;
+            border-radius: 4px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .s1-pct,
+        .s2-pct,
+        .s3-pct,
+        .s4-pct {
+            font-family: var(--mono);
+            font-weight: 600;
+            font-size: 0.9rem;
+            width: 50px;
+            text-align: right;
+        }
+
+        .s2-pct {
+            color: var(--s2);
+            font-weight: 700;
+        }
+
+        .s4-pct {
+            color: var(--s4);
+        }
+
+        .health-badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .health-strong {
+            color: var(--green);
+            background: rgba(0, 230, 118, 0.1);
+        }
+
+        .health-healthy {
+            color: var(--s2);
+            background: rgba(56, 182, 255, 0.1);
+        }
+
+        .health-neutral {
+            color: var(--s3);
+            background: rgba(255, 222, 89, 0.1);
+        }
+
+        .health-weak {
+            color: var(--s4);
+            background: rgba(255, 87, 87, 0.1);
+        }
+
+        .health-improving {
+            color: #a29bfe;
+            background: rgba(162, 155, 254, 0.1);
+        }
+
+        /* Stage bar fragments */
+        .f1 {
+            background-color: var(--s1);
+        }
+
+        .f2 {
+            background-color: var(--s2);
+        }
+
+        .f3 {
+            background-color: var(--s3);
+        }
+
+        .f4 {
+            background-color: var(--s4);
+        }
+
+        .loading {
+            padding: 4rem;
+            text-align: center;
+            color: var(--text2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="brand">
+                <span style="font-size: 1.4rem;">📊</span>
+                Stage Analysis
+            </div>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">Dashboard</a>
+                <a href="stages.html" class="nav-link active">Sector Analysis</a>
+                <a href="pulse.html" class="nav-link">Market Pulse</a>
+            </nav>
+        </header>
+
+        <section class="overview">
+            <h2 class="overview-title">Market Overview</h2>
+            <div id="market-bar" class="dist-bar-large">
+                <!-- Fragments go here -->
+            </div>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-label"><span class="dot f1"></span> S1 Basing</div>
+                    <div id="m-s1" class="legend-value">0%</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-label"><span class="dot f2"></span> S2 Advancing</div>
+                    <div id="m-s2" class="legend-value">0%</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-label"><span class="dot f3"></span> S3 Topping</div>
+                    <div id="m-s3" class="legend-value">0%</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-label"><span class="dot f4"></span> S4 Declining</div>
+                    <div id="m-s4" class="legend-value">0%</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sector</th>
+                        <th>Distribution</th>
+                        <th style="text-align: right">S1</th>
+                        <th style="text-align: right">S2</th>
+                        <th style="text-align: right">S3</th>
+                        <th style="text-align: right">S4</th>
+                        <th style="text-align: center">Health</th>
+                    </tr>
+                </thead>
+                <tbody id="stages-body">
+                    <tr>
+                        <td colspan="7" class="loading">Analyzing sector cycles...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        async function init() {
+            try {
+                const response = await fetch(`web_data.json?t=${Date.now()}`);
+                const data = await response.json();
+                render(data.stages);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('stages-body').innerHTML = '<tr><td colspan="7" class="loading">Data not found. Run rs_ranking.py.</td></tr>';
+            }
+        }
+
+        function render(stages) {
+            if (!stages || stages.length === 0) return;
+
+            // 1. Calculate Market Averages for the top bar
+            let ts1 = 0, ts2 = 0, ts3 = 0, ts4 = 0, tcount = 0;
+            stages.forEach(s => {
+                const c = s.count;
+                ts1 += (s.s1 / 100) * c;
+                ts2 += (s.s2 / 100) * c;
+                ts3 += (s.s3 / 100) * c;
+                ts4 += (s.s4 / 100) * c;
+                tcount += c;
+            });
+
+            const ps1 = Math.round((ts1 / tcount) * 100);
+            const ps2 = Math.round((ts2 / tcount) * 100);
+            const ps3 = Math.round((ts3 / tcount) * 100);
+            const ps4 = Math.round((ts4 / tcount) * 100);
+
+            const marketBar = document.getElementById('market-bar');
+            marketBar.innerHTML = `
+                <div class="f1" style="width: ${ps1}%"></div>
+                <div class="f2" style="width: ${ps2}%"></div>
+                <div class="f3" style="width: ${ps3}%"></div>
+                <div class="f4" style="width: ${ps4}%"></div>
+            `;
+
+            document.getElementById('m-s1').textContent = `${ps1}%`;
+            document.getElementById('m-s2').textContent = `${ps2}%`;
+            document.getElementById('m-s3').textContent = `${ps3}%`;
+            document.getElementById('m-s4').textContent = `${ps4}%`;
+
+            // 2. Render Sector Table
+            const body = document.getElementById('stages-body');
+            body.innerHTML = stages.map(s => `
+                <tr>
+                    <td>
+                        <div class="sector-name">${s.sector}</div>
+                        <div class="count">${s.count} Stocks</div>
+                    </td>
+                    <td class="dist-cell">
+                        <div class="mini-bar">
+                            <div class="f1" style="width: ${s.s1}%"></div>
+                            <div class="f2" style="width: ${s.s2}%"></div>
+                            <div class="f3" style="width: ${s.s3}%"></div>
+                            <div class="f4" style="width: ${s.s4}%"></div>
+                        </div>
+                    </td>
+                    <td class="s1-pct">${s.s1}%</td>
+                    <td class="s2-pct">${s.s2}%</td>
+                    <td class="s3-pct">${s.s3}%</td>
+                    <td class="s4-pct">${s.s4}%</td>
+                    <td style="text-align: center">
+                        <span class="health-badge health-${s.health.toLowerCase()}">${s.health}</span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

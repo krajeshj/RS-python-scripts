@@ -27,6 +27,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from io import StringIO
 from time import sleep
 import sys
+import argparse
 
 from datetime import date
 from datetime import datetime
@@ -92,6 +93,14 @@ REF_TICKER = {"ticker": REFERENCE_TICKER, "sector": "--- Reference ---", "indust
 
 UNKNOWN = "unknown"
 
+PULSE_TICKERS = [
+    "SLV", "HYG", "USO", "^VIX", "TAN", "GDX", "SLX", "GLD", "XLB", "TQQQ", 
+    "IGV", "IEO", "XLE", "XLY", "^NDX", "QQQ", "^IXIC", "FDN", "^TYX", "XLK", 
+    "FFTY", "SPY", "^SPX", "GXC", "SKYY", "^TNX", "QQQE", "XLU", "RSP", "SMH", 
+    "IBUY", "XLI", "XAR", "DX-Y.NYB", "GPN", "MDY", "SOXX", "IBB", "IIF", "XLF", 
+    "BTC-USD", "XHB", "IWM", "IWO", "XBI", "KBE", "KRE"
+]
+
 def get_securities(url, ticker_pos = 1, table_pos = 1, sector_offset = 1, industry_offset = 1, universe = "N/A"):
     headers = {'User-Agent': 'Mozilla/5.0'}
     try:
@@ -102,8 +111,8 @@ def get_securities(url, ticker_pos = 1, table_pos = 1, sector_offset = 1, indust
             return {}
         table = tables[table_pos-1]
         secs = {}
-        for row in table.findAll('tr')[1:]:
-            cells = row.findAll('td')
+        for row in table.find_all('tr')[1:]:
+            cells = row.find_all('td')
             if len(cells) < ticker_pos: continue
             ticker = cells[ticker_pos-1].text.strip().split('\n')[0]
             sec = {"ticker": ticker, "universe": universe}
@@ -120,9 +129,10 @@ def get_securities(url, ticker_pos = 1, table_pos = 1, sector_offset = 1, indust
         return {}
 
 
-def get_resolved_securities():
+def get_resolved_securities(full_scan=None):
     tickers = {REFERENCE_TICKER: REF_TICKER}
-    if ALL_STOCKS:
+    use_full = full_scan if full_scan is not None else ALL_STOCKS
+    if use_full:
         return get_tickers_from_nasdaq(tickers)
     else:
         try:
@@ -218,7 +228,7 @@ def get_tickers_from_nasdaq(tickers):
 
     return tickers
 
-SECURITIES = get_resolved_securities().values()
+# SECURITIES = get_resolved_securities().values()  # Now handled in main()
 
 def write_to_file(dict, file):
     with open(file, "w", encoding='utf8') as fp:
@@ -318,6 +328,7 @@ def load_ticker_info(ticker, info_dict_ignored):
                 "info": {
                     "industry": get_info_from_dict(info, "industry"),
                     "sector": get_info_from_dict(info, "sector"),
+                    "name": info.get("longName") or info.get("shortName") or ticker,
                     "marketCap": info.get("marketCap", 0),
                     "earnings_date": earnings_date,
                     "eps_growth_curr": info.get("earningsQuarterlyGrowth", 0),
@@ -518,8 +529,8 @@ def load_prices_from_yahoo(securities, info = {}):
         print(f"Batch download failed: {e}. Falling back to sequential.")
         full_df = None
 
-    # Metadata check
-    missing_metadata = [t for t in all_tickers if t not in TICKER_INFO_DICT]
+    # Metadata check - Fetch if missing entirely or missing the 'name' field
+    missing_metadata = [t for t in all_tickers if t not in TICKER_INFO_DICT or "name" not in TICKER_INFO_DICT[t].get("info", {})]
     if missing_metadata:
         load_ticker_info_batch(missing_metadata, TICKER_INFO_DICT)
         write_ticker_info_file(TICKER_INFO_DICT)
@@ -541,6 +552,7 @@ def load_prices_from_yahoo(securities, info = {}):
         if ticker in TICKER_INFO_DICT:
             ticker_data["industry"] = TICKER_INFO_DICT[ticker]["info"]["industry"]
             ticker_data["sector"] = TICKER_INFO_DICT[ticker]["info"]["sector"]
+            ticker_data["name"] = TICKER_INFO_DICT[ticker]["info"].get("name", ticker)
             ticker_data["marketCap"] = TICKER_INFO_DICT[ticker]["info"].get("marketCap", 0)
 
         tickers_dict[ticker] = ticker_data
@@ -560,12 +572,36 @@ def save_data(source, securities, api_key, info = {}):
         load_prices_from_tda(securities, api_key, info)
 
 
-def main(forceTDA = False, api_key = API_KEY):
+def main(forceTDA_legacy=None, api_key_legacy=None):
+    parser = argparse.ArgumentParser(description='RS Data Fetcher')
+    parser.add_argument('--full', action='store_true', help='Scan all listed stocks')
+    parser.add_argument('--test', action='store_true', help='Scan test set (NQ100)')
+    parser.add_argument('--tda', action='store_true', help='Force TD Ameritrade source')
+    args = parser.parse_args(sys.argv[1:] if len(sys.argv) > 1 and not (isinstance(forceTDA_legacy, bool) or forceTDA_legacy is not None) else [])
+
+    # Support legacy positional arguments
+    forceTDA = args.tda if not isinstance(forceTDA_legacy, bool) else forceTDA_legacy
+    api_key = API_KEY if api_key_legacy is None else api_key_legacy
     dataSource = DATA_SOURCE if not forceTDA else "TD_AMERITRADE"
     
+    # Determine scan scope
+    full_scan = None
+    if args.full: full_scan = True
+    if args.test: full_scan = False
+
     # Load manual tips and add them to securities
     tips = load_manual_tips()
-    all_securities = list(SECURITIES)
+    all_securities = list(get_resolved_securities(full_scan).values())
+
+    # Add Market Pulse tickers
+    for pt in PULSE_TICKERS:
+        if not any(s["ticker"] == pt for s in all_securities):
+            all_securities.append({
+                "ticker": pt,
+                "sector": "Market Pulse",
+                "industry": "Index/ETF",
+                "universe": "Market Pulse"
+            })
     
     # Track which tickers are manual tips for later info fetching
     manual_tickers = []
@@ -588,7 +624,7 @@ def main(forceTDA = False, api_key = API_KEY):
                     s["source"] = tip.get("source", "Manual Tip")
                     break
 
-    save_data(dataSource, all_securities, api_key, {"forceTDA": forceTDA})
+    save_data(dataSource, all_securities, API_KEY, {"forceTDA": forceTDA})
     write_ticker_info_file(TICKER_INFO_DICT)
 
 if __name__ == "__main__":

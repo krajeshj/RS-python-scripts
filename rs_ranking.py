@@ -1,4 +1,5 @@
 import sys
+import argparse
 import pandas as pd
 import numpy as np
 import json
@@ -61,6 +62,9 @@ TITLE_CAND_FLIP = "Candidate Flip"
 TITLE_SOURCE = "Source"
 TITLE_CANSLIM = "CANSLIM"
 TITLE_DTE = "DaysToEarnings"
+TITLE_NAME = "Name"
+TITLE_COMMENTARY = "Commentary"
+TITLE_STAGE = "Stage"
 
 # RMV thresholds calibrated to your RMV formula (volatility_pct*7)
 CONTROLLED_RMV_MAX = 45   # avg daily range <= ~6.4%
@@ -256,6 +260,65 @@ def _spy_trend_ok(ref_df_daily):
     return bool(last["Close"] > last["ma50"] and last["ma50"] > last["ma200"])
 
 
+def _get_trend_commentary(tdf):
+    """Generates one-line commentary based on technicals."""
+    try:
+        last = tdf.iloc[-1]
+        c = last["Close"]
+        ma50 = last["ma50"]
+        ma200 = last["ma200"]
+        
+        # Trend indicators
+        above_ma50 = c > ma50
+        above_ma200 = c > ma200
+        golden_cross = ma50 > ma200
+        ma200_slope = ma200 - tdf["ma200"].iloc[-20] if len(tdf) > 20 else 0
+        
+        status = "Sideways"
+        comment = "Consolidating near Moving Averages."
+        
+        if above_ma50 and above_ma200 and golden_cross:
+            status = "Upward"
+            if ma200_slope > 0:
+                comment = "Strong bull trend, trending above MA50 & MA200."
+            else:
+                comment = "Bullish posture but MA200 flattening."
+        elif not above_ma50 and not above_ma200:
+            status = "Downward"
+            comment = "Bearish posture, trading below major MAs."
+        elif above_ma200 and not above_ma50:
+            status = "Sideways"
+            comment = "Weakening, slipped below MA50 but holding MA200."
+        elif above_ma50 and not above_ma200:
+            status = "Sideways"
+            comment = "Recovering, trading above MA50 but below MA200."
+            
+        return status, comment
+    except:
+        return "Unknown", "Insufficient data for trend analysis."
+
+
+def _get_standard_stage(tdf):
+    """
+    Stan Weinstein’s 4-Stage Analysis (Heuristic based on MA200)
+    1: Basing, 2: Advancing, 3: Topping, 4: Declining
+    """
+    try:
+        last = tdf.iloc[-1]
+        c = last["Close"]
+        ma200 = last["ma200"]
+        ma200_prev = tdf["ma200"].iloc[-20] if len(tdf) > 20 else ma200
+        slope = ma200 - ma200_prev
+
+        if c > ma200:
+            return 2 if slope > 0 else 3
+        else:
+            return 4 if slope < 0 else 1
+    except:
+        return 1
+
+
+
 # -------------------------
 # Web Export Helpers
 # -------------------------
@@ -273,8 +336,8 @@ def _get_highlights(row):
         highlights.append("High Relative Strength")
     return ", ".join(highlights)
 
-def _export_web_data(df_stocks, df_industries):
-    """Exports top 6 stocks and top 6 industries to web_data.json"""
+def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
+    """Exports top 6 stocks and top 6 industries to web_data.json or quick_web_data.json"""
     # Select top 6 stocks: priority High-Win, then Flip, then RS
     top_stocks = []
     
@@ -307,7 +370,9 @@ def _export_web_data(df_stocks, df_industries):
         formatted_stocks.append({
             "rank": i + 1,
             "ticker": s[TITLE_TICKER],
-            "rs": round(s[TITLE_RS], 2),
+            "name": s.get(TITLE_NAME, s[TITLE_TICKER]),
+            "rs": int(s[TITLE_PERCENTILE]),  # Display percentile as RS
+            "rs_raw": round(s[TITLE_RS], 2), # Keep raw for sorting if needed
             "rmv": s[TITLE_RMV],
             "industry": s[TITLE_INDUSTRY],
             "sector": s[TITLE_SECTOR],
@@ -328,7 +393,9 @@ def _export_web_data(df_stocks, df_industries):
         formatted_tips.append({
             "rank": "TIP",
             "ticker": s[TITLE_TICKER],
-            "rs": round(s[TITLE_RS], 2),
+            "name": s.get(TITLE_NAME, s[TITLE_TICKER]),
+            "rs": int(s[TITLE_PERCENTILE]),
+            "rs_raw": round(s[TITLE_RS], 2),
             "rmv": s[TITLE_RMV],
             "industry": s[TITLE_INDUSTRY],
             "sector": s[TITLE_SECTOR],
@@ -354,14 +421,77 @@ def _export_web_data(df_stocks, df_industries):
             "tickers": row[TITLE_TICKERS].split(',')[:5] # Show top 5 tickers
         })
 
+    # Format Market Pulse Section
+    pulse_tickers = ["QQQ", "QQQE", "SPY", "RSP", "IWO", "IWM"] # High priority at top
+    pulse_df = df_stocks[df_stocks[TITLE_UNIVERSE] == "Market Pulse"]
+    
+    formatted_pulse = []
+    
+    # helper for sorting pulse
+    def pulse_sort_order(r):
+        if r[TITLE_TICKER] in pulse_tickers: return 10
+        if r[TITLE_COMMENTARY] == "Upward": return 5
+        if r[TITLE_COMMENTARY] == "Sideways": return 3
+        return 1
+
+    pulse_out_df = pulse_df.copy()
+    pulse_out_df["prio"] = pulse_out_df.apply(pulse_sort_order, axis=1)
+    pulse_out_df = pulse_out_df.sort_values("prio", ascending=False)
+
+    for _, s in pulse_out_df.iterrows():
+        formatted_pulse.append({
+            "ticker": s[TITLE_TICKER],
+            "name": s.get(TITLE_NAME, s[TITLE_TICKER]),
+            "rs_rank": int(s[TITLE_PERCENTILE]),
+            "trend": s.get(TITLE_COMMENTARY, "Sideways"),
+            "commentary": s.get("Commentary_Text", "Analyzing trend..."),
+            "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}"
+        })
+
     web_data = {
-        "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S") + " UTC",
         "stocks": formatted_stocks,
         "tips": formatted_tips,
-        "industries": formatted_industries
+        "industries": formatted_industries,
+        "pulse": formatted_pulse
     }
 
-    output_path = os.path.join(DIR, "output", "web_data.json")
+    # Add Stage Analysis if available
+    formatted_stages = []
+    if sector_stages:
+        for s, counts in sector_stages.items():
+            if not s or s == "unknown" or s == "--- Reference ---": continue
+            total = counts["total"]
+            if total == 0: continue
+            
+            s1_p = round((counts["s1"] / total) * 100)
+            s2_p = round((counts["s2"] / total) * 100)
+            s3_p = round((counts["s3"] / total) * 100)
+            s4_p = round((counts["s4"] / total) * 100)
+            
+            health = "Neutral"
+            if s2_p > 50: health = "Strong"
+            elif s2_p > 30: health = "Healthy"
+            elif s4_p > 40: health = "Weak"
+            elif s1_p + s2_p > 50: health = "Improving"
+            
+            formatted_stages.append({
+                "sector": s,
+                "count": total,
+                "s1": s1_p,
+                "s2": s2_p,
+                "s3": s3_p,
+                "s4": s4_p,
+                "health": health
+            })
+        
+        # Sort by Stage 2 Percentage
+        formatted_stages = sorted(formatted_stages, key=lambda x: x["s2"], reverse=True)
+
+    web_data["stages"] = formatted_stages
+
+    filename = "quick_web_data.json" if quick else "web_data.json"
+    output_path = os.path.join(DIR, "output", filename)
     with open(output_path, 'w') as f:
         json.dump(web_data, f, indent=4)
     print(f"Web data exported to {output_path}")
@@ -418,12 +548,13 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
         )
 
         # Use industry/sector from ticker_data or metadata
-        industry = ticker_data.get("industry", "unknown")
-        sector = ticker_data.get("sector", "unknown")
+        meta = TICKER_INFO_DICT.get(ticker, {}).get("info", {})
+        industry = ticker_data.get("industry", meta.get("industry", "unknown"))
+        sector = ticker_data.get("sector", meta.get("sector", "unknown"))
         universe = ticker_data.get("universe", "unknown")
+        name = meta.get("name", ticker)
 
         # CANSLIM & Earnings
-        meta = ticker_data.get("info", {})
         eps_c = meta.get("eps_growth_curr", 0) > 0.20
         eps_a = meta.get("eps_growth_annual", 0) > 0.20
         
@@ -442,6 +573,19 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
             except:
                 pass
 
+        canslim = {
+            "c": bool(eps_c),
+            "a": bool(eps_a),
+            "n": bool(new_high),
+            "s": bool(supply_demand),
+            "l": False, # Will be set in main rankings
+            "i": rs > 1.2, # Proxy: RS > 1.2 is strong institutional support
+            "m": bool(spy_ok)
+        }
+
+        status, trend_comment = _get_trend_commentary(tdf)
+        stage = _get_standard_stage(tdf)
+
         return (
             ticker, minervini_stage2, sector, industry, universe,
             rs, 0, rs1m, rs3m, rs6m, rmv,
@@ -454,22 +598,18 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
             bool(flip_setup),
             bool(spy_ok),
             ticker_data.get("source", "AI Scanner"),
-            {
-                "c": bool(eps_c),
-                "a": bool(eps_a),
-                "n": bool(new_high),
-                "s": bool(supply_demand),
-                "l": False, # Will be set in main rankings
-                "i": rs > 1.2, # Proxy: RS > 1.2 is strong institutional support
-                "m": bool(spy_ok)
-            },
-            days_to_earnings
+            canslim,
+            int(days_to_earnings),
+            name,
+            status,
+            trend_comment,
+            stage
         )
     except Exception as e:
         # print(f"Error processing {ticker}: {e}")
         return None
 
-def rankings(test_mode=False, test_tickers=None):
+def rankings(test_mode=False, test_tickers=None, quick=False):
     """Returns a dataframe with percentile rankings for relative strength + signals."""
     json_data = read_json(PRICE_DATA)
     relative_strengths = []
@@ -517,8 +657,15 @@ def rankings(test_mode=False, test_tickers=None):
             if res:
                 results.append(res)
 
+    sector_stages = {}
+
     for res in results:
-        ticker, mm, sector, industry, universe, rs, pct, rs1m, rs3m, rs6m, rmv, close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte = res
+        ticker, mm, sector, industry, universe, rs, pct, rs1m, rs3m, rs6m, rmv, close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, name, status, comment, stage = res
+        
+        if sector not in sector_stages:
+            sector_stages[sector] = {"s1": 0, "s2": 0, "s3": 0, "s4": 0, "total": 0}
+        sector_stages[sector][f"s{stage}"] += 1
+        sector_stages[sector]["total"] += 1
         
         if industry == "n/a" or not industry: continue
         is_restricted = industry in EXCLUDE_INDUSTRIES
@@ -526,7 +673,7 @@ def rankings(test_mode=False, test_tickers=None):
         relative_strengths.append((
             0, ticker, mm, sector, industry, universe,
             rs, pct, rs1m, rs3m, rs6m, rmv,
-            close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, is_restricted
+            close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, is_restricted, name, status, comment, stage
         ))
         stock_rs[ticker] = rs
 
@@ -548,7 +695,8 @@ def rankings(test_mode=False, test_tickers=None):
         TITLE_RANK, TITLE_TICKER, TITLE_MINERVINI, TITLE_SECTOR, TITLE_INDUSTRY, TITLE_UNIVERSE,
         TITLE_RS, TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M, TITLE_RMV,
         TITLE_CLOSE, TITLE_ATR_PCT, TITLE_PTC, TITLE_CONTRACTION, TITLE_BREAKOUT,
-        TITLE_NOT_EXT, TITLE_FLIP, TITLE_SPY_OK, TITLE_SOURCE, TITLE_CANSLIM, TITLE_DTE, "is_restricted"
+        TITLE_NOT_EXT, TITLE_FLIP, TITLE_SPY_OK, TITLE_SOURCE, TITLE_CANSLIM, TITLE_DTE, "is_restricted",
+        TITLE_NAME, TITLE_COMMENTARY, "Commentary_Text", TITLE_STAGE
     ])
 
     if df.empty:
@@ -712,27 +860,32 @@ def rankings(test_mode=False, test_tickers=None):
     df_industries.to_csv(os.path.join(DIR, "output", f'rs_industries{suffix}.csv'), index=False)
 
     # Final Web Dashboard Export (refreshed with industries if they exist)
-    _export_web_data(df, df_industries)
+    _export_web_data(df, df_industries, quick=quick, sector_stages=sector_stages)
 
     return [df, df_industries]
 
     return [df, df_industries]
 
 
-def main(skipEnter=False, test_mode=False, test_tickers=None):
-    if test_mode:
+def main():
+    parser = argparse.ArgumentParser(description='RS Ranking Engine')
+    parser.add_argument('--quick', action='store_true', help='Quick scan mode (outputs to quick_web_data.json)')
+    parser.add_argument('--test', action='store_true', help='Test mode')
+    args = parser.parse_args()
+
+    if args.test:
         print("Running in TEST MODE")
-        ranks = rankings(test_mode=True, test_tickers=test_tickers)
+        ranks = rankings(test_mode=True, quick=args.quick)
     else:
-        ranks = rankings()
+        ranks = rankings(quick=args.quick)
 
     if ranks:
         print(ranks[0].head(20))
-        print("***\nYour 'rs_stocks.csv' is in the output folder.\n***")
+        print(f"***\nDone. Final export to {'quick_web_data.json' if args.quick else 'web_data.json'}.\n***")
     else:
         print("No data processed.")
 
-    if not skipEnter and cfg("EXIT_WAIT_FOR_ENTER"):
+    if cfg("EXIT_WAIT_FOR_ENTER"):
         input("Press Enter key to exit...")
 
 
