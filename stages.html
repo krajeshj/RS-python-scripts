@@ -339,6 +339,9 @@
                 <a href="pulse.html" class="nav-link">Market Pulse 🌊</a>
                 <a href="tips.html" class="nav-link">Stock Tips 💡</a>
             </nav>
+            <div id="last-updated"
+                style="font-size:0.8rem;color:var(--text2);background:var(--surface);padding:4px 12px;border-radius:20px;border:1px solid var(--border);margin-top:8px;">
+                Updating...</div>
         </header>
 
         <section class="overview">
@@ -394,6 +397,12 @@
                 const response = await fetch(`web_data.json?t=${Date.now()}`);
                 const data = await response.json();
                 render(data.stages);
+
+                // Local date
+                if (data.last_updated) {
+                    const d = new Date(data.last_updated);
+                    document.getElementById('last-updated').textContent = `Sync: ${d.toLocaleString()}`;
+                }
             } catch (err) {
                 console.error(err);
                 document.getElementById('stages-body').innerHTML = '<tr><td colspan="7" class="loading">Data not found. Run rs_ranking.py.</td></tr>';

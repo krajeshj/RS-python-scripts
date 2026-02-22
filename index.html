@@ -518,6 +518,67 @@
             background: var(--border);
             border-radius: 10px;
         }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem 0.75rem;
+            }
+
+            header {
+                gap: 8px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .nav-links {
+                gap: 0.5rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-link {
+                font-size: 0.8rem;
+                padding: 5px 10px;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            .card-header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .ticker {
+                font-size: 1.2rem;
+            }
+
+            .chart-img {
+                max-height: 140px;
+            }
+
+            .dashboard-tools {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .toggle-btn {
+                justify-content: center;
+            }
+
+            .metrics {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.5rem;
+                padding: 8px;
+            }
+
+            .section-title {
+                font-size: 1.05rem;
+            }
+        }
     </style>
 </head>
 
@@ -582,7 +643,7 @@
                 const response = await fetch(`web_data.json?t=${Date.now()}`);
                 allData = await response.json();
 
-                const lastUpdated = new Date(allData.last_updated + " UTC");
+                const lastUpdated = new Date(allData.last_updated);
                 document.getElementById('last-updated').textContent = `Sync: ${lastUpdated.toLocaleString()}`;
 
                 document.getElementById('toggle-speculative').addEventListener('click', () => {
@@ -624,7 +685,8 @@
                                 <a href="${s.tradingview_url}" target="_blank" class="ticker">${s.ticker}</a>
                                 <div class="company-name">${s.name}</div>
                             </div>
-                            <div class="rs-pct-badge">RS 1M: ${s.rs_1m_pct}%</div>
+                            <div class="rs-pct-badge" style="color: var(--cyan)">1W: ${s.rs_1w_pct || 'N/A'}%</div>
+                            <div class="rs-pct-badge" style="color: var(--orange)">1M: ${s.rs_1m_pct || 'N/A'}%</div>
                             ${createCanslimTray(s.canslim)}
                         </div>
                         <div class="stats-top">
@@ -666,9 +728,10 @@
         function render() {
             if (!allData) return;
 
-            // Render Stocks
+            // Render Stocks — toggle between filtered and all
             const stocksGrid = document.getElementById('stocks-grid');
-            stocksGrid.innerHTML = allData.stocks.map((s, i) => renderStock(s, i)).join('');
+            const stocksToRender = hideSpeculative ? allData.stocks : (allData.all_stocks || allData.stocks);
+            stocksGrid.innerHTML = stocksToRender.map((s, i) => renderStock(s, i)).join('');
 
             // Render Tips Section
             const tips = allData.tips || [];

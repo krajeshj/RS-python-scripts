@@ -301,6 +301,9 @@
                 <a href="pulse.html" class="nav-link">Market Pulse 🌊</a>
                 <a href="tips.html" class="nav-link active">Stock Tips 💡</a>
             </div>
+            <div id="last-updated"
+                style="font-size:0.8rem;color:var(--text2);background:var(--surface);padding:4px 12px;border-radius:20px;border:1px solid var(--border);margin-top:8px;">
+                Updating...</div>
         </header>
 
         <div id="tips-container">
@@ -309,8 +312,8 @@
 
         <div class="management-section">
             <h2 class="management-title">Add New Tip Group</h2>
-            <p style="font-size: 0.9rem; color: var(--text2); margin-bottom: 1.5rem;">Fill this out to generate the
-                command for your local terminal:</p>
+            <p style="font-size: 0.9rem; color: var(--text2); margin-bottom: 1.5rem;">Submit tips directly to GitHub:
+            </p>
 
             <div id="tip-form">
                 <div class="input-group">
@@ -349,6 +352,12 @@
                 const response = await fetch(`web_data.json?t=${Date.now()}`);
                 const data = await response.json();
                 render(data.tips || []);
+
+                // Local date
+                if (data.last_updated) {
+                    const d = new Date(data.last_updated);
+                    document.getElementById('last-updated').textContent = `Sync: ${d.toLocaleString()}`;
+                }
             } catch (err) {
                 console.error(err);
                 document.getElementById('tips-container').innerHTML = '<div class="loading">No tips data found. Run a full scan to update.</div>';
