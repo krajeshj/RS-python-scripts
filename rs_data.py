@@ -2,6 +2,7 @@
 import requests
 import json
 import time
+import random
 import bs4 as bs
 import datetime as dt
 import os
@@ -291,76 +292,17 @@ def get_info_from_dict(dict, key):
     # fix unicode
     # value = value.replace("\u2014", " ")
     return value
-def load_ticker_info_batch(tickers, info_dict):
-    """Fetches ticker info in parallel."""
-    print(f"Fetching metadata and fundamentals for {len(tickers)} tickers in parallel...")
-    with ThreadPoolExecutor(max_workers=5) as executor:
-        future_to_ticker = {executor.submit(load_ticker_info, t, {}): t for t in tickers}
-        for future in as_completed(future_to_ticker):
-            ticker = future_to_ticker[future]
-            try:
-                res = future.result()
-                if res:
-                    info_dict.update(res)
-            except Exception as e:
-                print(f"Error fetching metadata for {ticker}: {e}")
 
-def load_ticker_info(ticker, info_dict_ignored):
-    """Fetches info for a single ticker. Returns a dict to be merged."""
-    escaped_ticker = escape_ticker(ticker)
-    try: 
-        t = yf.Ticker(escaped_ticker)
-        info = t.info
-        if not info:
-            return None
-        
-        # Get earnings date safely
-        earnings_date = "n/a"
+def _fetch_single_ticker_info(ticker, max_retries=3):
+    """Fetch info for a single ticker with exponential backoff."""
+    escaped = escape_ticker(ticker)
+    for attempt in range(max_retries):
         try:
-            calendar = t.calendar
-            if calendar is not None and 'Earnings Date' in calendar:
-                dates = calendar['Earnings Date']
-                if dates and len(dates) > 0:
-                    earnings_date = dates[0].strftime('%Y-%m-%d')
-        except:
-            pass
-
-        return {
-            ticker: {
-                "info": {
-                    "industry": "unknown",
-                    "sector": "unknown",
-                    "name": ticker,
-                    "marketCap": 0,
-                    "earnings_date": earnings_date,
-                    "eps_growth_curr": 0,
-                    "eps_growth_annual": 0,
-                    "revenue_growth": 0
-                }
-            }
-        }
-    except Exception as e:
-        return None
-
-def load_ticker_info_batch(tickers, current_info_dict):
-    """Fetches metadata for a batch of tickers using yfinance."""
-    if not tickers:
-        return
-    
-    print(f"Fetching metadata for {len(tickers)} tickers...")
-    for ticker in tickers:
-        if ticker in current_info_dict and "name" in current_info_dict[ticker].get("info", {}):
-            continue
-            
-        try:
-            # Use escaped ticker for yfinance
-            escaped = escape_ticker(ticker)
             yt = yf.Ticker(escaped)
             info = yt.info
-            
+
             if not info or "shortName" not in info:
-                # Fallback for indices/ETFs
-                current_info_dict[ticker] = {
+                return ticker, {
                     "info": {
                         "name": ticker,
                         "industry": "Index/ETF",
@@ -368,9 +310,8 @@ def load_ticker_info_batch(tickers, current_info_dict):
                         "marketCap": 0
                     }
                 }
-                continue
 
-            current_info_dict[ticker] = {
+            return ticker, {
                 "info": {
                     "name": info.get("shortName", info.get("longName", ticker)),
                     "industry": info.get("industry", "Index/ETF" if "^" in ticker or ticker == "DX-Y.NYB" else "unknown"),
@@ -379,9 +320,46 @@ def load_ticker_info_batch(tickers, current_info_dict):
                 }
             }
         except Exception as e:
-            print(f"Error fetching info for {ticker}: {e}")
-            if ticker not in current_info_dict:
-                current_info_dict[ticker] = {"info": {"name": ticker, "industry": "unknown", "sector": "unknown"}}
+            err_str = str(e)
+            if "Too Many Requests" in err_str or "429" in err_str:
+                wait = (2 ** attempt) + random.uniform(0, 1)
+                print(f"  Rate limited on {ticker}, retrying in {wait:.1f}s (attempt {attempt+1}/{max_retries})")
+                time.sleep(wait)
+            else:
+                print(f"  Error fetching info for {ticker}: {e}")
+                return ticker, {"info": {"name": ticker, "industry": "unknown", "sector": "unknown", "marketCap": 0}}
+    print(f"  Failed to fetch {ticker} after {max_retries} retries")
+    return ticker, {"info": {"name": ticker, "industry": "unknown", "sector": "unknown", "marketCap": 0}}
+
+def load_ticker_info_batch(tickers, current_info_dict):
+    """Fetches metadata for tickers with controlled parallelism and backoff."""
+    if not tickers:
+        return
+
+    needed = [t for t in tickers if t not in current_info_dict or "name" not in current_info_dict.get(t, {}).get("info", {})]
+    if not needed:
+        return
+
+    print(f"Fetching metadata for {len(needed)} tickers (3 workers, backoff enabled)...")
+    BATCH_SIZE = 50
+
+    for batch_start in range(0, len(needed), BATCH_SIZE):
+        batch = needed[batch_start:batch_start + BATCH_SIZE]
+        with ThreadPoolExecutor(max_workers=3) as executor:
+            futures = {executor.submit(_fetch_single_ticker_info, t): t for t in batch}
+            for future in as_completed(futures):
+                try:
+                    ticker, result = future.result()
+                    current_info_dict[ticker] = result
+                except Exception as e:
+                    t = futures[future]
+                    print(f"  Unexpected error for {t}: {e}")
+                    current_info_dict[t] = {"info": {"name": t, "industry": "unknown", "sector": "unknown", "marketCap": 0}}
+
+        if batch_start + BATCH_SIZE < len(needed):
+            time.sleep(0.3)
+            print(f"  Processed {min(batch_start + BATCH_SIZE, len(needed))}/{len(needed)} tickers...")
+
 
 def load_prices_from_tda(securities, api_key):
     print("*** Loading Stocks from TD Ameritrade ***")
@@ -450,25 +428,6 @@ def convert_string_to_numeric(value_str):
         print(f"Error: Unable to convert '{value_str}' to a numeric value.")
         return None
 
-
-def get_market_cap(ticker):
-    """
-    Fetches market cap for a ticker. 
-    In a high-performance environment, it's better to fetch these in bulk
-    or use a more efficient API than yahoo_fin for large universes.
-    """
-    try:
-        # Ticker info often contains market cap, check cache first if we ever add it there
-        quote = yf.Ticker(ticker).info
-        return quote.get("marketCap", 1000000001)
-    except Exception:
-        try:
-            quote_table = get_quote_table(ticker)
-            market_cap = quote_table.get("Market Cap", "0")
-            return convert_string_to_numeric(market_cap)
-        except Exception as e:
-            print(f"Error fetching Market Cap for {ticker}: {e}")
-            return 1000000001
 
 
 
@@ -659,7 +618,6 @@ def main(forceTDA_legacy=None, api_key_legacy=None, full_scan_legacy=None):
                 "universe": "Market Pulse"
             })
     
-    # Add tips to resolved securities list
     # Add tips to resolved securities list
     for tip in tips:
         ticker = tip["ticker"]
