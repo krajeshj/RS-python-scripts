@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-02-22 04:56:05 UTC",
+    "last_updated": "2026-02-21 21:08:06 UTC",
     "stocks": [
         {
             "rank": 1,
@@ -21,7 +21,7 @@
                 "i": true,
                 "m": true
             },
-            "days_to_earnings": 58,
+            "days_to_earnings": 59,
             "rs_1m_pct": 98,
             "is_restricted": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=LRCX",
@@ -47,7 +47,7 @@
                 "i": true,
                 "m": true
             },
-            "days_to_earnings": 3,
+            "days_to_earnings": 4,
             "rs_1m_pct": 97,
             "is_restricted": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=WBD",
@@ -73,7 +73,7 @@
                 "i": true,
                 "m": true
             },
-            "days_to_earnings": 80,
+            "days_to_earnings": 81,
             "rs_1m_pct": 93,
             "is_restricted": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=AMAT",
@@ -99,7 +99,7 @@
                 "i": true,
                 "m": true
             },
-            "days_to_earnings": 51,
+            "days_to_earnings": 52,
             "rs_1m_pct": 95,
             "is_restricted": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=ASML",
@@ -125,7 +125,7 @@
                 "i": true,
                 "m": true
             },
-            "days_to_earnings": 59,
+            "days_to_earnings": 60,
             "rs_1m_pct": 96,
             "is_restricted": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=INTC",
@@ -151,7 +151,7 @@
                 "i": true,
                 "m": true
             },
-            "days_to_earnings": 65,
+            "days_to_earnings": 66,
             "rs_1m_pct": 94,
             "is_restricted": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=KLAC",
@@ -181,7 +181,7 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 2,
+            "days_to_earnings": 3,
             "rs_1m_pct": 71,
             "is_restricted": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=NVDA",
@@ -209,7 +209,7 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 57,
+            "days_to_earnings": 58,
             "rs_1m_pct": 77,
             "is_restricted": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=TSLA",
@@ -237,7 +237,7 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 66,
+            "days_to_earnings": 67,
             "rs_1m_pct": 56,
             "is_restricted": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=AAPL",
@@ -265,7 +265,7 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 72,
+            "days_to_earnings": 73,
             "rs_1m_pct": 8,
             "is_restricted": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=ARM",
@@ -293,7 +293,7 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 65,
+            "days_to_earnings": 66,
             "rs_1m_pct": 31,
             "is_restricted": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=MSFT",
@@ -321,7 +321,7 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 71,
+            "days_to_earnings": 72,
             "rs_1m_pct": 4,
             "is_restricted": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=SMCI",
@@ -406,6 +406,10 @@
             "s2": 100,
             "s3": 0,
             "s4": 0,
+            "tickers": [
+                "BKR",
+                "FANG"
+            ],
             "health": "Strong"
         },
         {
@@ -415,6 +419,9 @@
             "s2": 100,
             "s3": 0,
             "s4": 0,
+            "tickers": [
+                "LIN"
+            ],
             "health": "Strong"
         },
         {
@@ -424,6 +431,49 @@
             "s2": 83,
             "s3": 2,
             "s4": 5,
+            "tickers": [
+                "SLV",
+                "GDX",
+                "TAN",
+                "SOXX",
+                "GLD",
+                "SLX",
+                "SMH",
+                "XAR",
+                "XBI",
+                "XLE",
+                "XLB",
+                "XLI",
+                "FFTY",
+                "KRE",
+                "IBB",
+                "IEO",
+                "IWM",
+                "KBE",
+                "XHB",
+                "MDY",
+                "IWO",
+                "TQQQ",
+                "RSP",
+                "USO",
+                "XLU",
+                "GXC",
+                "XLK",
+                "^SPX",
+                "^IXIC",
+                "QQQ",
+                "^NDX",
+                "QQQE",
+                "XLY",
+                "HYG",
+                "XLF",
+                "^VIX",
+                "IBUY",
+                "FDN",
+                "SKYY",
+                "IGV",
+                "BTC-USD"
+            ],
             "health": "Strong"
         },
         {
@@ -433,6 +483,12 @@
             "s2": 75,
             "s3": 0,
             "s4": 0,
+            "tickers": [
+                "AEP",
+                "XEL",
+                "EXC",
+                "CEG"
+            ],
             "health": "Strong"
         },
         {
@@ -442,6 +498,16 @@
             "s2": 62,
             "s3": 12,
             "s4": 25,
+            "tickers": [
+                "MNST",
+                "WMT",
+                "CCEP",
+                "PEP",
+                "COST",
+                "MDLZ",
+                "KDP",
+                "KHC"
+            ],
             "health": "Strong"
         },
         {
@@ -451,6 +517,18 @@
             "s2": 60,
             "s3": 10,
             "s4": 10,
+            "tickers": [
+                "INSM",
+                "GILD",
+                "AMGN",
+                "REGN",
+                "GEHC",
+                "VRTX",
+                "IDXX",
+                "DXCM",
+                "ISRG",
+                "ALNY"
+            ],
             "health": "Strong"
         },
         {
@@ -460,6 +538,20 @@
             "s2": 50,
             "s3": 8,
             "s4": 42,
+            "tickers": [
+                "ODFL",
+                "PCAR",
+                "FER",
+                "CSX",
+                "HON",
+                "FAST",
+                "GPN",
+                "CTAS",
+                "CPRT",
+                "AXON",
+                "VRSK",
+                "TRI"
+            ],
             "health": "Healthy"
         },
         {
@@ -469,6 +561,50 @@
             "s2": 45,
             "s3": 0,
             "s4": 31,
+            "tickers": [
+                "WDC",
+                "MU",
+                "STX",
+                "LRCX",
+                "AMAT",
+                "ASML",
+                "INTC",
+                "KLAC",
+                "MPWR",
+                "ADI",
+                "MCHP",
+                "AMD",
+                "TXN",
+                "AVGO",
+                "NVDA",
+                "CSCO",
+                "NXPI",
+                "AAPL",
+                "MRVL",
+                "SHOP",
+                "PLTR",
+                "CDNS",
+                "SNPS",
+                "ARM",
+                "FTNT",
+                "QCOM",
+                "CTSH",
+                "MSFT",
+                "CRWD",
+                "DDOG",
+                "SMCI",
+                "ADSK",
+                "PANW",
+                "ADP",
+                "PAYX",
+                "ADBE",
+                "ROP",
+                "ZS",
+                "INTU",
+                "WDAY",
+                "MSTR",
+                "TEAM"
+            ],
             "health": "Healthy"
         },
         {
@@ -478,6 +614,19 @@
             "s2": 36,
             "s3": 0,
             "s4": 18,
+            "tickers": [
+                "ROST",
+                "MAR",
+                "TSLA",
+                "SBUX",
+                "ABNB",
+                "ORLY",
+                "AMZN",
+                "MELI",
+                "PDD",
+                "DASH",
+                "BKNG"
+            ],
             "health": "Healthy"
         },
         {
@@ -487,6 +636,19 @@
             "s2": 36,
             "s3": 9,
             "s4": 36,
+            "tickers": [
+                "WBD",
+                "GOOGL",
+                "GOOG",
+                "EA",
+                "CMCSA",
+                "META",
+                "APP",
+                "TMUS",
+                "CHTR",
+                "TTWO",
+                "NFLX"
+            ],
             "health": "Healthy"
         },
         {
@@ -496,6 +658,9 @@
             "s2": 0,
             "s3": 0,
             "s4": 100,
+            "tickers": [
+                "CSGP"
+            ],
             "health": "Weak"
         },
         {
@@ -505,6 +670,10 @@
             "s2": 0,
             "s3": 0,
             "s4": 50,
+            "tickers": [
+                "IIF",
+                "PYPL"
+            ],
             "health": "Weak"
         }
     ]

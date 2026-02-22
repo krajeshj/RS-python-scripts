@@ -477,6 +477,10 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
             elif s4_p > 40: health = "Weak"
             elif s1_p + s2_p > 50: health = "Improving"
             
+            # Sort tickers by RS for display
+            sorted_t = sorted(counts["tickers"], key=lambda x: x["rs"], reverse=True)
+            ticker_list = [x["t"] for x in sorted_t]
+            
             formatted_stages.append({
                 "sector": s,
                 "count": total,
@@ -484,6 +488,7 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
                 "s2": s2_p,
                 "s3": s3_p,
                 "s4": s4_p,
+                "tickers": ticker_list,
                 "health": health
             })
         
@@ -667,9 +672,10 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
         ticker, mm, sector, industry, universe, rs, pct, rs1m, rs3m, rs6m, rmv, close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, name, status, comment, stage, label, date = res
         
         if sector not in sector_stages:
-            sector_stages[sector] = {"s1": 0, "s2": 0, "s3": 0, "s4": 0, "total": 0}
+            sector_stages[sector] = {"s1": 0, "s2": 0, "s3": 0, "s4": 0, "total": 0, "tickers": []}
         sector_stages[sector][f"s{stage}"] += 1
         sector_stages[sector]["total"] += 1
+        sector_stages[sector]["tickers"].append({"t": ticker, "rs": rs})
         
         if industry == "n/a" or not industry: continue
         is_restricted = industry in EXCLUDE_INDUSTRIES
