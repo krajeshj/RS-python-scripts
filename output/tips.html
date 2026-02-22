@@ -325,10 +325,20 @@
                     <label>Source (Optional)</label>
                     <input type="text" id="tip-source" placeholder="e.g. Twitter Analysis">
                 </div>
+                <div class="input-group">
+                    <label>GitHub Personal Access Token (PAT)</label>
+                    <input type="password" id="gh-pat" placeholder="ghp_xxxxxxxxxxxx">
+                    <small style="color: var(--text2); font-size: 0.7rem; margin-top: 4px;">Stored only in your
+                        browser's local storage.</small>
+                </div>
 
-                <p style="margin-top: 1.5rem; font-size: 0.85rem; font-weight: 700;">Run this command in yours desktop
-                    terminal:</p>
-                <div id="command-output" class="code-box">python manage_tips.py --add "..." --label "..."</div>
+                <div style="margin-top: 2rem;">
+                    <button id="submit-btn" onclick="submitToGitHub()"
+                        style="background: var(--cyan); color: #000; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease;">
+                        <span>🚀 Add Tips to GitHub</span>
+                    </button>
+                    <div id="status-msg" style="margin-top: 1rem; font-size: 0.9rem; display: none;"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -344,20 +354,87 @@
                 document.getElementById('tips-container').innerHTML = '<div class="loading">No tips data found. Run a full scan to update.</div>';
             }
 
-            // Command Generator Logic
-            const inputs = ['tip-label', 'tip-tickers', 'tip-source'];
-            inputs.forEach(id => {
-                document.getElementById(id).addEventListener('input', updateCommand);
-            });
+            // Load saved PAT from local storage if exists
+            const savedPat = localStorage.getItem('gh_pat');
+            if (savedPat) {
+                document.getElementById('gh-pat').value = savedPat;
+            }
         }
 
-        function updateCommand() {
-            const label = document.getElementById('tip-label').value || "Watching";
-            const tickers = document.getElementById('tip-tickers').value || "...";
+        async function submitToGitHub() {
+            const label = document.getElementById('tip-label').value;
+            const tickers = document.getElementById('tip-tickers').value;
             const source = document.getElementById('tip-source').value || "Manual Entry";
+            const pat = document.getElementById('gh-pat').value;
+            const statusMsg = document.getElementById('status-msg');
+            const submitBtn = document.getElementById('submit-btn');
 
-            const cmd = `python manage_tips.py --add "${tickers}" --label "${label}" --source "${source}"`;
-            document.getElementById('command-output').textContent = cmd;
+            if (!label || !tickers || !pat) {
+                showStatus("Please fill in Label, Tickers, and GitHub PAT.", "error");
+                return;
+            }
+
+            // Save PAT for convenience
+            localStorage.setItem('gh_pat', pat);
+
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = "0.5";
+            submitBtn.innerText = "⏳ Processing...";
+            showStatus("🚀 Triggering GitHub Action...", "info");
+
+            const repo = "krajeshj/RS-python-scripts"; // Hardcoded for this deployment
+            const url = `https://api.github.com/repos/${repo}/actions/workflows/add_tip.yml/dispatches`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `token ${pat}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                    },
+                    body: JSON.stringify({
+                        ref: 'master', // or your main branch
+                        inputs: { tickers, label, source }
+                    })
+                });
+
+                if (response.ok) {
+                    showStatus("✅ Success! GitHub is updating your tips. The page will auto-refresh when the scan completes (approx. 2-3 mins).", "success");
+                    // Wait a bit then clear form
+                    setTimeout(() => {
+                        document.getElementById('tip-label').value = '';
+                        document.getElementById('tip-tickers').value = '';
+                        submitBtn.disabled = false;
+                        submitBtn.style.opacity = "1";
+                        submitBtn.innerText = "🚀 Add Tips to GitHub";
+                    }, 5000);
+                } else {
+                    const errInfo = await response.json();
+                    showStatus(`❌ Error: ${errInfo.message || 'Failed to trigger workflow'}`, "error");
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = "1";
+                    submitBtn.innerText = "🚀 Add Tips to GitHub";
+                }
+            } catch (err) {
+                showStatus(`❌ Network error: ${err.message}`, "error");
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = "1";
+                submitBtn.innerText = "🚀 Add Tips to GitHub";
+            }
+        }
+
+        function showStatus(msg, type) {
+            const statusMsg = document.getElementById('status-msg');
+            statusMsg.style.display = "block";
+            statusMsg.innerText = msg;
+
+            if (type === "error") {
+                statusMsg.style.color = "var(--red)";
+            } else if (type === "success") {
+                statusMsg.style.color = "var(--green)";
+            } else {
+                statusMsg.style.color = "var(--cyan)";
+            }
         }
 
         function render(tips) {
