@@ -252,7 +252,7 @@
 
         <section id="indices-section">
             <div class="section-header">
-                <h2 class="section-title">🏛️ Major Indices</h2>
+                <h2 class="section-title">🏛️ Markets</h2>
             </div>
             <div id="indices-grid" class="pulse-grid">
                 <div class="loading">Analyzing market major indices...</div>
@@ -261,7 +261,7 @@
 
         <section id="etf-section">
             <div class="section-header">
-                <h2 class="section-title">📈 Asset Class Trends</h2>
+                <h2 class="section-title">📈 Key Sectors</h2>
             </div>
             <div id="etf-grid" class="pulse-grid"></div>
         </section>
@@ -297,7 +297,7 @@
             indicesGrid.innerHTML = '';
             etfGrid.innerHTML = '';
 
-            const topTickers = ["QQQ", "QQQE", "SPY", "RSP", "IWO", "IWM", "^NDX", "^SPX", "^IXIC"];
+            const topTickers = ["DIA", "SPY", "RSP", "QQQ", "QQQE", "MDY", "IWM"];
 
             pulseData.forEach(item => {
                 const card = createPulseCard(item);
