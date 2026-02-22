@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Pulse - Rajesh's Stock Screener</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #06060f;
+            --bg2: #0d0d1a;
+            --surface: rgba(255, 255, 255, .04);
+            --border: rgba(255, 255, 255, .08);
+            --text: #e4e4ef;
+            --text2: #8888a8;
+            --accent: #6c5ce7;
+            --accent2: #a29bfe;
+            --green: #00e676;
+            --cyan: #00e5ff;
+            --orange: #ff9100;
+            --red: #ff5252;
+            --glass: rgba(18, 18, 40, .72);
+            --font: 'Outfit', system-ui, sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+            --radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.55;
+            padding-bottom: 3rem;
+            background-image:
+                radial-gradient(ellipse 80% 60% at 50% -20%, rgba(108, 92, 231, .15), transparent);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text) 30%, var(--cyan));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            margin: 0.5rem 0;
+        }
+
+        .nav-link {
+            color: var(--text2);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 8px 20px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: var(--text);
+            background: var(--surface);
+        }
+
+        .nav-link.active {
+            color: var(--cyan);
+            background: rgba(0, 229, 255, 0.1);
+            border-color: rgba(0, 229, 255, 0.2);
+        }
+
+        .section-header {
+            margin: 2.5rem 0 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pulse-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .pulse-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .pulse-card:hover {
+            border-color: var(--accent);
+            transform: translateX(5px);
+        }
+
+        .pulse-main {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex: 1;
+        }
+
+        .pulse-ticker-box {
+            min-width: 100px;
+        }
+
+        .pulse-ticker {
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: var(--accent2);
+            text-decoration: none;
+            font-family: var(--mono);
+        }
+
+        .pulse-name {
+            font-size: 0.85rem;
+            color: var(--text2);
+            margin-top: 2px;
+        }
+
+        .pulse-trend-box {
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .trend-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .trend-upward {
+            background: rgba(0, 230, 118, 0.1);
+            color: var(--green);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+        }
+
+        .trend-sideways {
+            background: rgba(255, 145, 0, 0.1);
+            color: var(--orange);
+            border: 1px solid rgba(255, 145, 0, 0.2);
+        }
+
+        .trend-downward {
+            background: rgba(255, 82, 82, 0.1);
+            color: var(--red);
+            border: 1px solid rgba(255, 82, 82, 0.2);
+        }
+
+        .pulse-commentary {
+            flex: 2;
+            font-size: 1rem;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .pulse-rs {
+            font-family: var(--mono);
+            font-size: 0.9rem;
+            color: var(--cyan);
+            background: rgba(0, 229, 255, 0.05);
+            padding: 4px 10px;
+            border-radius: 8px;
+            margin-right: 1.5rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div style="font-size: 3rem;">🌊</div>
+            <h1>Market Pulse</h1>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Dashboard</a>
+                <a href="stages.html" class="nav-link">Sector Analysis</a>
+                <a href="quick_scan.html" class="nav-link">Quick Scan ⏱️</a>
+                <a href="pulse.html" class="nav-link active">Market Pulse</a>
+            </div>
+        </header>
+
+        <section id="indices-section">
+            <div class="section-header">
+                <h2 class="section-title">🏛️ Market Indices</h2>
+            </div>
+            <div id="indices-grid" class="pulse-grid">
+                <div class="loading">Loading market trends...</div>
+            </div>
+        </section>
+
+        <section id="etf-section">
+            <div class="section-header">
+                <h2 class="section-title">📈 Sector & Asset Trends</h2>
+            </div>
+            <div id="etf-grid" class="pulse-grid"></div>
+        </section>
+    </div>
+
+    <script>
+        async function init() {
+            try {
+                const response = await fetch(`web_data.json?t=${Date.now()}`);
+                const data = await response.json();
+
+                // Set local time for pulse display if needed, but we'll focus on the header if it existed
+                // Pulse doesn't have a 'last-updated' div in the current HTML, let's add one for consistency
+                render(data.pulse);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function render(pulseData) {
+            const indicesGrid = document.getElementById('indices-grid');
+            const etfGrid = document.getElementById('etf-grid');
+
+            indicesGrid.innerHTML = '';
+            etfGrid.innerHTML = '';
+
+            const topTickers = ["QQQ", "QQQE", "SPY", "RSP", "IWO", "IWM"];
+
+            pulseData.forEach(item => {
+                const card = createPulseCard(item);
+                if (topTickers.includes(item.ticker)) {
+                    indicesGrid.appendChild(card);
+                } else {
+                    etfGrid.appendChild(card);
+                }
+            });
+        }
+
+        function createPulseCard(item) {
+            const div = document.createElement('div');
+            div.className = 'pulse-card';
+
+            const trendClass = `trend-${item.trend.toLowerCase()}`;
+
+            div.innerHTML = `
+                <div class="pulse-main">
+                    <div class="pulse-ticker-box">
+                        <a href="${item.tradingview_url}" target="_blank" class="pulse-ticker">${item.ticker}</a>
+                        <div class="pulse-name">${item.name}</div>
+                    </div>
+                    <div class="pulse-trend-box">
+                        <span class="trend-badge ${trendClass}">${item.trend}</span>
+                    </div>
+                    <div class="pulse-commentary">${item.commentary}</div>
+                </div>
+                <div class="pulse-rs">RS rank: ${item.rs_rank}</div>
+            `;
+            return div;
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

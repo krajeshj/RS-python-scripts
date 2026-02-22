@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rajesh's Stock Screener</title>
+    <title>Intraday Quick Scan - Rajesh's Stock Screener</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -18,8 +18,9 @@
             --border: rgba(255, 255, 255, .08);
             --text: #e4e4ef;
             --text2: #8888a8;
-            --accent: #6c5ce7;
-            --accent2: #a29bfe;
+            --accent: #ff9100;
+            /* Orange for intraday/urgent */
+            --accent2: #ffb74d;
             --green: #00e676;
             --cyan: #00e5ff;
             --orange: #ff9100;
@@ -48,8 +49,8 @@
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
             background-image:
-                radial-gradient(ellipse 80% 60% at 50% -20%, rgba(108, 92, 231, .15), transparent),
-                radial-gradient(ellipse 60% 50% at 80% 110%, rgba(0, 229, 255, .08), transparent);
+                radial-gradient(ellipse 80% 60% at 50% -20%, rgba(255, 145, 0, .1), transparent),
+                radial-gradient(ellipse 60% 50% at 80% 110%, rgba(108, 92, 231, .08), transparent);
             padding-bottom: 3rem;
         }
 
@@ -70,16 +71,16 @@
 
         .logo-icon {
             font-size: 2.5rem;
-            color: var(--cyan);
+            color: var(--orange);
             margin-bottom: 4px;
-            filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.3));
+            filter: drop-shadow(0 0 10px rgba(255, 145, 0, 0.3));
         }
 
         h1 {
             font-size: 2.25rem;
             font-weight: 800;
             letter-spacing: -0.02em;
-            background: linear-gradient(135deg, var(--text) 30%, var(--accent2));
+            background: linear-gradient(135deg, var(--text) 30%, var(--orange));
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -101,9 +102,9 @@
             content: '';
             width: 8px;
             height: 8px;
-            background: var(--green);
+            background: var(--orange);
             border-radius: 50%;
-            box-shadow: 0 0 8px var(--green);
+            box-shadow: 0 0 8px var(--orange);
         }
 
         .nav-links {
@@ -129,9 +130,9 @@
         }
 
         .nav-link.active {
-            color: var(--cyan);
-            background: rgba(0, 229, 255, 0.1);
-            border-color: rgba(0, 229, 255, 0.2);
+            color: var(--orange);
+            background: rgba(255, 145, 0, 0.1);
+            border-color: rgba(255, 145, 0, 0.2);
         }
 
         .company-name {
@@ -176,6 +177,7 @@
         .toggle-btn.active {
             background: var(--accent);
             border-color: var(--accent2);
+            color: var(--bg);
         }
 
         .toggle-btn:hover {
@@ -250,7 +252,7 @@
         }
 
         .card:hover {
-            border-color: var(--accent);
+            border-color: var(--orange);
             transform: translateY(-4px);
             background: rgba(18, 18, 40, .85);
             box-shadow: 0 12px 40px rgba(0, 0, 0, .5);
@@ -279,7 +281,7 @@
         }
 
         .ticker:hover {
-            color: var(--accent2);
+            color: var(--orange);
         }
 
         .rs-pct-badge {
@@ -301,13 +303,13 @@
         }
 
         .rank-badge {
-            background: rgba(108, 92, 231, 0.15);
-            color: var(--accent2);
+            background: rgba(255, 145, 0, 0.1);
+            color: var(--orange);
             padding: 4px 10px;
             border-radius: 8px;
             font-size: 0.7rem;
             font-weight: 700;
-            border: 1px solid rgba(108, 92, 231, 0.2);
+            border: 1px solid rgba(255, 145, 0, 0.2);
         }
 
         .source-badge {
@@ -319,7 +321,6 @@
             opacity: 0.7;
         }
 
-        /* Chart container with link */
         .chart-link {
             display: block;
             border-radius: var(--radius-sm);
@@ -333,7 +334,7 @@
         .chart-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(108, 92, 231, 0.2);
+            background: rgba(255, 145, 0, 0.2);
             opacity: 0;
             transition: opacity 0.2s;
             display: flex;
@@ -362,7 +363,6 @@
             transform: scale(1.05);
         }
 
-        /* CANSLIM Letters */
         .canslim-tray {
             display: flex;
             gap: 4px;
@@ -473,7 +473,7 @@
         }
 
         .industry-card {
-            border-left: 4px solid var(--accent);
+            border-left: 4px solid var(--orange);
         }
 
         .ticker-row {
@@ -524,12 +524,12 @@
 <body>
     <div class="container">
         <header>
-            <div class="logo-icon">🚀</div>
-            <h1>Rajesh's Stock Screener</h1>
+            <div class="logo-icon">⏱️</div>
+            <h1>Intraday Quick Scan</h1>
             <div class="nav-links">
-                <a href="index.html" class="nav-link active">Dashboard</a>
+                <a href="index.html" class="nav-link">Dashboard</a>
                 <a href="stages.html" class="nav-link">Sector Analysis</a>
-                <a href="quick_scan.html" class="nav-link">Quick Scan ⏱️</a>
+                <a href="quick_scan.html" class="nav-link active">Quick Scan ⏱️</a>
                 <a href="pulse.html" class="nav-link">Market Pulse 🌊</a>
             </div>
             <div id="last-updated" class="last-updated">Updating...</div>
@@ -540,7 +540,7 @@
                 <span>🛡️ Speculative Filter</span>
                 <small id="spec-status">ON (Hiding Biotechs/Speculative)</small>
             </button>
-            <div class="meta-info">Showing top liquidity & strength</div>
+            <div class="meta-info">Focused on NQ100 & High Liquidity</div>
         </div>
 
         <section id="tips-section" class="hidden">
@@ -553,8 +553,8 @@
 
         <section>
             <div class="section-header">
-                <h2 class="section-title">✨ Top 6 Alpha Leaders</h2>
-                <p class="section-sub">Highest technical strength with strictly controlled volatility</p>
+                <h2 class="section-title">✨ Intraday Alpha Leaders</h2>
+                <p class="section-sub">Top NQ100 performers showing immediate strength</p>
             </div>
             <div id="stocks-grid" class="grid">
                 <div class="loading">Analyzing market conditions...</div>
@@ -578,11 +578,12 @@
 
         async function init() {
             try {
-                const response = await fetch(`web_data.json?t=${Date.now()}`);
+                // FETCH FROM quick_web_data.json
+                const response = await fetch(`quick_web_data.json?t=${Date.now()}`);
                 allData = await response.json();
 
                 const lastUpdated = new Date(allData.last_updated + " UTC");
-                document.getElementById('last-updated').textContent = `Sync: ${lastUpdated.toLocaleString()}`;
+                document.getElementById('last-updated').textContent = `Live Scan Sync: ${lastUpdated.toLocaleString()}`;
 
                 document.getElementById('toggle-speculative').addEventListener('click', () => {
                     hideSpeculative = !hideSpeculative;
@@ -595,7 +596,7 @@
                 render();
             } catch (err) {
                 console.error(err);
-                document.getElementById('stocks-grid').innerHTML = '<div class="loading">Live data connection failed. Check rs_ranking.py outputs.</div>';
+                document.getElementById('stocks-grid').innerHTML = '<div class="loading">No intraday data found. Run quick_refresh.bat to trigger a scan.</div>';
             }
         }
 
@@ -627,6 +628,10 @@
                             ${createCanslimTray(s.canslim)}
                         </div>
                         <div class="stats-top">
+                            <div class="rank-badge">RANK #${s.rank}</div>
+                            <div class="source-badge">${s.source}</div>
+                        </div>
+                    </div>
                             <div class="rank-badge">RANK #${s.rank}</div>
                             <div class="source-badge">${s.source}</div>
                         </div>
@@ -681,7 +686,7 @@
 
             // Render Industries
             const indGrid = document.getElementById('industries-grid');
-            indGrid.innerHTML = allData.industries.map((ind, i) => `
+            indGrid.innerHTML = (allData.industries || []).map((ind, i) => `
                 <div class="card industry-card" style="animation-delay: ${i * 0.1}s">
                     <div class="card-header">
                         <div class="ticker" style="font-size: 1.1rem; color: var(--text)">${ind.industry}</div>
