@@ -867,11 +867,15 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
     return [df, df_industries]
 
 
-def main():
+def main(skipEnter_legacy=None):
     parser = argparse.ArgumentParser(description='RS Ranking Engine')
     parser.add_argument('--quick', action='store_true', help='Quick scan mode (outputs to quick_web_data.json)')
     parser.add_argument('--test', action='store_true', help='Test mode')
-    args = parser.parse_args()
+    args = parser.parse_args(sys.argv[1:] if len(sys.argv) > 1 and not (isinstance(skipEnter_legacy, bool) or skipEnter_legacy is not None) else [])
+
+    # Support legacy positional arguments
+    is_test = args.test
+    is_quick = args.quick
 
     if args.test:
         print("Running in TEST MODE")
