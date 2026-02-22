@@ -522,13 +522,27 @@ def load_prices_from_yahoo(securities, info = {}):
     all_tickers = [sec["ticker"] for sec in securities]
     escaped_tickers = [escape_ticker(t) for t in all_tickers]
     
-    # Batch download
-    print(f"Downloading data for {len(escaped_tickers)} tickers...")
-    try:
-        full_df = yf.download(escaped_tickers, start=start_date, end=today, auto_adjust=True, group_by='ticker', progress=True)
-    except Exception as e:
-        print(f"Batch download failed: {e}. Falling back to sequential.")
-        full_df = None
+    # Chunked batch download — Yahoo drops results for oversized batches
+    DOWNLOAD_CHUNK = 500
+    print(f"Downloading price data for {len(escaped_tickers)} tickers in chunks of {DOWNLOAD_CHUNK}...")
+    full_df = None
+    
+    for chunk_start in range(0, len(escaped_tickers), DOWNLOAD_CHUNK):
+        chunk = escaped_tickers[chunk_start:chunk_start + DOWNLOAD_CHUNK]
+        chunk_num = chunk_start // DOWNLOAD_CHUNK + 1
+        total_chunks = (len(escaped_tickers) + DOWNLOAD_CHUNK - 1) // DOWNLOAD_CHUNK
+        print(f"  Batch {chunk_num}/{total_chunks}: downloading {len(chunk)} tickers...")
+        try:
+            chunk_df = yf.download(chunk, start=start_date, end=today, auto_adjust=True, group_by='ticker', progress=False)
+            if full_df is None:
+                full_df = chunk_df
+            else:
+                full_df = pd.concat([full_df, chunk_df], axis=1)
+        except Exception as e:
+            print(f"  Batch {chunk_num} failed: {e}")
+        
+        if chunk_start + DOWNLOAD_CHUNK < len(escaped_tickers):
+            time.sleep(2)
 
     # Metadata check - Fetch if missing entirely or missing the 'name' field
     missing_metadata = [t for t in all_tickers if t not in TICKER_INFO_DICT or "name" not in TICKER_INFO_DICT[t].get("info", {})]
