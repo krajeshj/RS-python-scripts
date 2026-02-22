@@ -245,6 +245,9 @@
                 <a href="pulse.html" class="nav-link active">Market Pulse 🌊</a>
                 <a href="tips.html" class="nav-link">Stock Tips 💡</a>
             </div>
+            <div id="last-updated" class="last-updated"
+                style="font-size:0.8rem;color:var(--text2);background:var(--surface);padding:4px 12px;border-radius:20px;border:1px solid var(--border);margin-top:8px;">
+                Updating...</div>
         </header>
 
         <section id="indices-section">
@@ -274,6 +277,12 @@
                     render(data.pulse);
                 } else {
                     document.getElementById('indices-grid').innerHTML = '<div class="loading">No pulse data found. Run a full scan to generate results.</div>';
+                }
+
+                // Local date
+                if (data.last_updated) {
+                    const d = new Date(data.last_updated);
+                    document.getElementById('last-updated').textContent = `Sync: ${d.toLocaleString()}`;
                 }
             } catch (err) {
                 console.error(err);

@@ -371,8 +371,10 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
             "rank": i + 1,
             "ticker": s[TITLE_TICKER],
             "name": s.get(TITLE_NAME, s[TITLE_TICKER]),
-            "rs": int(s[TITLE_PERCENTILE]),  # Display percentile as RS
-            "rs_raw": round(s[TITLE_RS], 2), # Keep raw for sorting if needed
+            "rs": int(s[TITLE_PERCENTILE]),
+            "rs_raw": round(s[TITLE_RS], 2),
+            "rs_1w_pct": int(s.get("rs_1w_pct", 50)),
+            "rs_1m_pct": int(s.get("rs_1m_pct", 50)),
             "rmv": s[TITLE_RMV],
             "industry": s[TITLE_INDUSTRY],
             "sector": s[TITLE_SECTOR],
@@ -380,7 +382,28 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
             "source": s.get(TITLE_SOURCE, "AI Scanner"),
             "canslim": s.get(TITLE_CANSLIM, {}),
             "days_to_earnings": int(s.get(TITLE_DTE, -1)),
+            "is_restricted": bool(s.get("is_restricted", False)),
+            "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
+            "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s.get(TITLE_TICKER, 'SPY')}&ty=c&ta=0&p=d&s=l"
+        })
+
+    # Also export ALL top stocks (including restricted) for toggle
+    all_top = df_stocks.sort_values(TITLE_RS, ascending=False).head(12)
+    all_stocks_list = []
+    for i, (_, s) in enumerate(all_top.iterrows()):
+        all_stocks_list.append({
+            "rank": i + 1,
+            "ticker": s[TITLE_TICKER],
+            "name": s.get(TITLE_NAME, s[TITLE_TICKER]),
+            "rs": int(s[TITLE_PERCENTILE]),
+            "rs_raw": round(s[TITLE_RS], 2),
+            "rs_1w_pct": int(s.get("rs_1w_pct", 50)),
             "rs_1m_pct": int(s.get("rs_1m_pct", 50)),
+            "rmv": s[TITLE_RMV],
+            "industry": s[TITLE_INDUSTRY],
+            "sector": s[TITLE_SECTOR],
+            "highlights": _get_highlights(s),
+            "source": s.get(TITLE_SOURCE, "AI Scanner"),
             "is_restricted": bool(s.get("is_restricted", False)),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
             "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s.get(TITLE_TICKER, 'SPY')}&ty=c&ta=0&p=d&s=l"
@@ -396,6 +419,8 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
             "name": s.get(TITLE_NAME, s[TITLE_TICKER]),
             "rs": int(s[TITLE_PERCENTILE]),
             "rs_raw": round(s[TITLE_RS], 2),
+            "rs_1w_pct": int(s.get("rs_1w_pct", 50)),
+            "rs_1m_pct": int(s.get("rs_1m_pct", 50)),
             "rmv": s[TITLE_RMV],
             "industry": s[TITLE_INDUSTRY],
             "sector": s[TITLE_SECTOR],
@@ -405,7 +430,6 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
             "date": s.get("date", ""),
             "canslim": s.get(TITLE_CANSLIM, {}),
             "days_to_earnings": int(s.get(TITLE_DTE, -1)),
-            "rs_1m_pct": int(s.get("rs_1m_pct", 50)),
             "is_restricted": bool(s.get("is_restricted", False)),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
             "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s.get(TITLE_TICKER, 'SPY')}&ty=c&ta=0&p=d&s=l"
@@ -451,8 +475,9 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
         })
 
     web_data = {
-        "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S") + " UTC",
+        "last_updated": datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
         "stocks": formatted_stocks,
+        "all_stocks": all_stocks_list,
         "tips": formatted_tips,
         "industries": formatted_industries,
         "pulse": formatted_pulse
@@ -530,6 +555,8 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
         rmv = calculate_rmv(closes_series, highs_series, lows_series)
 
         month = 20
+        week = 5
+        rs1w = relative_strength(closes_series.head(-week), closes_ref_series.head(-week))
         rs1m = relative_strength(closes_series.head(-month), closes_ref_series.head(-month))
         rs3m = relative_strength(closes_series.head(-3 * month), closes_ref_series.head(-3 * month))
         rs6m = relative_strength(closes_series.head(-6 * month), closes_ref_series.head(-6 * month))
@@ -595,7 +622,7 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
 
         return (
             ticker, minervini_stage2, sector, industry, universe,
-            rs, 0, rs1m, rs3m, rs6m, rmv,
+            rs, 0, rs1w, rs1m, rs3m, rs6m, rmv,
             float(latest_daily["Close"]),
             float(latest_daily["atr14_pct"]) if pd.notna(latest_daily["atr14_pct"]) else np.nan,
             int(ptc),
@@ -669,7 +696,7 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
     sector_stages = {}
 
     for res in results:
-        ticker, mm, sector, industry, universe, rs, pct, rs1m, rs3m, rs6m, rmv, close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, name, status, comment, stage, label, date = res
+        ticker, mm, sector, industry, universe, rs, pct, rs1w, rs1m, rs3m, rs6m, rmv, close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, name, status, comment, stage, label, date = res
         
         if sector not in sector_stages:
             sector_stages[sector] = {"s1": 0, "s2": 0, "s3": 0, "s4": 0, "total": 0, "tickers": []}
@@ -682,7 +709,7 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
         
         relative_strengths.append((
             0, ticker, mm, sector, industry, universe,
-            rs, pct, rs1m, rs3m, rs6m, rmv,
+            rs, pct, rs1w, rs1m, rs3m, rs6m, rmv,
             close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, is_restricted, name, status, comment, stage, label, date
         ))
         stock_rs[ticker] = rs
@@ -703,7 +730,7 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
 
     df = pd.DataFrame(relative_strengths, columns=[
         TITLE_RANK, TITLE_TICKER, TITLE_MINERVINI, TITLE_SECTOR, TITLE_INDUSTRY, TITLE_UNIVERSE,
-        TITLE_RS, TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M, TITLE_RMV,
+        TITLE_RS, TITLE_PERCENTILE, "RS_1W", TITLE_1M, TITLE_3M, TITLE_6M, TITLE_RMV,
         TITLE_CLOSE, TITLE_ATR_PCT, TITLE_PTC, TITLE_CONTRACTION, TITLE_BREAKOUT,
         TITLE_NOT_EXT, TITLE_FLIP, TITLE_SPY_OK, TITLE_SOURCE, TITLE_CANSLIM, TITLE_DTE, "is_restricted",
         TITLE_NAME, TITLE_COMMENTARY, "Commentary_Text", TITLE_STAGE, "label", "date"
@@ -715,6 +742,7 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
 
     # Percentile bins
     df[TITLE_PERCENTILE] = pd.qcut(df[TITLE_RS], 100, precision=64, labels=False, duplicates='drop') + 1
+    df["rs_1w_pct"] = pd.qcut(df["RS_1W"], 100, precision=64, labels=False, duplicates='drop') + 1
     df["rs_1m_pct"] = pd.qcut(df[TITLE_1M], 100, precision=64, labels=False, duplicates='drop') + 1
     df[TITLE_3M] = pd.qcut(df[TITLE_3M], 100, precision=64, labels=False, duplicates='drop') + 1
     df[TITLE_6M] = pd.qcut(df[TITLE_6M], 100, precision=64, labels=False, duplicates='drop') + 1
@@ -730,7 +758,8 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
     df[TITLE_RANK] = range(1, len(df) + 1)
 
     # trim to MIN_PERCENTILE (but keep ALL manual tips)
-    df = df[(df[TITLE_PERCENTILE] >= MIN_PERCENTILE) | (df[TITLE_SOURCE] != "AI Scanner")]
+    # Keep stocks above MIN_PERCENTILE, manual tips, AND Market Pulse tickers
+    df = df[(df[TITLE_PERCENTILE] >= MIN_PERCENTILE) | (df[TITLE_SOURCE] != "AI Scanner") | (df[TITLE_UNIVERSE] == "Market Pulse")]
 
     # Minervini subset
     dfm = df[df[TITLE_MINERVINI] > 6]
