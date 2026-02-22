@@ -401,6 +401,8 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
             "sector": s[TITLE_SECTOR],
             "highlights": _get_highlights(s),
             "source": s.get(TITLE_SOURCE, "Manual Tip"),
+            "label": s.get("label", ""),
+            "date": s.get("date", ""),
             "canslim": s.get(TITLE_CANSLIM, {}),
             "days_to_earnings": int(s.get(TITLE_DTE, -1)),
             "rs_1m_pct": int(s.get("rs_1m_pct", 50)),
@@ -603,7 +605,9 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
             name,
             status,
             trend_comment,
-            stage
+            stage,
+            ticker_data.get("label", ""),
+            ticker_data.get("date", "")
         )
     except Exception as e:
         # print(f"Error processing {ticker}: {e}")
@@ -660,7 +664,7 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
     sector_stages = {}
 
     for res in results:
-        ticker, mm, sector, industry, universe, rs, pct, rs1m, rs3m, rs6m, rmv, close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, name, status, comment, stage = res
+        ticker, mm, sector, industry, universe, rs, pct, rs1m, rs3m, rs6m, rmv, close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, name, status, comment, stage, label, date = res
         
         if sector not in sector_stages:
             sector_stages[sector] = {"s1": 0, "s2": 0, "s3": 0, "s4": 0, "total": 0}
@@ -673,7 +677,7 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
         relative_strengths.append((
             0, ticker, mm, sector, industry, universe,
             rs, pct, rs1m, rs3m, rs6m, rmv,
-            close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, is_restricted, name, status, comment, stage
+            close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, is_restricted, name, status, comment, stage, label, date
         ))
         stock_rs[ticker] = rs
 
@@ -696,7 +700,7 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
         TITLE_RS, TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M, TITLE_RMV,
         TITLE_CLOSE, TITLE_ATR_PCT, TITLE_PTC, TITLE_CONTRACTION, TITLE_BREAKOUT,
         TITLE_NOT_EXT, TITLE_FLIP, TITLE_SPY_OK, TITLE_SOURCE, TITLE_CANSLIM, TITLE_DTE, "is_restricted",
-        TITLE_NAME, TITLE_COMMENTARY, "Commentary_Text", TITLE_STAGE
+        TITLE_NAME, TITLE_COMMENTARY, "Commentary_Text", TITLE_STAGE, "label", "date"
     ])
 
     if df.empty:

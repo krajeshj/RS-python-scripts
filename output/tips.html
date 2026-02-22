@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Tips - Rajesh's Stock Screener</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #06060f;
+            --bg2: #0d0d1a;
+            --surface: rgba(255, 255, 255, .04);
+            --border: rgba(255, 255, 255, .08);
+            --text: #e4e4ef;
+            --text2: #8888a8;
+            --accent: #6c5ce7;
+            --accent2: #a29bfe;
+            --green: #00e676;
+            --cyan: #00e5ff;
+            --orange: #ff9100;
+            --red: #ff5252;
+            --glass: rgba(18, 18, 40, .72);
+            --glass-b: 12px;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --font: 'Outfit', system-ui, sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+            --shadow: 0 8px 32px rgba(0, 0, 0, .45);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(ellipse 80% 60% at 50% -20%, rgba(108, 92, 231, .15), transparent),
+                radial-gradient(ellipse 60% 50% at 80% 110%, rgba(0, 229, 255, .08), transparent);
+            padding-bottom: 3rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--cyan);
+            margin-bottom: 4px;
+            filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.3));
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--text) 30%, var(--accent2));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            margin: 0.5rem 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-link {
+            color: var(--text2);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 6px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: var(--text);
+            background: var(--surface);
+        }
+
+        .nav-link.active {
+            color: var(--cyan);
+            background: rgba(0, 229, 255, 0.1);
+            border-color: rgba(0, 229, 255, 0.2);
+        }
+
+        .section-header {
+            margin: 3rem 0 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .section-date {
+            color: var(--text2);
+            font-size: 0.9rem;
+            font-family: var(--mono);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(var(--glass-b));
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            animation: fadeUp 0.5s ease backwards;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card:hover {
+            border-color: var(--cyan);
+            transform: translateY(-4px);
+            background: rgba(18, 18, 40, .85);
+        }
+
+        .ticker {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--cyan);
+            font-family: var(--mono);
+            text-decoration: none;
+        }
+
+        .company-name {
+            font-size: 0.85rem;
+            color: var(--text2);
+        }
+
+        .chart-link {
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            height: 160px;
+        }
+
+        .chart-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            background: var(--surface);
+            padding: 12px;
+            border-radius: var(--radius-sm);
+        }
+
+        .metric {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metric-label {
+            font-size: 0.6rem;
+            color: var(--text2);
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: var(--mono);
+        }
+
+        .management-section {
+            margin-top: 5rem;
+            padding: 2rem;
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: 1px dashed var(--border);
+        }
+
+        .management-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--orange);
+        }
+
+        .code-box {
+            background: #000;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            color: var(--green);
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        input {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px;
+            border-radius: 8px;
+            font-family: var(--font);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-icon">💡</div>
+            <h1>Market Tips</h1>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Dashboard 🚀</a>
+                <a href="stages.html" class="nav-link">Sectors 📊</a>
+                <a href="quick_scan.html" class="nav-link">Quick Scan ⏱️</a>
+                <a href="pulse.html" class="nav-link">Market Pulse 🌊</a>
+                <a href="tips.html" class="nav-link active">Stock Tips 💡</a>
+            </div>
+        </header>
+
+        <div id="tips-container">
+            <div class="loading">Fetching latest tips...</div>
+        </div>
+
+        <div class="management-section">
+            <h2 class="management-title">Add New Tip Group</h2>
+            <p style="font-size: 0.9rem; color: var(--text2); margin-bottom: 1.5rem;">Fill this out to generate the
+                command for your local terminal:</p>
+
+            <div id="tip-form">
+                <div class="input-group">
+                    <label>Label (Group Name)</label>
+                    <input type="text" id="tip-label" placeholder="e.g. AI Breakouts">
+                </div>
+                <div class="input-group">
+                    <label>Tickers (Comma separated)</label>
+                    <input type="text" id="tip-tickers" placeholder="e.g. NVDA, SMCI, ARM">
+                </div>
+                <div class="input-group">
+                    <label>Source (Optional)</label>
+                    <input type="text" id="tip-source" placeholder="e.g. Twitter Analysis">
+                </div>
+
+                <p style="margin-top: 1.5rem; font-size: 0.85rem; font-weight: 700;">Run this command in yours desktop
+                    terminal:</p>
+                <div id="command-output" class="code-box">python manage_tips.py --add "..." --label "..."</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function init() {
+            try {
+                const response = await fetch(`web_data.json?t=${Date.now()}`);
+                const data = await response.json();
+                render(data.tips || []);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('tips-container').innerHTML = '<div class="loading">No tips data found. Run a full scan to update.</div>';
+            }
+
+            // Command Generator Logic
+            const inputs = ['tip-label', 'tip-tickers', 'tip-source'];
+            inputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', updateCommand);
+            });
+        }
+
+        function updateCommand() {
+            const label = document.getElementById('tip-label').value || "Watching";
+            const tickers = document.getElementById('tip-tickers').value || "...";
+            const source = document.getElementById('tip-source').value || "Manual Entry";
+
+            const cmd = `python manage_tips.py --add "${tickers}" --label "${label}" --source "${source}"`;
+            document.getElementById('command-output').textContent = cmd;
+        }
+
+        function render(tips) {
+            const container = document.getElementById('tips-container');
+            if (tips.length === 0) {
+                container.innerHTML = '<div class="loading">No manual tips currently being tracked.</div>';
+                return;
+            }
+
+            // Group by Label
+            const groups = {};
+            tips.forEach(t => {
+                const label = t.label || "General Tips";
+                if (!groups[label]) groups[label] = { items: [], date: t.date };
+                groups[label].items.push(t);
+            });
+
+            let html = '';
+            for (const [label, group] of Object.entries(groups)) {
+                html += `
+                    <div class="section-header">
+                        <h2 class="section-title">${label}</h2>
+                        <span class="section-date">${group.date || 'No Date'}</span>
+                    </div>
+                    <div class="grid">
+                        ${group.items.map((s, i) => `
+                            <div class="card" style="animation-delay: ${i * 0.05}s">
+                                <div style="display:flex; justify-content: space-between; align-items: flex-start;">
+                                    <div>
+                                        <a href="${s.tradingview_url}" target="_blank" class="ticker">${s.ticker}</a>
+                                        <div class="company-name">${s.name}</div>
+                                    </div>
+                                    <div style="background: rgba(255, 145, 0, 0.1); color: var(--orange); padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(255, 145, 0, 0.2);">
+                                        RS ${s.rs}
+                                    </div>
+                                </div>
+
+                                <a href="${s.tradingview_url}" target="_blank" class="chart-link">
+                                    <img src="${s.finviz_chart_url}" class="chart-img" loading="lazy">
+                                </a>
+
+                                <div class="metrics">
+                                    <div class="metric">
+                                        <span class="metric-label">Volatility</span>
+                                        <span class="metric-value">${s.rmv}</span>
+                                    </div>
+                                    <div class="metric">
+                                        <span class="metric-label">Industry</span>
+                                        <span class="metric-value" style="font-size: 0.75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${s.industry}</span>
+                                    </div>
+                                </div>
+                                
+                                <div style="font-size: 0.75rem; color: var(--text2); display: flex; justify-content: space-between;">
+                                    <span>${s.source}</span>
+                                    <span style="color: var(--cyan)">${s.highlights}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

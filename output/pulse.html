@@ -25,9 +25,11 @@
             --orange: #ff9100;
             --red: #ff5252;
             --glass: rgba(18, 18, 40, .72);
-            --font: 'Outfit', system-ui, sans-serif;
-            --mono: 'JetBrains Mono', monospace;
+            --glass-b: 12px;
             --radius: 16px;
+            --font: 'Outfit', sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+            --shadow: 0 8px 32px rgba(0, 0, 0, .45);
         }
 
         * {
@@ -42,9 +44,12 @@
             color: var(--text);
             min-height: 100vh;
             line-height: 1.55;
-            padding-bottom: 3rem;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
             background-image:
-                radial-gradient(ellipse 80% 60% at 50% -20%, rgba(108, 92, 231, .15), transparent);
+                radial-gradient(ellipse 80% 60% at 50% -20%, rgba(108, 92, 231, .15), transparent),
+                radial-gradient(ellipse 60% 50% at 80% 110%, rgba(0, 229, 255, .08), transparent);
+            padding-bottom: 3rem;
         }
 
         .container {
@@ -62,10 +67,18 @@
             gap: 12px;
         }
 
-        h1 {
+        .logo-icon {
             font-size: 2.5rem;
+            color: var(--cyan);
+            margin-bottom: 4px;
+            filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.3));
+        }
+
+        h1 {
+            font-size: 2.25rem;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--text) 30%, var(--cyan));
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--text) 30%, var(--accent2));
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -75,14 +88,16 @@
             display: flex;
             gap: 1.5rem;
             margin: 0.5rem 0;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .nav-link {
             color: var(--text2);
             text-decoration: none;
             font-weight: 600;
-            font-size: 1rem;
-            padding: 8px 20px;
+            font-size: 0.95rem;
+            padding: 6px 16px;
             border-radius: 20px;
             transition: all 0.3s ease;
             border: 1px solid transparent;
@@ -116,18 +131,21 @@
         .pulse-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 1rem;
+            gap: 1.25rem;
         }
 
         .pulse-card {
-            background: var(--surface);
+            background: var(--glass);
+            backdrop-filter: blur(var(--glass-b));
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 1.25rem;
+            padding: 1.5rem;
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
-            justify-content: space-between;
-            transition: transform 0.2s ease, border-color 0.2s ease;
+            gap: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.2s ease;
         }
 
         .pulse-card:hover {
@@ -140,6 +158,7 @@
             align-items: center;
             gap: 1.5rem;
             flex: 1;
+            min-width: 300px;
         }
 
         .pulse-ticker-box {
@@ -148,7 +167,7 @@
 
         .pulse-ticker {
             font-weight: 800;
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             color: var(--accent2);
             text-decoration: none;
             font-family: var(--mono);
@@ -160,18 +179,14 @@
             margin-top: 2px;
         }
 
-        .pulse-trend-box {
-            min-width: 120px;
-            text-align: center;
-        }
-
         .trend-badge {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 700;
             padding: 4px 12px;
             border-radius: 12px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            display: inline-block;
         }
 
         .trend-upward {
@@ -197,6 +212,7 @@
             font-size: 1rem;
             color: var(--text);
             font-weight: 500;
+            min-width: 200px;
         }
 
         .pulse-rs {
@@ -204,9 +220,9 @@
             font-size: 0.9rem;
             color: var(--cyan);
             background: rgba(0, 229, 255, 0.05);
-            padding: 4px 10px;
+            padding: 6px 12px;
             border-radius: 8px;
-            margin-right: 1.5rem;
+            border: 1px solid rgba(0, 229, 255, 0.1);
         }
 
         .loading {
@@ -220,28 +236,29 @@
 <body>
     <div class="container">
         <header>
-            <div style="font-size: 3rem;">🌊</div>
+            <div class="logo-icon">🌊</div>
             <h1>Market Pulse</h1>
             <div class="nav-links">
-                <a href="index.html" class="nav-link">Dashboard</a>
-                <a href="stages.html" class="nav-link">Sector Analysis</a>
+                <a href="index.html" class="nav-link">Dashboard 🚀</a>
+                <a href="stages.html" class="nav-link">Sectors 📊</a>
                 <a href="quick_scan.html" class="nav-link">Quick Scan ⏱️</a>
-                <a href="pulse.html" class="nav-link active">Market Pulse</a>
+                <a href="pulse.html" class="nav-link active">Market Pulse 🌊</a>
+                <a href="tips.html" class="nav-link">Stock Tips 💡</a>
             </div>
         </header>
 
         <section id="indices-section">
             <div class="section-header">
-                <h2 class="section-title">🏛️ Market Indices</h2>
+                <h2 class="section-title">🏛️ Major Indices</h2>
             </div>
             <div id="indices-grid" class="pulse-grid">
-                <div class="loading">Loading market trends...</div>
+                <div class="loading">Analyzing market major indices...</div>
             </div>
         </section>
 
         <section id="etf-section">
             <div class="section-header">
-                <h2 class="section-title">📈 Sector & Asset Trends</h2>
+                <h2 class="section-title">📈 Asset Class Trends</h2>
             </div>
             <div id="etf-grid" class="pulse-grid"></div>
         </section>
@@ -253,11 +270,14 @@
                 const response = await fetch(`web_data.json?t=${Date.now()}`);
                 const data = await response.json();
 
-                // Set local time for pulse display if needed, but we'll focus on the header if it existed
-                // Pulse doesn't have a 'last-updated' div in the current HTML, let's add one for consistency
-                render(data.pulse);
+                if (data.pulse && data.pulse.length > 0) {
+                    render(data.pulse);
+                } else {
+                    document.getElementById('indices-grid').innerHTML = '<div class="loading">No pulse data found. Run a full scan to generate results.</div>';
+                }
             } catch (err) {
                 console.error(err);
+                document.getElementById('indices-grid').innerHTML = '<div class="loading">Unable to load pulse data.</div>';
             }
         }
 
@@ -268,7 +288,7 @@
             indicesGrid.innerHTML = '';
             etfGrid.innerHTML = '';
 
-            const topTickers = ["QQQ", "QQQE", "SPY", "RSP", "IWO", "IWM"];
+            const topTickers = ["QQQ", "QQQE", "SPY", "RSP", "IWO", "IWM", "^NDX", "^SPX", "^IXIC"];
 
             pulseData.forEach(item => {
                 const card = createPulseCard(item);
@@ -283,21 +303,20 @@
         function createPulseCard(item) {
             const div = document.createElement('div');
             div.className = 'pulse-card';
-
-            const trendClass = `trend-${item.trend.toLowerCase()}`;
+            const trendClass = `trend-${(item.trend || 'Sideways').toLowerCase()}`;
 
             div.innerHTML = `
                 <div class="pulse-main">
                     <div class="pulse-ticker-box">
-                        <a href="${item.tradingview_url}" target="_blank" class="pulse-ticker">${item.ticker}</a>
-                        <div class="pulse-name">${item.name}</div>
+                        <a href="https://www.tradingview.com/chart/?symbol=${item.ticker}" target="_blank" class="pulse-ticker">${item.ticker}</a>
+                        <div class="pulse-name">${item.name || item.ticker}</div>
                     </div>
-                    <div class="pulse-trend-box">
-                        <span class="trend-badge ${trendClass}">${item.trend}</span>
+                    <div style="min-width: 120px; text-align: center;">
+                        <span class="trend-badge ${trendClass}">${item.trend || 'Sideways'}</span>
                     </div>
-                    <div class="pulse-commentary">${item.commentary}</div>
+                    <div class="pulse-commentary">${item.commentary || 'Analyzing...'}</div>
                 </div>
-                <div class="pulse-rs">RS rank: ${item.rs_rank}</div>
+                <div class="pulse-rs">RS Rank: ${item.rs_rank || 'N/A'}</div>
             `;
             return div;
         }

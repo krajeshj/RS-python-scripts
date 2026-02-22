@@ -1,9 +1,16 @@
-# Add your manual stock tips here. 
+# Groups of manual stock tips
 # Format:
-# - ticker: TICKER_SYMBOL
-#   source: "Source Name"
+# - label: "Name of the group/tip"
+#   date: "YYYY-MM-DD"
+#   tickers: TICKER1, TICKER2, TICKER3
+#   source: "Optional source name"
 
-- ticker: NVDA
-  source: "Friend's Tip"
-- ticker: TSLA
-  source: "Twitter"
+- label: "Tech Giants Watch"
+  date: "2026-02-21"
+  tickers: NVDA, TSLA, AAPL, MSFT
+  source: "Weekly Analysis"
+
+- label: "High Growth Breakouts"
+  date: "2026-02-21"
+  tickers: SMCI, ARM
+  source: "Breakout Scanner"

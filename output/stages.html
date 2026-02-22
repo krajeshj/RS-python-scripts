@@ -12,21 +12,25 @@
         rel="stylesheet">
     <style>
         :root {
-            --bg: #12121e;
-            --bg2: #09090f;
-            --surface: #1e1e2d;
-            --border: rgba(255, 255, 255, 0.08);
+            --bg: #06060f;
+            --bg2: #0d0d1a;
+            --surface: rgba(255, 255, 255, .04);
+            --border: rgba(255, 255, 255, .08);
             --text: #e4e4ef;
-            --text2: #8a8aa3;
+            --text2: #8888a8;
+            --accent: #6c5ce7;
+            --accent2: #a29bfe;
             --s1: #7f8c8d;
-            --s2: #38b6ff;
-            /* Bright Blue */
+            --s2: #00e5ff;
+            /* Cyan for consistency */
             --s3: #ffde59;
-            /* Yellow */
-            --s4: #ff5757;
-            /* Pink/Red */
+            --s4: #ff5252;
             --green: #00e676;
-            --radius: 12px;
+            --cyan: #00e5ff;
+            --orange: #ff9100;
+            --glass: rgba(18, 18, 40, .72);
+            --glass-b: 12px;
+            --radius: 16px;
             --font: 'Outfit', sans-serif;
             --mono: 'JetBrains Mono', monospace;
         }
@@ -39,63 +43,86 @@
 
         body {
             font-family: var(--font);
-            background-color: var(--bg2);
+            background: var(--bg);
             color: var(--text);
             min-height: 100vh;
-            padding: 2rem;
-            line-height: 1.5;
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(ellipse 80% 60% at 50% -20%, rgba(108, 92, 231, .15), transparent),
+                radial-gradient(ellipse 60% 50% at 80% 110%, rgba(0, 229, 255, .08), transparent);
+            padding-bottom: 3rem;
         }
 
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            background: var(--bg);
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            padding: 2rem 1.5rem;
         }
 
         header {
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid var(--border);
+            margin-bottom: 3rem;
+            text-align: center;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .brand {
-            display: flex;
+            flex-direction: column;
             align-items: center;
             gap: 12px;
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: var(--text);
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--accent2);
+            margin-bottom: 4px;
+            filter: drop-shadow(0 0 10px rgba(108, 92, 231, 0.3));
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--text) 30%, var(--accent2));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .nav-links {
             display: flex;
             gap: 1.5rem;
+            margin: 0.5rem 0;
         }
 
         .nav-link {
             color: var(--text2);
             text-decoration: none;
-            font-size: 0.9rem;
             font-weight: 600;
-            transition: color 0.2s;
+            font-size: 0.95rem;
+            padding: 6px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
         }
 
-        .nav-link:hover,
+        .nav-link:hover {
+            color: var(--text);
+            background: var(--surface);
+        }
+
         .nav-link.active {
-            color: var(--s2);
+            color: var(--cyan);
+            background: rgba(0, 229, 255, 0.1);
+            border-color: rgba(0, 229, 255, 0.2);
         }
 
         /* Market Overview Section */
         .overview {
             padding: 2rem;
-            background: rgba(255, 255, 255, 0.02);
-            border-bottom: 1px solid var(--border);
+            background: var(--glass);
+            backdrop-filter: blur(var(--glass-b));
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
         }
 
         .overview-title {
@@ -117,8 +144,14 @@
 
         .legend {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 1rem;
+        }
+
+        @media (min-width: 600px) {
+            .legend {
+                grid-template-columns: repeat(4, 1fr);
+            }
         }
 
         .legend-item {
@@ -154,6 +187,10 @@
         .table-container {
             width: 100%;
             overflow-x: auto;
+            background: var(--glass);
+            backdrop-filter: blur(var(--glass-b));
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
         }
 
         table {
@@ -163,7 +200,7 @@
         }
 
         th {
-            padding: 1rem 2rem;
+            padding: 1rem 1.5rem;
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -173,9 +210,9 @@
         }
 
         td {
-            padding: 1.25rem 2rem;
+            padding: 1.25rem 1.5rem;
             border-bottom: 1px solid var(--border);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .sector-name {
@@ -184,13 +221,13 @@
         }
 
         .count {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text2);
-            margin-left: 6px;
+            margin-top: 2px;
         }
 
         .dist-cell {
-            min-width: 180px;
+            min-width: 140px;
         }
 
         .mini-bar {
@@ -208,24 +245,23 @@
         .s4-pct {
             font-family: var(--mono);
             font-weight: 600;
-            font-size: 0.9rem;
-            width: 50px;
+            font-size: 0.85rem;
+            width: 45px;
             text-align: right;
         }
 
         .s2-pct {
-            color: var(--s2);
-            font-weight: 700;
+            color: var(--cyan);
         }
 
         .s4-pct {
-            color: var(--s4);
+            color: var(--red);
         }
 
         .health-badge {
             padding: 4px 10px;
             border-radius: 6px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 700;
             text-transform: uppercase;
         }
@@ -236,8 +272,8 @@
         }
 
         .health-healthy {
-            color: var(--s2);
-            background: rgba(56, 182, 255, 0.1);
+            color: var(--cyan);
+            background: rgba(0, 229, 255, 0.1);
         }
 
         .health-neutral {
@@ -246,16 +282,15 @@
         }
 
         .health-weak {
-            color: var(--s4);
-            background: rgba(255, 87, 87, 0.1);
+            color: var(--red);
+            background: rgba(255, 82, 82, 0.1);
         }
 
         .health-improving {
-            color: #a29bfe;
+            color: var(--accent2);
             background: rgba(162, 155, 254, 0.1);
         }
 
-        /* Stage bar fragments */
         .f1 {
             background-color: var(--s1);
         }
@@ -283,14 +318,14 @@
 <body>
     <div class="container">
         <header>
-            <div class="brand">
-                <span style="font-size: 1.4rem;">📊</span>
-                Stage Analysis
-            </div>
+            <div class="logo-icon">📊</div>
+            <h1>Sector Analysis</h1>
             <nav class="nav-links">
                 <a href="index.html" class="nav-link">Dashboard</a>
                 <a href="stages.html" class="nav-link active">Sector Analysis</a>
-                <a href="pulse.html" class="nav-link">Market Pulse</a>
+                <a href="quick_scan.html" class="nav-link">Quick Scan ⏱️</a>
+                <a href="pulse.html" class="nav-link">Market Pulse 🌊</a>
+                <a href="tips.html" class="nav-link">Stock Tips 💡</a>
             </nav>
         </header>
 

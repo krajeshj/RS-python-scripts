@@ -19,42 +19,46 @@ def save_tips(tips):
 def main():
     parser = argparse.ArgumentParser(description="Manage manual stock tips in tips.yaml")
     parser.add_argument("--add", help="Comma-separated list of tickers to add")
-    parser.add_argument("--delete", help="Comma-separated list of tickers to delete")
-    parser.add_argument("--source", default="Manual Entry", help="Source name for added tips (default: Manual Entry)")
+    parser.add_argument("--label", default="Watching", help="Label for the tip group")
+    parser.add_argument("--date", default=None, help="Date for the tip group (YYYY-MM-DD)")
+    parser.add_argument("--source", default="Manual Entry", help="Source for the tip group")
+    parser.add_argument("--delete", help="Label of the group to delete (exact match)")
     
     args = parser.parse_args()
     
     tips = load_tips()
-    existing_tickers = {t['ticker'] for t in tips}
     
     changed = False
     
     if args.add:
-        added_count = 0
-        new_tickers = [t.strip().upper() for t in args.add.split(',')]
-        for ticker in new_tickers:
-            if ticker and ticker not in existing_tickers:
-                tips.append({"ticker": ticker, "source": args.source})
-                existing_tickers.add(ticker)
-                added_count += 1
-                changed = True
-        print(f"Added {added_count} new tips.")
+        tickers = [t.strip().upper() for t in args.add.split(',')]
+        date = args.date if args.date else datetime.now().strftime("%Y-%m-%d")
+        
+        new_group = {
+            "label": args.label,
+            "date": date,
+            "tickers": ", ".join(tickers),
+            "source": args.source
+        }
+        tips.append(new_group)
+        print(f"Added group '{args.label}' with {len(tickers)} tickers.")
+        changed = True
 
     if args.delete:
-        deleted_count = 0
-        to_delete = {t.strip().upper() for t in args.delete.split(',')}
-        new_tips = [t for t in tips if t['ticker'].upper() not in to_delete]
-        deleted_count = len(tips) - len(new_tips)
-        if deleted_count > 0:
-            tips = new_tips
+        old_len = len(tips)
+        tips = [t for t in tips if t.get('label') != args.delete]
+        if len(tips) < old_len:
             changed = True
-        print(f"Deleted {deleted_count} tips.")
+            print(f"Deleted group '{args.delete}'.")
+        else:
+            print(f"Group '{args.delete}' not found.")
 
     if changed:
         save_tips(tips)
         print("tips.yaml updated successfully.")
     else:
-        print("No changes were made to tips.yaml.")
+        print("No changes made.")
 
 if __name__ == "__main__":
+    from datetime import datetime
     main()

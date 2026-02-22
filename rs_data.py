@@ -250,6 +250,8 @@ def enrich_ticker_data(ticker_response, security, skip_calc, mm_count):
     ticker_response["industry"] = security["industry"]
     ticker_response["universe"] = security["universe"]
     ticker_response["source"] = security.get("source", "AI Scanner")
+    ticker_response["label"] = security.get("label", "")
+    ticker_response["date"] = security.get("date", "")
     ticker_response["skip_calc"] = skip_calc
     ticker_response["minervini"] = int(mm_count)
  
@@ -326,20 +328,60 @@ def load_ticker_info(ticker, info_dict_ignored):
         return {
             ticker: {
                 "info": {
-                    "industry": get_info_from_dict(info, "industry"),
-                    "sector": get_info_from_dict(info, "sector"),
-                    "name": info.get("longName") or info.get("shortName") or ticker,
-                    "marketCap": info.get("marketCap", 0),
+                    "industry": "unknown",
+                    "sector": "unknown",
+                    "name": ticker,
+                    "marketCap": 0,
                     "earnings_date": earnings_date,
-                    "eps_growth_curr": info.get("earningsQuarterlyGrowth", 0),
-                    "eps_growth_annual": info.get("earningsGrowth", 0),
-                    "revenue_growth": info.get("revenueGrowth", 0)
+                    "eps_growth_curr": 0,
+                    "eps_growth_annual": 0,
+                    "revenue_growth": 0
                 }
             }
         }
     except Exception as e:
-        # print(f"Error fetching metadata for {escaped_ticker}: {e}")
         return None
+
+def load_ticker_info_batch(tickers, current_info_dict):
+    """Fetches metadata for a batch of tickers using yfinance."""
+    if not tickers:
+        return
+    
+    print(f"Fetching metadata for {len(tickers)} tickers...")
+    for ticker in tickers:
+        if ticker in current_info_dict and "name" in current_info_dict[ticker].get("info", {}):
+            continue
+            
+        try:
+            # Use escaped ticker for yfinance
+            escaped = escape_ticker(ticker)
+            yt = yf.Ticker(escaped)
+            info = yt.info
+            
+            if not info or "shortName" not in info:
+                # Fallback for indices/ETFs
+                current_info_dict[ticker] = {
+                    "info": {
+                        "name": ticker,
+                        "industry": "Index/ETF",
+                        "sector": "Market Pulse",
+                        "marketCap": 0
+                    }
+                }
+                continue
+
+            current_info_dict[ticker] = {
+                "info": {
+                    "name": info.get("shortName", info.get("longName", ticker)),
+                    "industry": info.get("industry", "Index/ETF" if "^" in ticker or ticker == "DX-Y.NYB" else "unknown"),
+                    "sector": info.get("sector", "Market Pulse" if "^" in ticker or ticker == "DX-Y.NYB" else "unknown"),
+                    "marketCap": info.get("marketCap", 0)
+                }
+            }
+        except Exception as e:
+            print(f"Error fetching info for {ticker}: {e}")
+            if ticker not in current_info_dict:
+                current_info_dict[ticker] = {"info": {"name": ticker, "industry": "unknown", "sector": "unknown"}}
 
 def load_prices_from_tda(securities, api_key):
     print("*** Loading Stocks from TD Ameritrade ***")
@@ -591,6 +633,20 @@ def main(forceTDA_legacy=None, api_key_legacy=None):
 
     # Load manual tips and add them to securities
     tips = load_manual_tips()
+    
+    # Flatten grouped tips for processing
+    flattened_tips = []
+    for group in tips:
+        g_tickers = [t.strip().upper() for t in str(group.get("tickers", "")).split(",") if t.strip()]
+        for ticker in g_tickers:
+            flattened_tips.append({
+                "ticker": ticker,
+                "source": group.get("source", "Manual Tip"),
+                "label": group.get("label", "Manual Tip"),
+                "date": group.get("date", "")
+            })
+    tips = flattened_tips
+
     all_securities = list(get_resolved_securities(full_scan).values())
 
     # Add Market Pulse tickers
@@ -603,27 +659,29 @@ def main(forceTDA_legacy=None, api_key_legacy=None):
                 "universe": "Market Pulse"
             })
     
-    # Track which tickers are manual tips for later info fetching
-    manual_tickers = []
+    # Add tips to resolved securities list
+    # Add tips to resolved securities list
     for tip in tips:
         ticker = tip["ticker"]
-        # Create security object if not already present
-        if not any(s["ticker"] == ticker for s in all_securities):
+        # Find if ticker already exists in resolutions
+        existing = next((s for s in all_securities if s["ticker"] == ticker), None)
+        if existing:
+            # Enrich existing security with tip metadata
+            existing["source"] = tip.get("source", "Manual Tip")
+            existing["label"] = tip.get("label", "")
+            existing["date"] = tip.get("date", "")
+        else:
+            # Create new security entry for tip
             all_securities.append({
                 "ticker": ticker,
                 "sector": UNKNOWN,
                 "industry": UNKNOWN,
                 "universe": "Manual Tip",
-                "source": tip.get("source", "Manual Tip")
+                "source": tip.get("source", "Manual Tip"),
+                "label": tip.get("label", ""),
+                "date": tip.get("date", "")
             })
-            manual_tickers.append(ticker)
-        else:
-            # Update source for existing security if it's in tips
-            for s in all_securities:
-                if s["ticker"] == ticker:
-                    s["source"] = tip.get("source", "Manual Tip")
-                    break
-
+    
     save_data(dataSource, all_securities, API_KEY, {"forceTDA": forceTDA})
     write_ticker_info_file(TICKER_INFO_DICT)
 
