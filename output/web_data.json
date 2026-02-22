@@ -1,153 +1,149 @@
 {
-<<<<<<< HEAD
-    "last_updated": "2026-02-21 12:18:59",
-=======
-    "last_updated": "2026-02-21 19:59:48",
->>>>>>> a034e9e248e7133e3f34e41b44daa59cef2864c0
+    "last_updated": "2026-02-22 00:16:31",
     "stocks": [
         {
             "rank": 1,
-            "ticker": "LRCX",
-            "rs": 2.07,
-            "rmv": 36.95,
-            "industry": "Semiconductor Equipment & Materials",
-            "sector": "Technology",
-            "highlights": "VCP Contraction, Strong Trend Alignment, Controlled Volatility",
-            "source": "AI Scanner",
-            "canslim": {
-                "c": false,
-                "a": false,
-                "n": true,
-                "s": false,
-                "l": true,
-                "i": true,
-                "m": true
-            },
-            "days_to_earnings": -1,
-            "rs_1m_pct": 97,
-            "is_restricted": false,
-            "tradingview_url": "https://www.tradingview.com/chart/?symbol=LRCX",
-            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=LRCX&ty=c&ta=0&p=d&s=l"
-        },
-        {
-            "rank": 2,
-            "ticker": "WBD",
-            "rs": 1.93,
-            "rmv": 11.57,
-            "industry": "Entertainment",
-            "sector": "Communication Services",
+            "ticker": "QMMM",
+            "rs": 45.48,
+            "rmv": 0.0,
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "Not Extended, Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
                 "c": false,
                 "a": false,
-                "n": true,
+                "n": false,
                 "s": false,
                 "l": true,
                 "i": true,
                 "m": true
             },
             "days_to_earnings": -1,
-            "rs_1m_pct": 96,
+            "rs_1m_pct": 100,
             "is_restricted": false,
-            "tradingview_url": "https://www.tradingview.com/chart/?symbol=WBD",
-            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=WBD&ty=c&ta=0&p=d&s=l"
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=QMMM",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=QMMM&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 2,
+            "ticker": "ABVX",
+            "rs": 7.51,
+            "rmv": 27.81,
+            "industry": "unknown",
+            "sector": "unknown",
+            "highlights": "VCP Contraction, Not Extended, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": false,
+                "l": true,
+                "i": true,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "rs_1m_pct": 100,
+            "is_restricted": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=ABVX",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ABVX&ty=c&ta=0&p=d&s=l"
         },
         {
             "rank": 3,
-            "ticker": "AMAT",
-            "rs": 1.81,
-            "rmv": 35.03,
-            "industry": "Semiconductor Equipment & Materials",
-            "sector": "Technology",
+            "ticker": "TERN",
+            "rs": 5.48,
+            "rmv": 43.57,
+            "industry": "Biotechnology",
+            "sector": "Healthcare",
+            "highlights": "Not Extended, Controlled Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": false,
+                "l": true,
+                "i": true,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "rs_1m_pct": 100,
+            "is_restricted": true,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=TERN",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TERN&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 4,
+            "ticker": "AFJKU",
+            "rs": 5.21,
+            "rmv": 0.0,
+            "industry": "unknown",
+            "sector": "unknown",
+            "highlights": "Strong Trend Alignment, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": false,
+                "l": true,
+                "i": true,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "rs_1m_pct": 100,
+            "is_restricted": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=AFJKU",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AFJKU&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 5,
+            "ticker": "SOGP",
+            "rs": 4.61,
+            "rmv": 44.7,
+            "industry": "unknown",
+            "sector": "unknown",
+            "highlights": "VCP Contraction, Not Extended, Strong Trend Alignment, Controlled Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": false,
+                "l": true,
+                "i": true,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "rs_1m_pct": 99,
+            "is_restricted": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=SOGP",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SOGP&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 6,
+            "ticker": "PRAX",
+            "rs": 4.23,
+            "rmv": 41.17,
+            "industry": "Biotechnology",
+            "sector": "Healthcare",
             "highlights": "Strong Trend Alignment, Controlled Volatility",
             "source": "AI Scanner",
             "canslim": {
                 "c": false,
                 "a": false,
                 "n": true,
-                "s": false,
+                "s": true,
                 "l": true,
                 "i": true,
                 "m": true
             },
             "days_to_earnings": -1,
-            "rs_1m_pct": 92,
-            "is_restricted": false,
-            "tradingview_url": "https://www.tradingview.com/chart/?symbol=AMAT",
-            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AMAT&ty=c&ta=0&p=d&s=l"
-        },
-        {
-            "rank": 4,
-            "ticker": "ASML",
-            "rs": 1.6,
-            "rmv": 23.6,
-            "industry": "Semiconductor Equipment & Materials",
-            "sector": "Technology",
-            "highlights": "VCP Contraction, Strong Trend Alignment, Ultra Low Volatility",
-            "source": "AI Scanner",
-            "canslim": {
-                "c": false,
-                "a": false,
-                "n": true,
-                "s": false,
-                "l": true,
-                "i": true,
-                "m": true
-            },
-            "days_to_earnings": -1,
-            "rs_1m_pct": 94,
-            "is_restricted": false,
-            "tradingview_url": "https://www.tradingview.com/chart/?symbol=ASML",
-            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ASML&ty=c&ta=0&p=d&s=l"
-        },
-        {
-            "rank": 5,
-            "ticker": "INTC",
-            "rs": 1.48,
-            "rmv": 41.19,
-            "industry": "Semiconductors",
-            "sector": "Technology",
-            "highlights": "VCP Contraction, Not Extended, Controlled Volatility",
-            "source": "AI Scanner",
-            "canslim": {
-                "c": false,
-                "a": false,
-                "n": false,
-                "s": false,
-                "l": true,
-                "i": true,
-                "m": true
-            },
-            "days_to_earnings": -1,
-            "rs_1m_pct": 95,
-            "is_restricted": false,
-            "tradingview_url": "https://www.tradingview.com/chart/?symbol=INTC",
-            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=INTC&ty=c&ta=0&p=d&s=l"
-        },
-        {
-            "rank": 6,
-            "ticker": "KLAC",
-            "rs": 1.47,
-            "rmv": 31.93,
-            "industry": "Semiconductor Equipment & Materials",
-            "sector": "Technology",
-            "highlights": "VCP Contraction, Not Extended, Strong Trend Alignment, Ultra Low Volatility",
-            "source": "AI Scanner",
-            "canslim": {
-                "c": false,
-                "a": false,
-                "n": false,
-                "s": false,
-                "l": true,
-                "i": true,
-                "m": true
-            },
-            "days_to_earnings": -1,
-            "rs_1m_pct": 93,
-            "is_restricted": false,
-            "tradingview_url": "https://www.tradingview.com/chart/?symbol=KLAC",
-            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=KLAC&ty=c&ta=0&p=d&s=l"
+            "rs_1m_pct": 100,
+            "is_restricted": true,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=PRAX",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PRAX&ty=c&ta=0&p=d&s=l"
         }
     ],
     "tips": [
@@ -170,7 +166,7 @@
                 "m": true
             },
             "days_to_earnings": -1,
-            "rs_1m_pct": 70,
+            "rs_1m_pct": 65,
             "is_restricted": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=NVDA",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=NVDA&ty=c&ta=0&p=d&s=l"
@@ -194,7 +190,7 @@
                 "m": true
             },
             "days_to_earnings": -1,
-            "rs_1m_pct": 76,
+            "rs_1m_pct": 71,
             "is_restricted": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=TSLA",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TSLA&ty=c&ta=0&p=d&s=l"
@@ -203,73 +199,77 @@
     "industries": [
         {
             "rank": 1,
-            "industry": "Computer Hardware",
-            "sector": "Technology",
-            "rs": 2.89,
+            "industry": "Other Precious Metals & Mining",
+            "sector": "Basic Materials",
+            "rs": 3.57,
             "tickers": [
-                "WDC",
-                "STX"
+                "HYMC",
+                "MUX",
+                "BVN",
+                "PPTA"
             ]
         },
         {
             "rank": 2,
-            "industry": "Semiconductor Equipment & Materials",
-            "sector": "Technology",
-            "rs": 1.73,
+            "industry": "Silver",
+            "sector": "Basic Materials",
+            "rs": 2.21,
             "tickers": [
-                "LRCX",
-                "AMAT",
-                "ASML",
-                "KLAC"
+                "AG",
+                "EXK",
+                "PAAS",
+                "FSM"
             ]
         },
         {
             "rank": 3,
-            "industry": "Semiconductors",
+            "industry": "Semiconductor Equipment & Materials",
             "sector": "Technology",
-            "rs": 1.26,
+            "rs": 1.98,
             "tickers": [
-                "MU",
-                "INTC",
-                "MPWR",
-                "ADI",
-                "MCHP"
+                "AXTI",
+                "ICHR",
+                "TER",
+                "UCTT",
+                "ACMR"
             ]
         },
         {
             "rank": 4,
-            "industry": "Entertainment",
-            "sector": "Communication Services",
-            "rs": 1.09,
+            "industry": "Gold",
+            "sector": "Basic Materials",
+            "rs": 1.8,
             "tickers": [
-                "WBD",
-                "CMCSA",
-                "CHTR",
-                "NFLX"
+                "HL",
+                "IAG",
+                "CDE",
+                "NGD",
+                "GOLD"
             ]
         },
         {
             "rank": 5,
-            "industry": "Biotechnology",
-            "sector": "Healthcare",
-            "rs": 1.05,
+            "industry": "Uranium",
+            "sector": "Energy",
+            "rs": 1.78,
             "tickers": [
-                "INSM",
-                "REGN",
-                "VRTX",
-                "ALNY"
+                "UUUU",
+                "UEC",
+                "CCJ",
+                "NXE",
+                "LEU"
             ]
         },
         {
             "rank": 6,
-            "industry": "Beverages\u2014Non-Alcoholic",
-            "sector": "Consumer Defensive",
-            "rs": 1.05,
+            "industry": "Copper",
+            "sector": "Basic Materials",
+            "rs": 1.75,
             "tickers": [
-                "MNST",
-                "CCEP",
-                "PEP",
-                "KDP"
+                "HBM",
+                "SCCO",
+                "ERO",
+                "FCX"
             ]
         }
     ]
