@@ -204,6 +204,7 @@ def exchange_from_symbol(symbol):
 def get_tickers_from_nasdaq(tickers):
     filename = "nasdaqtraded.txt"
     ticker_column = 1
+    name_column = 2
     etf_column = 5
     exchange_column = 3
     test_column = 7
@@ -216,17 +217,30 @@ def get_tickers_from_nasdaq(tickers):
     lines.seek(0)
     results = lines.readlines()
 
+    # Non-equity security types to exclude
+    JUNK_KEYWORDS = {'warrant', 'warrants', 'rights', 'units', 'unit', 
+                     'notes', 'debenture', 'debentures', 'bond',
+                     'preferred'}
+    skipped = 0
+
     for entry in results:
         sec = {}
         values = entry.split('|')
         ticker = values[ticker_column]
         if re.match(r'^[A-Z]+$', ticker) and values[etf_column] == "N" and values[test_column] == "N":
+            # Filter by Security Name — skip warrants, units, rights, debt, preferred
+            sec_name = values[name_column].lower() if len(values) > name_column else ""
+            if any(kw in sec_name for kw in JUNK_KEYWORDS):
+                skipped += 1
+                continue
+
             sec["ticker"] = ticker
             sec["sector"] = UNKNOWN
             sec["industry"] = UNKNOWN
             sec["universe"] = exchange_from_symbol(values[exchange_column])
             tickers[sec["ticker"]] = sec
 
+    print(f"Loaded {len(tickers)} equities from NASDAQ (skipped {skipped} warrants/units/rights/debt/preferred)")
     return tickers
 
 # SECURITIES = get_resolved_securities().values()  # Now handled in main()
