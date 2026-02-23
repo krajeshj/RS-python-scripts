@@ -158,29 +158,61 @@
             gap: 1rem;
         }
 
-        .toggle-btn {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 8px 16px;
-            border-radius: 12px;
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 200px;
+        }
+
+        .slider-group label {
             font-size: 0.85rem;
             font-weight: 600;
+            color: var(--text2);
+        }
+
+        .slider-val {
+            color: var(--cyan);
+            font-family: var(--mono);
+            font-weight: 700;
+        }
+
+        .range-slider {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--cyan));
+            outline: none;
+            opacity: 0.85;
+            transition: opacity 0.15s;
+        }
+
+        .range-slider:hover {
+            opacity: 1;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--cyan);
             cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
         }
 
-        .toggle-btn.active {
-            background: var(--accent);
-            border-color: var(--accent2);
+        .range-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--cyan);
+            cursor: pointer;
+            border: none;
         }
 
-        .toggle-btn:hover {
-            background: rgba(255, 255, 255, 0.08);
-        }
+
 
         .section-header {
             display: flex;
@@ -598,25 +630,21 @@
         </header>
 
         <div class="dashboard-tools">
-            <button id="toggle-speculative" class="toggle-btn active">
-                <span>🛡️ Speculative Filter</span>
-                <small id="spec-status">ON (Hiding Biotechs/Speculative)</small>
-            </button>
-            <div class="meta-info">Showing top liquidity & strength</div>
-        </div>
-
-        <section id="tips-section" class="hidden">
-            <div class="section-header">
-                <h2 class="section-title">💡 Market Tips & Alerts</h2>
-                <p class="section-sub">Manually curated opportunities from your watchlists</p>
+            <div class="slider-group">
+                <label>RS Percentile ≥ <span id="rs-val" class="slider-val">75</span></label>
+                <input type="range" id="rs-slider" min="70" max="99" value="75" class="range-slider">
             </div>
-            <div id="tips-grid" class="grid"></div>
-        </section>
+            <div class="slider-group">
+                <label>RMV ≤ <span id="rmv-val" class="slider-val">45</span></label>
+                <input type="range" id="rmv-slider" min="10" max="100" value="45" class="range-slider">
+            </div>
+            <div class="meta-info" id="filter-count">Showing top candidates</div>
+        </div>
 
         <section>
             <div class="section-header">
                 <h2 class="section-title">✨ Top 6 Alpha Leaders</h2>
-                <p class="section-sub">Highest technical strength with strictly controlled volatility</p>
+                <p class="section-sub">Highest technical strength with controlled volatility</p>
             </div>
             <div id="stocks-grid" class="grid">
                 <div class="loading">Analyzing market conditions...</div>
@@ -636,7 +664,6 @@
 
     <script>
         let allData = null;
-        let hideSpeculative = true;
 
         async function init() {
             try {
@@ -646,11 +673,15 @@
                 const lastUpdated = new Date(allData.last_updated);
                 document.getElementById('last-updated').textContent = `Sync: ${lastUpdated.toLocaleString()}`;
 
-                document.getElementById('toggle-speculative').addEventListener('click', () => {
-                    hideSpeculative = !hideSpeculative;
-                    const btn = document.getElementById('toggle-speculative');
-                    btn.classList.toggle('active');
-                    document.getElementById('spec-status').textContent = hideSpeculative ? 'ON (Hiding Biotechs/Speculative)' : 'OFF (Showing All)';
+                // Slider listeners
+                const rsSlider = document.getElementById('rs-slider');
+                const rmvSlider = document.getElementById('rmv-slider');
+                rsSlider.addEventListener('input', () => {
+                    document.getElementById('rs-val').textContent = rsSlider.value;
+                    render();
+                });
+                rmvSlider.addEventListener('input', () => {
+                    document.getElementById('rmv-val').textContent = rmvSlider.value;
                     render();
                 });
 
@@ -728,20 +759,21 @@
         function render() {
             if (!allData) return;
 
-            // Render Stocks — toggle between filtered and all
-            const stocksGrid = document.getElementById('stocks-grid');
-            const stocksToRender = hideSpeculative ? allData.stocks : (allData.all_stocks || allData.stocks);
-            stocksGrid.innerHTML = stocksToRender.map((s, i) => renderStock(s, i)).join('');
+            const minRS = parseInt(document.getElementById('rs-slider').value);
+            const maxRMV = parseInt(document.getElementById('rmv-slider').value);
 
-            // Render Tips Section
-            const tips = allData.tips || [];
-            const tipsSection = document.getElementById('tips-section');
-            if (tips.length > 0) {
-                tipsSection.classList.remove('hidden');
-                document.getElementById('tips-grid').innerHTML = tips.map((s, i) => renderStock(s, i)).join('');
+            // Filter all_stocks by slider values, show up to 6
+            const pool = allData.all_stocks || allData.stocks || [];
+            const filtered = pool.filter(s => s.rs >= minRS && s.rmv <= maxRMV);
+            const stocksToRender = filtered.slice(0, 6);
+
+            const stocksGrid = document.getElementById('stocks-grid');
+            if (stocksToRender.length > 0) {
+                stocksGrid.innerHTML = stocksToRender.map((s, i) => renderStock(s, i)).join('');
             } else {
-                tipsSection.classList.add('hidden');
+                stocksGrid.innerHTML = '<div class="loading">No stocks match current filters. Try lowering RS or raising RMV.</div>';
             }
+            document.getElementById('filter-count').textContent = `${stocksToRender.length} of ${pool.length} candidates (RS≥${minRS}, RMV≤${maxRMV})`;
 
             // Render Industries
             const indGrid = document.getElementById('industries-grid');
