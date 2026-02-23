@@ -33,10 +33,16 @@
             --shadow: 0 8px 32px rgba(0, 0, 0, .45);
         }
 
-        * {
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        html {
+            overflow-x: hidden;
         }
 
         body {
@@ -57,6 +63,8 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem 1.5rem;
+            width: 100%;
+            overflow-x: hidden;
         }
 
         header {
@@ -212,6 +220,75 @@
             border: none;
         }
 
+        /* Quality toggle */
+        .quality-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .quality-toggle:hover {
+            border-color: var(--accent);
+        }
+
+        .quality-toggle.active {
+            background: rgba(0, 230, 118, 0.1);
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        .quality-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--text2);
+            transition: all 0.2s;
+        }
+
+        .quality-toggle.active .quality-dot {
+            background: var(--green);
+            box-shadow: 0 0 8px rgba(0, 230, 118, 0.5);
+        }
+
+        /* Delete button on card */
+        .card-delete {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 82, 82, 0.1);
+            border: 1px solid rgba(255, 82, 82, 0.2);
+            color: var(--red);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            opacity: 0;
+            transition: all 0.2s;
+            z-index: 2;
+        }
+
+        .card:hover .card-delete {
+            opacity: 1;
+        }
+
+        .card-delete:hover {
+            background: rgba(255, 82, 82, 0.25);
+            transform: scale(1.1);
+        }
 
 
         .section-header {
@@ -638,6 +715,10 @@
                 <label>RMV ≤ <span id="rmv-val" class="slider-val">45</span></label>
                 <input type="range" id="rmv-slider" min="10" max="100" value="45" class="range-slider">
             </div>
+            <div id="quality-btn" class="quality-toggle active" onclick="toggleQuality()">
+                <div class="quality-dot"></div>
+                🛡️ Quality Filter
+            </div>
             <div class="meta-info" id="filter-count">Showing top candidates</div>
         </div>
 
@@ -703,13 +784,30 @@
             </div>`;
         }
 
+        function getHiddenTickers() {
+            try { return JSON.parse(localStorage.getItem('hidden_tickers') || '[]'); } catch { return []; }
+        }
+        function hideTicker(ticker) {
+            const list = getHiddenTickers();
+            if (!list.includes(ticker)) { list.push(ticker); localStorage.setItem('hidden_tickers', JSON.stringify(list)); }
+            render();
+        }
+        let qualityOn = true;
+        function toggleQuality() {
+            qualityOn = !qualityOn;
+            document.getElementById('quality-btn').classList.toggle('active', qualityOn);
+            render();
+        }
+
         function renderStock(s, idx) {
             const earningsBadge = (s.days_to_earnings >= 0 && s.days_to_earnings <= 14)
                 ? `<div class="earnings-alert">📅 EARNINGS IN ${s.days_to_earnings}D</div>`
                 : '';
+            const priceStr = s.price ? `$${s.price.toFixed(2)}` : '';
 
             return `
                 <div class="card" style="animation-delay: ${idx * 0.05}s">
+                    <div class="card-delete" onclick="hideTicker('${s.ticker}')" title="Hide ${s.ticker}">✕</div>
                     <div class="card-header">
                         <div class="ticker-group">
                             <div class="ticker-box">
@@ -722,6 +820,7 @@
                         </div>
                         <div class="stats-top">
                             <div class="rank-badge">RANK #${s.rank}</div>
+                            ${priceStr ? `<div class="source-badge">${priceStr}</div>` : ''}
                             <div class="source-badge">${s.source}</div>
                         </div>
                     </div>
@@ -761,19 +860,25 @@
 
             const minRS = parseInt(document.getElementById('rs-slider').value);
             const maxRMV = parseInt(document.getElementById('rmv-slider').value);
+            const hidden = getHiddenTickers();
 
-            // Filter all_stocks by slider values, show up to 6
             const pool = allData.all_stocks || allData.stocks || [];
-            const filtered = pool.filter(s => s.rs >= minRS && s.rmv <= maxRMV);
-            const stocksToRender = filtered;
+            const filtered = pool.filter(s => {
+                if (s.rs < minRS || s.rmv > maxRMV) return false;
+                if (hidden.includes(s.ticker)) return false;
+                if (qualityOn && s.is_speculative) return false;
+                return true;
+            });
 
+            const specCount = pool.filter(s => s.is_speculative).length;
             const stocksGrid = document.getElementById('stocks-grid');
-            if (stocksToRender.length > 0) {
-                stocksGrid.innerHTML = stocksToRender.map((s, i) => renderStock(s, i)).join('');
+            if (filtered.length > 0) {
+                stocksGrid.innerHTML = filtered.map((s, i) => renderStock(s, i)).join('');
             } else {
-                stocksGrid.innerHTML = '<div class="loading">No stocks match current filters. Try lowering RS or raising RMV.</div>';
+                stocksGrid.innerHTML = '<div class="loading">No stocks match current filters. Try lowering RS, raising RMV, or toggling Quality Filter off.</div>';
             }
-            document.getElementById('filter-count').textContent = `${stocksToRender.length} of ${pool.length} candidates (RS≥${minRS}, RMV≤${maxRMV})`;
+            const qLabel = qualityOn ? `, ${specCount} speculative hidden` : '';
+            document.getElementById('filter-count').textContent = `${filtered.length} of ${pool.length} candidates (RS≥${minRS}, RMV≤${maxRMV}${qLabel})`;
 
             // Render Industries
             const indGrid = document.getElementById('industries-grid');
