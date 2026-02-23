@@ -762,10 +762,15 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
     df[TITLE_3M] = pd.qcut(df[TITLE_3M], 100, precision=64, labels=False, duplicates='drop') + 1
     df[TITLE_6M] = pd.qcut(df[TITLE_6M], 100, precision=64, labels=False, duplicates='drop') + 1
 
-    # Finalize CANSLIM 'L'
+    # Finalize CANSLIM 'L' — Leader requires RS >= 80 AND an upward-sloping RS line
+    # (1W RS pct >= 1M RS pct ensures sustained trend, not a one-day spike)
     def _finalize_canslim(r):
         c = r[TITLE_CANSLIM]
-        c["l"] = r[TITLE_PERCENTILE] >= 80
+        rs_high = r[TITLE_PERCENTILE] >= 80
+        rs_1w = r.get("rs_1w_pct", 50)
+        rs_1m = r.get("rs_1m_pct", 50)
+        rs_trending_up = (rs_1w >= rs_1m) and (rs_1w >= 70)
+        c["l"] = bool(rs_high and rs_trending_up)
         return c
     df[TITLE_CANSLIM] = df.apply(_finalize_canslim, axis=1)
 
