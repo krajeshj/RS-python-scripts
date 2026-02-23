@@ -765,7 +765,7 @@
             // Filter all_stocks by slider values, show up to 6
             const pool = allData.all_stocks || allData.stocks || [];
             const filtered = pool.filter(s => s.rs >= minRS && s.rmv <= maxRMV);
-            const stocksToRender = filtered.slice(0, 6);
+            const stocksToRender = filtered;
 
             const stocksGrid = document.getElementById('stocks-grid');
             if (stocksToRender.length > 0) {
