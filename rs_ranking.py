@@ -806,55 +806,18 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
         r[TITLE_NOT_EXT]
     ), axis=1)
 
-    # --- Writes ---
+    # --- CSV Exports (3 files only) ---
+    # 1. Full RS ranking
     df.to_csv(os.path.join(DIR, "output", f'rs_stocks{suffix}.csv'), index=False)
-    dfm.to_csv(os.path.join(DIR, "output", f'rs_stocks_minervini.csv'), index=False)
 
-    # Full scored sheet
-    df.to_csv(os.path.join(DIR, "output", "rs_stocks_scored.csv"), index=False)
+    # 2. Actionable setups: RS >= 75 and low RMV
+    df_setups = df[(df[TITLE_PERCENTILE] >= 75) & (df[TITLE_RMV] <= CONTROLLED_RMV_MAX)].copy()
+    if not df_setups.empty:
+        df_setups = df_setups.sort_values(TITLE_RS, ascending=False)
+        df_setups[TITLE_RANK] = range(1, len(df_setups) + 1)
+        df_setups.to_csv(os.path.join(DIR, "output", "rs_setups.csv"), index=False)
+        print(f"\nSetups (RS>=75, RMV<={CONTROLLED_RMV_MAX}): {len(df_setups)} stocks")
 
-    # Candidates
-    df[df[TITLE_CAND_HIGH]].to_csv(os.path.join(DIR, "output", "rs_stocks_candidates_high_win.csv"), index=False)
-    df[df[TITLE_CAND_FLIP]].to_csv(os.path.join(DIR, "output", "rs_stocks_candidates_flip.csv"), index=False)
-
-    # Create low RMV list (calibrated to your RMV scale)
-    df_low_rmv = df[df[TITLE_RMV] <= CONTROLLED_RMV_MAX].copy()
-    if not df_low_rmv.empty:
-        df_low_rmv = df_low_rmv.sort_values(TITLE_RMV, ascending=True)
-        df_low_rmv[TITLE_RANK] = range(1, len(df_low_rmv) + 1)
-        df_low_rmv.to_csv(os.path.join(DIR, "output", "rs_stocks_low_rmv.csv"), index=False)
-        print(f"\nLow RMV stocks (RMV <= {CONTROLLED_RMV_MAX}): {len(df_low_rmv)} stocks")
-        print(df_low_rmv[[TITLE_RANK, TITLE_TICKER, TITLE_RMV, TITLE_RS, TITLE_SECTOR, TITLE_INDUSTRY]].head(10))
-    else:
-        print(f"\nNo stocks found with RMV <= {CONTROLLED_RMV_MAX}")
-
-    # Also create a list showing all stocks sorted by RMV
-    df_sorted_rmv = df.sort_values(TITLE_RMV, ascending=True).copy()
-    df_sorted_rmv[TITLE_RANK] = range(1, len(df_sorted_rmv) + 1)
-    df_sorted_rmv.to_csv(os.path.join(DIR, "output", "rs_stocks_by_rmv.csv"), index=False)
-    print(f"\nAll stocks sorted by RMV (lowest first): {len(df_sorted_rmv)} stocks")
-    print(df_sorted_rmv[[TITLE_RANK, TITLE_TICKER, TITLE_RMV, TITLE_RS, TITLE_SECTOR, TITLE_INDUSTRY]].head(10))
-
-    # Create rmv_rs.csv filtered for RMV <= CONTROLLED_RMV_MAX
-    df_rmv_rs = df[df[TITLE_RMV] <= CONTROLLED_RMV_MAX].copy()
-    if not df_rmv_rs.empty:
-        df_rmv_rs = df_rmv_rs.sort_values(TITLE_RMV, ascending=True)
-        df_rmv_rs_output = df_rmv_rs[[TITLE_RMV, TITLE_TICKER, TITLE_MINERVINI, TITLE_SECTOR, TITLE_INDUSTRY,
-                                     TITLE_PERCENTILE, TITLE_RS, TITLE_1M]].copy()
-        df_rmv_rs_output.to_csv(os.path.join(DIR, "output", "rmv_rs.csv"), index=False)
-        print(f"\nRMV-RS list (RMV <= {CONTROLLED_RMV_MAX}): {len(df_rmv_rs_output)} stocks")
-        print(df_rmv_rs_output.head(10))
-    else:
-        print(f"\nNo stocks found with RMV <= {CONTROLLED_RMV_MAX} for rmv_rs.csv")
-
-    # Minervini_list.csv
-    try:
-        list_of_dfm_tickers = dfm[TITLE_TICKER].to_list()
-        list_of_dfm_tickers = ", ".join(map(str, list_of_dfm_tickers))
-        with open(os.path.join(DIR, "output", "Minervini_list.csv"), 'w') as f:
-            f.write(list_of_dfm_tickers)
-    except:
-        print('Minervini_list not created')
 
     # -------------------------
     # Industries analysis (kept from your original)
@@ -906,12 +869,11 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
 
     df_industries[TITLE_RANK] = range(1, len(df_industries) + 1)
 
+    # 3. Sector/Industry ranking CSV
     df_industries.to_csv(os.path.join(DIR, "output", f'rs_industries{suffix}.csv'), index=False)
 
     # Final Web Dashboard Export (refreshed with industries if they exist)
     _export_web_data(df, df_industries, quick=quick, sector_stages=sector_stages)
-
-    return [df, df_industries]
 
     return [df, df_industries]
 
