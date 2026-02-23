@@ -404,6 +404,7 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
             "rs_1w_pct": int(s.get("rs_1w_pct", 50)),
             "rs_1m_pct": int(s.get("rs_1m_pct", 50)),
             "rmv": s[TITLE_RMV],
+            "price": round(s.get(TITLE_CLOSE, 0), 2),
             "industry": s[TITLE_INDUSTRY],
             "sector": s[TITLE_SECTOR],
             "highlights": _get_highlights(s),
@@ -595,13 +596,17 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
         name = meta.get("name", ticker)
 
         # CANSLIM & Earnings
-        eps_c = meta.get("eps_growth_curr", 0) > 0.20
-        eps_a = meta.get("eps_growth_annual", 0) > 0.20
+        eps_c = meta.get("eps_growth_curr", 0) > 0.25  # EPS quarterly growth > 25%
+        sales_c = meta.get("revenue_growth", 0) > 0.20  # Sales growth > 20%
+        eps_a = meta.get("roe", 0) > 0.17  # ROE > 17% (Profitability)
         
         high_52w = float(tdf["High"].tail(252).max())
         new_high = latest_daily["Close"] > (high_52w * 0.95)
         
         supply_demand = latest_daily["Volume"] > latest_daily["vol20"]
+        
+        avg_vol = meta.get("avg_volume", 0)
+        institutional_liquidity = avg_vol > 400_000  # Institutional-grade volume
         
         # Days to earnings
         earnings_date_str = meta.get("earnings_date", "n/a")
@@ -614,13 +619,13 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
                 pass
 
         canslim = {
-            "c": bool(eps_c),
-            "a": bool(eps_a),
-            "n": bool(new_high),
-            "s": bool(supply_demand),
-            "l": False, # Will be set in main rankings
-            "i": rs > 1.2, # Proxy: RS > 1.2 is strong institutional support
-            "m": bool(spy_ok)
+            "c": bool(eps_c and sales_c),     # C: Current earnings + sales
+            "a": bool(eps_a),                  # A: Annual profitability (ROE)
+            "n": bool(new_high),               # N: New high
+            "s": bool(supply_demand),          # S: Supply/demand
+            "l": False,                        # L: Leader (set in main rankings, RS > 80)
+            "i": bool(institutional_liquidity),# I: Institutional quality (volume)
+            "m": bool(spy_ok)                  # M: Market direction
         }
 
         status, trend_comment = _get_trend_commentary(tdf)

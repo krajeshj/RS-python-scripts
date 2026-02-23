@@ -330,7 +330,13 @@ def _fetch_single_ticker_info(ticker, max_retries=3):
                     "name": info.get("shortName", info.get("longName", ticker)),
                     "industry": info.get("industry", "Index/ETF" if "^" in ticker else "unknown"),
                     "sector": info.get("sector", "Market Pulse" if "^" in ticker else "unknown"),
-                    "marketCap": info.get("marketCap", 0)
+                    "marketCap": info.get("marketCap", 0),
+                    # CANSLIM screening fields
+                    "eps_growth_curr": info.get("earningsQuarterlyGrowth", 0) or 0,
+                    "revenue_growth": info.get("revenueGrowth", 0) or 0,
+                    "roe": info.get("returnOnEquity", 0) or 0,
+                    "avg_volume": info.get("averageDailyVolume10Day", 0) or 0,
+                    "current_price": info.get("currentPrice", 0) or 0,
                 }
             }
         except Exception as e:
