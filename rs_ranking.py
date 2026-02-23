@@ -387,10 +387,14 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
             "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s.get(TITLE_TICKER, 'SPY')}&ty=c&ta=0&p=d&s=l"
         })
 
-    # Also export ALL top stocks (including restricted) for toggle
-    all_top = df_stocks.sort_values(TITLE_RS, ascending=False).head(12)
+    # Export all AI-screened stocks with RS >= 70 for client-side slider filtering
+    filterable = df_stocks[
+        (df_stocks[TITLE_PERCENTILE] >= 70) & 
+        (df_stocks[TITLE_SOURCE] == "AI Scanner") &
+        (df_stocks[TITLE_UNIVERSE] != "Market Pulse")
+    ].sort_values(TITLE_RS, ascending=False)
     all_stocks_list = []
-    for i, (_, s) in enumerate(all_top.iterrows()):
+    for i, (_, s) in enumerate(filterable.iterrows()):
         all_stocks_list.append({
             "rank": i + 1,
             "ticker": s[TITLE_TICKER],
@@ -404,6 +408,8 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
             "sector": s[TITLE_SECTOR],
             "highlights": _get_highlights(s),
             "source": s.get(TITLE_SOURCE, "AI Scanner"),
+            "canslim": s.get(TITLE_CANSLIM, {}),
+            "days_to_earnings": int(s.get(TITLE_DTE, -1)),
             "is_restricted": bool(s.get("is_restricted", False)),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
             "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s.get(TITLE_TICKER, 'SPY')}&ty=c&ta=0&p=d&s=l"

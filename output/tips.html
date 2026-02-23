@@ -446,16 +446,31 @@
             }
         }
 
+        function getHiddenTips() {
+            try { return JSON.parse(localStorage.getItem('hidden_tips') || '[]'); }
+            catch { return []; }
+        }
+
+        function removeTip(ticker) {
+            const hidden = getHiddenTips();
+            if (!hidden.includes(ticker)) hidden.push(ticker);
+            localStorage.setItem('hidden_tips', JSON.stringify(hidden));
+            render(window._currentTips || []);
+        }
+
         function render(tips) {
+            window._currentTips = tips;
             const container = document.getElementById('tips-container');
-            if (tips.length === 0) {
+            const hidden = getHiddenTips();
+            const visible = tips.filter(t => !hidden.includes(t.ticker));
+            if (visible.length === 0) {
                 container.innerHTML = '<div class="loading">No manual tips currently being tracked.</div>';
                 return;
             }
 
             // Group by Label
             const groups = {};
-            tips.forEach(t => {
+            visible.forEach(t => {
                 const label = t.label || "General Tips";
                 if (!groups[label]) groups[label] = { items: [], date: t.date };
                 groups[label].items.push(t);
@@ -470,14 +485,17 @@
                     </div>
                     <div class="grid">
                         ${group.items.map((s, i) => `
-                            <div class="card" style="animation-delay: ${i * 0.05}s">
+                            <div class="card" id="tip-${s.ticker}" style="animation-delay: ${i * 0.05}s">
                                 <div style="display:flex; justify-content: space-between; align-items: flex-start;">
                                     <div>
                                         <a href="${s.tradingview_url}" target="_blank" class="ticker">${s.ticker}</a>
                                         <div class="company-name">${s.name}</div>
                                     </div>
-                                    <div style="background: rgba(255, 145, 0, 0.1); color: var(--orange); padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(255, 145, 0, 0.2);">
-                                        RS ${s.rs}
+                                    <div style="display:flex; gap:6px; align-items:center;">
+                                        <div style="background: rgba(255, 145, 0, 0.1); color: var(--orange); padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(255, 145, 0, 0.2);">
+                                            RS ${s.rs}
+                                        </div>
+                                        <button onclick="removeTip('${s.ticker}')" style="background:rgba(255,82,82,0.1); border:1px solid rgba(255,82,82,0.2); color:var(--red); border-radius:8px; padding:4px 8px; cursor:pointer; font-size:0.75rem;" title="Hide this tip">🗑️</button>
                                     </div>
                                 </div>
 
