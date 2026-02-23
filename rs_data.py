@@ -337,6 +337,14 @@ def _fetch_single_ticker_info(ticker, max_retries=3):
                     "roe": info.get("returnOnEquity", 0) or 0,
                     "avg_volume": info.get("averageDailyVolume10Day", 0) or 0,
                     "current_price": info.get("currentPrice", 0) or 0,
+                    # Quality / speculative screening fields
+                    "trailing_eps": info.get("trailingEps", 0) or 0,
+                    "operating_margin": info.get("operatingMargins", 0) or 0,
+                    "debt_to_equity": info.get("debtToEquity", 999) if info.get("debtToEquity") is not None else 999,
+                    "current_ratio": info.get("currentRatio", 0) or 0,
+                    "free_cash_flow": info.get("freeCashflow", 0) or 0,
+                    "ps_ratio": info.get("priceToSalesTrailing12Months", 0) or 0,
+                    "pb_ratio": info.get("priceToBook", 0) or 0,
                 }
             }
         except Exception as e:

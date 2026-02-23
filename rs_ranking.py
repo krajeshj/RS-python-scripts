@@ -382,7 +382,7 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
             "source": s.get(TITLE_SOURCE, "AI Scanner"),
             "canslim": s.get(TITLE_CANSLIM, {}),
             "days_to_earnings": int(s.get(TITLE_DTE, -1)),
-            "is_restricted": bool(s.get("is_restricted", False)),
+            "is_speculative": bool(s.get("is_speculative", False)),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
             "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s.get(TITLE_TICKER, 'SPY')}&ty=c&ta=0&p=d&s=l"
         })
@@ -411,7 +411,7 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
             "source": s.get(TITLE_SOURCE, "AI Scanner"),
             "canslim": s.get(TITLE_CANSLIM, {}),
             "days_to_earnings": int(s.get(TITLE_DTE, -1)),
-            "is_restricted": bool(s.get("is_restricted", False)),
+            "is_speculative": bool(s.get("is_speculative", False)),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
             "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s.get(TITLE_TICKER, 'SPY')}&ty=c&ta=0&p=d&s=l"
         })
@@ -437,7 +437,7 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
             "date": s.get("date", ""),
             "canslim": s.get(TITLE_CANSLIM, {}),
             "days_to_earnings": int(s.get(TITLE_DTE, -1)),
-            "is_restricted": bool(s.get("is_restricted", False)),
+            "is_speculative": bool(s.get("is_speculative", False)),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
             "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s.get(TITLE_TICKER, 'SPY')}&ty=c&ta=0&p=d&s=l"
         })
@@ -631,10 +631,25 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
         status, trend_comment = _get_trend_commentary(tdf)
         stage = _get_standard_stage(tdf)
 
+        # Quality filter: is_speculative if ANY fundamental check fails
+        price = float(latest_daily["Close"])
+        speculative = not all([
+            meta.get("trailing_eps", 0) > 0,          # EPS > 0
+            meta.get("operating_margin", 0) > 0,      # Operating margin > 0
+            meta.get("roe", 0) > 0.05,                # ROE > 5%
+            meta.get("debt_to_equity", 999) < 200,     # D/E < 200%
+            meta.get("current_ratio", 0) > 1.0,        # Current ratio > 1.0
+            meta.get("free_cash_flow", 0) > 0,         # FCF > 0
+            meta.get("marketCap", 0) > 300_000_000,    # Market cap > $300M
+            price > 5,                                  # Price > $5
+            avg_vol > 100_000,                          # Avg volume > 100K
+            meta.get("ps_ratio", 0) < 20 or meta.get("ps_ratio", 0) == 0,  # P/S < 20 (0 = no data)
+        ])
+
         return (
             ticker, minervini_stage2, sector, industry, universe,
             rs, 0, rs1w, rs1m, rs3m, rs6m, rmv,
-            float(latest_daily["Close"]),
+            price,
             float(latest_daily["atr14_pct"]) if pd.notna(latest_daily["atr14_pct"]) else np.nan,
             int(ptc),
             bool(latest_daily["contraction"]),
@@ -645,6 +660,7 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
             ticker_data.get("source", "AI Scanner"),
             canslim,
             int(days_to_earnings),
+            bool(speculative),
             name,
             status,
             trend_comment,
@@ -707,7 +723,7 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
     sector_stages = {}
 
     for res in results:
-        ticker, mm, sector, industry, universe, rs, pct, rs1w, rs1m, rs3m, rs6m, rmv, close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, name, status, comment, stage, label, date = res
+        ticker, mm, sector, industry, universe, rs, pct, rs1w, rs1m, rs3m, rs6m, rmv, close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, speculative, name, status, comment, stage, label, date = res
         
         if sector not in sector_stages:
             sector_stages[sector] = {"s1": 0, "s2": 0, "s3": 0, "s4": 0, "total": 0, "tickers": []}
@@ -720,12 +736,13 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
                 industry = "Index/ETF"  # Keep pulse tickers with a default industry
             else:
                 continue
-        is_restricted = industry in EXCLUDE_INDUSTRIES
+        # Merge: speculative from fundamentals OR from excluded industries
+        is_speculative = speculative or (industry in EXCLUDE_INDUSTRIES)
         
         relative_strengths.append((
             0, ticker, mm, sector, industry, universe,
             rs, pct, rs1w, rs1m, rs3m, rs6m, rmv,
-            close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, is_restricted, name, status, comment, stage, label, date
+            close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, is_speculative, name, status, comment, stage, label, date
         ))
         stock_rs[ticker] = rs
 
@@ -747,7 +764,7 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
         TITLE_RANK, TITLE_TICKER, TITLE_MINERVINI, TITLE_SECTOR, TITLE_INDUSTRY, TITLE_UNIVERSE,
         TITLE_RS, TITLE_PERCENTILE, "RS_1W", TITLE_1M, TITLE_3M, TITLE_6M, TITLE_RMV,
         TITLE_CLOSE, TITLE_ATR_PCT, TITLE_PTC, TITLE_CONTRACTION, TITLE_BREAKOUT,
-        TITLE_NOT_EXT, TITLE_FLIP, TITLE_SPY_OK, TITLE_SOURCE, TITLE_CANSLIM, TITLE_DTE, "is_restricted",
+        TITLE_NOT_EXT, TITLE_FLIP, TITLE_SPY_OK, TITLE_SOURCE, TITLE_CANSLIM, TITLE_DTE, "is_speculative",
         TITLE_NAME, TITLE_COMMENTARY, "Commentary_Text", TITLE_STAGE, "label", "date"
     ])
 

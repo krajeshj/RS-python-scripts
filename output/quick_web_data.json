@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-02-22T21:20:11Z",
+    "last_updated": "2026-02-23T14:59:03Z",
     "stocks": [
         {
             "rank": 1,
@@ -23,8 +23,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 58,
-            "is_restricted": false,
+            "days_to_earnings": 57,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=LRCX",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=LRCX&ty=c&ta=0&p=d&s=l"
         },
@@ -50,8 +50,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 3,
-            "is_restricted": false,
+            "days_to_earnings": 2,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=WBD",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=WBD&ty=c&ta=0&p=d&s=l"
         },
@@ -77,8 +77,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 80,
-            "is_restricted": false,
+            "days_to_earnings": 79,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=AMAT",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AMAT&ty=c&ta=0&p=d&s=l"
         },
@@ -105,7 +105,7 @@
                 "m": true
             },
             "days_to_earnings": -1,
-            "is_restricted": false,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=GDX",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GDX&ty=c&ta=0&p=d&s=l"
         },
@@ -127,12 +127,12 @@
                 "a": false,
                 "n": true,
                 "s": false,
-                "l": true,
+                "l": false,
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 51,
-            "is_restricted": false,
+            "days_to_earnings": 50,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=ASML",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ASML&ty=c&ta=0&p=d&s=l"
         },
@@ -158,8 +158,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 59,
-            "is_restricted": false,
+            "days_to_earnings": 58,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=INTC",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=INTC&ty=c&ta=0&p=d&s=l"
         }
@@ -188,8 +188,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 72,
-            "is_restricted": false,
+            "days_to_earnings": 71,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=WDC",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=WDC&ty=c&ta=0&p=d&s=l"
         },
@@ -216,8 +216,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 23,
-            "is_restricted": false,
+            "days_to_earnings": 22,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=MU",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MU&ty=c&ta=0&p=d&s=l"
         },
@@ -244,8 +244,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 71,
-            "is_restricted": false,
+            "days_to_earnings": 70,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=STX",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=STX&ty=c&ta=0&p=d&s=l"
         },
@@ -272,8 +272,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 58,
-            "is_restricted": false,
+            "days_to_earnings": 57,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=LRCX",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=LRCX&ty=c&ta=0&p=d&s=l"
         },
@@ -300,8 +300,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 3,
-            "is_restricted": false,
+            "days_to_earnings": 2,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=WBD",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=WBD&ty=c&ta=0&p=d&s=l"
         },
@@ -328,8 +328,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 80,
-            "is_restricted": false,
+            "days_to_earnings": 79,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=AMAT",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AMAT&ty=c&ta=0&p=d&s=l"
         },
@@ -352,12 +352,12 @@
                 "a": false,
                 "n": true,
                 "s": false,
-                "l": true,
+                "l": false,
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 51,
-            "is_restricted": false,
+            "days_to_earnings": 50,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=ASML",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ASML&ty=c&ta=0&p=d&s=l"
         },
@@ -384,8 +384,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 59,
-            "is_restricted": false,
+            "days_to_earnings": 58,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=INTC",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=INTC&ty=c&ta=0&p=d&s=l"
         },
@@ -412,8 +412,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 65,
-            "is_restricted": false,
+            "days_to_earnings": 64,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=KLAC",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=KLAC&ty=c&ta=0&p=d&s=l"
         },
@@ -440,8 +440,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 66,
-            "is_restricted": false,
+            "days_to_earnings": 65,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=MPWR",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MPWR&ty=c&ta=0&p=d&s=l"
         },
@@ -468,8 +468,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 87,
-            "is_restricted": false,
+            "days_to_earnings": 86,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=ADI",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ADI&ty=c&ta=0&p=d&s=l"
         },
@@ -492,12 +492,12 @@
                 "a": false,
                 "n": false,
                 "s": true,
-                "l": true,
+                "l": false,
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 59,
-            "is_restricted": false,
+            "days_to_earnings": 58,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=GOOGL",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GOOGL&ty=c&ta=0&p=d&s=l"
         },
@@ -524,8 +524,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 59,
-            "is_restricted": false,
+            "days_to_earnings": 58,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=GOOG",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GOOG&ty=c&ta=0&p=d&s=l"
         },
@@ -548,12 +548,12 @@
                 "a": false,
                 "n": false,
                 "s": true,
-                "l": true,
+                "l": false,
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 73,
-            "is_restricted": true,
+            "days_to_earnings": 72,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=INSM",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=INSM&ty=c&ta=0&p=d&s=l"
         },
@@ -580,8 +580,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 57,
-            "is_restricted": true,
+            "days_to_earnings": 56,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=BKR",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=BKR&ty=c&ta=0&p=d&s=l"
         },
@@ -608,8 +608,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 73,
-            "is_restricted": false,
+            "days_to_earnings": 72,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=MCHP",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MCHP&ty=c&ta=0&p=d&s=l"
         }
@@ -639,8 +639,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 2,
-            "is_restricted": false,
+            "days_to_earnings": 1,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=NVDA",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=NVDA&ty=c&ta=0&p=d&s=l"
         },
@@ -668,8 +668,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 57,
-            "is_restricted": false,
+            "days_to_earnings": 56,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=TSLA",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TSLA&ty=c&ta=0&p=d&s=l"
         },
@@ -697,8 +697,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 66,
-            "is_restricted": false,
+            "days_to_earnings": 65,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=AAPL",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AAPL&ty=c&ta=0&p=d&s=l"
         },
@@ -726,8 +726,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 72,
-            "is_restricted": false,
+            "days_to_earnings": 71,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=ARM",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ARM&ty=c&ta=0&p=d&s=l"
         },
@@ -755,8 +755,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 65,
-            "is_restricted": false,
+            "days_to_earnings": 64,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=MSFT",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MSFT&ty=c&ta=0&p=d&s=l"
         },
@@ -784,8 +784,8 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 71,
-            "is_restricted": false,
+            "days_to_earnings": 70,
+            "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=SMCI",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SMCI&ty=c&ta=0&p=d&s=l"
         }
