@@ -146,6 +146,7 @@
             gap: 1.5rem;
             box-shadow: var(--shadow);
             transition: all 0.2s ease;
+            flex-direction: column;
         }
 
         .pulse-card:hover {
@@ -230,20 +231,63 @@
             padding: 4rem;
             color: var(--text2);
         }
+
+        .pulse-chart-link {
+            display: block;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            position: relative;
+            background: var(--surface);
+            height: 160px;
+            width: 100%;
+        }
+
+        .pulse-chart-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.9) contrast(1.1);
+            transition: transform 0.3s;
+        }
+
+        .pulse-chart-link:hover .pulse-chart-img {
+            transform: scale(1.05);
+        }
+
+        .pulse-chart-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(108, 92, 231, 0.2);
+            opacity: 0;
+            transition: opacity 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: white;
+            gap: 8px;
+            backdrop-filter: blur(2px);
+        }
+
+        .pulse-chart-link:hover .pulse-chart-overlay {
+            opacity: 1;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
         <header>
-            <div class="logo-icon">🌊</div>
+            <div class="logo-icon">📡</div>
             <h1>Market Pulse</h1>
             <div class="nav-links">
                 <a href="index.html" class="nav-link">Dashboard 🚀</a>
-                <a href="stages.html" class="nav-link">Sectors 📊</a>
-                <a href="quick_scan.html" class="nav-link">Quick Scan ⏱️</a>
-                <a href="pulse.html" class="nav-link active">Market Pulse 🌊</a>
-                <a href="tips.html" class="nav-link">Stock Tips 💡</a>
+                <a href="stages.html" class="nav-link">Sector Analysis 🏗️</a>
+                <a href="quick_scan.html" class="nav-link">Quick Scan ⚡</a>
+                <a href="pulse.html" class="nav-link active">Market Pulse 📡</a>
+                <a href="tips.html" class="nav-link">Stock Tips 🎯</a>
             </div>
             <div id="last-updated" class="last-updated"
                 style="font-size:0.8rem;color:var(--text2);background:var(--surface);padding:4px 12px;border-radius:20px;border:1px solid var(--border);margin-top:8px;">
@@ -313,25 +357,39 @@
             const div = document.createElement('div');
             div.className = 'pulse-card';
             const trendClass = `trend-${(item.trend || 'Sideways').toLowerCase()}`;
+            const tvUrl = `https://www.tradingview.com/chart/?symbol=${item.ticker}`;
+            const finvizUrl = `https://charts2.finviz.com/chart.ashx?t=${item.ticker}&ty=c&ta=0&p=d&s=l`;
 
             div.innerHTML = `
                 <div class="pulse-main">
                     <div class="pulse-ticker-box">
-                        <a href="https://www.tradingview.com/chart/?symbol=${item.ticker}" target="_blank" class="pulse-ticker">${item.ticker}</a>
+                        <a href="${tvUrl}" target="_blank" class="pulse-ticker">${item.ticker}</a>
                         <div class="pulse-name">${item.name || item.ticker}</div>
                     </div>
                     <div style="min-width: 120px; text-align: center;">
                         <span class="trend-badge ${trendClass}">${item.trend || 'Sideways'}</span>
                     </div>
                     <div class="pulse-commentary">${item.commentary || 'Analyzing...'}</div>
+                    <div class="pulse-rs">RS Rank: ${item.rs_rank || 'N/A'}</div>
                 </div>
-                <div class="pulse-rs">RS Rank: ${item.rs_rank || 'N/A'}</div>
+                <a href="${tvUrl}" target="_blank" class="pulse-chart-link">
+                    <img src="${finvizUrl}&t=${Date.now()}" class="pulse-chart-img" loading="lazy" alt="${item.ticker}">
+                    <div class="pulse-chart-overlay">
+                        <span>Open Live Chart</span>
+                        <span>↗️</span>
+                    </div>
+                </a>
             `;
             return div;
         }
 
         init();
     </script>
+
+    <footer
+        style="text-align:center; padding:2rem 1rem; color:var(--text2); font-size:0.75rem; border-top:1px solid var(--border); margin-top:2rem;">
+        © 2026 Rajesh's Stock Screener. All rights reserved.
+    </footer>
 </body>
 
 </html>

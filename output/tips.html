@@ -286,25 +286,103 @@
             padding: 4rem;
             color: var(--text2);
         }
+
+        /* Quality toggle */
+        .quality-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            user-select: none;
+            width: fit-content;
+        }
+
+        .quality-toggle:hover {
+            border-color: var(--accent);
+        }
+
+        .quality-toggle.active {
+            background: rgba(0, 230, 118, 0.1);
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        .quality-layer {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--text2);
+            transition: all 0.2s;
+        }
+
+        .quality-toggle.active .quality-layer {
+            background: var(--green);
+            box-shadow: 0 0 8px rgba(0, 230, 118, 0.5);
+        }
+
+        /* Delete button on card */
+        .card-delete {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 82, 82, 0.1);
+            border: 1px solid rgba(255, 82, 82, 0.2);
+            color: var(--red);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            opacity: 0;
+            transition: all 0.2s;
+            z-index: 2;
+        }
+
+        .card:hover .card-delete {
+            opacity: 1;
+        }
+
+        .card-delete:hover {
+            background: rgba(255, 82, 82, 0.25);
+            transform: scale(1.1);
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
         <header>
-            <div class="logo-icon">💡</div>
+            <div class="logo-icon">🎯</div>
             <h1>Market Tips</h1>
             <div class="nav-links">
                 <a href="index.html" class="nav-link">Dashboard 🚀</a>
-                <a href="stages.html" class="nav-link">Sectors 📊</a>
-                <a href="quick_scan.html" class="nav-link">Quick Scan ⏱️</a>
-                <a href="pulse.html" class="nav-link">Market Pulse 🌊</a>
-                <a href="tips.html" class="nav-link active">Stock Tips 💡</a>
+                <a href="stages.html" class="nav-link">Sector Analysis 🏗️</a>
+                <a href="quick_scan.html" class="nav-link">Quick Scan ⚡</a>
+                <a href="pulse.html" class="nav-link">Market Pulse 📡</a>
+                <a href="tips.html" class="nav-link active">Stock Tips 🎯</a>
             </div>
             <div id="last-updated"
                 style="font-size:0.8rem;color:var(--text2);background:var(--surface);padding:4px 12px;border-radius:20px;border:1px solid var(--border);margin-top:8px;">
                 Updating...</div>
         </header>
+
+        <div style="margin-bottom:1.5rem;">
+            <div id="quality-btn" class="quality-toggle active" onclick="toggleQuality()">
+                <div class="quality-layer"></div>
+                🛡️ Quality Filter
+            </div>
+        </div>
 
         <div id="tips-container">
             <div class="loading">Fetching latest tips...</div>
@@ -458,11 +536,23 @@
             render(window._currentTips || []);
         }
 
+        let qualityOn = true;
+        function toggleQuality() {
+            qualityOn = !qualityOn;
+            const btn = document.getElementById('quality-btn');
+            if (qualityOn) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+            render(window._currentTips || []);
+        }
+
         function render(tips) {
             window._currentTips = tips;
             const container = document.getElementById('tips-container');
             const hidden = getHiddenTips();
-            const visible = tips.filter(t => !hidden.includes(t.ticker));
+            const visible = tips.filter(t => !hidden.includes(t.ticker) && !(qualityOn && t.is_speculative));
             if (visible.length === 0) {
                 container.innerHTML = '<div class="loading">No manual tips currently being tracked.</div>';
                 return;
@@ -486,6 +576,7 @@
                     <div class="grid">
                         ${group.items.map((s, i) => `
                             <div class="card" id="tip-${s.ticker}" style="animation-delay: ${i * 0.05}s">
+                                <div class="card-delete" onclick="removeTip('${s.ticker}')" title="Hide ${s.ticker}">✕</div>
                                 <div style="display:flex; justify-content: space-between; align-items: flex-start;">
                                     <div>
                                         <a href="${s.tradingview_url}" target="_blank" class="ticker">${s.ticker}</a>
@@ -495,7 +586,6 @@
                                         <div style="background: rgba(255, 145, 0, 0.1); color: var(--orange); padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(255, 145, 0, 0.2);">
                                             RS ${s.rs}
                                         </div>
-                                        <button onclick="removeTip('${s.ticker}')" style="background:rgba(255,82,82,0.1); border:1px solid rgba(255,82,82,0.2); color:var(--red); border-radius:8px; padding:4px 8px; cursor:pointer; font-size:0.75rem;" title="Hide this tip">🗑️</button>
                                     </div>
                                 </div>
 
@@ -528,6 +618,11 @@
 
         init();
     </script>
+
+    <footer
+        style="text-align:center; padding:2rem 1rem; color:var(--text2); font-size:0.75rem; border-top:1px solid var(--border); margin-top:2rem;">
+        © 2026 Rajesh's Stock Screener. All rights reserved.
+    </footer>
 </body>
 
 </html>
