@@ -610,7 +610,7 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
         industry = ticker_data.get("industry", meta.get("industry", "unknown"))
         sector = ticker_data.get("sector", meta.get("sector", "unknown"))
         universe = ticker_data.get("universe", "unknown")
-        name = meta.get("name", ticker)
+        name = ticker_data.get("name", meta.get("name", ticker))
 
         # CANSLIM & Earnings
         eps_c = meta.get("eps_growth_curr", 0) > 0.25  # EPS quarterly growth > 25%

@@ -226,15 +226,20 @@ def get_tickers_from_nasdaq(tickers):
     for entry in results:
         sec = {}
         values = entry.split('|')
+        if len(values) <= name_column:
+            continue
+            
         ticker = values[ticker_column]
         if re.match(r'^[A-Z]+$', ticker) and values[etf_column] == "N" and values[test_column] == "N":
             # Filter by Security Name — skip warrants, units, rights, debt, preferred
-            sec_name = values[name_column].lower() if len(values) > name_column else ""
-            if any(kw in sec_name for kw in JUNK_KEYWORDS):
+            full_name = values[name_column]
+            sec_name_lower = full_name.lower()
+            if any(kw in sec_name_lower for kw in JUNK_KEYWORDS):
                 skipped += 1
                 continue
 
             sec["ticker"] = ticker
+            sec["name"] = full_name
             sec["sector"] = UNKNOWN
             sec["industry"] = UNKNOWN
             sec["universe"] = exchange_from_symbol(values[exchange_column])
@@ -261,6 +266,7 @@ def create_price_history_file(tickers_dict):
         json.dump(tickers_dict, fp)
 
 def enrich_ticker_data(ticker_response, security, skip_calc, mm_count):
+    ticker_response["name"] = security.get("name", security["ticker"])
     ticker_response["sector"] = security["sector"]
     ticker_response["industry"] = security["industry"]
     ticker_response["universe"] = security["universe"]
@@ -327,7 +333,7 @@ def _fetch_single_ticker_info(ticker, max_retries=3):
 
             return ticker, {
                 "info": {
-                    "name": info.get("shortName", info.get("longName", ticker)),
+                    "name": info.get("longName", info.get("shortName", ticker)),
                     "industry": info.get("industry", "Index/ETF" if "^" in ticker else "unknown"),
                     "sector": info.get("sector", "Market Pulse" if "^" in ticker else "unknown"),
                     "marketCap": info.get("marketCap", 0),
@@ -364,7 +370,14 @@ def load_ticker_info_batch(tickers, current_info_dict):
     if not tickers:
         return
 
-    needed = [t for t in tickers if t not in current_info_dict or "name" not in current_info_dict.get(t, {}).get("info", {})]
+    needed = []
+    for t in tickers:
+        info_block = current_info_dict.get(t, {}).get("info", {})
+        name = info_block.get("name", "")
+        # If name is missing OR is just the ticker symbol, we need a refetch attempt
+        if not name or name == t:
+            needed.append(t)
+            
     if not needed:
         return
 
