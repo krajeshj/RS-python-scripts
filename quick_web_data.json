@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-02-23T21:36:20Z",
+    "last_updated": "2026-02-24T13:33:53Z",
     "stocks": [
         {
             "rank": 1,
@@ -23,9 +23,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 57,
+            "days_to_earnings": 56,
             "is_speculative": true,
             "is_minervini": true,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=LRCX",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=LRCX&ty=c&ta=0&p=d&s=l"
         },
@@ -51,9 +52,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 2,
+            "days_to_earnings": 1,
             "is_speculative": true,
             "is_minervini": true,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=WBD",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=WBD&ty=c&ta=0&p=d&s=l"
         },
@@ -79,9 +81,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 79,
+            "days_to_earnings": 78,
             "is_speculative": true,
             "is_minervini": true,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=AMAT",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AMAT&ty=c&ta=0&p=d&s=l"
         },
@@ -110,6 +113,7 @@
             "days_to_earnings": -1,
             "is_speculative": true,
             "is_minervini": true,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=GDX",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GDX&ty=c&ta=0&p=d&s=l"
         },
@@ -135,9 +139,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 50,
+            "days_to_earnings": 49,
             "is_speculative": true,
             "is_minervini": true,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=ASML",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ASML&ty=c&ta=0&p=d&s=l"
         },
@@ -152,7 +157,7 @@
             "rmv": 41.19,
             "industry": "Semiconductors",
             "sector": "Technology",
-            "highlights": "VCP Contraction, Not Extended, Controlled Volatility",
+            "highlights": "VCP Contraction, Flip Setup, Not Extended, Controlled Volatility",
             "source": "AI Scanner",
             "canslim": {
                 "c": false,
@@ -163,9 +168,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 58,
+            "days_to_earnings": 57,
             "is_speculative": true,
             "is_minervini": true,
+            "flip": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=INTC",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=INTC&ty=c&ta=0&p=d&s=l"
         }
@@ -194,9 +200,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 71,
+            "days_to_earnings": 70,
             "is_speculative": true,
             "is_minervini": true,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=WDC",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=WDC&ty=c&ta=0&p=d&s=l"
         },
@@ -223,9 +230,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 22,
+            "days_to_earnings": 21,
             "is_speculative": true,
             "is_minervini": true,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=MU",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MU&ty=c&ta=0&p=d&s=l"
         },
@@ -252,9 +260,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 70,
+            "days_to_earnings": 69,
             "is_speculative": true,
             "is_minervini": true,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=STX",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=STX&ty=c&ta=0&p=d&s=l"
         },
@@ -281,9 +290,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 57,
+            "days_to_earnings": 56,
             "is_speculative": true,
             "is_minervini": true,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=LRCX",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=LRCX&ty=c&ta=0&p=d&s=l"
         },
@@ -310,9 +320,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 2,
+            "days_to_earnings": 1,
             "is_speculative": true,
             "is_minervini": true,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=WBD",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=WBD&ty=c&ta=0&p=d&s=l"
         },
@@ -339,9 +350,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 79,
+            "days_to_earnings": 78,
             "is_speculative": true,
             "is_minervini": true,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=AMAT",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AMAT&ty=c&ta=0&p=d&s=l"
         },
@@ -368,9 +380,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 50,
+            "days_to_earnings": 49,
             "is_speculative": true,
             "is_minervini": true,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=ASML",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ASML&ty=c&ta=0&p=d&s=l"
         },
@@ -386,7 +399,7 @@
             "price": 44.11,
             "industry": "Semiconductors",
             "sector": "Technology",
-            "highlights": "VCP Contraction, Not Extended, Controlled Volatility",
+            "highlights": "VCP Contraction, Flip Setup, Not Extended, Controlled Volatility",
             "source": "AI Scanner",
             "canslim": {
                 "c": false,
@@ -397,9 +410,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 58,
+            "days_to_earnings": 57,
             "is_speculative": true,
             "is_minervini": true,
+            "flip": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=INTC",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=INTC&ty=c&ta=0&p=d&s=l"
         },
@@ -426,9 +440,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 64,
+            "days_to_earnings": 63,
             "is_speculative": true,
             "is_minervini": true,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=KLAC",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=KLAC&ty=c&ta=0&p=d&s=l"
         },
@@ -455,9 +470,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 65,
+            "days_to_earnings": 64,
             "is_speculative": true,
             "is_minervini": true,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=MPWR",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MPWR&ty=c&ta=0&p=d&s=l"
         },
@@ -484,9 +500,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 86,
+            "days_to_earnings": 85,
             "is_speculative": true,
             "is_minervini": true,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=ADI",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ADI&ty=c&ta=0&p=d&s=l"
         },
@@ -513,9 +530,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 58,
+            "days_to_earnings": 57,
             "is_speculative": true,
             "is_minervini": false,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=GOOGL",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GOOGL&ty=c&ta=0&p=d&s=l"
         },
@@ -542,9 +560,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 58,
+            "days_to_earnings": 57,
             "is_speculative": true,
             "is_minervini": false,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=GOOG",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GOOG&ty=c&ta=0&p=d&s=l"
         },
@@ -571,9 +590,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 72,
+            "days_to_earnings": 71,
             "is_speculative": true,
             "is_minervini": false,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=INSM",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=INSM&ty=c&ta=0&p=d&s=l"
         },
@@ -600,9 +620,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 56,
+            "days_to_earnings": 55,
             "is_speculative": true,
             "is_minervini": true,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=BKR",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=BKR&ty=c&ta=0&p=d&s=l"
         },
@@ -629,11 +650,882 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 72,
+            "days_to_earnings": 71,
             "is_speculative": true,
             "is_minervini": true,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=MCHP",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MCHP&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 17,
+            "ticker": "ODFL",
+            "name": "Old Dominion Freight Line, Inc.",
+            "rs": 84,
+            "rs_raw": 1.24,
+            "rs_1w_pct": 71,
+            "rs_1m_pct": 63,
+            "rmv": 28.89,
+            "price": 201.39,
+            "industry": "Trucking",
+            "sector": "Industrials",
+            "highlights": "Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": false,
+                "l": true,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 56,
+            "is_speculative": true,
+            "is_minervini": false,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=ODFL",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ODFL&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 18,
+            "ticker": "ROST",
+            "name": "Ross Stores, Inc.",
+            "rs": 83,
+            "rs_raw": 1.22,
+            "rs_1w_pct": 79,
+            "rs_1m_pct": 79,
+            "rmv": 12.93,
+            "price": 201.45,
+            "industry": "Apparel Retail",
+            "sector": "Consumer Cyclical",
+            "highlights": "Not Extended, Strong Trend Alignment, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": false,
+                "l": true,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 6,
+            "is_speculative": true,
+            "is_minervini": true,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=ROST",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ROST&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 19,
+            "ticker": "PCAR",
+            "name": "PACCAR Inc",
+            "rs": 82,
+            "rs_raw": 1.21,
+            "rs_1w_pct": 80,
+            "rs_1m_pct": 77,
+            "rmv": 16.4,
+            "price": 128.46,
+            "industry": "Farm & Heavy Construction Machinery",
+            "sector": "Industrials",
+            "highlights": "Strong Trend Alignment, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": false,
+                "l": true,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 62,
+            "is_speculative": true,
+            "is_minervini": true,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=PCAR",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PCAR&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 20,
+            "ticker": "FER",
+            "name": "Ferrovial SE",
+            "rs": 82,
+            "rs_raw": 1.21,
+            "rs_1w_pct": 85,
+            "rs_1m_pct": 80,
+            "rmv": 11.69,
+            "price": 72.76,
+            "industry": "Engineering & Construction",
+            "sector": "Industrials",
+            "highlights": "Not Extended, Strong Trend Alignment, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": false,
+                "l": true,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 0,
+            "is_speculative": true,
+            "is_minervini": true,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=FER",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FER&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 21,
+            "ticker": "MNST",
+            "name": "Monster Beverage Corporation",
+            "rs": 81,
+            "rs_raw": 1.19,
+            "rs_1w_pct": 83,
+            "rs_1m_pct": 83,
+            "rmv": 13.04,
+            "price": 83.76,
+            "industry": "Beverages - Non-Alcoholic",
+            "sector": "Consumer Defensive",
+            "highlights": "VCP Contraction, Not Extended, Strong Trend Alignment, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": true,
+                "l": true,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 1,
+            "is_speculative": true,
+            "is_minervini": true,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=MNST",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MNST&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 22,
+            "ticker": "GILD",
+            "name": "Gilead Sciences, Inc.",
+            "rs": 80,
+            "rs_raw": 1.19,
+            "rs_1w_pct": 85,
+            "rs_1m_pct": 71,
+            "rmv": 19.68,
+            "price": 151.4,
+            "industry": "Drug Manufacturers - General",
+            "sector": "Healthcare",
+            "highlights": "Strong Trend Alignment, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": false,
+                "l": true,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 57,
+            "is_speculative": true,
+            "is_minervini": true,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=GILD",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GILD&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 23,
+            "ticker": "AMD",
+            "name": "Advanced Micro Devices, Inc.",
+            "rs": 79,
+            "rs_raw": 1.17,
+            "rs_1w_pct": 75,
+            "rs_1m_pct": 93,
+            "rmv": 36.72,
+            "price": 200.15,
+            "industry": "Semiconductors",
+            "sector": "Technology",
+            "highlights": "VCP Contraction, Not Extended, Controlled Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": true,
+                "a": false,
+                "n": false,
+                "s": false,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 69,
+            "is_speculative": true,
+            "is_minervini": false,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=AMD",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AMD&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 24,
+            "ticker": "CSX",
+            "name": "CSX Corporation",
+            "rs": 78,
+            "rs_raw": 1.16,
+            "rs_1w_pct": 72,
+            "rs_1m_pct": 48,
+            "rmv": 14.95,
+            "price": 42.31,
+            "industry": "Railroads",
+            "sector": "Industrials",
+            "highlights": "Strong Trend Alignment, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": true,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 49,
+            "is_speculative": true,
+            "is_minervini": true,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=CSX",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CSX&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 25,
+            "ticker": "MAR",
+            "name": "Marriott International, Inc.",
+            "rs": 78,
+            "rs_raw": 1.15,
+            "rs_1w_pct": 78,
+            "rs_1m_pct": 73,
+            "rmv": 18.05,
+            "price": 347.93,
+            "industry": "Lodging",
+            "sector": "Consumer Cyclical",
+            "highlights": "Strong Trend Alignment, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": true,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 69,
+            "is_speculative": true,
+            "is_minervini": true,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=MAR",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MAR&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 26,
+            "ticker": "TXN",
+            "name": "Texas Instruments Incorporated",
+            "rs": 76,
+            "rs_raw": 1.14,
+            "rs_1w_pct": 80,
+            "rs_1m_pct": 60,
+            "rmv": 20.62,
+            "price": 219.73,
+            "industry": "Semiconductors",
+            "sector": "Technology",
+            "highlights": "Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": false,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 62,
+            "is_speculative": true,
+            "is_minervini": false,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=TXN",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TXN&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 27,
+            "ticker": "WMT",
+            "name": "Walmart Inc.",
+            "rs": 75,
+            "rs_raw": 1.14,
+            "rs_1w_pct": 84,
+            "rs_1m_pct": 69,
+            "rmv": 21.26,
+            "price": 122.99,
+            "industry": "Discount Stores",
+            "sector": "Consumer Defensive",
+            "highlights": "Not Extended, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": true,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 78,
+            "is_speculative": true,
+            "is_minervini": true,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=WMT",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=WMT&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 28,
+            "ticker": "HON",
+            "name": "Honeywell International Inc.",
+            "rs": 75,
+            "rs_raw": 1.13,
+            "rs_1w_pct": 73,
+            "rs_1m_pct": 59,
+            "rmv": 13.21,
+            "price": 243.97,
+            "industry": "Conglomerates",
+            "sector": "Industrials",
+            "highlights": "VCP Contraction, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": false,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 62,
+            "is_speculative": true,
+            "is_minervini": false,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=HON",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=HON&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 29,
+            "ticker": "AMGN",
+            "name": "Amgen Inc.",
+            "rs": 74,
+            "rs_raw": 1.13,
+            "rs_1w_pct": 75,
+            "rs_1m_pct": 73,
+            "rmv": 19.46,
+            "price": 374.75,
+            "industry": "Drug Manufacturers - General",
+            "sector": "Healthcare",
+            "highlights": "Strong Trend Alignment, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": false,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 64,
+            "is_speculative": true,
+            "is_minervini": true,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=AMGN",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AMGN&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 30,
+            "ticker": "FANG",
+            "name": "Diamondback Energy, Inc.",
+            "rs": 71,
+            "rs_raw": 1.1,
+            "rs_1w_pct": 68,
+            "rs_1m_pct": 41,
+            "rmv": 19.7,
+            "price": 176.01,
+            "industry": "Oil & Gas E&P",
+            "sector": "Energy",
+            "highlights": "VCP Contraction, Strong Trend Alignment, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": true,
+                "a": false,
+                "n": true,
+                "s": true,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": -2,
+            "is_speculative": true,
+            "is_minervini": true,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=FANG",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FANG&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 31,
+            "ticker": "EA",
+            "name": "Electronic Arts Inc.",
+            "rs": 69,
+            "rs_raw": 1.09,
+            "rs_1w_pct": 70,
+            "rs_1m_pct": 75,
+            "rmv": 6.79,
+            "price": 200.4,
+            "industry": "Electronic Gaming & Multimedia",
+            "sector": "Communication Services",
+            "highlights": "Not Extended, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": false,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 69,
+            "is_speculative": true,
+            "is_minervini": false,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=EA",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=EA&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 32,
+            "ticker": "CCEP",
+            "name": "Coca-Cola Europacific Partners PLC",
+            "rs": 69,
+            "rs_raw": 1.09,
+            "rs_1w_pct": 62,
+            "rs_1m_pct": 35,
+            "rmv": 14.71,
+            "price": 105.7,
+            "industry": "Beverages - Non-Alcoholic",
+            "sector": "Consumer Defensive",
+            "highlights": "Strong Trend Alignment, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": false,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": -8,
+            "is_speculative": true,
+            "is_minervini": true,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=CCEP",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CCEP&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 33,
+            "ticker": "REGN",
+            "name": "Regeneron Pharmaceuticals, Inc.",
+            "rs": 66,
+            "rs_raw": 1.08,
+            "rs_1w_pct": 77,
+            "rs_1m_pct": 78,
+            "rmv": 21.7,
+            "price": 779.67,
+            "industry": "Biotechnology",
+            "sector": "Healthcare",
+            "highlights": "Flip Setup, Not Extended, Strong Trend Alignment, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": false,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 63,
+            "is_speculative": true,
+            "is_minervini": true,
+            "flip": true,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=REGN",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=REGN&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 34,
+            "ticker": "AVGO",
+            "name": "Broadcom Inc.",
+            "rs": 65,
+            "rs_raw": 1.08,
+            "rs_1w_pct": 65,
+            "rs_1m_pct": 74,
+            "rmv": 32.84,
+            "price": 332.65,
+            "industry": "Semiconductors",
+            "sector": "Technology",
+            "highlights": "Not Extended, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": false,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 7,
+            "is_speculative": true,
+            "is_minervini": false,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=AVGO",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AVGO&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 35,
+            "ticker": "AEP",
+            "name": "American Electric Power Company, Inc.",
+            "rs": 63,
+            "rs_raw": 1.06,
+            "rs_1w_pct": 67,
+            "rs_1m_pct": 52,
+            "rmv": 14.79,
+            "price": 129.37,
+            "industry": "Utilities - Regulated Electric",
+            "sector": "Utilities",
+            "highlights": "Strong Trend Alignment, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": false,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 70,
+            "is_speculative": true,
+            "is_minervini": true,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=AEP",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AEP&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 36,
+            "ticker": "PEP",
+            "name": "PepsiCo, Inc.",
+            "rs": 62,
+            "rs_raw": 1.06,
+            "rs_1w_pct": 73,
+            "rs_1m_pct": 30,
+            "rmv": 17.41,
+            "price": 164.94,
+            "industry": "Beverages - Non-Alcoholic",
+            "sector": "Consumer Defensive",
+            "highlights": "Strong Trend Alignment, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": false,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 57,
+            "is_speculative": true,
+            "is_minervini": true,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=PEP",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PEP&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 37,
+            "ticker": "CSCO",
+            "name": "Cisco Systems, Inc.",
+            "rs": 60,
+            "rs_raw": 1.04,
+            "rs_1w_pct": 58,
+            "rs_1m_pct": 65,
+            "rmv": 21.53,
+            "price": 79.2,
+            "industry": "Communication Equipment",
+            "sector": "Technology",
+            "highlights": "Not Extended, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": true,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 77,
+            "is_speculative": true,
+            "is_minervini": true,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=CSCO",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CSCO&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 38,
+            "ticker": "FAST",
+            "name": "Fastenal Company",
+            "rs": 59,
+            "rs_raw": 1.04,
+            "rs_1w_pct": 60,
+            "rs_1m_pct": 46,
+            "rmv": 19.97,
+            "price": 46.22,
+            "industry": "Industrial Distribution",
+            "sector": "Industrials",
+            "highlights": "Not Extended, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": true,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 47,
+            "is_speculative": true,
+            "is_minervini": false,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=FAST",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FAST&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 39,
+            "ticker": "LIN",
+            "name": "Linde plc",
+            "rs": 57,
+            "rs_raw": 1.03,
+            "rs_1w_pct": 50,
+            "rs_1m_pct": 30,
+            "rmv": 14.66,
+            "price": 496.51,
+            "industry": "Specialty Chemicals",
+            "sector": "Basic Materials",
+            "highlights": "Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": true,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 64,
+            "is_speculative": true,
+            "is_minervini": false,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=LIN",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=LIN&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 40,
+            "ticker": "NXPI",
+            "name": "NXP Semiconductors N.V.",
+            "rs": 56,
+            "rs_raw": 1.02,
+            "rs_1w_pct": 66,
+            "rs_1m_pct": 60,
+            "rmv": 30.13,
+            "price": 232.27,
+            "industry": "Semiconductors",
+            "sector": "Technology",
+            "highlights": "Flip Setup, Not Extended, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": false,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 61,
+            "is_speculative": true,
+            "is_minervini": true,
+            "flip": true,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=NXPI",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=NXPI&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 41,
+            "ticker": "GEHC",
+            "name": "GE HealthCare Technologies Inc.",
+            "rs": 55,
+            "rs_raw": 1.02,
+            "rs_1w_pct": 42,
+            "rs_1m_pct": 48,
+            "rmv": 22.99,
+            "price": 84.23,
+            "industry": "Medical Devices",
+            "sector": "Healthcare",
+            "highlights": "Confirmed Breakout, Not Extended, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": true,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 63,
+            "is_speculative": true,
+            "is_minervini": true,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=GEHC",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GEHC&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 42,
+            "ticker": "XEL",
+            "name": "Xcel Energy Inc.",
+            "rs": 54,
+            "rs_raw": 1.02,
+            "rs_1w_pct": 55,
+            "rs_1m_pct": 39,
+            "rmv": 15.35,
+            "price": 81.55,
+            "industry": "Utilities - Regulated Electric",
+            "sector": "Utilities",
+            "highlights": "Not Extended, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": true,
+                "s": false,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 57,
+            "is_speculative": true,
+            "is_minervini": false,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=XEL",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=XEL&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 43,
+            "ticker": "VRTX",
+            "name": "Vertex Pharmaceuticals Incorporated",
+            "rs": 53,
+            "rs_raw": 1.01,
+            "rs_1w_pct": 55,
+            "rs_1m_pct": 43,
+            "rmv": 21.17,
+            "price": 476.9,
+            "industry": "Biotechnology",
+            "sector": "Healthcare",
+            "highlights": "Not Extended, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": false,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 68,
+            "is_speculative": true,
+            "is_minervini": false,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=VRTX",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=VRTX&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 44,
+            "ticker": "SBUX",
+            "name": "Starbucks Corporation",
+            "rs": 53,
+            "rs_raw": 1.01,
+            "rs_1w_pct": 50,
+            "rs_1m_pct": 53,
+            "rmv": 18.92,
+            "price": 97.49,
+            "industry": "Restaurants",
+            "sector": "Consumer Cyclical",
+            "highlights": "VCP Contraction, Not Extended, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": false,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 62,
+            "is_speculative": true,
+            "is_minervini": false,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=SBUX",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SBUX&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 45,
+            "ticker": "CMCSA",
+            "name": "Comcast Corporation",
+            "rs": 50,
+            "rs_raw": 1.0,
+            "rs_1w_pct": 59,
+            "rs_1m_pct": 26,
+            "rmv": 16.5,
+            "price": 31.34,
+            "industry": "Telecom Services",
+            "sector": "Communication Services",
+            "highlights": "VCP Contraction, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": false,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 57,
+            "is_speculative": true,
+            "is_minervini": false,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=CMCSA",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CMCSA&ty=c&ta=0&p=d&s=l"
         }
     ],
     "tips": [
@@ -661,9 +1553,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 1,
+            "days_to_earnings": 0,
             "is_speculative": true,
             "is_minervini": true,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=NVDA",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=NVDA&ty=c&ta=0&p=d&s=l"
         },
@@ -691,9 +1584,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 56,
+            "days_to_earnings": 55,
             "is_speculative": true,
             "is_minervini": false,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=TSLA",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TSLA&ty=c&ta=0&p=d&s=l"
         },
@@ -721,9 +1615,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 65,
+            "days_to_earnings": 64,
             "is_speculative": true,
             "is_minervini": false,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=AAPL",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AAPL&ty=c&ta=0&p=d&s=l"
         },
@@ -751,9 +1646,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 71,
+            "days_to_earnings": 70,
             "is_speculative": true,
             "is_minervini": false,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=ARM",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ARM&ty=c&ta=0&p=d&s=l"
         },
@@ -781,9 +1677,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 64,
+            "days_to_earnings": 63,
             "is_speculative": true,
             "is_minervini": false,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=MSFT",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MSFT&ty=c&ta=0&p=d&s=l"
         },
@@ -811,9 +1708,10 @@
                 "i": false,
                 "m": true
             },
-            "days_to_earnings": 70,
+            "days_to_earnings": 69,
             "is_speculative": true,
             "is_minervini": false,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=SMCI",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SMCI&ty=c&ta=0&p=d&s=l"
         }
@@ -825,9 +1723,18 @@
             "sector": "Technology",
             "rs": 2.17,
             "tickers": [
-                "WDC",
-                "STX",
-                "SMCI"
+                {
+                    "t": "WDC",
+                    "n": "Western Digital Corporation"
+                },
+                {
+                    "t": "STX",
+                    "n": "Seagate Technology Holdings plc"
+                },
+                {
+                    "t": "SMCI",
+                    "n": "Super Micro Computer, Inc."
+                }
             ]
         },
         {
@@ -836,10 +1743,22 @@
             "sector": "Technology",
             "rs": 1.73,
             "tickers": [
-                "LRCX",
-                "AMAT",
-                "ASML",
-                "KLAC"
+                {
+                    "t": "LRCX",
+                    "n": "Lam Research Corporation"
+                },
+                {
+                    "t": "AMAT",
+                    "n": "Applied Materials, Inc."
+                },
+                {
+                    "t": "ASML",
+                    "n": "ASML Holding N.V."
+                },
+                {
+                    "t": "KLAC",
+                    "n": "KLA Corporation"
+                }
             ]
         },
         {
@@ -848,8 +1767,14 @@
             "sector": "Communication Services",
             "rs": 1.28,
             "tickers": [
-                "WBD",
-                "NFLX"
+                {
+                    "t": "WBD",
+                    "n": "Warner Bros. Discovery, Inc."
+                },
+                {
+                    "t": "NFLX",
+                    "n": "Netflix, Inc."
+                }
             ]
         },
         {
@@ -858,11 +1783,26 @@
             "sector": "Technology",
             "rs": 1.26,
             "tickers": [
-                "MU",
-                "INTC",
-                "MPWR",
-                "ADI",
-                "MCHP"
+                {
+                    "t": "MU",
+                    "n": "Micron Technology, Inc."
+                },
+                {
+                    "t": "INTC",
+                    "n": "Intel Corporation"
+                },
+                {
+                    "t": "MPWR",
+                    "n": "Monolithic Power Systems, Inc."
+                },
+                {
+                    "t": "ADI",
+                    "n": "Analog Devices, Inc."
+                },
+                {
+                    "t": "MCHP",
+                    "n": "Microchip Technology Incorporated"
+                }
             ]
         },
         {
@@ -871,9 +1811,18 @@
             "sector": "Communication Services",
             "rs": 1.18,
             "tickers": [
-                "GOOGL",
-                "GOOG",
-                "META"
+                {
+                    "t": "GOOGL",
+                    "n": "Alphabet Inc."
+                },
+                {
+                    "t": "GOOG",
+                    "n": "Alphabet Inc."
+                },
+                {
+                    "t": "META",
+                    "n": "Meta Platforms, Inc."
+                }
             ]
         },
         {
@@ -882,8 +1831,14 @@
             "sector": "Healthcare",
             "rs": 1.15,
             "tickers": [
-                "GILD",
-                "AMGN"
+                {
+                    "t": "GILD",
+                    "n": "Gilead Sciences, Inc."
+                },
+                {
+                    "t": "AMGN",
+                    "n": "Amgen Inc."
+                }
             ]
         }
     ],
@@ -1242,8 +2197,14 @@
             "s3": 0,
             "s4": 0,
             "tickers": [
-                "BKR",
-                "FANG"
+                {
+                    "t": "BKR",
+                    "n": "Baker Hughes Company"
+                },
+                {
+                    "t": "FANG",
+                    "n": "Diamondback Energy, Inc."
+                }
             ],
             "health": "Strong"
         },
@@ -1255,7 +2216,10 @@
             "s3": 0,
             "s4": 0,
             "tickers": [
-                "LIN"
+                {
+                    "t": "LIN",
+                    "n": "Linde plc"
+                }
             ],
             "health": "Strong"
         },
@@ -1267,47 +2231,170 @@
             "s3": 2,
             "s4": 5,
             "tickers": [
-                "SLV",
-                "GDX",
-                "TAN",
-                "SOXX",
-                "GLD",
-                "SLX",
-                "SMH",
-                "XAR",
-                "XBI",
-                "XLE",
-                "XLB",
-                "XLI",
-                "FFTY",
-                "KRE",
-                "IBB",
-                "IEO",
-                "IWM",
-                "KBE",
-                "XHB",
-                "MDY",
-                "IWO",
-                "TQQQ",
-                "RSP",
-                "USO",
-                "XLU",
-                "GXC",
-                "XLK",
-                "^SPX",
-                "^IXIC",
-                "QQQ",
-                "^NDX",
-                "QQQE",
-                "XLY",
-                "HYG",
-                "XLF",
-                "^VIX",
-                "IBUY",
-                "FDN",
-                "SKYY",
-                "IGV",
-                "BTC-USD"
+                {
+                    "t": "SLV",
+                    "n": "iShares Silver Trust"
+                },
+                {
+                    "t": "GDX",
+                    "n": "VanEck Gold Miners ETF"
+                },
+                {
+                    "t": "TAN",
+                    "n": "Invesco Solar ETF"
+                },
+                {
+                    "t": "SOXX",
+                    "n": "iShares Semiconductor ETF"
+                },
+                {
+                    "t": "GLD",
+                    "n": "SPDR Gold Shares"
+                },
+                {
+                    "t": "SLX",
+                    "n": "VanEck Steel ETF"
+                },
+                {
+                    "t": "SMH",
+                    "n": "VanEck Semiconductor ETF"
+                },
+                {
+                    "t": "XAR",
+                    "n": "State Street SPDR S&P Aerospace & Defense ETF"
+                },
+                {
+                    "t": "XBI",
+                    "n": "State Street SPDR S&P Biotech ETF"
+                },
+                {
+                    "t": "XLE",
+                    "n": "State Street Energy Select Sector SPDR ETF"
+                },
+                {
+                    "t": "XLB",
+                    "n": "State Street Materials Select Sector SPDR ETF"
+                },
+                {
+                    "t": "XLI",
+                    "n": "State Street Industrial Select Sector SPDR ETF"
+                },
+                {
+                    "t": "FFTY",
+                    "n": "Innovator IBD 50 ETF"
+                },
+                {
+                    "t": "KRE",
+                    "n": "State Street SPDR S&P Regional Banking ETF"
+                },
+                {
+                    "t": "IBB",
+                    "n": "iShares Biotechnology ETF"
+                },
+                {
+                    "t": "IEO",
+                    "n": "iShares U.S. Oil & Gas Exploration & Production ETF"
+                },
+                {
+                    "t": "IWM",
+                    "n": "iShares Russell 2000 ETF"
+                },
+                {
+                    "t": "KBE",
+                    "n": "State Street SPDR S&P Bank ETF"
+                },
+                {
+                    "t": "XHB",
+                    "n": "State Street SPDR S&P Homebuilders ETF"
+                },
+                {
+                    "t": "MDY",
+                    "n": "State Street SPDR S&P MIDCAP 400 ETF Trust"
+                },
+                {
+                    "t": "IWO",
+                    "n": "iShares Russell 2000 Growth ETF"
+                },
+                {
+                    "t": "TQQQ",
+                    "n": "ProShares UltraPro QQQ"
+                },
+                {
+                    "t": "RSP",
+                    "n": "Invesco S&P 500 Equal Weight ETF"
+                },
+                {
+                    "t": "USO",
+                    "n": "United States Oil Fund, LP"
+                },
+                {
+                    "t": "XLU",
+                    "n": "State Street Utilities Select Sector SPDR ETF"
+                },
+                {
+                    "t": "GXC",
+                    "n": "State Street SPDR S&P China ETF"
+                },
+                {
+                    "t": "XLK",
+                    "n": "State Street Technology Select Sector SPDR ETF"
+                },
+                {
+                    "t": "^SPX",
+                    "n": "S&P 500 INDEX"
+                },
+                {
+                    "t": "^IXIC",
+                    "n": "NASDAQ Composite"
+                },
+                {
+                    "t": "QQQ",
+                    "n": "Invesco QQQ Trust"
+                },
+                {
+                    "t": "^NDX",
+                    "n": "NASDAQ-100"
+                },
+                {
+                    "t": "QQQE",
+                    "n": "Direxion NASDAQ-100 Equal Weighted Index Shares"
+                },
+                {
+                    "t": "XLY",
+                    "n": "State Street Consumer Discretionary Select Sector SPDR ETF"
+                },
+                {
+                    "t": "HYG",
+                    "n": "iShares iBoxx $ High Yield Corporate Bond ETF"
+                },
+                {
+                    "t": "XLF",
+                    "n": "State Street Financial Select Sector SPDR ETF"
+                },
+                {
+                    "t": "^VIX",
+                    "n": "CBOE Volatility Index"
+                },
+                {
+                    "t": "IBUY",
+                    "n": "Amplify Online Retail ETF"
+                },
+                {
+                    "t": "FDN",
+                    "n": "First Trust Dow Jones Internet Index Fund"
+                },
+                {
+                    "t": "SKYY",
+                    "n": "First Trust Cloud Computing ETF"
+                },
+                {
+                    "t": "IGV",
+                    "n": "iShares Expanded Tech-Software Sector ETF"
+                },
+                {
+                    "t": "BTC-USD",
+                    "n": "Bitcoin USD"
+                }
             ],
             "health": "Strong"
         },
@@ -1319,10 +2406,22 @@
             "s3": 0,
             "s4": 0,
             "tickers": [
-                "AEP",
-                "XEL",
-                "EXC",
-                "CEG"
+                {
+                    "t": "AEP",
+                    "n": "American Electric Power Company, Inc."
+                },
+                {
+                    "t": "XEL",
+                    "n": "Xcel Energy Inc."
+                },
+                {
+                    "t": "EXC",
+                    "n": "Exelon Corporation"
+                },
+                {
+                    "t": "CEG",
+                    "n": "Constellation Energy Corporation"
+                }
             ],
             "health": "Strong"
         },
@@ -1334,14 +2433,38 @@
             "s3": 12,
             "s4": 25,
             "tickers": [
-                "MNST",
-                "WMT",
-                "CCEP",
-                "PEP",
-                "COST",
-                "MDLZ",
-                "KDP",
-                "KHC"
+                {
+                    "t": "MNST",
+                    "n": "Monster Beverage Corporation"
+                },
+                {
+                    "t": "WMT",
+                    "n": "Walmart Inc."
+                },
+                {
+                    "t": "CCEP",
+                    "n": "Coca-Cola Europacific Partners PLC"
+                },
+                {
+                    "t": "PEP",
+                    "n": "PepsiCo, Inc."
+                },
+                {
+                    "t": "COST",
+                    "n": "Costco Wholesale Corporation"
+                },
+                {
+                    "t": "MDLZ",
+                    "n": "Mondelez International, Inc."
+                },
+                {
+                    "t": "KDP",
+                    "n": "Keurig Dr Pepper Inc."
+                },
+                {
+                    "t": "KHC",
+                    "n": "The Kraft Heinz Company"
+                }
             ],
             "health": "Strong"
         },
@@ -1353,16 +2476,46 @@
             "s3": 10,
             "s4": 10,
             "tickers": [
-                "INSM",
-                "GILD",
-                "AMGN",
-                "REGN",
-                "GEHC",
-                "VRTX",
-                "IDXX",
-                "DXCM",
-                "ISRG",
-                "ALNY"
+                {
+                    "t": "INSM",
+                    "n": "Insmed Incorporated"
+                },
+                {
+                    "t": "GILD",
+                    "n": "Gilead Sciences, Inc."
+                },
+                {
+                    "t": "AMGN",
+                    "n": "Amgen Inc."
+                },
+                {
+                    "t": "REGN",
+                    "n": "Regeneron Pharmaceuticals, Inc."
+                },
+                {
+                    "t": "GEHC",
+                    "n": "GE HealthCare Technologies Inc."
+                },
+                {
+                    "t": "VRTX",
+                    "n": "Vertex Pharmaceuticals Incorporated"
+                },
+                {
+                    "t": "IDXX",
+                    "n": "IDEXX Laboratories, Inc."
+                },
+                {
+                    "t": "DXCM",
+                    "n": "DexCom, Inc."
+                },
+                {
+                    "t": "ISRG",
+                    "n": "Intuitive Surgical, Inc."
+                },
+                {
+                    "t": "ALNY",
+                    "n": "Alnylam Pharmaceuticals, Inc."
+                }
             ],
             "health": "Strong"
         },
@@ -1374,18 +2527,54 @@
             "s3": 8,
             "s4": 42,
             "tickers": [
-                "ODFL",
-                "PCAR",
-                "FER",
-                "CSX",
-                "HON",
-                "FAST",
-                "GPN",
-                "CTAS",
-                "CPRT",
-                "AXON",
-                "VRSK",
-                "TRI"
+                {
+                    "t": "ODFL",
+                    "n": "Old Dominion Freight Line, Inc."
+                },
+                {
+                    "t": "PCAR",
+                    "n": "PACCAR Inc"
+                },
+                {
+                    "t": "FER",
+                    "n": "Ferrovial SE"
+                },
+                {
+                    "t": "CSX",
+                    "n": "CSX Corporation"
+                },
+                {
+                    "t": "HON",
+                    "n": "Honeywell International Inc."
+                },
+                {
+                    "t": "FAST",
+                    "n": "Fastenal Company"
+                },
+                {
+                    "t": "GPN",
+                    "n": "Global Payments Inc."
+                },
+                {
+                    "t": "CTAS",
+                    "n": "Cintas Corporation"
+                },
+                {
+                    "t": "CPRT",
+                    "n": "Copart, Inc."
+                },
+                {
+                    "t": "AXON",
+                    "n": "Axon Enterprise, Inc."
+                },
+                {
+                    "t": "VRSK",
+                    "n": "Verisk Analytics, Inc."
+                },
+                {
+                    "t": "TRI",
+                    "n": "Thomson Reuters Corporation"
+                }
             ],
             "health": "Healthy"
         },
@@ -1397,70 +2586,174 @@
             "s3": 0,
             "s4": 31,
             "tickers": [
-                "WDC",
-                "MU",
-                "STX",
-                "LRCX",
-                "AMAT",
-                "ASML",
-                "INTC",
-                "KLAC",
-                "MPWR",
-                "ADI",
-                "MCHP",
-                "AMD",
-                "TXN",
-                "AVGO",
-                "NVDA",
-                "CSCO",
-                "NXPI",
-                "AAPL",
-                "MRVL",
-                "SHOP",
-                "PLTR",
-                "CDNS",
-                "SNPS",
-                "ARM",
-                "FTNT",
-                "QCOM",
-                "CTSH",
-                "MSFT",
-                "CRWD",
-                "DDOG",
-                "SMCI",
-                "ADSK",
-                "PANW",
-                "ADP",
-                "PAYX",
-                "ADBE",
-                "ROP",
-                "ZS",
-                "INTU",
-                "WDAY",
-                "MSTR",
-                "TEAM"
-            ],
-            "health": "Healthy"
-        },
-        {
-            "sector": "Consumer Cyclical",
-            "count": 11,
-            "s1": 45,
-            "s2": 36,
-            "s3": 0,
-            "s4": 18,
-            "tickers": [
-                "ROST",
-                "MAR",
-                "TSLA",
-                "SBUX",
-                "ABNB",
-                "ORLY",
-                "AMZN",
-                "MELI",
-                "PDD",
-                "DASH",
-                "BKNG"
+                {
+                    "t": "WDC",
+                    "n": "Western Digital Corporation"
+                },
+                {
+                    "t": "MU",
+                    "n": "Micron Technology, Inc."
+                },
+                {
+                    "t": "STX",
+                    "n": "Seagate Technology Holdings plc"
+                },
+                {
+                    "t": "LRCX",
+                    "n": "Lam Research Corporation"
+                },
+                {
+                    "t": "AMAT",
+                    "n": "Applied Materials, Inc."
+                },
+                {
+                    "t": "ASML",
+                    "n": "ASML Holding N.V."
+                },
+                {
+                    "t": "INTC",
+                    "n": "Intel Corporation"
+                },
+                {
+                    "t": "KLAC",
+                    "n": "KLA Corporation"
+                },
+                {
+                    "t": "MPWR",
+                    "n": "Monolithic Power Systems, Inc."
+                },
+                {
+                    "t": "ADI",
+                    "n": "Analog Devices, Inc."
+                },
+                {
+                    "t": "MCHP",
+                    "n": "Microchip Technology Incorporated"
+                },
+                {
+                    "t": "AMD",
+                    "n": "Advanced Micro Devices, Inc."
+                },
+                {
+                    "t": "TXN",
+                    "n": "Texas Instruments Incorporated"
+                },
+                {
+                    "t": "AVGO",
+                    "n": "Broadcom Inc."
+                },
+                {
+                    "t": "NVDA",
+                    "n": "NVIDIA Corporation"
+                },
+                {
+                    "t": "CSCO",
+                    "n": "Cisco Systems, Inc."
+                },
+                {
+                    "t": "NXPI",
+                    "n": "NXP Semiconductors N.V."
+                },
+                {
+                    "t": "AAPL",
+                    "n": "Apple Inc."
+                },
+                {
+                    "t": "MRVL",
+                    "n": "Marvell Technology, Inc."
+                },
+                {
+                    "t": "SHOP",
+                    "n": "Shopify Inc."
+                },
+                {
+                    "t": "PLTR",
+                    "n": "Palantir Technologies Inc."
+                },
+                {
+                    "t": "CDNS",
+                    "n": "Cadence Design Systems, Inc."
+                },
+                {
+                    "t": "SNPS",
+                    "n": "Synopsys, Inc."
+                },
+                {
+                    "t": "ARM",
+                    "n": "Arm Holdings plc"
+                },
+                {
+                    "t": "FTNT",
+                    "n": "Fortinet, Inc."
+                },
+                {
+                    "t": "QCOM",
+                    "n": "QUALCOMM Incorporated"
+                },
+                {
+                    "t": "CTSH",
+                    "n": "Cognizant Technology Solutions Corporation"
+                },
+                {
+                    "t": "MSFT",
+                    "n": "Microsoft Corporation"
+                },
+                {
+                    "t": "CRWD",
+                    "n": "CrowdStrike Holdings, Inc."
+                },
+                {
+                    "t": "DDOG",
+                    "n": "Datadog, Inc."
+                },
+                {
+                    "t": "SMCI",
+                    "n": "Super Micro Computer, Inc."
+                },
+                {
+                    "t": "ADSK",
+                    "n": "Autodesk, Inc."
+                },
+                {
+                    "t": "PANW",
+                    "n": "Palo Alto Networks, Inc."
+                },
+                {
+                    "t": "ADP",
+                    "n": "Automatic Data Processing, Inc."
+                },
+                {
+                    "t": "PAYX",
+                    "n": "Paychex, Inc."
+                },
+                {
+                    "t": "ADBE",
+                    "n": "Adobe Inc."
+                },
+                {
+                    "t": "ROP",
+                    "n": "Roper Technologies, Inc."
+                },
+                {
+                    "t": "ZS",
+                    "n": "Zscaler, Inc."
+                },
+                {
+                    "t": "INTU",
+                    "n": "Intuit Inc."
+                },
+                {
+                    "t": "WDAY",
+                    "n": "Workday, Inc."
+                },
+                {
+                    "t": "MSTR",
+                    "n": "Strategy Inc"
+                },
+                {
+                    "t": "TEAM",
+                    "n": "Atlassian Corporation"
+                }
             ],
             "health": "Healthy"
         },
@@ -1472,17 +2765,105 @@
             "s3": 9,
             "s4": 36,
             "tickers": [
-                "WBD",
-                "GOOGL",
-                "GOOG",
-                "EA",
-                "CMCSA",
-                "META",
-                "APP",
-                "TMUS",
-                "CHTR",
-                "TTWO",
-                "NFLX"
+                {
+                    "t": "WBD",
+                    "n": "Warner Bros. Discovery, Inc."
+                },
+                {
+                    "t": "GOOGL",
+                    "n": "Alphabet Inc."
+                },
+                {
+                    "t": "GOOG",
+                    "n": "Alphabet Inc."
+                },
+                {
+                    "t": "EA",
+                    "n": "Electronic Arts Inc."
+                },
+                {
+                    "t": "CMCSA",
+                    "n": "Comcast Corporation"
+                },
+                {
+                    "t": "META",
+                    "n": "Meta Platforms, Inc."
+                },
+                {
+                    "t": "APP",
+                    "n": "AppLovin Corporation"
+                },
+                {
+                    "t": "TMUS",
+                    "n": "T-Mobile US, Inc."
+                },
+                {
+                    "t": "CHTR",
+                    "n": "Charter Communications, Inc."
+                },
+                {
+                    "t": "TTWO",
+                    "n": "Take-Two Interactive Software, Inc."
+                },
+                {
+                    "t": "NFLX",
+                    "n": "Netflix, Inc."
+                }
+            ],
+            "health": "Healthy"
+        },
+        {
+            "sector": "Consumer Cyclical",
+            "count": 11,
+            "s1": 45,
+            "s2": 36,
+            "s3": 0,
+            "s4": 18,
+            "tickers": [
+                {
+                    "t": "ROST",
+                    "n": "Ross Stores, Inc."
+                },
+                {
+                    "t": "MAR",
+                    "n": "Marriott International, Inc."
+                },
+                {
+                    "t": "TSLA",
+                    "n": "Tesla, Inc."
+                },
+                {
+                    "t": "SBUX",
+                    "n": "Starbucks Corporation"
+                },
+                {
+                    "t": "ABNB",
+                    "n": "Airbnb, Inc."
+                },
+                {
+                    "t": "ORLY",
+                    "n": "O'Reilly Automotive, Inc."
+                },
+                {
+                    "t": "AMZN",
+                    "n": "Amazon.com, Inc."
+                },
+                {
+                    "t": "MELI",
+                    "n": "MercadoLibre, Inc."
+                },
+                {
+                    "t": "PDD",
+                    "n": "PDD Holdings Inc."
+                },
+                {
+                    "t": "DASH",
+                    "n": "DoorDash, Inc."
+                },
+                {
+                    "t": "BKNG",
+                    "n": "Booking Holdings Inc."
+                }
             ],
             "health": "Healthy"
         },
@@ -1494,7 +2875,10 @@
             "s3": 0,
             "s4": 100,
             "tickers": [
-                "CSGP"
+                {
+                    "t": "CSGP",
+                    "n": "CoStar Group, Inc."
+                }
             ],
             "health": "Weak"
         },
@@ -1506,8 +2890,14 @@
             "s3": 0,
             "s4": 50,
             "tickers": [
-                "IIF",
-                "PYPL"
+                {
+                    "t": "IIF",
+                    "n": "Morgan Stanley India Investment Fund, Inc."
+                },
+                {
+                    "t": "PYPL",
+                    "n": "PayPal Holdings, Inc."
+                }
             ],
             "health": "Weak"
         }

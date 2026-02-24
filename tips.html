@@ -239,6 +239,33 @@
             font-family: var(--mono);
         }
 
+        .flip-badge {
+            background: rgba(255, 215, 0, 0.15);
+            color: #FFD700;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            animation: glow 2s infinite;
+        }
+
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            }
+
+            100% {
+                box-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+            }
+        }
+
         .management-section {
             margin-top: 5rem;
             padding: 2rem;
@@ -440,13 +467,13 @@
             box-shadow: 0 0 8px rgba(0, 230, 118, 0.5);
         }
 
-        /* Delete button on card */
+
         .card-delete {
             position: absolute;
             top: 10px;
             right: 10px;
-            background: rgba(255, 82, 82, 0.1);
-            border: 1px solid rgba(255, 82, 82, 0.2);
+            background: rgba(255, 82, 82, 0.15);
+            border: 1px solid rgba(255, 82, 82, 0.3);
             color: var(--red);
             width: 28px;
             height: 28px;
@@ -456,18 +483,53 @@
             justify-content: center;
             cursor: pointer;
             font-size: 0.75rem;
-            opacity: 0;
+            opacity: 1;
+            /* Always visible */
             transition: all 0.2s;
             z-index: 2;
         }
 
-        .card:hover .card-delete {
-            opacity: 1;
+        .card-delete:hover {
+            background: rgba(255, 82, 82, 0.3);
+            transform: scale(1.1);
+            border-color: var(--red);
         }
 
         .card-delete:hover {
-            background: rgba(255, 82, 82, 0.25);
+            background: rgba(255, 82, 82, 0.35);
             transform: scale(1.1);
+        }
+
+        .rs-range-fill {
+            position: absolute;
+            height: 6px;
+            background: linear-gradient(90deg, var(--accent), var(--cyan));
+            border-radius: 3px;
+            top: 6px;
+        }
+
+        .canslim-tray {
+            display: flex;
+            gap: 2px;
+            margin-top: 4px;
+        }
+
+        .canslim-letter {
+            width: 14px;
+            height: 14px;
+            font-size: 0.6rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .canslim-letter.active {
+            background: var(--cyan);
+            color: var(--bg);
         }
     </style>
 </head>
@@ -498,8 +560,14 @@
 
         <div class="dashboard-tools">
             <div class="slider-group">
-                <label>RS Percentile ≥ <span id="rs-val" class="slider-val">70</span></label>
-                <input type="range" id="rs-slider" min="50" max="99" value="70" class="range-slider">
+                <label>RS Range: <span id="rs-min-val" class="slider-val">70</span> - <span id="rs-max-val"
+                        class="slider-val">100</span></label>
+                <div class="dual-range-container">
+                    <div class="dual-range-bg"></div>
+                    <div id="rs-fill" class="rs-range-fill" style="left: 40%; right: 0%;"></div>
+                    <input type="range" id="rs-min-slider" min="50" max="100" value="70" class="dual-range">
+                    <input type="range" id="rs-max-slider" min="50" max="100" value="100" class="dual-range">
+                </div>
             </div>
             <div class="slider-group">
                 <label>RMV Range: <span id="rmv-min-val" class="slider-val">0</span> - <span id="rmv-max-val"
@@ -563,7 +631,8 @@
 
     <script>
         let allData = null;
-        let rsPercentile = 70;
+        let minRS = 70;
+        let maxRS = 100;
         let minRMV = 0;
         let maxRMV = 100;
         let qualityOn = true;
@@ -581,10 +650,23 @@
                     document.getElementById('last-updated').textContent = `Sync: ${d.toLocaleString()}`;
                 }
 
-                // RS Slider
-                document.getElementById('rs-slider').addEventListener('input', (e) => {
-                    rsPercentile = parseInt(e.target.value);
-                    document.getElementById('rs-val').textContent = rsPercentile;
+                // RS Dual Sliders
+                const minRS_S = document.getElementById('rs-min-slider');
+                const maxRS_S = document.getElementById('rs-max-slider');
+
+                minRS_S.addEventListener('input', (e) => {
+                    minRS = Math.min(parseInt(e.target.value), maxRS - 1);
+                    e.target.value = minRS;
+                    document.getElementById('rs-min-val').textContent = minRS;
+                    updateRSFill();
+                    render(allData.tips || []);
+                });
+
+                maxRS_S.addEventListener('input', (e) => {
+                    maxRS = Math.max(parseInt(e.target.value), minRS + 1);
+                    e.target.value = maxRS;
+                    document.getElementById('rs-max-val').textContent = maxRS;
+                    updateRSFill();
                     render(allData.tips || []);
                 });
 
@@ -617,6 +699,14 @@
             if (savedPat) {
                 document.getElementById('gh-pat').value = savedPat;
             }
+        }
+
+        function updateRSFill() {
+            const fill = document.getElementById('rs-fill');
+            const left = (minRS - 50) * 2;
+            const right = 100 - ((maxRS - 50) * 2);
+            fill.style.left = left + '%';
+            fill.style.right = right + '%';
         }
 
         function updateRangeFill() {
@@ -733,8 +823,8 @@
                 !hidden.includes(t.ticker) &&
                 !(qualityOn && t.is_speculative) &&
                 !(minerviniOn && !t.is_minervini) &&
-                t.rs >= rsPercentile &&
-                t.rmv >= minRMV && t.rmv <= maxRMV
+                (t.rs >= minRS && t.rs <= maxRS) &&
+                (t.rmv >= minRMV && t.rmv <= maxRMV)
             );
             if (visible.length === 0) {
                 container.innerHTML = '<div class="loading">No manual tips currently being tracked.</div>';
@@ -762,13 +852,25 @@
                                 <div class="card-delete" onclick="removeTip('${s.ticker}')" title="Hide ${s.ticker}">✕</div>
                                 <div style="display:flex; justify-content: space-between; align-items: flex-start;">
                                     <div>
-                                        <a href="${s.tradingview_url}" target="_blank" class="ticker">${s.ticker}</a>
-                                        <div class="company-name">${s.name}</div>
-                                    </div>
-                                    <div style="display:flex; gap:6px; align-items:center;">
-                                        <div style="background: rgba(255, 145, 0, 0.1); color: var(--orange); padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(255, 145, 0, 0.2);">
-                                            RS ${s.rs}
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <a href="${s.tradingview_url}" target="_blank" class="ticker">${s.ticker}</a>
+                                            <div style="background: rgba(0, 229, 255, 0.1); color: var(--cyan); padding: 2px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; border: 1px solid rgba(0, 229, 255, 0.2);">RS ${s.rs}</div>
                                         </div>
+                                        <div class="company-name">${s.name}</div>
+                                        ${(function () {
+                        if (!s.canslim) return '';
+                        const letters = ['C', 'A', 'N', 'S', 'L', 'I', 'M'];
+                        return `<div class="canslim-tray">
+                                                ${letters.map(l => {
+                            const active = s.canslim[l.toLowerCase()];
+                            return `<div class="canslim-letter ${active ? 'active' : ''}" title="${l}">${l}</div>`;
+                        }).join('')}
+                                            </div>`;
+                    })()}
+                                    </div>
+                                    <div style="display:flex; flex-direction: column; align-items: flex-end; gap:4px;">
+                                        <div style="font-size:0.7rem; color:var(--text2); opacity:0.8;">#${s.rank}</div>
+                                        ${s.flip ? `<div class="flip-badge">⚡ PRIME FLIP</div>` : ''}
                                     </div>
                                 </div>
 
