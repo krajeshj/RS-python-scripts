@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-02-23T14:59:03Z",
+    "last_updated": "2026-02-23T19:57:11Z",
     "stocks": [
         {
             "rank": 1,
@@ -1415,28 +1415,6 @@
             "health": "Healthy"
         },
         {
-            "sector": "Consumer Cyclical",
-            "count": 11,
-            "s1": 45,
-            "s2": 36,
-            "s3": 0,
-            "s4": 18,
-            "tickers": [
-                "ROST",
-                "MAR",
-                "TSLA",
-                "SBUX",
-                "ABNB",
-                "ORLY",
-                "AMZN",
-                "MELI",
-                "PDD",
-                "DASH",
-                "BKNG"
-            ],
-            "health": "Healthy"
-        },
-        {
             "sector": "Communication Services",
             "count": 11,
             "s1": 18,
@@ -1455,6 +1433,28 @@
                 "CHTR",
                 "TTWO",
                 "NFLX"
+            ],
+            "health": "Healthy"
+        },
+        {
+            "sector": "Consumer Cyclical",
+            "count": 11,
+            "s1": 45,
+            "s2": 36,
+            "s3": 0,
+            "s4": 18,
+            "tickers": [
+                "ROST",
+                "MAR",
+                "TSLA",
+                "SBUX",
+                "ABNB",
+                "ORLY",
+                "AMZN",
+                "MELI",
+                "PDD",
+                "DASH",
+                "BKNG"
             ],
             "health": "Healthy"
         },

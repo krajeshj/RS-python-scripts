@@ -518,29 +518,100 @@
             background: var(--border);
             border-radius: 10px;
         }
+
+        /* Quality toggle */
+        .quality-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            user-select: none;
+            width: fit-content;
+        }
+
+        .quality-toggle:hover {
+            border-color: var(--accent);
+        }
+
+        .quality-toggle.active {
+            background: rgba(0, 230, 118, 0.1);
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        .quality-layer {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--text2);
+            transition: all 0.2s;
+        }
+
+        .quality-toggle.active .quality-layer {
+            background: var(--green);
+            box-shadow: 0 0 8px rgba(0, 230, 118, 0.5);
+        }
+
+        /* Delete button on card */
+        .card-delete {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 82, 82, 0.1);
+            border: 1px solid rgba(255, 82, 82, 0.2);
+            color: var(--red);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            opacity: 0;
+            transition: all 0.2s;
+            z-index: 2;
+        }
+
+        .card:hover .card-delete {
+            opacity: 1;
+        }
+
+        .card-delete:hover {
+            background: rgba(255, 82, 82, 0.25);
+            transform: scale(1.1);
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
         <header>
-            <div class="logo-icon">⏱️</div>
+            <div class="logo-icon">⚡</div>
             <h1>Intraday Quick Scan</h1>
             <div class="nav-links">
-                <a href="index.html" class="nav-link">Dashboard</a>
-                <a href="stages.html" class="nav-link">Sector Analysis</a>
-                <a href="quick_scan.html" class="nav-link active">Quick Scan ⏱️</a>
-                <a href="pulse.html" class="nav-link">Market Pulse 🌊</a>
-                <a href="tips.html" class="nav-link">Stock Tips 💡</a>
+                <a href="index.html" class="nav-link">Dashboard 🚀</a>
+                <a href="stages.html" class="nav-link">Sector Analysis 🏗️</a>
+                <a href="quick_scan.html" class="nav-link active">Quick Scan ⚡</a>
+                <a href="pulse.html" class="nav-link">Market Pulse 📡</a>
+                <a href="tips.html" class="nav-link">Stock Tips 🎯</a>
             </div>
             <div id="last-updated" class="last-updated">Updating...</div>
         </header>
 
-        <div class="dashboard-tools">
-            <button id="toggle-speculative" class="toggle-btn active">
-                <span>🛡️ Speculative Filter</span>
-                <small id="spec-status">ON (Hiding Biotechs/Speculative)</small>
-            </button>
+        <div class="dashboard-tools" style="padding-bottom: 1.5rem;">
+            <div id="quality-btn" class="quality-toggle active" onclick="toggleQuality()">
+                <div class="quality-layer"></div>
+                🛡️ Quality Filter
+            </div>
             <div class="meta-info">Focused on NQ100 & High Liquidity</div>
         </div>
 
@@ -573,9 +644,27 @@
         </section>
     </div>
 
+    <footer
+        style="text-align:center; padding:2rem 1rem; color:var(--text2); font-size:0.75rem; border-top:1px solid var(--border); margin-top:2rem;">
+        © 2026 Rajesh's Stock Screener. All rights reserved.
+    </footer>
+
     <script>
-        let allData = null;
-        let hideSpeculative = true;
+        let qualityOn = true;
+
+        function getHiddenTickers() {
+            try { return JSON.parse(localStorage.getItem('hidden_quick') || '[]'); } catch { return []; }
+        }
+        function hideTicker(ticker) {
+            const list = getHiddenTickers();
+            if (!list.includes(ticker)) { list.push(ticker); localStorage.setItem('hidden_quick', JSON.stringify(list)); }
+            render();
+        }
+        function toggleQuality() {
+            qualityOn = !qualityOn;
+            document.getElementById('quality-btn').classList.toggle('active', qualityOn);
+            render();
+        }
 
         async function init() {
             try {
@@ -585,14 +674,6 @@
 
                 const lastUpdated = new Date(allData.last_updated + " UTC");
                 document.getElementById('last-updated').textContent = `Live Scan Sync: ${lastUpdated.toLocaleString()}`;
-
-                document.getElementById('toggle-speculative').addEventListener('click', () => {
-                    hideSpeculative = !hideSpeculative;
-                    const btn = document.getElementById('toggle-speculative');
-                    btn.classList.toggle('active');
-                    document.getElementById('spec-status').textContent = hideSpeculative ? 'ON (Hiding Biotechs/Speculative)' : 'OFF (Showing All)';
-                    render();
-                });
 
                 render();
             } catch (err) {
@@ -618,7 +699,8 @@
                 : '';
 
             return `
-                <div class="card ${s.is_restricted ? 'speculative' : ''} ${hideSpeculative && s.is_restricted ? 'hidden' : ''}" style="animation-delay: ${idx * 0.05}s">
+                <div class="card" style="animation-delay: ${idx * 0.05}s">
+                    <div class="card-delete" onclick="hideTicker('${s.ticker}')" title="Hide ${s.ticker}">✕</div>
                     <div class="card-header">
                         <div class="ticker-group">
                             <div class="ticker-box">
@@ -666,17 +748,20 @@
 
         function render() {
             if (!allData) return;
+            const hidden = getHiddenTickers();
 
             // Render Stocks
             const stocksGrid = document.getElementById('stocks-grid');
-            stocksGrid.innerHTML = allData.stocks.map((s, i) => renderStock(s, i)).join('');
+            const stocksFiltered = allData.stocks.filter(s => !hidden.includes(s.ticker) && !(qualityOn && s.is_speculative));
+            stocksGrid.innerHTML = stocksFiltered.map((s, i) => renderStock(s, i)).join('');
 
             // Render Tips Section
             const tips = allData.tips || [];
             const tipsSection = document.getElementById('tips-section');
-            if (tips.length > 0) {
+            const tipsFiltered = tips.filter(s => !hidden.includes(s.ticker) && !(qualityOn && s.is_speculative));
+            if (tipsFiltered.length > 0) {
                 tipsSection.classList.remove('hidden');
-                document.getElementById('tips-grid').innerHTML = tips.map((s, i) => renderStock(s, i)).join('');
+                document.getElementById('tips-grid').innerHTML = tipsFiltered.map((s, i) => renderStock(s, i)).join('');
             } else {
                 tipsSection.classList.add('hidden');
             }

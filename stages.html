@@ -20,11 +20,11 @@
             --text2: #8888a8;
             --accent: #6c5ce7;
             --accent2: #a29bfe;
-            --s1: #7f8c8d;
-            --s2: #00e5ff;
-            /* Cyan for consistency */
-            --s3: #ffde59;
-            --s4: #ff5252;
+            --s1: #546e7a;
+            --s2: #26c6da;
+            /* Teal for S2 Accumulation */
+            --s3: #ffca28;
+            --s4: #ef5350;
             --green: #00e676;
             --cyan: #00e5ff;
             --orange: #ff9100;
@@ -50,8 +50,8 @@
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
             background-image:
-                radial-gradient(ellipse 80% 60% at 50% -20%, rgba(108, 92, 231, .15), transparent),
-                radial-gradient(ellipse 60% 50% at 80% 110%, rgba(0, 229, 255, .08), transparent);
+                radial-gradient(ellipse 80% 60% at 50% -20%, rgba(38, 198, 218, .12), transparent),
+                radial-gradient(ellipse 60% 50% at 80% 110%, rgba(255, 202, 40, .06), transparent);
             padding-bottom: 3rem;
         }
 
@@ -330,14 +330,14 @@
 <body>
     <div class="container">
         <header>
-            <div class="logo-icon">📊</div>
+            <div class="logo-icon">🏗️</div>
             <h1>Sector Analysis</h1>
             <nav class="nav-links">
-                <a href="index.html" class="nav-link">Dashboard</a>
-                <a href="stages.html" class="nav-link active">Sector Analysis</a>
-                <a href="quick_scan.html" class="nav-link">Quick Scan ⏱️</a>
-                <a href="pulse.html" class="nav-link">Market Pulse 🌊</a>
-                <a href="tips.html" class="nav-link">Stock Tips 💡</a>
+                <a href="index.html" class="nav-link">Dashboard 🚀</a>
+                <a href="stages.html" class="nav-link active">Sector Analysis 🏗️</a>
+                <a href="quick_scan.html" class="nav-link">Quick Scan ⚡</a>
+                <a href="pulse.html" class="nav-link">Market Pulse 📡</a>
+                <a href="tips.html" class="nav-link">Stock Tips 🎯</a>
             </nav>
             <div id="last-updated"
                 style="font-size:0.8rem;color:var(--text2);background:var(--surface);padding:4px 12px;border-radius:20px;border:1px solid var(--border);margin-top:8px;">
@@ -473,6 +473,11 @@
 
         init();
     </script>
+
+    <footer
+        style="text-align:center; padding:2rem 1rem; color:var(--text2); font-size:0.75rem; border-top:1px solid var(--border); margin-top:2rem;">
+        © 2026 Rajesh's Stock Screener. All rights reserved.
+    </footer>
 </body>
 
 </html>
