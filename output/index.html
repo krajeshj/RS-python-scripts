@@ -220,6 +220,61 @@
             border: none;
         }
 
+        /* Dual Range Slider Styles */
+        .dual-range-container {
+            position: relative;
+            height: 20px;
+            width: 100%;
+        }
+
+        .dual-range {
+            position: absolute;
+            width: 100%;
+            pointer-events: none;
+            appearance: none;
+            -webkit-appearance: none;
+            background: none;
+            top: 0;
+            left: 0;
+            margin: 0;
+        }
+
+        .dual-range::-webkit-slider-runnable-track {
+            background: none;
+        }
+
+        .dual-range::-webkit-slider-thumb {
+            pointer-events: auto;
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--cyan);
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+            border: 2px solid var(--surface);
+            position: relative;
+            z-index: 2;
+        }
+
+        .dual-range-bg {
+            position: absolute;
+            height: 6px;
+            width: 100%;
+            background: var(--border);
+            border-radius: 3px;
+            top: 6px;
+        }
+
+        .dual-range-fill {
+            position: absolute;
+            height: 6px;
+            background: linear-gradient(90deg, var(--accent), var(--cyan));
+            border-radius: 3px;
+            top: 6px;
+        }
+
         /* Quality toggle */
         .quality-toggle {
             display: flex;
@@ -712,12 +767,22 @@
                 <input type="range" id="rs-slider" min="70" max="99" value="75" class="range-slider">
             </div>
             <div class="slider-group">
-                <label>RMV ≤ <span id="rmv-val" class="slider-val">45</span></label>
-                <input type="range" id="rmv-slider" min="10" max="100" value="45" class="range-slider">
+                <label>RMV Range: <span id="rmv-min-val" class="slider-val">10</span> - <span id="rmv-max-val"
+                        class="slider-val">45</span></label>
+                <div class="dual-range-container">
+                    <div class="dual-range-bg"></div>
+                    <div id="rmv-fill" class="dual-range-fill" style="left: 10%; right: 55%;"></div>
+                    <input type="range" id="rmv-min-slider" min="0" max="100" value="10" class="dual-range">
+                    <input type="range" id="rmv-max-slider" min="0" max="100" value="45" class="dual-range">
+                </div>
             </div>
             <div id="quality-btn" class="quality-toggle active" onclick="toggleQuality()">
                 <div class="quality-dot"></div>
-                🛡️ Quality Filter
+                🛡️ Quality
+            </div>
+            <div id="minervini-btn" class="quality-toggle" onclick="toggleMinervini()">
+                <div class="quality-dot"></div>
+                🌟 Minervini
             </div>
             <div class="meta-info" id="filter-count">Showing top candidates</div>
         </div>
@@ -745,6 +810,11 @@
 
     <script>
         let allData = null;
+        let rsPercentile = 75;
+        let minRMV = 10;
+        let maxRMV = 45;
+        let qualityOn = true;
+        let minerviniOn = false;
 
         async function init() {
             try {
@@ -754,15 +824,30 @@
                 const lastUpdated = new Date(allData.last_updated);
                 document.getElementById('last-updated').textContent = `Sync: ${lastUpdated.toLocaleString()}`;
 
-                // Slider listeners
-                const rsSlider = document.getElementById('rs-slider');
-                const rmvSlider = document.getElementById('rmv-slider');
-                rsSlider.addEventListener('input', () => {
-                    document.getElementById('rs-val').textContent = rsSlider.value;
+                // RS Slider
+                document.getElementById('rs-slider').addEventListener('input', (e) => {
+                    rsPercentile = parseInt(e.target.value);
+                    document.getElementById('rs-val').textContent = rsPercentile;
                     render();
                 });
-                rmvSlider.addEventListener('input', () => {
-                    document.getElementById('rmv-val').textContent = rmvSlider.value;
+
+                // RMV Dual Sliders
+                const minS = document.getElementById('rmv-min-slider');
+                const maxS = document.getElementById('rmv-max-slider');
+
+                minS.addEventListener('input', (e) => {
+                    minRMV = Math.min(parseInt(e.target.value), maxRMV - 1);
+                    e.target.value = minRMV;
+                    document.getElementById('rmv-min-val').textContent = minRMV;
+                    updateRangeFill();
+                    render();
+                });
+
+                maxS.addEventListener('input', (e) => {
+                    maxRMV = Math.max(parseInt(e.target.value), minRMV + 1);
+                    e.target.value = maxRMV;
+                    document.getElementById('rmv-max-val').textContent = maxRMV;
+                    updateRangeFill();
                     render();
                 });
 
@@ -771,6 +856,24 @@
                 console.error(err);
                 document.getElementById('stocks-grid').innerHTML = '<div class="loading">Live data connection failed. Check rs_ranking.py outputs.</div>';
             }
+        }
+
+        function updateRangeFill() {
+            const fill = document.getElementById('rmv-fill');
+            fill.style.left = minRMV + '%';
+            fill.style.right = (100 - maxRMV) + '%';
+        }
+
+        function toggleQuality() {
+            qualityOn = !qualityOn;
+            document.getElementById('quality-btn').classList.toggle('active', qualityOn);
+            render();
+        }
+
+        function toggleMinervini() {
+            minerviniOn = !minerviniOn;
+            document.getElementById('minervini-btn').classList.toggle('active', minerviniOn);
+            render();
         }
 
         function createCanslimTray(canslim) {
@@ -792,12 +895,7 @@
             if (!list.includes(ticker)) { list.push(ticker); localStorage.setItem('hidden_tickers', JSON.stringify(list)); }
             render();
         }
-        let qualityOn = true;
-        function toggleQuality() {
-            qualityOn = !qualityOn;
-            document.getElementById('quality-btn').classList.toggle('active', qualityOn);
-            render();
-        }
+
 
         function renderStock(s, idx) {
             const earningsBadge = (s.days_to_earnings >= 0 && s.days_to_earnings <= 14)
@@ -857,16 +955,15 @@
 
         function render() {
             if (!allData) return;
-
-            const minRS = parseInt(document.getElementById('rs-slider').value);
-            const maxRMV = parseInt(document.getElementById('rmv-slider').value);
             const hidden = getHiddenTickers();
 
             const pool = allData.all_stocks || allData.stocks || [];
             const filtered = pool.filter(s => {
-                if (s.rs < minRS || s.rmv > maxRMV) return false;
+                if (s.rs < rsPercentile) return false;
+                if (s.rmv < minRMV || s.rmv > maxRMV) return false;
                 if (hidden.includes(s.ticker)) return false;
                 if (qualityOn && s.is_speculative) return false;
+                if (minerviniOn && !s.is_minervini) return false;
                 return true;
             });
 
@@ -878,7 +975,8 @@
                 stocksGrid.innerHTML = '<div class="loading">No stocks match current filters. Try lowering RS, raising RMV, or toggling Quality Filter off.</div>';
             }
             const qLabel = qualityOn ? `, ${specCount} speculative hidden` : '';
-            document.getElementById('filter-count').textContent = `${filtered.length} of ${pool.length} candidates (RS≥${minRS}, RMV≤${maxRMV}${qLabel})`;
+            const mLabel = minerviniOn ? `, Minervini Only` : '';
+            document.getElementById('filter-count').textContent = `${filtered.length} of ${pool.length} candidates (RS≥${rsPercentile}, RMV:${minRMV}-${maxRMV}${qLabel}${mLabel})`;
 
             // Render Industries
             const indGrid = document.getElementById('industries-grid');

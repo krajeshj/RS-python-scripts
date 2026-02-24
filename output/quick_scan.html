@@ -251,6 +251,106 @@
             }
         }
 
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 200px;
+        }
+
+        .slider-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text2);
+        }
+
+        .slider-val {
+            color: var(--cyan);
+            font-family: var(--mono);
+            font-weight: 700;
+        }
+
+        .range-slider {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--cyan));
+            outline: none;
+            opacity: 0.85;
+            transition: opacity 0.15s;
+        }
+
+        .range-slider:hover {
+            opacity: 1;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--cyan);
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+        }
+
+        /* Dual Range Slider Styles */
+        .dual-range-container {
+            position: relative;
+            height: 20px;
+            width: 100%;
+        }
+
+        .dual-range {
+            position: absolute;
+            width: 100%;
+            pointer-events: none;
+            appearance: none;
+            -webkit-appearance: none;
+            background: none;
+            top: 0;
+            left: 0;
+            margin: 0;
+        }
+
+        .dual-range::-webkit-slider-runnable-track {
+            background: none;
+        }
+
+        .dual-range::-webkit-slider-thumb {
+            pointer-events: auto;
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--cyan);
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+            border: 2px solid var(--surface);
+            position: relative;
+            z-index: 2;
+        }
+
+        .dual-range-bg {
+            position: absolute;
+            height: 6px;
+            width: 100%;
+            background: var(--border);
+            border-radius: 3px;
+            top: 6px;
+        }
+
+        .dual-range-fill {
+            position: absolute;
+            height: 6px;
+            background: linear-gradient(90deg, var(--accent), var(--cyan));
+            border-radius: 3px;
+            top: 6px;
+        }
+
         .card:hover {
             border-color: var(--orange);
             transform: translateY(-4px);
@@ -608,11 +708,29 @@
         </header>
 
         <div class="dashboard-tools" style="padding-bottom: 1.5rem;">
+            <div class="slider-group">
+                <label>RS Percentile ≥ <span id="rs-val" class="slider-val">75</span></label>
+                <input type="range" id="rs-slider" min="70" max="99" value="75" class="range-slider">
+            </div>
+            <div class="slider-group">
+                <label>RMV Range: <span id="rmv-min-val" class="slider-val">10</span> - <span id="rmv-max-val"
+                        class="slider-val">45</span></label>
+                <div class="dual-range-container">
+                    <div class="dual-range-bg"></div>
+                    <div id="rmv-fill" class="dual-range-fill" style="left: 10%; right: 55%;"></div>
+                    <input type="range" id="rmv-min-slider" min="0" max="100" value="10" class="dual-range">
+                    <input type="range" id="rmv-max-slider" min="0" max="100" value="45" class="dual-range">
+                </div>
+            </div>
             <div id="quality-btn" class="quality-toggle active" onclick="toggleQuality()">
                 <div class="quality-layer"></div>
-                🛡️ Quality Filter
+                🛡️ Quality
             </div>
-            <div class="meta-info">Focused on NQ100 & High Liquidity</div>
+            <div id="minervini-btn" class="quality-toggle" onclick="toggleMinervini()">
+                <div class="quality-layer"></div>
+                🌟 Minervini
+            </div>
+            <div class="meta-info">Intraday Setup Scanner</div>
         </div>
 
         <section id="tips-section" class="hidden">
@@ -650,7 +768,11 @@
     </footer>
 
     <script>
+        let rsPercentile = 75;
+        let minRMV = 10;
+        let maxRMV = 45;
         let qualityOn = true;
+        let minerviniOn = false;
 
         function getHiddenTickers() {
             try { return JSON.parse(localStorage.getItem('hidden_quick') || '[]'); } catch { return []; }
@@ -665,6 +787,16 @@
             document.getElementById('quality-btn').classList.toggle('active', qualityOn);
             render();
         }
+        function toggleMinervini() {
+            minerviniOn = !minerviniOn;
+            document.getElementById('minervini-btn').classList.toggle('active', minerviniOn);
+            render();
+        }
+        function updateRangeFill() {
+            const fill = document.getElementById('rmv-fill');
+            fill.style.left = minRMV + '%';
+            fill.style.right = (100 - maxRMV) + '%';
+        }
 
         async function init() {
             try {
@@ -674,6 +806,33 @@
 
                 const lastUpdated = new Date(allData.last_updated + " UTC");
                 document.getElementById('last-updated').textContent = `Live Scan Sync: ${lastUpdated.toLocaleString()}`;
+
+                // RS Slider
+                document.getElementById('rs-slider').addEventListener('input', (e) => {
+                    rsPercentile = parseInt(e.target.value);
+                    document.getElementById('rs-val').textContent = rsPercentile;
+                    render();
+                });
+
+                // RMV Dual Sliders
+                const minS = document.getElementById('rmv-min-slider');
+                const maxS = document.getElementById('rmv-max-slider');
+
+                minS.addEventListener('input', (e) => {
+                    minRMV = Math.min(parseInt(e.target.value), maxRMV - 1);
+                    e.target.value = minRMV;
+                    document.getElementById('rmv-min-val').textContent = minRMV;
+                    updateRangeFill();
+                    render();
+                });
+
+                maxS.addEventListener('input', (e) => {
+                    maxRMV = Math.max(parseInt(e.target.value), minRMV + 1);
+                    e.target.value = maxRMV;
+                    document.getElementById('rmv-max-val').textContent = maxRMV;
+                    updateRangeFill();
+                    render();
+                });
 
                 render();
             } catch (err) {
@@ -752,13 +911,25 @@
 
             // Render Stocks
             const stocksGrid = document.getElementById('stocks-grid');
-            const stocksFiltered = allData.stocks.filter(s => !hidden.includes(s.ticker) && !(qualityOn && s.is_speculative));
+            const stocksFiltered = allData.stocks.filter(s =>
+                !hidden.includes(s.ticker) &&
+                !(qualityOn && s.is_speculative) &&
+                !(minerviniOn && !s.is_minervini) &&
+                s.rs >= rsPercentile &&
+                s.rmv >= minRMV && s.rmv <= maxRMV
+            );
             stocksGrid.innerHTML = stocksFiltered.map((s, i) => renderStock(s, i)).join('');
 
             // Render Tips Section
             const tips = allData.tips || [];
             const tipsSection = document.getElementById('tips-section');
-            const tipsFiltered = tips.filter(s => !hidden.includes(s.ticker) && !(qualityOn && s.is_speculative));
+            const tipsFiltered = tips.filter(s =>
+                !hidden.includes(s.ticker) &&
+                !(qualityOn && s.is_speculative) &&
+                !(minerviniOn && !s.is_minervini) &&
+                s.rs >= rsPercentile &&
+                s.rmv >= minRMV && s.rmv <= maxRMV
+            );
             if (tipsFiltered.length > 0) {
                 tipsSection.classList.remove('hidden');
                 document.getElementById('tips-grid').innerHTML = tipsFiltered.map((s, i) => renderStock(s, i)).join('');

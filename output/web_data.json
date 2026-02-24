@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
     "last_updated": "2026-02-24T04:35:34Z",
+=======
+    "last_updated": "2026-02-23T21:36:20Z",
+>>>>>>> 2100920 (Implement dual RMV slider, Minervini toggle, and fix Pulse charts)
     "stocks": [
         {
             "rank": 1,
@@ -25,8 +29,14 @@
             },
             "days_to_earnings": -1,
             "is_speculative": true,
+<<<<<<< HEAD
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=QMMM",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=QMMM&ty=c&ta=0&p=d&s=l"
+=======
+            "is_minervini": true,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=LRCX",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=LRCX&ty=c&ta=0&p=d&s=l"
+>>>>>>> 2100920 (Implement dual RMV slider, Minervini toggle, and fix Pulse charts)
         },
         {
             "rank": 2,
@@ -79,8 +89,14 @@
             },
             "days_to_earnings": -1,
             "is_speculative": true,
+<<<<<<< HEAD
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=ERAS",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ERAS&ty=c&ta=0&p=d&s=l"
+=======
+            "is_minervini": true,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=WBD",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=WBD&ty=c&ta=0&p=d&s=l"
+>>>>>>> 2100920 (Implement dual RMV slider, Minervini toggle, and fix Pulse charts)
         },
         {
             "rank": 4,
@@ -129,12 +145,50 @@
                 "s": false,
                 "l": true,
                 "i": false,
+<<<<<<< HEAD
                 "m": false
             },
             "days_to_earnings": -1,
             "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=PRAX",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PRAX&ty=c&ta=0&p=d&s=l"
+=======
+                "m": true
+            },
+            "days_to_earnings": 79,
+            "is_speculative": true,
+            "is_minervini": true,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=AMAT",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AMAT&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 4,
+            "ticker": "GDX",
+            "name": "VanEck Gold Miners ETF",
+            "rs": 96,
+            "rs_raw": 1.67,
+            "rs_1w_pct": 96,
+            "rs_1m_pct": 96,
+            "rmv": 31.92,
+            "industry": "Index/ETF",
+            "sector": "n/a",
+            "highlights": "VCP Contraction, Strong Trend Alignment, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": false,
+                "l": true,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "is_speculative": true,
+            "is_minervini": true,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=GDX",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GDX&ty=c&ta=0&p=d&s=l"
+>>>>>>> 2100920 (Implement dual RMV slider, Minervini toggle, and fix Pulse charts)
         },
         {
             "rank": 6,
@@ -152,6 +206,37 @@
             "canslim": {
                 "c": false,
                 "a": false,
+<<<<<<< HEAD
+=======
+                "n": true,
+                "s": false,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 50,
+            "is_speculative": true,
+            "is_minervini": true,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=ASML",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ASML&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 6,
+            "ticker": "INTC",
+            "name": "Intel Corporation",
+            "rs": 94,
+            "rs_raw": 1.48,
+            "rs_1w_pct": 96,
+            "rs_1m_pct": 96,
+            "rmv": 41.19,
+            "industry": "Semiconductors",
+            "sector": "Technology",
+            "highlights": "VCP Contraction, Not Extended, Controlled Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+>>>>>>> 2100920 (Implement dual RMV slider, Minervini toggle, and fix Pulse charts)
                 "n": false,
                 "s": true,
                 "l": true,
@@ -160,8 +245,14 @@
             },
             "days_to_earnings": -1,
             "is_speculative": true,
+<<<<<<< HEAD
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=VTYX",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=VTYX&ty=c&ta=0&p=d&s=l"
+=======
+            "is_minervini": true,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=INTC",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=INTC&ty=c&ta=0&p=d&s=l"
+>>>>>>> 2100920 (Implement dual RMV slider, Minervini toggle, and fix Pulse charts)
         }
     ],
     "all_stocks": [
@@ -918,6 +1009,7 @@
             },
             "days_to_earnings": 70,
             "is_speculative": true,
+            "is_minervini": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=WDC",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=WDC&ty=c&ta=0&p=d&s=l"
         },
@@ -1226,6 +1318,7 @@
             },
             "days_to_earnings": 21,
             "is_speculative": true,
+            "is_minervini": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=MU",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MU&ty=c&ta=0&p=d&s=l"
         },
@@ -1842,6 +1935,7 @@
             },
             "days_to_earnings": 69,
             "is_speculative": true,
+            "is_minervini": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=STX",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=STX&ty=c&ta=0&p=d&s=l"
         },
@@ -3102,6 +3196,7 @@
             },
             "days_to_earnings": 56,
             "is_speculative": true,
+            "is_minervini": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=LRCX",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=LRCX&ty=c&ta=0&p=d&s=l"
         },
@@ -3886,6 +3981,7 @@
             },
             "days_to_earnings": 1,
             "is_speculative": true,
+            "is_minervini": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=WBD",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=WBD&ty=c&ta=0&p=d&s=l"
         },
@@ -4278,8 +4374,14 @@
             },
             "days_to_earnings": -1,
             "is_speculative": true,
+<<<<<<< HEAD
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=SCCO",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SCCO&ty=c&ta=0&p=d&s=l"
+=======
+            "is_minervini": true,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=AMAT",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AMAT&ty=c&ta=0&p=d&s=l"
+>>>>>>> 2100920 (Implement dual RMV slider, Minervini toggle, and fix Pulse charts)
         },
         {
             "rank": 148,
@@ -4474,8 +4576,14 @@
             },
             "days_to_earnings": -1,
             "is_speculative": true,
+<<<<<<< HEAD
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=NBR",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=NBR&ty=c&ta=0&p=d&s=l"
+=======
+            "is_minervini": true,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=ASML",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ASML&ty=c&ta=0&p=d&s=l"
+>>>>>>> 2100920 (Implement dual RMV slider, Minervini toggle, and fix Pulse charts)
         },
         {
             "rank": 155,
@@ -4726,8 +4834,14 @@
             },
             "days_to_earnings": -1,
             "is_speculative": true,
+<<<<<<< HEAD
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=AMLX",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AMLX&ty=c&ta=0&p=d&s=l"
+=======
+            "is_minervini": true,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=INTC",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=INTC&ty=c&ta=0&p=d&s=l"
+>>>>>>> 2100920 (Implement dual RMV slider, Minervini toggle, and fix Pulse charts)
         },
         {
             "rank": 164,
@@ -4754,8 +4868,14 @@
             },
             "days_to_earnings": -1,
             "is_speculative": true,
+<<<<<<< HEAD
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=FEIM",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FEIM&ty=c&ta=0&p=d&s=l"
+=======
+            "is_minervini": true,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=KLAC",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=KLAC&ty=c&ta=0&p=d&s=l"
+>>>>>>> 2100920 (Implement dual RMV slider, Minervini toggle, and fix Pulse charts)
         },
         {
             "rank": 165,
@@ -6378,8 +6498,14 @@
             },
             "days_to_earnings": -1,
             "is_speculative": true,
+<<<<<<< HEAD
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=MTSI",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MTSI&ty=c&ta=0&p=d&s=l"
+=======
+            "is_minervini": true,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=MPWR",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MPWR&ty=c&ta=0&p=d&s=l"
+>>>>>>> 2100920 (Implement dual RMV slider, Minervini toggle, and fix Pulse charts)
         },
         {
             "rank": 223,
@@ -6462,6 +6588,7 @@
             },
             "days_to_earnings": -1,
             "is_speculative": true,
+<<<<<<< HEAD
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=WF",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=WF&ty=c&ta=0&p=d&s=l"
         },
@@ -6478,6 +6605,54 @@
             "industry": "Engineering & Construction",
             "sector": "Industrials",
             "highlights": "Strong Trend Alignment, Controlled Volatility",
+=======
+            "is_minervini": true,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=ADI",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ADI&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 12,
+            "ticker": "GOOGL",
+            "name": "Alphabet Inc.",
+            "rs": 89,
+            "rs_raw": 1.32,
+            "rs_1w_pct": 91,
+            "rs_1m_pct": 92,
+            "rmv": 22.33,
+            "price": 314.98,
+            "industry": "Internet Content & Information",
+            "sector": "Communication Services",
+            "highlights": "Not Extended, Ultra Low Volatility",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": true,
+                "l": false,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": 58,
+            "is_speculative": true,
+            "is_minervini": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=GOOGL",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GOOGL&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 13,
+            "ticker": "GOOG",
+            "name": "Alphabet Inc.",
+            "rs": 88,
+            "rs_raw": 1.31,
+            "rs_1w_pct": 91,
+            "rs_1m_pct": 91,
+            "rmv": 21.89,
+            "price": 314.9,
+            "industry": "Internet Content & Information",
+            "sector": "Communication Services",
+            "highlights": "Not Extended, Ultra Low Volatility",
+>>>>>>> 2100920 (Implement dual RMV slider, Minervini toggle, and fix Pulse charts)
             "source": "AI Scanner",
             "canslim": {
                 "c": false,
@@ -6490,8 +6665,14 @@
             },
             "days_to_earnings": -1,
             "is_speculative": true,
+<<<<<<< HEAD
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=PRIM",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PRIM&ty=c&ta=0&p=d&s=l"
+=======
+            "is_minervini": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=GOOG",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GOOG&ty=c&ta=0&p=d&s=l"
+>>>>>>> 2100920 (Implement dual RMV slider, Minervini toggle, and fix Pulse charts)
         },
         {
             "rank": 227,
@@ -7078,8 +7259,14 @@
             },
             "days_to_earnings": -1,
             "is_speculative": true,
+<<<<<<< HEAD
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=IE",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=IE&ty=c&ta=0&p=d&s=l"
+=======
+            "is_minervini": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=INSM",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=INSM&ty=c&ta=0&p=d&s=l"
+>>>>>>> 2100920 (Implement dual RMV slider, Minervini toggle, and fix Pulse charts)
         },
         {
             "rank": 248,
@@ -10074,8 +10261,14 @@
             },
             "days_to_earnings": -1,
             "is_speculative": true,
+<<<<<<< HEAD
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=INSW",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=INSW&ty=c&ta=0&p=d&s=l"
+=======
+            "is_minervini": true,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=BKR",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=BKR&ty=c&ta=0&p=d&s=l"
+>>>>>>> 2100920 (Implement dual RMV slider, Minervini toggle, and fix Pulse charts)
         },
         {
             "rank": 355,
@@ -10998,6 +11191,7 @@
             },
             "days_to_earnings": -1,
             "is_speculative": true,
+<<<<<<< HEAD
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=AMRX",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AMRX&ty=c&ta=0&p=d&s=l"
         },
@@ -12960,6 +13154,11 @@
             "is_speculative": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=NVST",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=NVST&ty=c&ta=0&p=d&s=l"
+=======
+            "is_minervini": true,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=MCHP",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MCHP&ty=c&ta=0&p=d&s=l"
+>>>>>>> 2100920 (Implement dual RMV slider, Minervini toggle, and fix Pulse charts)
         }
     ],
     "tips": [
@@ -13018,6 +13217,7 @@
             },
             "days_to_earnings": 0,
             "is_speculative": true,
+            "is_minervini": true,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=NVDA",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=NVDA&ty=c&ta=0&p=d&s=l"
         },
@@ -13047,8 +13247,14 @@
             },
             "days_to_earnings": -1,
             "is_speculative": true,
+<<<<<<< HEAD
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=ANET",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ANET&ty=c&ta=0&p=d&s=l"
+=======
+            "is_minervini": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=TSLA",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TSLA&ty=c&ta=0&p=d&s=l"
+>>>>>>> 2100920 (Implement dual RMV slider, Minervini toggle, and fix Pulse charts)
         },
         {
             "rank": "TIP",
@@ -13076,6 +13282,7 @@
             },
             "days_to_earnings": 64,
             "is_speculative": true,
+            "is_minervini": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=AAPL",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AAPL&ty=c&ta=0&p=d&s=l"
         },
@@ -13163,6 +13370,7 @@
             },
             "days_to_earnings": 70,
             "is_speculative": true,
+            "is_minervini": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=ARM",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ARM&ty=c&ta=0&p=d&s=l"
         },
@@ -13221,6 +13429,7 @@
             },
             "days_to_earnings": 63,
             "is_speculative": true,
+            "is_minervini": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=MSFT",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MSFT&ty=c&ta=0&p=d&s=l"
         },
@@ -13250,6 +13459,7 @@
             },
             "days_to_earnings": 69,
             "is_speculative": true,
+            "is_minervini": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=SMCI",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SMCI&ty=c&ta=0&p=d&s=l"
         }

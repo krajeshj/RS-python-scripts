@@ -1,4 +1,5 @@
 Rank,Industry,Sector,Relative Strength,Percentile,1 Month Ago,3 Months Ago,6 Months Ago,Tickers
+<<<<<<< HEAD
 1,Silver,Basic Materials,2.68,78,68,63,58,"AG,SVM,EXK"
 2,Advertising Agencies,Communication Services,6.67,78,69,67,54,"QMMM,OMC,ZD,APP,TC,WPP,CRTO,TTD"
 3,Drug Manufacturers - Specialty & Generic,Healthcare,2.66,77,69,66,66,"RGC,BIOA,AMLX,INDV,PAHC,TEVA,VTRS,ELAN,KNSA,AMRX,HROW,TAK,SUPN,COLL,LNTH,ETON,ALKS,ASRT,ANIP,RDY,HCM,AMPH,PBH,NBIX,PCRX,ZTS,PRGO,HIMS"
@@ -142,3 +143,24 @@ Rank,Industry,Sector,Relative Strength,Percentile,1 Month Ago,3 Months Ago,6 Mon
 141,Gambling,Consumer Cyclical,0.72,1,2,6,51,"RSI,CHDN,DKNG,FLUT"
 142,Insurance Brokers,Financial Services,0.65,0,0,2,0,"WTW,MRSH,AON,ERIE,AJG,BRO,KG,TWFG,CRVL,GSHD,BWIN"
 143,Staffing & Employment Services,Industrials,0.7,0,3,0,2,"KELYB,KFY,BBSI,KFRC,MAN,RHI,TNET,NSP"
+=======
+1,Computer Hardware,Technology,2.17,94,85,85,89,"WDC,STX,SMCI"
+2,Semiconductor Equipment & Materials,Technology,1.73,89,80,73,50,"LRCX,AMAT,ASML,KLAC"
+3,Entertainment,Communication Services,1.28,83,74,80,72,"WBD,NFLX"
+4,Semiconductors,Technology,1.26,78,69,61,61,"MU,INTC,MPWR,ADI,MCHP,AMD,TXN,AVGO,NVDA,NXPI,MRVL,ARM,QCOM"
+5,Internet Content & Information,Communication Services,1.18,72,63,67,72,"GOOGL,GOOG,META"
+6,Drug Manufacturers - General,Healthcare,1.15,67,51,61,28,"GILD,AMGN"
+7,Index/ETF,n/a,1.08,61,51,49,44,"SLV,GDX,TAN,SOXX,GLD,SLX,SMH,XAR,XBI,XLE,XLB,XLI,FFTY,KRE,IBB,IEO,IWM,KBE,XHB,MDY,IWO,TQQQ,RSP,USO,XLU,GXC,XLK,^SPX,^IXIC,QQQ,^NDX,QQQE,XLY,HYG,XLF,^VIX,IBUY,FDN,SKYY,IGV,BTC-USD"
+8,Beverages - Non-Alcoholic,Consumer Defensive,1.05,55,34,38,16,"MNST,CCEP,PEP,KDP"
+9,Biotechnology,Healthcare,1.05,55,58,73,84,"INSM,REGN,VRTX,ALNY"
+10,Discount Stores,Consumer Defensive,1.03,49,39,33,16,"WMT,COST"
+11,Utilities - Regulated Electric,Utilities,1.02,44,28,55,39,"AEP,XEL,EXC"
+12,Medical Devices,Healthcare,0.97,38,22,11,5,"GEHC,DXCM"
+13,Electronic Gaming & Multimedia,Communication Services,0.94,33,45,61,56,"EA,TTWO"
+14,Telecom Services,Communication Services,0.88,27,0,0,0,"CMCSA,TMUS,CHTR"
+15,Travel Services,Consumer Cyclical,0.83,22,22,16,33,"ABNB,BKNG"
+16,Internet Retail,Consumer Cyclical,0.81,16,16,27,67,"AMZN,MELI,PDD,DASH"
+17,Software - Infrastructure,Technology,0.76,11,16,44,78,"PLTR,SNPS,FTNT,MSFT,CRWD,PANW,ZS"
+18,Specialty Business Services,Industrials,0.75,5,11,5,11,"GPN,CTAS,CPRT,TRI"
+19,Software - Application,Technology,0.64,0,5,22,22,"SHOP,CDNS,DDOG,ADSK,ADP,PAYX,ADBE,ROP,INTU,WDAY,MSTR,TEAM"
+>>>>>>> 2100920 (Implement dual RMV slider, Minervini toggle, and fix Pulse charts)

@@ -383,6 +383,7 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
             "canslim": s.get(TITLE_CANSLIM, {}),
             "days_to_earnings": int(s.get(TITLE_DTE, -1)),
             "is_speculative": bool(s.get("is_speculative", False)),
+            "is_minervini": bool(s.get(TITLE_MINERVINI, 0) >= 8),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
             "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s.get(TITLE_TICKER, 'SPY')}&ty=c&ta=0&p=d&s=l"
         })
@@ -412,6 +413,7 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
             "canslim": s.get(TITLE_CANSLIM, {}),
             "days_to_earnings": int(s.get(TITLE_DTE, -1)),
             "is_speculative": bool(s.get("is_speculative", False)),
+            "is_minervini": bool(s.get(TITLE_MINERVINI, 0) >= 8),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
             "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s.get(TITLE_TICKER, 'SPY')}&ty=c&ta=0&p=d&s=l"
         })
@@ -438,6 +440,7 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
             "canslim": s.get(TITLE_CANSLIM, {}),
             "days_to_earnings": int(s.get(TITLE_DTE, -1)),
             "is_speculative": bool(s.get("is_speculative", False)),
+            "is_minervini": bool(s.get(TITLE_MINERVINI, 0) >= 8),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
             "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s.get(TITLE_TICKER, 'SPY')}&ty=c&ta=0&p=d&s=l"
         })
