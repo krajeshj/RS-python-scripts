@@ -336,7 +336,7 @@ def _get_highlights(row):
         highlights.append("High Relative Strength")
     return ", ".join(highlights)
 
-def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
+def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None, industries_dict=None):
     """Exports top 6 stocks and top 6 industries to web_data.json or quick_web_data.json"""
     # Select top 6 stocks: priority High-Win, then Flip, then RS
     top_stocks = []
@@ -384,13 +384,14 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
             "days_to_earnings": int(s.get(TITLE_DTE, -1)),
             "is_speculative": bool(s.get("is_speculative", False)),
             "is_minervini": bool(s.get(TITLE_MINERVINI, 0) >= 8),
+            "flip": bool(s.get(TITLE_FLIP, False)),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
             "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s.get(TITLE_TICKER, 'SPY')}&ty=c&ta=0&p=d&s=l"
         })
 
-    # Export all AI-screened stocks with RS >= 70 for client-side slider filtering
+    # Export all AI-screened stocks with RS >= 50 for client-side slider filtering
     filterable = df_stocks[
-        (df_stocks[TITLE_PERCENTILE] >= 70) & 
+        (df_stocks[TITLE_PERCENTILE] >= 50) & 
         (df_stocks[TITLE_SOURCE] == "AI Scanner") &
         (df_stocks[TITLE_UNIVERSE] != "Market Pulse")
     ].sort_values(TITLE_RS, ascending=False)
@@ -414,6 +415,7 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
             "days_to_earnings": int(s.get(TITLE_DTE, -1)),
             "is_speculative": bool(s.get("is_speculative", False)),
             "is_minervini": bool(s.get(TITLE_MINERVINI, 0) >= 8),
+            "flip": bool(s.get(TITLE_FLIP, False)),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
             "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s.get(TITLE_TICKER, 'SPY')}&ty=c&ta=0&p=d&s=l"
         })
@@ -441,6 +443,7 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
             "days_to_earnings": int(s.get(TITLE_DTE, -1)),
             "is_speculative": bool(s.get("is_speculative", False)),
             "is_minervini": bool(s.get(TITLE_MINERVINI, 0) >= 8),
+            "flip": bool(s.get(TITLE_FLIP, False)),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
             "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s.get(TITLE_TICKER, 'SPY')}&ty=c&ta=0&p=d&s=l"
         })
@@ -449,12 +452,23 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
     top_6_ind = df_industries.head(6)
     formatted_industries = []
     for i, (_, row) in enumerate(top_6_ind.iterrows()):
+        industry_name = row[TITLE_INDUSTRY]
+        raw_tickers = row[TITLE_TICKERS].split(',')[:5]
+        
+        # Look up names from industries_dict if available
+        refined_tickers = []
+        for t in raw_tickers:
+            name = t
+            if industries_dict and industry_name in industries_dict:
+                name = industries_dict[industry_name].get("stock_names", {}).get(t, t)
+            refined_tickers.append({"t": t, "n": name})
+
         formatted_industries.append({
             "rank": i + 1,
-            "industry": row[TITLE_INDUSTRY],
+            "industry": industry_name,
             "sector": row[TITLE_SECTOR],
             "rs": round(row[TITLE_RS], 2),
-            "tickers": row[TITLE_TICKERS].split(',')[:5] # Show top 5 tickers
+            "tickers": refined_tickers
         })
 
     # Format Market Pulse Section
@@ -514,7 +528,7 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None):
             
             # Sort tickers by RS for display
             sorted_t = sorted(counts["tickers"], key=lambda x: x["rs"], reverse=True)
-            ticker_list = [x["t"] for x in sorted_t]
+            ticker_list = [{"t": x["t"], "n": x["name"]} for x in sorted_t]
             
             formatted_stages.append({
                 "sector": s,
@@ -585,8 +599,8 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
         ptc = _compute_ptc(latest_daily, latest_weekly)
 
         flip_setup = (
-            ptc == 5 and
-            (abs(latest_daily["Close"] - latest_daily["ma50"]) / latest_daily["ma50"] < 0.02) and
+            ptc >= 5 and
+            (abs(latest_daily["Close"] - latest_daily["ma50"]) / latest_daily["ma50"] < 0.05) and
             (tdf["atr14"].iloc[-1] < tdf["atr14"].iloc[-6]) and
             (latest_daily["Volume"] < latest_daily["vol20"])
         )
@@ -634,20 +648,21 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
         status, trend_comment = _get_trend_commentary(tdf)
         stage = _get_standard_stage(tdf)
 
-        # Quality filter: is_speculative if ANY fundamental check fails
+        # Quality filter: is_speculative if essential fundamental checks fail.
+        # We lean towards speculative if critical data is missing (except D/E which defaults to safe).
         price = float(latest_daily["Close"])
-        speculative = not all([
-            meta.get("trailing_eps", 0) > 0,          # EPS > 0
-            meta.get("operating_margin", 0) > 0,      # Operating margin > 0
-            meta.get("roe", 0) > 0.05,                # ROE > 5%
-            meta.get("debt_to_equity", 999) < 200,     # D/E < 200%
-            meta.get("current_ratio", 0) > 1.0,        # Current ratio > 1.0
-            meta.get("free_cash_flow", 0) > 0,         # FCF > 0
-            meta.get("marketCap", 0) > 300_000_000,    # Market cap > $300M
-            price > 5,                                  # Price > $5
-            avg_vol > 100_000,                          # Avg volume > 100K
-            meta.get("ps_ratio", 0) < 20 or meta.get("ps_ratio", 0) == 0,  # P/S < 20 (0 = no data)
-        ])
+        market_cap = meta.get("marketCap", 0)
+        
+        # Consolidation of fundamental logic
+        fundamental_checks = [
+            meta.get("trailing_eps", 0) > 0 or meta.get("forward_eps", 0) > 0, # Positive earnings (curr or fwd)
+            price > 5,                                                         # Price > $5
+            meta.get("avg_volume", 0) > 100_000,                               # Avg volume > 100K
+            market_cap > 50_000_000,                                           # Market cap > $50M (relaxed from 100M)
+            meta.get("debt_to_equity", 0) < 500,                               # D/E < 500% (relaxed from 300%)
+            meta.get("operating_margin", 0) > -0.8                             # Operating margin not catastrophic
+        ]
+        speculative = not all(fundamental_checks)
 
         return (
             ticker, minervini_stage2, sector, industry, universe,
@@ -732,7 +747,7 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
             sector_stages[sector] = {"s1": 0, "s2": 0, "s3": 0, "s4": 0, "total": 0, "tickers": []}
         sector_stages[sector][f"s{stage}"] += 1
         sector_stages[sector]["total"] += 1
-        sector_stages[sector]["tickers"].append({"t": ticker, "rs": rs})
+        sector_stages[sector]["tickers"].append({"t": ticker, "rs": rs, "name": name})
         
         if (industry == "n/a" or not industry):
             if universe == "Market Pulse":
@@ -752,13 +767,14 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
         if industry not in industries:
             industries[industry] = {
                 "info": (0, industry, sector, 0, 99, 1, 3, 6),
-                TITLE_RS: [], TITLE_1M: [], TITLE_3M: [], TITLE_6M: [], TITLE_TICKERS: []
+                TITLE_RS: [], TITLE_1M: [], TITLE_3M: [], TITLE_6M: [], TITLE_TICKERS: [], "stock_names": {}
             }
         industries[industry][TITLE_RS].append(rs)
         industries[industry][TITLE_1M].append(rs1m)
         industries[industry][TITLE_3M].append(rs3m)
         industries[industry][TITLE_6M].append(rs6m)
         industries[industry][TITLE_TICKERS].append(ticker)
+        industries[industry]["stock_names"][ticker] = name
 
     dfs = []
     suffix = ''
@@ -871,7 +887,7 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
         return ",".join(sorted(industries_dict[industry_name][TITLE_TICKERS], key=rs_for_stock, reverse=True))
 
     # Web Dashboard Export (always run before potential early return)
-    _export_web_data(df, pd.DataFrame(columns=[TITLE_INDUSTRY, TITLE_SECTOR, TITLE_RS, TITLE_TICKERS]))
+    _export_web_data(df, pd.DataFrame(columns=[TITLE_INDUSTRY, TITLE_SECTOR, TITLE_RS, TITLE_TICKERS]), industries_dict=industries)
 
     # remove industries with only one stock
     filtered_industries = filter(lambda i: len(i[TITLE_TICKERS]) > 1, list(industries.values()))
@@ -903,7 +919,7 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
     df_industries.to_csv(os.path.join(DIR, "output", f'rs_industries{suffix}.csv'), index=False)
 
     # Final Web Dashboard Export (refreshed with industries if they exist)
-    _export_web_data(df, df_industries, quick=quick, sector_stages=sector_stages)
+    _export_web_data(df, df_industries, quick=quick, sector_stages=sector_stages, industries_dict=industries)
 
     return [df, df_industries]
 

@@ -448,8 +448,11 @@
                     <td>
                         <div class="sector-name">${s.sector}</div>
                         <div class="count">${s.count} Stocks</div>
-                        <div class="tickers-list" title="${s.tickers.join(', ')}">
-                            ${s.count} stocks: ${s.tickers.join(', ')}
+                        <div id="tickers-${s.sector.replace(/\s+/g, '-')}" class="tickers-list">
+                            ${s.tickers.map(stock => `
+                                <span style="color: var(--cyan); font-weight:700;">${stock.t}</span>
+                                <span style="color: var(--text2); margin-right: 8px;">(${stock.name})</span>
+                            `).join('')}
                         </div>
                     </td>
                     <td class="dist-cell">

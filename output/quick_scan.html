@@ -251,6 +251,41 @@
             }
         }
 
+        .rs-range-fill {
+            position: absolute;
+            height: 6px;
+            background: linear-gradient(90deg, var(--accent), var(--cyan));
+            border-radius: 3px;
+            top: 6px;
+        }
+
+        .card-delete {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 82, 82, 0.15);
+            border: 1px solid rgba(255, 82, 82, 0.3);
+            color: var(--red);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            opacity: 1;
+            /* Always visible */
+            transition: all 0.2s;
+            z-index: 2;
+        }
+
+        .card-delete:hover {
+            background: rgba(255, 82, 82, 0.3);
+            transform: scale(1.1);
+            border-color: var(--red);
+        }
+
         .slider-group {
             display: flex;
             flex-direction: column;
@@ -410,6 +445,33 @@
             font-size: 0.7rem;
             font-weight: 700;
             border: 1px solid rgba(255, 145, 0, 0.2);
+        }
+
+        .flip-badge {
+            background: rgba(255, 215, 0, 0.15);
+            color: #FFD700;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            animation: glow 2s infinite;
+        }
+
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            }
+
+            100% {
+                box-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+            }
         }
 
         .source-badge {
@@ -578,20 +640,35 @@
 
         .ticker-row {
             display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 4px;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .ticker-tag-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--surface);
+            padding: 4px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
         }
 
         .ticker-tag {
-            background: var(--surface);
-            color: var(--text);
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 600;
+            color: var(--cyan);
+            font-size: 0.8rem;
+            font-weight: 800;
             font-family: var(--mono);
-            border: 1px solid var(--border);
+            min-width: 45px;
+        }
+
+        .ticker-tag-name {
+            font-size: 0.75rem;
+            color: var(--text2);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .loading {
@@ -659,36 +736,6 @@
             background: var(--green);
             box-shadow: 0 0 8px rgba(0, 230, 118, 0.5);
         }
-
-        /* Delete button on card */
-        .card-delete {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255, 82, 82, 0.1);
-            border: 1px solid rgba(255, 82, 82, 0.2);
-            color: var(--red);
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 0.75rem;
-            opacity: 0;
-            transition: all 0.2s;
-            z-index: 2;
-        }
-
-        .card:hover .card-delete {
-            opacity: 1;
-        }
-
-        .card-delete:hover {
-            background: rgba(255, 82, 82, 0.25);
-            transform: scale(1.1);
-        }
     </style>
 </head>
 
@@ -709,8 +756,14 @@
 
         <div class="dashboard-tools" style="padding-bottom: 1.5rem;">
             <div class="slider-group">
-                <label>RS Percentile ≥ <span id="rs-val" class="slider-val">75</span></label>
-                <input type="range" id="rs-slider" min="70" max="99" value="75" class="range-slider">
+                <label>RS Range: <span id="rs-min-val" class="slider-val">75</span> - <span id="rs-max-val"
+                        class="slider-val">100</span></label>
+                <div class="dual-range-container">
+                    <div class="dual-range-bg"></div>
+                    <div id="rs-fill" class="rs-range-fill" style="left: 50%; right: 0%;"></div>
+                    <input type="range" id="rs-min-slider" min="50" max="100" value="75" class="dual-range">
+                    <input type="range" id="rs-max-slider" min="50" max="100" value="100" class="dual-range">
+                </div>
             </div>
             <div class="slider-group">
                 <label>RMV Range: <span id="rmv-min-val" class="slider-val">10</span> - <span id="rmv-max-val"
@@ -768,7 +821,9 @@
     </footer>
 
     <script>
-        let rsPercentile = 75;
+        let allData = null;
+        let minRS = 75;
+        let maxRS = 100;
         let minRMV = 10;
         let maxRMV = 45;
         let qualityOn = true;
@@ -792,6 +847,14 @@
             document.getElementById('minervini-btn').classList.toggle('active', minerviniOn);
             render();
         }
+        function updateRSFill() {
+            const fill = document.getElementById('rs-fill');
+            const left = (minRS - 50) * 2;
+            const right = 100 - ((maxRS - 50) * 2);
+            fill.style.left = left + '%';
+            fill.style.right = right + '%';
+        }
+
         function updateRangeFill() {
             const fill = document.getElementById('rmv-fill');
             fill.style.left = minRMV + '%';
@@ -807,10 +870,23 @@
                 const lastUpdated = new Date(allData.last_updated + " UTC");
                 document.getElementById('last-updated').textContent = `Live Scan Sync: ${lastUpdated.toLocaleString()}`;
 
-                // RS Slider
-                document.getElementById('rs-slider').addEventListener('input', (e) => {
-                    rsPercentile = parseInt(e.target.value);
-                    document.getElementById('rs-val').textContent = rsPercentile;
+                // RS Dual Sliders
+                const minRS_S = document.getElementById('rs-min-slider');
+                const maxRS_S = document.getElementById('rs-max-slider');
+
+                minRS_S.addEventListener('input', (e) => {
+                    minRS = Math.min(parseInt(e.target.value), maxRS - 1);
+                    e.target.value = minRS;
+                    document.getElementById('rs-min-val').textContent = minRS;
+                    updateRSFill();
+                    render();
+                });
+
+                maxRS_S.addEventListener('input', (e) => {
+                    maxRS = Math.max(parseInt(e.target.value), minRS + 1);
+                    e.target.value = maxRS;
+                    document.getElementById('rs-max-val').textContent = maxRS;
+                    updateRSFill();
                     render();
                 });
 
@@ -866,17 +942,19 @@
                                 <a href="${s.tradingview_url}" target="_blank" class="ticker">${s.ticker}</a>
                                 <div class="company-name">${s.name}</div>
                             </div>
-                            <div class="rs-pct-badge">RS 1M: ${s.rs_1m_pct}%</div>
+                            <div class="rs-pct-badge" style="color: var(--cyan)">1W: ${s.rs_1w_pct || 'N/A'}%</div>
+                            <div class="rs-pct-badge" style="color: var(--orange)">1M: ${s.rs_1m_pct || 'N/A'}%</div>
                             ${createCanslimTray(s.canslim)}
                         </div>
                         <div class="stats-top">
                             <div class="rank-badge">RANK #${s.rank}</div>
+                            ${s.flip ? `<div class="flip-badge">⚡ PRIME FLIP</div>` : ''}
                             <div class="source-badge">${s.source}</div>
                         </div>
                     </div>
                     
                     ${earningsBadge}
-
+    
                     <a href="${s.tradingview_url}" target="_blank" class="chart-link">
                         <img src="${s.finviz_chart_url}&t=${Date.now()}" class="chart-img" loading="lazy" alt="${s.ticker}">
                         <div class="chart-overlay">
@@ -911,12 +989,12 @@
 
             // Render Stocks
             const stocksGrid = document.getElementById('stocks-grid');
-            const stocksFiltered = allData.stocks.filter(s =>
+            const stocksFiltered = (allData.stocks || []).filter(s =>
                 !hidden.includes(s.ticker) &&
                 !(qualityOn && s.is_speculative) &&
                 !(minerviniOn && !s.is_minervini) &&
-                s.rs >= rsPercentile &&
-                s.rmv >= minRMV && s.rmv <= maxRMV
+                (s.rs >= minRS && s.rs <= maxRS) &&
+                (s.rmv >= minRMV && s.rmv <= maxRMV)
             );
             stocksGrid.innerHTML = stocksFiltered.map((s, i) => renderStock(s, i)).join('');
 
@@ -927,8 +1005,8 @@
                 !hidden.includes(s.ticker) &&
                 !(qualityOn && s.is_speculative) &&
                 !(minerviniOn && !s.is_minervini) &&
-                s.rs >= rsPercentile &&
-                s.rmv >= minRMV && s.rmv <= maxRMV
+                (s.rs >= minRS && s.rs <= maxRS) &&
+                (s.rmv >= minRMV && s.rmv <= maxRMV)
             );
             if (tipsFiltered.length > 0) {
                 tipsSection.classList.remove('hidden');
@@ -953,7 +1031,12 @@
                     </div>
                     <div class="meta-info">${ind.sector}</div>
                     <div class="ticker-row">
-                        ${ind.tickers.map(t => `<span class="ticker-tag">${t}</span>`).join('')}
+                        ${ind.tickers.map(stock => `
+                            <div class="ticker-tag-group">
+                                <span class="ticker-tag">${stock.t}</span>
+                                <span class="ticker-tag-name">${stock.n}</span>
+                            </div>
+                        `).join('')}
                     </div>
                 </div>
             `).join('');

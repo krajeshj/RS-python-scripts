@@ -258,6 +258,42 @@
             z-index: 2;
         }
 
+        .rs-range-fill {
+            position: absolute;
+            height: 6px;
+            background: linear-gradient(90deg, var(--accent), var(--cyan));
+            border-radius: 3px;
+            top: 6px;
+        }
+
+        .card-delete {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 82, 82, 0.15);
+            border: 1px solid rgba(255, 82, 82, 0.3);
+            color: var(--red);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            opacity: 1;
+            /* Always visible */
+            transition: all 0.2s;
+            z-index: 2;
+        }
+
+        .card-delete:hover {
+            background: rgba(255, 82, 82, 0.3);
+            transform: scale(1.1);
+            border-color: var(--red);
+        }
+
+
         .dual-range-bg {
             position: absolute;
             height: 6px;
@@ -315,35 +351,6 @@
             box-shadow: 0 0 8px rgba(0, 230, 118, 0.5);
         }
 
-        /* Delete button on card */
-        .card-delete {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255, 82, 82, 0.1);
-            border: 1px solid rgba(255, 82, 82, 0.2);
-            color: var(--red);
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 0.75rem;
-            opacity: 0;
-            transition: all 0.2s;
-            z-index: 2;
-        }
-
-        .card:hover .card-delete {
-            opacity: 1;
-        }
-
-        .card-delete:hover {
-            background: rgba(255, 82, 82, 0.25);
-            transform: scale(1.1);
-        }
 
 
         .section-header {
@@ -472,6 +479,33 @@
             font-size: 0.7rem;
             font-weight: 700;
             border: 1px solid rgba(108, 92, 231, 0.2);
+        }
+
+        .flip-badge {
+            background: rgba(255, 215, 0, 0.15);
+            color: #FFD700;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            animation: glow 2s infinite;
+        }
+
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            }
+
+            100% {
+                box-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+            }
         }
 
         .source-badge {
@@ -642,20 +676,35 @@
 
         .ticker-row {
             display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 4px;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .ticker-tag-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--surface);
+            padding: 4px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
         }
 
         .ticker-tag {
-            background: var(--surface);
-            color: var(--text);
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 600;
+            color: var(--cyan);
+            font-size: 0.8rem;
+            font-weight: 800;
             font-family: var(--mono);
-            border: 1px solid var(--border);
+            min-width: 45px;
+        }
+
+        .ticker-tag-name {
+            font-size: 0.75rem;
+            color: var(--text2);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .loading {
@@ -763,8 +812,14 @@
 
         <div class="dashboard-tools">
             <div class="slider-group">
-                <label>RS Percentile ≥ <span id="rs-val" class="slider-val">75</span></label>
-                <input type="range" id="rs-slider" min="70" max="99" value="75" class="range-slider">
+                <label>RS Range: <span id="rs-min-val" class="slider-val">75</span> - <span id="rs-max-val"
+                        class="slider-val">100</span></label>
+                <div class="dual-range-container">
+                    <div class="dual-range-bg"></div>
+                    <div id="rs-fill" class="rs-range-fill" style="left: 50%; right: 0%;"></div>
+                    <input type="range" id="rs-min-slider" min="50" max="100" value="75" class="dual-range">
+                    <input type="range" id="rs-max-slider" min="50" max="100" value="100" class="dual-range">
+                </div>
             </div>
             <div class="slider-group">
                 <label>RMV Range: <span id="rmv-min-val" class="slider-val">10</span> - <span id="rmv-max-val"
@@ -810,7 +865,8 @@
 
     <script>
         let allData = null;
-        let rsPercentile = 75;
+        let minRS = 75;
+        let maxRS = 100;
         let minRMV = 10;
         let maxRMV = 45;
         let qualityOn = true;
@@ -824,10 +880,23 @@
                 const lastUpdated = new Date(allData.last_updated);
                 document.getElementById('last-updated').textContent = `Sync: ${lastUpdated.toLocaleString()}`;
 
-                // RS Slider
-                document.getElementById('rs-slider').addEventListener('input', (e) => {
-                    rsPercentile = parseInt(e.target.value);
-                    document.getElementById('rs-val').textContent = rsPercentile;
+                // RS Dual Sliders
+                const minRS_S = document.getElementById('rs-min-slider');
+                const maxRS_S = document.getElementById('rs-max-slider');
+
+                minRS_S.addEventListener('input', (e) => {
+                    minRS = Math.min(parseInt(e.target.value), maxRS - 1);
+                    e.target.value = minRS;
+                    document.getElementById('rs-min-val').textContent = minRS;
+                    updateRSFill();
+                    render();
+                });
+
+                maxRS_S.addEventListener('input', (e) => {
+                    maxRS = Math.max(parseInt(e.target.value), minRS + 1);
+                    e.target.value = maxRS;
+                    document.getElementById('rs-max-val').textContent = maxRS;
+                    updateRSFill();
                     render();
                 });
 
@@ -856,6 +925,15 @@
                 console.error(err);
                 document.getElementById('stocks-grid').innerHTML = '<div class="loading">Live data connection failed. Check rs_ranking.py outputs.</div>';
             }
+        }
+
+        function updateRSFill() {
+            const fill = document.getElementById('rs-fill');
+            // Scale 50-100 down to 0-100 for style
+            const left = (minRS - 50) * 2;
+            const right = 100 - ((maxRS - 50) * 2);
+            fill.style.left = left + '%';
+            fill.style.right = right + '%';
         }
 
         function updateRangeFill() {
@@ -918,6 +996,7 @@
                         </div>
                         <div class="stats-top">
                             <div class="rank-badge">RANK #${s.rank}</div>
+                            ${s.flip ? `<div class="flip-badge">⚡ PRIME FLIP</div>` : ''}
                             ${priceStr ? `<div class="source-badge">${priceStr}</div>` : ''}
                             <div class="source-badge">${s.source}</div>
                         </div>
@@ -959,7 +1038,8 @@
 
             const pool = allData.all_stocks || allData.stocks || [];
             const filtered = pool.filter(s => {
-                if (s.rs < rsPercentile) return false;
+                const rs = s.rs || 0;
+                if (rs < minRS || rs > maxRS) return false;
                 if (s.rmv < minRMV || s.rmv > maxRMV) return false;
                 if (hidden.includes(s.ticker)) return false;
                 if (qualityOn && s.is_speculative) return false;
@@ -974,9 +1054,9 @@
             } else {
                 stocksGrid.innerHTML = '<div class="loading">No stocks match current filters. Try lowering RS, raising RMV, or toggling Quality Filter off.</div>';
             }
-            const qLabel = qualityOn ? `, ${specCount} speculative hidden` : '';
+            const qLabel = qualityOn ? `, Quality Filter ON` : '';
             const mLabel = minerviniOn ? `, Minervini Only` : '';
-            document.getElementById('filter-count').textContent = `${filtered.length} of ${pool.length} candidates (RS≥${rsPercentile}, RMV:${minRMV}-${maxRMV}${qLabel}${mLabel})`;
+            document.getElementById('filter-count').textContent = `${filtered.length} of ${pool.length} candidates (RS:${minRS}-${maxRS}, RMV:${minRMV}-${maxRMV}${qLabel}${mLabel})`;
 
             // Render Industries
             const indGrid = document.getElementById('industries-grid');
@@ -994,7 +1074,12 @@
                     </div>
                     <div class="meta-info">${ind.sector}</div>
                     <div class="ticker-row">
-                        ${ind.tickers.map(t => `<span class="ticker-tag">${t}</span>`).join('')}
+                        ${ind.tickers.map(stock => `
+                            <div class="ticker-tag-group">
+                                <span class="ticker-tag">${stock.t}</span>
+                                <span class="ticker-tag-name">${stock.n}</span>
+                            </div>
+                        `).join('')}
                     </div>
                 </div>
             `).join('');
