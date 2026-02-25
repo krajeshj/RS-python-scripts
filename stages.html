@@ -327,6 +327,77 @@
             text-align: center;
             color: var(--text2);
         }
+
+        /* Tooltip Styles */
+        .info-trigger {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            font-size: 0.75rem;
+            cursor: help;
+            color: var(--cyan);
+            margin-left: 8px;
+            transition: all 0.2s;
+            vertical-align: middle;
+        }
+
+        .info-trigger:hover {
+            background: rgba(0, 229, 255, 0.1);
+            border-color: var(--cyan);
+            transform: scale(1.1);
+        }
+
+        .tooltip-content {
+            display: none;
+            position: absolute;
+            top: 40px;
+            left: 0;
+            width: 320px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--cyan);
+            border-radius: var(--radius-sm);
+            padding: 1.25rem;
+            z-index: 100;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+            font-size: 0.85rem;
+        }
+
+        .info-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .info-container:hover .tooltip-content {
+            display: block;
+        }
+
+        .tooltip-title {
+            color: var(--cyan);
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tooltip-line {
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        .tooltip-sub {
+            color: var(--text2);
+            font-size: 0.75rem;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border);
+        }
     </style>
 </head>
 
@@ -348,7 +419,27 @@
         </header>
 
         <section class="overview">
-            <h2 class="overview-title">Market Overview</h2>
+            <div class="info-container">
+                <h2 class="overview-title">Market Overview <span class="info-trigger">ⓘ</span></h2>
+                <div class="tooltip-content">
+                    <div class="tooltip-title">🔭 Stage Analysis Criteria</div>
+                    <div class="tooltip-line">Based on <b>Stan Weinstein's 4-Stage methodology</b>, categorizing price
+                        action relative to the <b>200-day SMA</b>:</div>
+                    <div class="tooltip-line">• <b>Stg 1 (Basing)</b>: Price below MA200, but MA200 is flattening or
+                        turning up.</div>
+                    <div class="tooltip-line">• <b>Stg 2 (Advancing)</b>: Price above MA200, and MA200 is sloping
+                        upward.</div>
+                    <div class="tooltip-line">• <b>Stg 3 (Topping)</b>: Price above MA200, but MA200 is flattening or
+                        turning down.</div>
+                    <div class="tooltip-line">• <b>Stg 4 (Declining)</b>: Price below MA200, and MA200 is sloping
+                        downward.</div>
+                    <div class="tooltip-sub">
+                        Universe includes liquid US equities (Price > $5, Vol > 100k).<br>
+                        <b>Exclusions:</b> Penny stocks, illiquid tickers, and highly volatile industries (Biotech,
+                        Junior Mining) are filtered to ensure institutional quality.
+                    </div>
+                </div>
+            </div>
             <div id="market-bar" class="dist-bar-large">
                 <!-- Fragments go here -->
             </div>
@@ -453,8 +544,12 @@
                         <div class="count">${s.count} Stocks</div>
                         <div id="tickers-${s.sector.replace(/\s+/g, '-')}" class="tickers-list">
                             ${s.tickers.map(stock => `
-                                <span style="color: var(--cyan); font-weight:700;">${stock.t}</span>
-                                <span style="color: var(--text2); margin-right: 8px;">(${stock.name})</span>
+                                <a href="https://www.tradingview.com/chart/?symbol=${stock.t}&interval=D&range=3M" 
+                                   target="_blank" 
+                                   style="color: var(--cyan); font-weight:700; text-decoration:none; margin-right: 8px;"
+                                   title="View 3-Month Chart">
+                                   ${stock.t}
+                                </a>
                             `).join('')}
                         </div>
                     </td>
