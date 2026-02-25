@@ -136,6 +136,20 @@
             .tip-card {
                 padding: 1rem;
             }
+
+            .input-group input {
+                font-size: 16px;
+                /* Prevent iPhone zoom */
+            }
+
+            #submit-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .management-section {
+                padding: 1.5rem;
+            }
         }
 
         .nav-link.active {
@@ -182,6 +196,51 @@
             .grid {
                 grid-template-columns: repeat(3, 1fr);
             }
+        }
+
+        .management-section {
+            margin-top: 4rem;
+            background: var(--glass);
+            backdrop-filter: blur(var(--glass-b));
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 2.5rem;
+        }
+
+        .management-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--cyan);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text2);
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--text);
+            font-family: var(--font);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--cyan);
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .card {
