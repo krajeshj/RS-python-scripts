@@ -118,6 +118,27 @@
             border-color: rgba(0, 229, 255, 0.2);
         }
 
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .nav-links {
+                gap: 0.5rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-link {
+                font-size: 0.85rem;
+                padding: 6px 12px;
+            }
+        }
+
         /* Market Overview Section */
         .overview {
             padding: 2rem;
@@ -154,6 +175,22 @@
         @media (min-width: 600px) {
             .legend {
                 grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .legend-item {
+                gap: 4px;
+            }
+
+            .legend-value {
+                font-size: 0.85rem;
+            }
+
+            .tooltip-content {
+                width: 280px;
+                left: -20px;
+                top: 35px;
             }
         }
 

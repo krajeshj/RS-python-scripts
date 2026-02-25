@@ -103,9 +103,31 @@
             border: 1px solid transparent;
         }
 
-        .nav-link:hover {
-            color: var(--text);
-            background: var(--surface);
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .nav-links {
+                gap: 0.5rem;
+            }
+
+            .nav-link {
+                font-size: 0.85rem;
+                padding: 6px 12px;
+            }
+
+            .metric-card {
+                padding: 1rem;
+            }
+
+            .market-status {
+                font-size: 1.25rem;
+            }
         }
 
         .nav-link.active {

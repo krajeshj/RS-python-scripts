@@ -17,21 +17,29 @@ This is a script that fetches data from Yahoo Finance, filters stocks, and ranks
 
 ## Installation
 
-1. Clone the repository:
-```bash
-git clone https://github.com/krajeshj/RS-python-scripts.git
-cd RS-python-scripts
-```
+### Windows Laptop
+1. **Install Python**: Download and install Python 3.11+ from [python.org](https://www.python.org/downloads/windows/). Ensure "Add Python to PATH" is checked during installation.
+2. **Clone & Setup**: Open PowerShell or Command Prompt:
+   ```powershell
+   git clone https://github.com/krajeshj/RS-python-scripts.git
+   cd RS-python-scripts
+   python -m venv venv
+   .\venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+3. **Verify**: Run `python check_python_version.py`
 
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-3. Check Python version compatibility:
-```bash
-python check_python_version.py
-```
+### Mac (Intel or Apple Silicon)
+1. **Install Python**: Use Homebrew (`brew install python@3.11`) or download from [python.org](https://www.python.org/downloads/macos/).
+2. **Clone & Setup**: Open Terminal:
+   ```bash
+   git clone https://github.com/krajeshj/RS-python-scripts.git
+   cd RS-python-scripts
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+   ```
+3. **Verify**: Run `python3 check_python_version.py`
 
 ## Configuration
 
