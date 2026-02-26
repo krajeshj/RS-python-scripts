@@ -448,8 +448,8 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None, 
             "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s.get(TITLE_TICKER, 'SPY')}&ty=c&ta=0&p=d&s=l"
         })
 
-    # Format top 6 industries
-    top_6_ind = df_industries.head(6)
+    # Format all industries
+    top_6_ind = df_industries
     formatted_industries = []
     for i, (_, row) in enumerate(top_6_ind.iterrows()):
         industry_name = row[TITLE_INDUSTRY]
@@ -467,7 +467,9 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None, 
             "rank": i + 1,
             "industry": industry_name,
             "sector": row[TITLE_SECTOR],
-            "rs": round(row[TITLE_RS], 2),
+            "rs": int(row.get(TITLE_PERCENTILE, 50)),
+            "rs_1w_pct": int(row.get("rs_1w_pct", 50)),
+            "rs_1m_pct": int(row.get(TITLE_1M, 50)),
             "tickers": refined_tickers
         })
 
@@ -768,10 +770,11 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
 
         if industry not in industries:
             industries[industry] = {
-                "info": (0, industry, sector, 0, 99, 1, 3, 6),
-                TITLE_RS: [], TITLE_1M: [], TITLE_3M: [], TITLE_6M: [], TITLE_TICKERS: [], "stock_names": {}
+                "info": (0, industry, sector, 0, 99, 99, 1, 3, 6),
+                TITLE_RS: [], "RS_1W": [], TITLE_1M: [], TITLE_3M: [], TITLE_6M: [], TITLE_TICKERS: [], "stock_names": {}
             }
         industries[industry][TITLE_RS].append(rs)
+        industries[industry]["RS_1W"].append(rs1w)
         industries[industry][TITLE_1M].append(rs1m)
         industries[industry][TITLE_3M].append(rs3m)
         industries[industry][TITLE_6M].append(rs6m)
@@ -900,17 +903,19 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
         return [df]
 
     df_industries = pd.DataFrame(map(getDfView, filtered_industries_list),
-                                columns=[TITLE_RANK, TITLE_INDUSTRY, TITLE_SECTOR, TITLE_RS, TITLE_PERCENTILE, TITLE_1M, TITLE_3M, TITLE_6M])
+                                columns=[TITLE_RANK, TITLE_INDUSTRY, TITLE_SECTOR, TITLE_RS, TITLE_PERCENTILE, "RS_1W", TITLE_1M, TITLE_3M, TITLE_6M])
 
     df_industries[TITLE_RS] = df_industries.apply(lambda row: getRsAverage(industries, row[TITLE_INDUSTRY], TITLE_RS), axis=1)
+    df_industries["RS_1W"] = df_industries.apply(lambda row: getRsAverage(industries, row[TITLE_INDUSTRY], "RS_1W"), axis=1)
     df_industries[TITLE_1M] = df_industries.apply(lambda row: getRsAverage(industries, row[TITLE_INDUSTRY], TITLE_1M), axis=1)
     df_industries[TITLE_3M] = df_industries.apply(lambda row: getRsAverage(industries, row[TITLE_INDUSTRY], TITLE_3M), axis=1)
     df_industries[TITLE_6M] = df_industries.apply(lambda row: getRsAverage(industries, row[TITLE_INDUSTRY], TITLE_6M), axis=1)
 
-    df_industries[TITLE_PERCENTILE] = pd.qcut(df_industries[TITLE_RS], 100, labels=False, duplicates="drop")
-    df_industries[TITLE_1M] = pd.qcut(df_industries[TITLE_1M], 100, labels=False, duplicates="drop")
-    df_industries[TITLE_3M] = pd.qcut(df_industries[TITLE_3M], 100, labels=False, duplicates="drop")
-    df_industries[TITLE_6M] = pd.qcut(df_industries[TITLE_6M], 100, labels=False, duplicates="drop")
+    df_industries[TITLE_PERCENTILE] = pd.qcut(df_industries[TITLE_RS], 100, labels=False, duplicates="drop") + 1
+    df_industries["rs_1w_pct"] = pd.qcut(df_industries["RS_1W"], 100, labels=False, duplicates="drop") + 1
+    df_industries[TITLE_1M] = pd.qcut(df_industries[TITLE_1M], 100, labels=False, duplicates="drop") + 1
+    df_industries[TITLE_3M] = pd.qcut(df_industries[TITLE_3M], 100, labels=False, duplicates="drop") + 1
+    df_industries[TITLE_6M] = pd.qcut(df_industries[TITLE_6M], 100, labels=False, duplicates="drop") + 1
     df_industries[TITLE_TICKERS] = df_industries.apply(lambda row: getTickers(industries, row[TITLE_INDUSTRY]), axis=1)
 
     df_industries = df_industries.sort_values(([TITLE_PERCENTILE]), ascending=False)

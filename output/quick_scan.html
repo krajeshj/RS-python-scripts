@@ -270,6 +270,7 @@
             gap: 1rem;
             animation: fadeUp 0.5s ease backwards;
             position: relative;
+            min-width: 0;
         }
 
         @keyframes fadeUp {
@@ -840,16 +841,6 @@
                 <div class="loading">Analyzing market conditions...</div>
             </div>
         </section>
-
-        <section>
-            <div class="section-header">
-                <h2 class="section-title">📊 Sector Leadership</h2>
-                <p class="section-sub">Identifying institutional capital flow clusters</p>
-            </div>
-            <div id="industries-grid" class="grid">
-                <div class="loading">Scanning sectors...</div>
-            </div>
-        </section>
     </div>
 
     <footer
@@ -1064,32 +1055,6 @@
             } else {
                 tipsSection.classList.add('hidden');
             }
-
-            // Render Industries
-            const indGrid = document.getElementById('industries-grid');
-            indGrid.innerHTML = (allData.industries || []).map((ind, i) => `
-                <div class="card industry-card" style="animation-delay: ${i * 0.1}s">
-                    <div class="card-header">
-                        <div class="ticker" style="font-size: 1.1rem; color: var(--text)">${ind.industry}</div>
-                        <div class="rank-badge">RANK #${ind.rank}</div>
-                    </div>
-                    <div class="metrics">
-                        <div class="metric">
-                            <span class="metric-label">Group RS Avg</span>
-                            <span class="metric-value">${ind.rs}</span>
-                        </div>
-                    </div>
-                    <div class="meta-info">${ind.sector}</div>
-                    <div class="ticker-row">
-                        ${ind.tickers.map(stock => `
-                            <div class="ticker-tag-group">
-                                <span class="ticker-tag">${stock.t}</span>
-                                <span class="ticker-tag-name">${stock.n}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `).join('');
         }
 
         init();

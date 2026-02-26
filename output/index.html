@@ -450,6 +450,7 @@
             gap: 1rem;
             animation: fadeUp 0.5s ease backwards;
             position: relative;
+            min-width: 0;
         }
 
         @keyframes fadeUp {
@@ -847,6 +848,7 @@
             <div class="nav-links">
                 <a href="index.html" class="nav-link active">Dashboard 🚀</a>
                 <a href="stages.html" class="nav-link">Sector Analysis 🏗️</a>
+                <a href="industries.html" class="nav-link">Industry Momentum 📊</a>
                 <a href="quick_scan.html" class="nav-link">Quick Scan ⚡</a>
                 <a href="pulse.html" class="nav-link">Market Pulse 📡</a>
                 <a href="tips.html" class="nav-link">Stock Tips 🎯</a>
@@ -1120,32 +1122,6 @@
             const mLabel = minerviniOn ? `, Minervini Only` : '';
             const t5Label = top5On ? `, Top 5 Sectors` : '';
             document.getElementById('filter-count').textContent = `${filtered.length} of ${pool.length} candidates (RS:${minRS}-${maxRS}, RMV:${minRMV}-${maxRMV}${qLabel}${mLabel}${t5Label})`;
-
-            // Render Industries
-            const indGrid = document.getElementById('industries-grid');
-            indGrid.innerHTML = allData.industries.map((ind, i) => `
-                <div class="card industry-card" style="animation-delay: ${i * 0.1}s">
-                    <div class="card-header">
-                        <div class="ticker" style="font-size: 1.1rem; color: var(--text)">${ind.industry}</div>
-                        <div class="rank-badge">RANK #${ind.rank}</div>
-                    </div>
-                    <div class="metrics">
-                        <div class="metric">
-                            <span class="metric-label">Group RS Avg</span>
-                            <span class="metric-value">${ind.rs}</span>
-                        </div>
-                    </div>
-                    <div class="meta-info">${ind.sector}</div>
-                    <div class="ticker-row">
-                        ${ind.tickers.map(stock => `
-                            <div class="ticker-tag-group">
-                                <span class="ticker-tag">${stock.t}</span>
-                                <span class="ticker-tag-name">${stock.n}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `).join('');
         }
 
         init();
