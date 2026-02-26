@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rajesh's Stock Screener</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #06060f;
+            --bg2: #0d0d1a;
+            --surface: rgba(255, 255, 255, .04);
+            --border: rgba(255, 255, 255, .08);
+            --text: #e4e4ef;
+            --text2: #8888a8;
+            --accent: #6c5ce7;
+            --accent2: #a29bfe;
+            --green: #00e676;
+            --cyan: #00e5ff;
+            --orange: #ff9100;
+            --red: #ff5252;
+            --glass: rgba(18, 18, 40, .72);
+            --glass-b: 12px;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --font: 'Outfit', system-ui, sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+            --shadow: 0 8px 32px rgba(0, 0, 0, .45);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(ellipse 80% 60% at 50% -20%, rgba(108, 92, 231, .15), transparent),
+                radial-gradient(ellipse 60% 50% at 80% 110%, rgba(0, 229, 255, .08), transparent);
+            padding-bottom: 3rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--cyan);
+            margin-bottom: 4px;
+            filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.3));
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--text) 30%, var(--accent2));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .last-updated {
+            font-size: 0.85rem;
+            color: var(--text2);
+            background: var(--surface);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .last-updated::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--green);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            margin: 0.5rem 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-link {
+            color: var(--text2);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 6px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            color: var(--text);
+            background: var(--surface);
+        }
+
+        .nav-link.active {
+            color: var(--cyan);
+            background: rgba(0, 229, 255, 0.1);
+            border-color: rgba(0, 229, 255, 0.2);
+        }
+
+        .section-header {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+        }
+
+        .section-sub {
+            color: var(--text2);
+            font-size: .85rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+            margin-bottom: 3.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(var(--glass-b));
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            animation: fadeUp 0.5s ease backwards;
+            position: relative;
+            min-width: 0;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            background: rgba(18, 18, 40, .85);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, .5);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .ticker {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--cyan);
+            letter-spacing: -0.02em;
+            font-family: var(--mono);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .rank-badge {
+            background: rgba(108, 92, 231, 0.15);
+            color: var(--accent2);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border: 1px solid rgba(108, 92, 231, 0.2);
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            background: var(--surface);
+            padding: 12px;
+            border-radius: var(--radius-sm);
+        }
+
+        .metric {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .metric-label {
+            font-size: 0.6rem;
+            color: var(--text2);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            font-family: var(--mono);
+        }
+
+        .meta-info {
+            font-size: 0.8rem;
+            color: var(--text2);
+            font-weight: 500;
+        }
+
+        .industry-card {
+            border-left: 4px solid var(--accent);
+        }
+
+        .ticker-row {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .ticker-tag-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--surface);
+            padding: 4px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .ticker-tag {
+            color: var(--cyan);
+            font-size: 0.8rem;
+            font-weight: 800;
+            font-family: var(--mono);
+            min-width: 45px;
+        }
+
+        .ticker-tag-name {
+            font-size: 0.75rem;
+            color: var(--text2);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text2);
+            font-weight: 500;
+            grid-column: 1 / -1;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem 0.75rem;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-icon">📊</div>
+            <h1>Industry Momentum</h1>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Dashboard 🚀</a>
+                <a href="stages.html" class="nav-link">Sector Analysis 🏗️</a>
+                <a href="industries.html" class="nav-link active">Industry Momentum 📊</a>
+                <a href="quick_scan.html" class="nav-link">Quick Scan ⚡</a>
+                <a href="pulse.html" class="nav-link">Market Pulse 📡</a>
+                <a href="tips.html" class="nav-link">Stock Tips 🎯</a>
+            </div>
+            <div id="last-updated" class="last-updated">Updating...</div>
+        </header>
+
+        <section>
+            <div class="section-header">
+                <h2 class="section-title">📊 Industry Group Momentum</h2>
+                <p class="section-sub">Identifying institutional capital flow clusters across the highest momentum
+                    sub-sectors</p>
+            </div>
+            <div id="industries-grid" class="grid">
+                <div class="loading">Scanning sectors...</div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        let allData = null;
+
+        async function init() {
+            try {
+                const response = await fetch(`web_data.json?t=${Date.now()}`);
+                allData = await response.json();
+
+                const lastUpdated = new Date(allData.last_updated);
+                document.getElementById('last-updated').textContent = `Sync: ${lastUpdated.toLocaleString()}`;
+
+                // Render Industries
+                const indGrid = document.getElementById('industries-grid');
+                if (allData.industries && allData.industries.length > 0) {
+                    indGrid.innerHTML = allData.industries.map((ind, i) => `
+                        <div class="card industry-card" style="animation-delay: ${i * 0.05}s">
+                            <div class="card-header">
+                                <div class="ticker" style="font-size: 1.1rem; color: var(--text)">${ind.industry}</div>
+                                <div class="rank-badge">RANK #${ind.rank}</div>
+                            </div>
+                            <div class="metrics">
+                                <div class="metric">
+                                    <span class="metric-label">RS Perc</span>
+                                    <span class="metric-value" style="color: var(--cyan)">${ind.rs}</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">1W</span>
+                                    <span class="metric-value">${ind.rs_1w_pct}</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">1M</span>
+                                    <span class="metric-value">${ind.rs_1m_pct}</span>
+                                </div>
+                            </div>
+                            <div class="meta-info">${ind.sector}</div>
+                            <div class="ticker-row">
+                                ${ind.tickers.map((stock, idx) => `
+                                    <a href="https://www.tradingview.com/chart/?symbol=${stock.t}" target="_blank" style="text-decoration: none;">
+                                        <div class="ticker-tag-group" style="${idx < 3 ? 'border-color: rgba(0,229,255,0.2)' : ''}">
+                                            <span class="ticker-tag">${stock.t}</span>
+                                            <span class="ticker-tag-name">${stock.n}</span>
+                                        </div>
+                                    </a>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    indGrid.innerHTML = '<div class="loading">No industry data available.</div>';
+                }
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('industries-grid').innerHTML = '<div class="loading">Live data connection failed. Check rs_ranking.py outputs.</div>';
+            }
+        }
+
+        init();
+    </script>
+    <footer
+        style="text-align:center; padding:2rem 1rem; color:var(--text2); font-size:0.75rem; border-top:1px solid var(--border); margin-top:2rem;">
+        © 2026 Rajesh's Stock Screener. All rights reserved.
+    </footer>
+</body>
+
+</html>

@@ -410,6 +410,27 @@
             display: inline-block;
         }
 
+        .info-container:hover {
+            z-index: 1000;
+        }
+
+        .copy-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            margin-top: 4px;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
         .info-container:hover .tooltip-content {
             display: block;
         }
@@ -446,6 +467,7 @@
             <nav class="nav-links">
                 <a href="index.html" class="nav-link">Dashboard 🚀</a>
                 <a href="stages.html" class="nav-link active">Sector Analysis 🏗️</a>
+                <a href="industries.html" class="nav-link">Industry Momentum 📊</a>
                 <a href="quick_scan.html" class="nav-link">Quick Scan ⚡</a>
                 <a href="pulse.html" class="nav-link">Market Pulse 📡</a>
                 <a href="tips.html" class="nav-link">Stock Tips 🎯</a>
@@ -579,8 +601,9 @@
                     <td>
                         <div class="sector-name">${s.sector}</div>
                         <div class="count">${s.count} Stocks</div>
+                        <button onclick="copySector('${s.sector}')" class="copy-btn" id="btn-${s.sector.replace(/\s+/g, '-')}">📋 Copy Full List</button>
                         <div id="tickers-${s.sector.replace(/\s+/g, '-')}" class="tickers-list">
-                            ${s.tickers.map(stock => `
+                            ${s.tickers.slice(0, 10).map(stock => `
                                 <a href="https://www.tradingview.com/chart/?symbol=${stock.t}&interval=D&range=3M" 
                                    target="_blank" 
                                    style="color: var(--cyan); font-weight:700; text-decoration:none; margin-right: 8px;"
@@ -608,6 +631,26 @@
                 </tr>
             `).join('');
         }
+
+        window.copySector = function (sectorName) {
+            const sectorData = stages.find(s => s.sector === sectorName);
+            if (!sectorData) return;
+            const tickerString = sectorData.tickers.map(stock => stock.t).join(', ');
+            navigator.clipboard.writeText(tickerString).then(() => {
+                const btn = document.getElementById(`btn-${sectorName.replace(/\s+/g, '-')}`);
+                if (btn) {
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '✅ Copied!';
+                    btn.style.color = 'var(--green)';
+                    btn.style.borderColor = 'var(--green)';
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.style.color = '';
+                        btn.style.borderColor = '';
+                    }, 2000);
+                }
+            });
+        };
 
         init();
     </script>
