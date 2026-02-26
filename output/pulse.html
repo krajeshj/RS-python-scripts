@@ -121,21 +121,19 @@
                 padding: 6px 12px;
             }
 
-            .metric-card {
-                padding: 1rem;
-            }
-
-            .market-status {
-                font-size: 1.25rem;
-            }
-
             .pulse-card {
-                padding: 1.25rem;
-                gap: 1rem;
+                padding: 1rem;
+                gap: 0.75rem;
             }
 
             .pulse-ticker {
                 font-size: 1.25rem;
+            }
+
+            .pulse-metrics {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.5rem;
+                padding: 8px;
             }
         }
 
@@ -163,6 +161,19 @@
             display: grid;
             grid-template-columns: 1fr;
             gap: 1.25rem;
+            margin-bottom: 3.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .pulse-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .pulse-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
         .pulse-card {
@@ -171,52 +182,83 @@
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 1.5rem;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 1.5rem;
             box-shadow: var(--shadow);
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
             flex-direction: column;
+            gap: 1rem;
+            animation: fadeUp 0.5s ease backwards;
+            position: relative;
             min-width: 0;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .pulse-card:hover {
             border-color: var(--accent);
-            transform: translateX(5px);
+            transform: translateY(-4px);
+            background: rgba(18, 18, 40, .85);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, .5);
         }
 
         .pulse-main {
             display: flex;
-            align-items: center;
-            gap: 1.5rem;
+            flex-direction: column;
+            gap: 0.75rem;
             flex: 1;
             min-width: 100%;
         }
 
+        .pulse-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 100%;
+        }
+
         .pulse-ticker-box {
-            min-width: 100px;
+            display: flex;
+            flex-direction: column;
         }
 
         .pulse-ticker {
             font-weight: 800;
             font-size: 1.5rem;
-            color: var(--accent2);
+            color: var(--cyan);
             text-decoration: none;
             font-family: var(--mono);
+            transition: color 0.2s;
+            letter-spacing: -0.02em;
+        }
+
+        .pulse-ticker:hover {
+            color: var(--accent2);
         }
 
         .pulse-name {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text2);
             margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .trend-badge {
             font-size: 0.7rem;
             font-weight: 700;
-            padding: 4px 12px;
-            border-radius: 12px;
+            padding: 4px 10px;
+            border-radius: 8px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             display: inline-block;
@@ -240,22 +282,35 @@
             border: 1px solid rgba(255, 82, 82, 0.2);
         }
 
-        .pulse-commentary {
-            flex: 2;
-            font-size: 1rem;
-            color: var(--text);
-            font-weight: 500;
-            min-width: 200px;
+        .pulse-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            background: var(--surface);
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            width: 100%;
         }
 
-        .pulse-rs {
+        .pulse-metric {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .metric-label {
+            font-size: 0.6rem;
+            color: var(--text2);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
             font-family: var(--mono);
-            font-size: 0.9rem;
-            color: var(--cyan);
-            background: rgba(0, 229, 255, 0.05);
-            padding: 6px 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(0, 229, 255, 0.1);
         }
 
         .loading {
@@ -278,7 +333,7 @@
         .pulse-chart-img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
             background: #fff;
             filter: brightness(0.9) contrast(1.1);
             transition: transform 0.3s;
@@ -395,17 +450,16 @@
             const finvizUrl = `https://charts2.finviz.com/chart.ashx?t=${item.ticker}&ty=c&ta=0&p=d&s=l`;
 
             div.innerHTML = `
-                <div class="pulse-main">
+                <div class="pulse-header">
                     <div class="pulse-ticker-box">
                         <a href="${tvUrl}" target="_blank" class="pulse-ticker">${item.ticker}</a>
                         <div class="pulse-name">${item.name || item.ticker}</div>
                     </div>
-                    <div style="min-width: 120px; text-align: center;">
+                    <div style="text-align: right; display: flex; flex-direction: column; gap: 4px; align-items: flex-end;">
                         <span class="trend-badge ${trendClass}">${item.trend || 'Sideways'}</span>
                     </div>
-                    <div class="pulse-commentary">${item.commentary || 'Analyzing...'}</div>
-                    <div class="pulse-rs">RS Rank: ${item.rs_rank || 'N/A'}</div>
                 </div>
+                
                 <a href="${tvUrl}" target="_blank" class="pulse-chart-link">
                     <img src="${finvizUrl}&t=${Date.now()}" class="pulse-chart-img" loading="lazy" alt="${item.ticker}">
                     <div class="pulse-chart-overlay">
@@ -413,6 +467,17 @@
                         <span>↗️</span>
                     </div>
                 </a>
+
+                <div class="pulse-metrics">
+                    <div class="pulse-metric">
+                        <span class="metric-label">RS Rank (1-99)</span>
+                        <span class="metric-value" style="color: var(--cyan)">${item.rs_rank || 'N/A'}</span>
+                    </div>
+                    <div class="pulse-metric" style="grid-column: 1 / -1; margin-top: 4px;">
+                        <span class="metric-label">Commentary</span>
+                        <span style="font-size: 0.85rem; color: var(--text); font-weight: 500; line-height: 1.4;">${item.commentary || 'Analyzing...'}</span>
+                    </div>
+                </div>
             `;
             return div;
         }
