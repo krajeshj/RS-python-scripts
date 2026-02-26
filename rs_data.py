@@ -375,7 +375,8 @@ def load_ticker_info_batch(tickers, current_info_dict):
         info_block = current_info_dict.get(t, {}).get("info", {})
         name = info_block.get("name", "")
         # If name is missing OR is just the ticker symbol, we need a refetch attempt
-        if not name or name == t:
+        # Also refetch if recently added fields like trailing_eps or avg_volume are missing
+        if not name or name == t or "trailing_eps" not in info_block or "avg_volume" not in info_block:
             needed.append(t)
             
     if not needed:

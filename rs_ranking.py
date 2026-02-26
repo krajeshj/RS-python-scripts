@@ -636,7 +636,7 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
                 pass
 
         canslim = {
-            "c": bool(eps_c and sales_c),     # C: Current earnings + sales
+            "c": bool(eps_c or sales_c),       # C: Current earnings OR sales (Relaxed)
             "a": bool(eps_a),                  # A: Annual profitability (ROE)
             "n": bool(new_high),               # N: New high
             "s": bool(supply_demand),          # S: Supply/demand
@@ -653,16 +653,18 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
         price = float(latest_daily["Close"])
         market_cap = meta.get("marketCap", 0)
         
-        # Consolidation of fundamental logic
+        # Consolidation of fundamental logic (Fail-open constraints)
+        is_sp = universe in ["S&P 500", "S&P 400", "S&P 600", "Nasdaq 100"]
+        
         fundamental_checks = [
-            meta.get("trailing_eps", 0) > 0 or meta.get("forward_eps", 0) > 0, # Positive earnings (curr or fwd)
-            price > 5,                                                         # Price > $5
-            meta.get("avg_volume", 0) > 100_000,                               # Avg volume > 100K
-            market_cap > 50_000_000,                                           # Market cap > $50M (relaxed from 100M)
-            meta.get("debt_to_equity", 0) < 500,                               # D/E < 500% (relaxed from 300%)
-            meta.get("operating_margin", 0) > -0.8                             # Operating margin not catastrophic
+            (meta.get("trailing_eps", 0) > 0 or meta.get("forward_eps", 0) > 0) if meta.get("trailing_eps", 0) != 0 else True,
+            price > 5,
+            meta.get("avg_volume", 0) > 100_000 if meta.get("avg_volume", 0) != 0 else True,
+            market_cap > 50_000_000 if market_cap != 0 else True,
+            meta.get("debt_to_equity", 0) < 500,
+            meta.get("operating_margin", 0) > -0.8 if meta.get("operating_margin", 0) != 0 else True
         ]
-        speculative = not all(fundamental_checks)
+        speculative = not (is_sp or all(fundamental_checks))
 
         return (
             ticker, minervini_stage2, sector, industry, universe,
