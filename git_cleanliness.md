@@ -21,3 +21,14 @@ To avoid push rejections and messy rebase states, we will follow these protocols
     - Run: `git add .` to mark resolution, then continue.
     - This ensures code always moves forward while data conflicts are ignored.
 5. **Verification**: Always run `git status` before `git push` to ensure NO data files are staged for the remote.
+
+## Rebase Recovery & Headless Protocols
+If a rebase becomes stranded or locked, follow these steps:
+
+1. **Stuck in Interactive Editor (`vi`)**:
+    - During a headless rebase (e.g., executing `git rebase --continue` from an agent terminal), an interactive `vi` editor often opens to confirm the commit message, causing the command to hang.
+    - **Fix**: Either run it with the environment variable set to skip it (`GIT_EDITOR=true git rebase --continue`) or manually inject the `:wq` command into the process input loop to save and exit.
+2. **The Windows Rebase-Merge Lock**:
+    - Sometimes on Windows, after successfully resolving conflicts during a rebase, `git status` will incorrectly report `You are currently rebasing. (all conflicts fixed: run "git rebase --continue")`.
+    - Attempting `--continue` will fail because the tree is clean, but Git cannot delete the lock folder.
+    - **Fix**: Manually delete the lock folder using PowerShell: `Remove-Item -Recurse -Force .git/rebase-merge`. Then verify with `git status` that the rebase state has cleared.
