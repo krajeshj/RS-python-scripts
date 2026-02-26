@@ -816,6 +816,10 @@
                 <div class="quality-layer"></div>
                 🌟 Minervini
             </div>
+            <div id="top5-btn" class="quality-toggle" onclick="toggleTop5()">
+                <div class="quality-layer"></div>
+                🏆 Top 5 Sectors
+            </div>
             <div class="meta-info">Intraday Setup Scanner</div>
         </div>
 
@@ -861,6 +865,7 @@
         let maxRMV = 45;
         let qualityOn = true;
         let minerviniOn = false;
+        let top5On = false;
 
         function getHiddenTickers() {
             try { return JSON.parse(localStorage.getItem('hidden_quick') || '[]'); } catch { return []; }
@@ -878,6 +883,11 @@
         function toggleMinervini() {
             minerviniOn = !minerviniOn;
             document.getElementById('minervini-btn').classList.toggle('active', minerviniOn);
+            render();
+        }
+        function toggleTop5() {
+            top5On = !top5On;
+            document.getElementById('top5-btn').classList.toggle('active', top5On);
             render();
         }
         function updateRSFill() {
@@ -974,6 +984,7 @@
                             <div class="ticker-box">
                                 <a href="${s.tradingview_url}" target="_blank" class="ticker">${s.ticker}</a>
                                 <div class="company-name">${s.name}</div>
+                                <div class="meta-info" style="margin-top: 4px; font-size: 0.75rem;">${s.industry} &bull; ${s.sector}</div>
                             </div>
                             <div class="rs-pct-badge" style="color: var(--cyan)">1W: ${s.rs_1w_pct || 'N/A'}%</div>
                             <div class="rs-pct-badge" style="color: var(--orange)">1M: ${s.rs_1m_pct || 'N/A'}%</div>
@@ -1006,8 +1017,6 @@
                             <span class="metric-value">${s.rmv}</span>
                         </div>
                     </div>
-
-                    <div class="meta-info">${s.industry} &bull; ${s.sector}</div>
                     
                     <div class="highlights">
                         ${s.highlights.split(', ').map(h => `<span class="highlight-tag">${h}</span>`).join('')}
@@ -1020,12 +1029,19 @@
             if (!allData) return;
             const hidden = getHiddenTickers();
 
+            // Extract top 5 sector names if Top 5 filter is active
+            let top5SectorsNames = [];
+            if (top5On && allData.stages && allData.stages.length >= 5) {
+                top5SectorsNames = allData.stages.slice(0, 5).map(stg => stg.sector);
+            }
+
             // Render Stocks
             const stocksGrid = document.getElementById('stocks-grid');
             const stocksFiltered = (allData.stocks || []).filter(s =>
                 !hidden.includes(s.ticker) &&
                 !(qualityOn && s.is_speculative) &&
                 !(minerviniOn && !s.is_minervini) &&
+                (!top5On || top5SectorsNames.length === 0 || top5SectorsNames.includes(s.sector)) &&
                 (s.rs >= minRS && s.rs <= maxRS) &&
                 (s.rmv >= minRMV && s.rmv <= maxRMV)
             );
@@ -1038,6 +1054,7 @@
                 !hidden.includes(s.ticker) &&
                 !(qualityOn && s.is_speculative) &&
                 !(minerviniOn && !s.is_minervini) &&
+                (!top5On || top5SectorsNames.length === 0 || top5SectorsNames.includes(s.sector)) &&
                 (s.rs >= minRS && s.rs <= maxRS) &&
                 (s.rmv >= minRMV && s.rmv <= maxRMV)
             );

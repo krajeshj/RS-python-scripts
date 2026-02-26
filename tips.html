@@ -668,6 +668,10 @@
                 <div class="quality-layer"></div>
                 🌟 Minervini
             </div>
+            <div id="top5-btn" class="quality-toggle" onclick="toggleTop5()">
+                <div class="quality-layer"></div>
+                🏆 Top 5 Sectors
+            </div>
         </div>
 
         <div id="tips-container">
@@ -718,6 +722,7 @@
         let maxRMV = 100;
         let qualityOn = true;
         let minerviniOn = false;
+        let top5On = false;
 
         async function init() {
             try {
@@ -896,14 +901,28 @@
             render(window._currentTips || []);
         }
 
+        function toggleTop5() {
+            top5On = !top5On;
+            document.getElementById('top5-btn').classList.toggle('active', top5On);
+            render(window._currentTips || []);
+        }
+
         function render(tips) {
             window._currentTips = tips;
             const container = document.getElementById('tips-container');
             const hidden = getHiddenTips();
+
+            // Extract top 5 sector names if Top 5 filter is active
+            let top5SectorsNames = [];
+            if (top5On && allData && allData.stages && allData.stages.length >= 5) {
+                top5SectorsNames = allData.stages.slice(0, 5).map(stg => stg.sector);
+            }
+
             const visible = tips.filter(t =>
                 !hidden.includes(t.ticker) &&
                 !(qualityOn && t.is_speculative) &&
                 !(minerviniOn && !t.is_minervini) &&
+                (!top5On || top5SectorsNames.length === 0 || top5SectorsNames.includes(t.sector)) &&
                 (t.rs >= minRS && t.rs <= maxRS) &&
                 (t.rmv >= minRMV && t.rmv <= maxRMV)
             );
@@ -938,6 +957,7 @@
                                             <div style="background: rgba(0, 229, 255, 0.1); color: var(--cyan); padding: 2px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; border: 1px solid rgba(0, 229, 255, 0.2);">RS ${s.rs}</div>
                                         </div>
                                         <div class="company-name">${s.name}</div>
+                                        <div style="font-size: 0.75rem; color: var(--text2); margin-top: 4px;">${s.industry} &bull; ${s.sector}</div>
                                         ${(function () {
                         if (!s.canslim) return '';
                         const letters = ['C', 'A', 'N', 'S', 'L', 'I', 'M'];
@@ -959,14 +979,10 @@
                                     <img src="${s.finviz_chart_url}" class="chart-img" loading="lazy">
                                 </a>
 
-                                <div class="metrics">
+                                <div class="metrics" style="grid-template-columns: 1fr;">
                                     <div class="metric">
                                         <span class="metric-label">Volatility</span>
                                         <span class="metric-value">${s.rmv}</span>
-                                    </div>
-                                    <div class="metric">
-                                        <span class="metric-label">Industry</span>
-                                        <span class="metric-value" style="font-size: 0.75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${s.industry}</span>
                                     </div>
                                 </div>
                                 

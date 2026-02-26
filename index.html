@@ -883,6 +883,10 @@
                 <div class="quality-dot"></div>
                 🌟 Minervini
             </div>
+            <div id="top5-btn" class="quality-toggle" onclick="toggleTop5()">
+                <div class="quality-dot"></div>
+                🏆 Top 5 Sectors
+            </div>
             <div class="meta-info" id="filter-count">Showing top candidates</div>
         </div>
 
@@ -915,6 +919,7 @@
         let maxRMV = 45;
         let qualityOn = true;
         let minerviniOn = false;
+        let top5On = false;
 
         async function init() {
             try {
@@ -998,6 +1003,12 @@
             render();
         }
 
+        function toggleTop5() {
+            top5On = !top5On;
+            document.getElementById('top5-btn').classList.toggle('active', top5On);
+            render();
+        }
+
         function createCanslimTray(canslim) {
             if (!canslim) return '';
             const letters = ['C', 'A', 'N', 'S', 'L', 'I', 'M'];
@@ -1033,6 +1044,7 @@
                             <div class="ticker-box">
                                 <a href="${s.tradingview_url}" target="_blank" class="ticker">${s.ticker}</a>
                                 <div class="company-name">${s.name}</div>
+                                <div class="meta-info" style="margin-top: 4px; font-size: 0.75rem;">${s.industry} &bull; ${s.sector}</div>
                             </div>
                             <div class="rs-pct-badge" style="color: var(--cyan)">1W: ${s.rs_1w_pct || 'N/A'}%</div>
                             <div class="rs-pct-badge" style="color: var(--orange)">1M: ${s.rs_1m_pct || 'N/A'}%</div>
@@ -1066,8 +1078,6 @@
                             <span class="metric-value">${s.rmv}</span>
                         </div>
                     </div>
-
-                    <div class="meta-info">${s.industry} &bull; ${s.sector}</div>
                     
                     <div class="highlights">
                         ${s.highlights.split(', ').map(h => `<span class="highlight-tag">${h}</span>`).join('')}
@@ -1081,6 +1091,13 @@
             const hidden = getHiddenTickers();
 
             const pool = allData.all_stocks || allData.stocks || [];
+
+            // Extract top 5 sector names if Top 5 filter is active
+            let top5SectorsNames = [];
+            if (top5On && allData.stages && allData.stages.length >= 5) {
+                top5SectorsNames = allData.stages.slice(0, 5).map(stg => stg.sector);
+            }
+
             const filtered = pool.filter(s => {
                 const rs = s.rs || 0;
                 if (rs < minRS || rs > maxRS) return false;
@@ -1088,6 +1105,7 @@
                 if (hidden.includes(s.ticker)) return false;
                 if (qualityOn && s.is_speculative) return false;
                 if (minerviniOn && !s.is_minervini) return false;
+                if (top5On && top5SectorsNames.length > 0 && !top5SectorsNames.includes(s.sector)) return false;
                 return true;
             });
 
@@ -1100,7 +1118,8 @@
             }
             const qLabel = qualityOn ? `, Quality Filter ON` : '';
             const mLabel = minerviniOn ? `, Minervini Only` : '';
-            document.getElementById('filter-count').textContent = `${filtered.length} of ${pool.length} candidates (RS:${minRS}-${maxRS}, RMV:${minRMV}-${maxRMV}${qLabel}${mLabel})`;
+            const t5Label = top5On ? `, Top 5 Sectors` : '';
+            document.getElementById('filter-count').textContent = `${filtered.length} of ${pool.length} candidates (RS:${minRS}-${maxRS}, RMV:${minRMV}-${maxRMV}${qLabel}${mLabel}${t5Label})`;
 
             // Render Industries
             const indGrid = document.getElementById('industries-grid');
