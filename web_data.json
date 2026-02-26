@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-02-26T02:00:49Z",
+    "last_updated": "2026-02-26T02:01:18Z",
     "stocks": [
         {
             "rank": 1,
@@ -4110,15 +4110,15 @@
         {
             "rank": 132,
             "ticker": "RVMD",
-            "name": "Revolution Medicines, Inc.",
+            "name": "RVMD",
             "rs": 96,
             "rs_raw": 1.95,
             "rs_1w_pct": 96,
             "rs_1m_pct": 96,
             "rmv": 22.85,
             "price": 103.24,
-            "industry": "Biotechnology",
-            "sector": "Healthcare",
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "VCP Contraction, Not Extended, Strong Trend Alignment, Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -4131,7 +4131,7 @@
                 "m": true
             },
             "days_to_earnings": -1,
-            "is_speculative": true,
+            "is_speculative": false,
             "is_minervini": true,
             "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=RVMD",
@@ -4170,15 +4170,15 @@
         {
             "rank": 134,
             "ticker": "GSAT",
-            "name": "GSAT",
+            "name": "Globalstar, Inc.",
             "rs": 96,
             "rs_raw": 1.94,
             "rs_1w_pct": 95,
             "rs_1m_pct": 96,
             "rmv": 37.92,
             "price": 63.44,
-            "industry": "unknown",
-            "sector": "unknown",
+            "industry": "Telecom Services",
+            "sector": "Communication Services",
             "highlights": "VCP Contraction, Not Extended, Controlled Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -6630,15 +6630,15 @@
         {
             "rank": 216,
             "ticker": "RAIL",
-            "name": "RAIL",
+            "name": "FreightCar America, Inc.",
             "rs": 93,
             "rs_raw": 1.68,
             "rs_1w_pct": 90,
             "rs_1m_pct": 76,
             "rmv": 40.21,
             "price": 14.5,
-            "industry": "unknown",
-            "sector": "unknown",
+            "industry": "Railroads",
+            "sector": "Industrials",
             "highlights": "VCP Contraction, Strong Trend Alignment, Controlled Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -16260,15 +16260,15 @@
         {
             "rank": 537,
             "ticker": "TIMB",
-            "name": "TIMB",
+            "name": "TIM S.A.",
             "rs": 82,
             "rs_raw": 1.3,
             "rs_1w_pct": 76,
             "rs_1m_pct": 78,
             "rmv": 15.71,
             "price": 27.38,
-            "industry": "unknown",
-            "sector": "unknown",
+            "industry": "Telecom Services",
+            "sector": "Communication Services",
             "highlights": "Strong Trend Alignment, Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -18360,15 +18360,15 @@
         {
             "rank": 607,
             "ticker": "DGII",
-            "name": "Digi International Inc.",
+            "name": "DGII",
             "rs": 79,
             "rs_raw": 1.26,
             "rs_1w_pct": 80,
             "rs_1m_pct": 75,
             "rmv": 36.6,
             "price": 49.91,
-            "industry": "Communication Equipment",
-            "sector": "Technology",
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "Strong Trend Alignment, Controlled Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -22650,15 +22650,15 @@
         {
             "rank": 750,
             "ticker": "GS",
-            "name": "GS",
+            "name": "The Goldman Sachs Group, Inc.",
             "rs": 74,
             "rs_raw": 1.2,
             "rs_1w_pct": 75,
             "rs_1m_pct": 80,
             "rmv": 24.53,
             "price": 921.38,
-            "industry": "unknown",
-            "sector": "unknown",
+            "industry": "Capital Markets",
+            "sector": "Financial Services",
             "highlights": "Not Extended, Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -23070,15 +23070,15 @@
         {
             "rank": 764,
             "ticker": "TVTX",
-            "name": "Travere Therapeutics, Inc.",
+            "name": "TVTX",
             "rs": 74,
             "rs_raw": 1.19,
             "rs_1w_pct": 59,
             "rs_1m_pct": 82,
             "rmv": 45.19,
             "price": 29.34,
-            "industry": "Biotechnology",
-            "sector": "Healthcare",
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "Not Extended",
             "source": "AI Scanner",
             "canslim": {
@@ -23091,7 +23091,7 @@
                 "m": true
             },
             "days_to_earnings": -1,
-            "is_speculative": true,
+            "is_speculative": false,
             "is_minervini": false,
             "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=TVTX",
@@ -29730,15 +29730,15 @@
         {
             "rank": 986,
             "ticker": "LBTYB",
-            "name": "Liberty Global Ltd.",
+            "name": "LBTYB",
             "rs": 66,
             "rs_raw": 1.12,
             "rs_1w_pct": 72,
             "rs_1m_pct": 23,
             "rmv": 100.0,
             "price": 13.38,
-            "industry": "Telecom Services",
-            "sector": "Communication Services",
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "Strong Trend Alignment",
             "source": "AI Scanner",
             "canslim": {
@@ -35100,15 +35100,15 @@
         {
             "rank": 1165,
             "ticker": "WSR",
-            "name": "Whitestone REIT",
+            "name": "WSR",
             "rs": 59,
             "rs_raw": 1.08,
             "rs_1w_pct": 54,
             "rs_1m_pct": 56,
             "rmv": 12.4,
             "price": 15.2,
-            "industry": "REIT - Retail",
-            "sector": "Real Estate",
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "Not Extended, Strong Trend Alignment, Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -46852,7 +46852,7 @@
         },
         {
             "sector": "Financial Services",
-            "count": 665,
+            "count": 668,
             "s1": 11,
             "s2": 75,
             "s3": 2,
@@ -47149,6 +47149,10 @@
                 {
                     "t": "HRTG",
                     "n": "Heritage Insurance Holdings, Inc."
+                },
+                {
+                    "t": "GS",
+                    "n": "The Goldman Sachs Group, Inc."
                 },
                 {
                     "t": "XP",
@@ -49311,6 +49315,10 @@
                     "n": "World Acceptance Corporation"
                 },
                 {
+                    "t": "LPLA",
+                    "n": "LPL Financial Holdings Inc."
+                },
+                {
                     "t": "BXSL",
                     "n": "Blackstone Secured Lending Fund"
                 },
@@ -49385,6 +49393,10 @@
                 {
                     "t": "ERIE",
                     "n": "Erie Indemnity Company"
+                },
+                {
+                    "t": "TIPT",
+                    "n": "Tiptree Inc."
                 },
                 {
                     "t": "FOA",
@@ -49526,7 +49538,7 @@
             "count": 375,
             "s1": 11,
             "s2": 74,
-            "s3": 3,
+            "s3": 2,
             "s4": 13,
             "tickers": [
                 {
@@ -49624,6 +49636,10 @@
                 {
                     "t": "KTOS",
                     "n": "Kratos Defense & Security Solutions, Inc."
+                },
+                {
+                    "t": "RAIL",
+                    "n": "FreightCar America, Inc."
                 },
                 {
                     "t": "CODA",
@@ -50634,10 +50650,6 @@
                     "n": "CSW Industrials, Inc."
                 },
                 {
-                    "t": "WSO",
-                    "n": "Watsco, Inc."
-                },
-                {
                     "t": "AAON",
                     "n": "AAON, Inc."
                 },
@@ -51034,8 +51046,8 @@
         },
         {
             "sector": "Healthcare",
-            "count": 394,
-            "s1": 12,
+            "count": 391,
+            "s1": 13,
             "s2": 66,
             "s3": 4,
             "s4": 17,
@@ -51227,10 +51239,6 @@
                 {
                     "t": "DRUG",
                     "n": "Bright Minds Biosciences Inc."
-                },
-                {
-                    "t": "RVMD",
-                    "n": "Revolution Medicines, Inc."
                 },
                 {
                     "t": "ROIV",
@@ -51623,10 +51631,6 @@
                 {
                     "t": "TNDM",
                     "n": "Tandem Diabetes Care, Inc."
-                },
-                {
-                    "t": "TVTX",
-                    "n": "Travere Therapeutics, Inc."
                 },
                 {
                     "t": "ENSG",
@@ -52257,10 +52261,6 @@
                     "n": "Revvity, Inc."
                 },
                 {
-                    "t": "CI",
-                    "n": "The Cigna Group"
-                },
-                {
                     "t": "XRAY",
                     "n": "DENTSPLY SIRONA Inc."
                 },
@@ -52621,7 +52621,7 @@
         },
         {
             "sector": "Real Estate",
-            "count": 147,
+            "count": 146,
             "s1": 12,
             "s2": 65,
             "s3": 7,
@@ -52750,10 +52750,6 @@
                 {
                     "t": "NHI",
                     "n": "National Health Investors, Inc."
-                },
-                {
-                    "t": "WSR",
-                    "n": "Whitestone REIT"
                 },
                 {
                     "t": "FOR",
@@ -53220,9 +53216,9 @@
         },
         {
             "sector": "Consumer Cyclical",
-            "count": 297,
-            "s1": 19,
-            "s2": 59,
+            "count": 295,
+            "s1": 18,
+            "s2": 60,
             "s3": 2,
             "s4": 20,
             "tickers": [
@@ -53755,6 +53751,10 @@
                     "n": "Liquidity Services, Inc."
                 },
                 {
+                    "t": "DHI",
+                    "n": "D.R. Horton, Inc."
+                },
+                {
                     "t": "AVY",
                     "n": "Avery Dennison Corporation"
                 },
@@ -53885,10 +53885,6 @@
                 {
                     "t": "TMHC",
                     "n": "Taylor Morrison Home Corporation"
-                },
-                {
-                    "t": "RVLV",
-                    "n": "Revolve Group, Inc."
                 },
                 {
                     "t": "DKS",
@@ -54099,16 +54095,8 @@
                     "n": "AutoZone, Inc."
                 },
                 {
-                    "t": "EXPE",
-                    "n": "Expedia Group, Inc."
-                },
-                {
                     "t": "GLBE",
                     "n": "Global-E Online Ltd."
-                },
-                {
-                    "t": "MNSO",
-                    "n": "MINISO Group Holding Limited"
                 },
                 {
                     "t": "KEQU",
@@ -54914,7 +54902,7 @@
         },
         {
             "sector": "Communication Services",
-            "count": 107,
+            "count": 108,
             "s1": 21,
             "s2": 50,
             "s3": 2,
@@ -54939,6 +54927,10 @@
                 {
                     "t": "SPHR",
                     "n": "Sphere Entertainment Co."
+                },
+                {
+                    "t": "GSAT",
+                    "n": "Globalstar, Inc."
                 },
                 {
                     "t": "WBD",
@@ -54981,6 +54973,10 @@
                     "n": "Scholastic Corporation"
                 },
                 {
+                    "t": "TIMB",
+                    "n": "TIM S.A."
+                },
+                {
                     "t": "GOOGL",
                     "n": "Alphabet Inc."
                 },
@@ -55019,10 +55015,6 @@
                 {
                     "t": "SOHU",
                     "n": "Sohu.com Limited"
-                },
-                {
-                    "t": "LBTYB",
-                    "n": "Liberty Global Ltd."
                 },
                 {
                     "t": "RCI",
@@ -55097,10 +55089,6 @@
                     "n": "Live Nation Entertainment, Inc."
                 },
                 {
-                    "t": "LBTYK",
-                    "n": "Liberty Global Ltd."
-                },
-                {
                     "t": "OMC",
                     "n": "Omnicom Group Inc."
                 },
@@ -55131,6 +55119,10 @@
                 {
                     "t": "T",
                     "n": "AT&T Inc."
+                },
+                {
+                    "t": "CHT",
+                    "n": "Chunghwa Telecom Co., Ltd."
                 },
                 {
                     "t": "ROKU",
@@ -55353,7 +55345,7 @@
         },
         {
             "sector": "Technology",
-            "count": 363,
+            "count": 362,
             "s1": 21,
             "s2": 46,
             "s3": 1,
@@ -55786,10 +55778,6 @@
                 {
                     "t": "ENPH",
                     "n": "Enphase Energy, Inc."
-                },
-                {
-                    "t": "DGII",
-                    "n": "Digi International Inc."
                 },
                 {
                     "t": "AVT",
