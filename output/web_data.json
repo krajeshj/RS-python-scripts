@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-02-27T16:56:17Z",
+    "last_updated": "2026-02-27T22:00:41Z",
     "stocks": [
         {
             "rank": 1,
@@ -335,7 +335,7 @@
                 "c": false,
                 "a": false,
                 "n": false,
-                "s": false,
+                "s": true,
                 "l": true,
                 "i": true,
                 "m": true
@@ -1695,6 +1695,38 @@
         },
         {
             "rank": 48,
+            "ticker": "ALOY",
+            "name": "REalloys Inc.",
+            "rs": 99,
+            "rs_raw": 2.62,
+            "rs_1w_pct": 98,
+            "rs_1m_pct": 97,
+            "rmv": 100.0,
+            "price": 13.97,
+            "industry": "Other Industrial Metals & Mining",
+            "sector": "Basic Materials",
+            "highlights": "Strong Trend Alignment",
+            "source": "AI Scanner",
+            "canslim": {
+                "c": false,
+                "a": false,
+                "n": false,
+                "s": true,
+                "l": true,
+                "i": false,
+                "m": true
+            },
+            "days_to_earnings": -1,
+            "is_speculative": false,
+            "low_signal": true,
+            "marketCap": 0.0,
+            "is_minervini": true,
+            "flip": false,
+            "tradingview_url": "https://www.tradingview.com/chart/?symbol=ALOY",
+            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ALOY&ty=c&ta=0&p=d&s=l"
+        },
+        {
+            "rank": 49,
             "ticker": "UUUU",
             "name": "Energy Fuels Inc.",
             "rs": 99,
@@ -1726,7 +1758,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=UUUU&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 49,
+            "rank": 50,
             "ticker": "SVM",
             "name": "Silvercorp Metals Inc.",
             "rs": 99,
@@ -1758,7 +1790,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SVM&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 50,
+            "rank": 51,
             "ticker": "GLUE",
             "name": "Monte Rosa Therapeutics, Inc.",
             "rs": 99,
@@ -1790,7 +1822,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GLUE&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 51,
+            "rank": 52,
             "ticker": "TER",
             "name": "Teradyne, Inc.",
             "rs": 99,
@@ -1822,7 +1854,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TER&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 52,
+            "rank": 53,
             "ticker": "SATS",
             "name": "EchoStar Corporation",
             "rs": 99,
@@ -1854,7 +1886,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SATS&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 53,
+            "rank": 54,
             "ticker": "ENLT",
             "name": "Enlight Renewable Energy Ltd",
             "rs": 99,
@@ -1886,7 +1918,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ENLT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 54,
+            "rank": 55,
             "ticker": "WULF",
             "name": "TeraWulf Inc.",
             "rs": 99,
@@ -1918,7 +1950,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=WULF&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 55,
+            "rank": 56,
             "ticker": "CDE",
             "name": "Coeur Mining, Inc.",
             "rs": 99,
@@ -1950,13 +1982,13 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CDE&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 56,
+            "rank": 57,
             "ticker": "ISSC",
             "name": "Innovative Aerosystems, Inc.",
-            "rs": 99,
+            "rs": 98,
             "rs_raw": 2.47,
             "rs_1w_pct": 98,
-            "rs_1m_pct": 95,
+            "rs_1m_pct": 94,
             "rmv": 52.83,
             "price": 25.9,
             "industry": "Aerospace & Defense",
@@ -1982,7 +2014,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ISSC&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 57,
+            "rank": 58,
             "ticker": "IREN",
             "name": "IREN Limited",
             "rs": 98,
@@ -2014,7 +2046,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=IREN&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 58,
+            "rank": 59,
             "ticker": "PHOE",
             "name": "Phoenix Asia Holdings Limited",
             "rs": 98,
@@ -2046,7 +2078,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PHOE&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 59,
+            "rank": 60,
             "ticker": "NGD",
             "name": "New Gold Inc.",
             "rs": 98,
@@ -2078,17 +2110,17 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=NGD&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 60,
+            "rank": 61,
             "ticker": "GPCR",
-            "name": "Structure Therapeutics Inc.",
+            "name": "GPCR",
             "rs": 98,
             "rs_raw": 2.42,
             "rs_1w_pct": 98,
             "rs_1m_pct": 99,
             "rmv": 38.58,
             "price": 64.75,
-            "industry": "Biotechnology",
-            "sector": "Healthcare",
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "VCP Contraction, Not Extended, Controlled Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -2101,7 +2133,7 @@
                 "m": true
             },
             "days_to_earnings": -1,
-            "is_speculative": true,
+            "is_speculative": false,
             "low_signal": true,
             "marketCap": 0.0,
             "is_minervini": false,
@@ -2110,7 +2142,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GPCR&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 61,
+            "rank": 62,
             "ticker": "PACS",
             "name": "PACS Group, Inc.",
             "rs": 98,
@@ -2142,7 +2174,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PACS&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 62,
+            "rank": 63,
             "ticker": "IAG",
             "name": "IAMGOLD Corporation",
             "rs": 98,
@@ -2174,7 +2206,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=IAG&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 63,
+            "rank": 64,
             "ticker": "TTMI",
             "name": "TTM Technologies, Inc.",
             "rs": 98,
@@ -2206,7 +2238,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TTMI&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 64,
+            "rank": 65,
             "ticker": "EXK",
             "name": "Endeavour Silver Corp.",
             "rs": 98,
@@ -2238,7 +2270,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=EXK&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 65,
+            "rank": 66,
             "ticker": "MAZE",
             "name": "Maze Therapeutics, Inc.",
             "rs": 98,
@@ -2270,7 +2302,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MAZE&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 66,
+            "rank": 67,
             "ticker": "FET",
             "name": "Forum Energy Technologies, Inc.",
             "rs": 98,
@@ -2302,7 +2334,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FET&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 67,
+            "rank": 68,
             "ticker": "STX",
             "name": "Seagate Technology Holdings plc",
             "rs": 98,
@@ -2334,7 +2366,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=STX&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 68,
+            "rank": 69,
             "ticker": "ICHR",
             "name": "Ichor Holdings, Ltd.",
             "rs": 98,
@@ -2366,7 +2398,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ICHR&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 69,
+            "rank": 70,
             "ticker": "SKYT",
             "name": "SkyWater Technology, Inc.",
             "rs": 98,
@@ -2398,7 +2430,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SKYT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 70,
+            "rank": 71,
             "ticker": "AEHR",
             "name": "Aehr Test Systems, Inc.",
             "rs": 98,
@@ -2430,7 +2462,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AEHR&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 71,
+            "rank": 72,
             "ticker": "MUX",
             "name": "McEwen Inc.",
             "rs": 98,
@@ -2462,7 +2494,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MUX&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 72,
+            "rank": 73,
             "ticker": "FORM",
             "name": "FormFactor, Inc.",
             "rs": 98,
@@ -2494,7 +2526,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FORM&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 73,
+            "rank": 74,
             "ticker": "SKE",
             "name": "Skeena Resources Limited",
             "rs": 98,
@@ -2526,7 +2558,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SKE&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 74,
+            "rank": 75,
             "ticker": "DBVT",
             "name": "DBV Technologies S.A.",
             "rs": 98,
@@ -2558,7 +2590,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=DBVT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 75,
+            "rank": 76,
             "ticker": "SII",
             "name": "Sprott Inc.",
             "rs": 98,
@@ -2590,7 +2622,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SII&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 76,
+            "rank": 77,
             "ticker": "LVLU",
             "name": "Lulu's Fashion Lounge Holdings, Inc.",
             "rs": 98,
@@ -2622,7 +2654,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=LVLU&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 77,
+            "rank": 78,
             "ticker": "ARWR",
             "name": "Arrowhead Pharmaceuticals, Inc.",
             "rs": 98,
@@ -2654,7 +2686,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ARWR&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 78,
+            "rank": 79,
             "ticker": "CIFR",
             "name": "Cipher Digital Inc.",
             "rs": 98,
@@ -2686,7 +2718,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CIFR&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 79,
+            "rank": 80,
             "ticker": "SBSW",
             "name": "Sibanye Stillwater Limited",
             "rs": 98,
@@ -2718,7 +2750,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SBSW&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 80,
+            "rank": 81,
             "ticker": "UCTT",
             "name": "Ultra Clean Holdings, Inc.",
             "rs": 98,
@@ -2750,7 +2782,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=UCTT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 81,
+            "rank": 82,
             "ticker": "COHR",
             "name": "Coherent Corp.",
             "rs": 98,
@@ -2782,7 +2814,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=COHR&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 82,
+            "rank": 83,
             "ticker": "SEPN",
             "name": "Septerna, Inc.",
             "rs": 98,
@@ -2814,7 +2846,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SEPN&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 83,
+            "rank": 84,
             "ticker": "AU",
             "name": "AngloGold Ashanti plc",
             "rs": 98,
@@ -2846,10 +2878,10 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AU&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 84,
+            "rank": 85,
             "ticker": "PLRZ",
             "name": "Polyrizon Ltd.",
-            "rs": 98,
+            "rs": 97,
             "rs_raw": 2.24,
             "rs_1w_pct": 95,
             "rs_1m_pct": 78,
@@ -2878,7 +2910,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PLRZ&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 85,
+            "rank": 86,
             "ticker": "BLTE",
             "name": "Belite Bio, Inc",
             "rs": 97,
@@ -2910,7 +2942,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=BLTE&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 86,
+            "rank": 87,
             "ticker": "AAOI",
             "name": "Applied Optoelectronics, Inc.",
             "rs": 97,
@@ -2927,7 +2959,7 @@
                 "c": false,
                 "a": false,
                 "n": false,
-                "s": false,
+                "s": true,
                 "l": true,
                 "i": true,
                 "m": true
@@ -2942,7 +2974,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AAOI&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 87,
+            "rank": 88,
             "ticker": "OIS",
             "name": "Oil States International, Inc.",
             "rs": 97,
@@ -2974,7 +3006,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=OIS&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 88,
+            "rank": 89,
             "ticker": "NG",
             "name": "NovaGold Resources Inc.",
             "rs": 97,
@@ -3006,7 +3038,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=NG&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 89,
+            "rank": 90,
             "ticker": "STOK",
             "name": "Stoke Therapeutics, Inc.",
             "rs": 97,
@@ -3038,7 +3070,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=STOK&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 90,
+            "rank": 91,
             "ticker": "GLW",
             "name": "Corning Incorporated",
             "rs": 97,
@@ -3070,7 +3102,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GLW&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 91,
+            "rank": 92,
             "ticker": "VIAV",
             "name": "Viavi Solutions Inc.",
             "rs": 97,
@@ -3102,7 +3134,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=VIAV&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 92,
+            "rank": 93,
             "ticker": "CGAU",
             "name": "Centerra Gold Inc.",
             "rs": 97,
@@ -3134,7 +3166,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CGAU&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 93,
+            "rank": 94,
             "ticker": "TYRA",
             "name": "Tyra Biosciences, Inc.",
             "rs": 97,
@@ -3166,7 +3198,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TYRA&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 94,
+            "rank": 95,
             "ticker": "CENX",
             "name": "Century Aluminum Company",
             "rs": 97,
@@ -3198,7 +3230,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CENX&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 95,
+            "rank": 96,
             "ticker": "SA",
             "name": "Seabridge Gold Inc.",
             "rs": 97,
@@ -3230,7 +3262,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SA&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 96,
+            "rank": 97,
             "ticker": "HUT",
             "name": "Hut 8 Corp.",
             "rs": 97,
@@ -3262,7 +3294,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=HUT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 97,
+            "rank": 98,
             "ticker": "GOLD",
             "name": "Gold.com, Inc.",
             "rs": 97,
@@ -3294,7 +3326,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GOLD&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 98,
+            "rank": 99,
             "ticker": "ATRO",
             "name": "Astronics Corporation",
             "rs": 97,
@@ -3326,7 +3358,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ATRO&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 99,
+            "rank": 100,
             "ticker": "EFXT",
             "name": "Enerflex Ltd.",
             "rs": 97,
@@ -3358,13 +3390,13 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=EFXT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 100,
+            "rank": 101,
             "ticker": "VSCO",
             "name": "Victoria's Secret & Co.",
             "rs": 97,
             "rs_raw": 2.14,
             "rs_1w_pct": 97,
-            "rs_1m_pct": 96,
+            "rs_1m_pct": 95,
             "rmv": 37.75,
             "price": 65.75,
             "industry": "Apparel Retail",
@@ -3390,7 +3422,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=VSCO&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 101,
+            "rank": 102,
             "ticker": "FIX",
             "name": "Comfort Systems USA, Inc.",
             "rs": 97,
@@ -3422,7 +3454,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FIX&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 102,
+            "rank": 103,
             "ticker": "APLM",
             "name": "Apollomics, Inc.",
             "rs": 97,
@@ -3454,12 +3486,12 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=APLM&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 103,
+            "rank": 104,
             "ticker": "BVN",
             "name": "Compa\u00f1\u00eda de Minas Buenaventura S.A.A.",
             "rs": 97,
             "rs_raw": 2.12,
-            "rs_1w_pct": 97,
+            "rs_1w_pct": 96,
             "rs_1m_pct": 97,
             "rmv": 32.38,
             "price": 41.13,
@@ -3472,7 +3504,7 @@
                 "a": false,
                 "n": true,
                 "s": true,
-                "l": true,
+                "l": false,
                 "i": true,
                 "m": true
             },
@@ -3486,7 +3518,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=BVN&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 104,
+            "rank": 105,
             "ticker": "FBRX",
             "name": "Forte Biosciences, Inc.",
             "rs": 97,
@@ -3518,7 +3550,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FBRX&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 105,
+            "rank": 106,
             "ticker": "PPTA",
             "name": "Perpetua Resources Corp.",
             "rs": 97,
@@ -3550,7 +3582,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PPTA&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 106,
+            "rank": 107,
             "ticker": "ASYS",
             "name": "Amtech Systems, Inc.",
             "rs": 97,
@@ -3582,7 +3614,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ASYS&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 107,
+            "rank": 108,
             "ticker": "POWL",
             "name": "Powell Industries, Inc.",
             "rs": 97,
@@ -3614,7 +3646,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=POWL&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 108,
+            "rank": 109,
             "ticker": "APLD",
             "name": "Applied Digital Corporation",
             "rs": 97,
@@ -3646,7 +3678,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=APLD&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 109,
+            "rank": 110,
             "ticker": "ANAB",
             "name": "AnaptysBio, Inc.",
             "rs": 97,
@@ -3678,7 +3710,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ANAB&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 110,
+            "rank": 111,
             "ticker": "ASTS",
             "name": "AST SpaceMobile, Inc.",
             "rs": 97,
@@ -3710,7 +3742,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ASTS&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 111,
+            "rank": 112,
             "ticker": "AMLX",
             "name": "Amylyx Pharmaceuticals, Inc.",
             "rs": 97,
@@ -3742,7 +3774,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AMLX&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 112,
+            "rank": 113,
             "ticker": "SPHR",
             "name": "Sphere Entertainment Co.",
             "rs": 97,
@@ -3774,10 +3806,10 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SPHR&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 113,
+            "rank": 114,
             "ticker": "AAUC",
             "name": "Allied Gold Corporation",
-            "rs": 97,
+            "rs": 96,
             "rs_raw": 2.05,
             "rs_1w_pct": 98,
             "rs_1m_pct": 97,
@@ -3806,7 +3838,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AAUC&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 114,
+            "rank": 115,
             "ticker": "LRCX",
             "name": "Lam Research Corporation",
             "rs": 96,
@@ -3838,7 +3870,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=LRCX&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 115,
+            "rank": 116,
             "ticker": "CTNM",
             "name": "Contineum Therapeutics, Inc.",
             "rs": 96,
@@ -3870,7 +3902,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CTNM&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 116,
+            "rank": 117,
             "ticker": "KF",
             "name": "The Korea Fund, Inc.",
             "rs": 96,
@@ -3902,7 +3934,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=KF&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 117,
+            "rank": 118,
             "ticker": "ASA",
             "name": "ASA Gold and Precious Metals Limited",
             "rs": 96,
@@ -3934,13 +3966,13 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ASA&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 118,
+            "rank": 119,
             "ticker": "AEIS",
             "name": "Advanced Energy Industries, Inc.",
             "rs": 96,
             "rs_raw": 2.01,
             "rs_1w_pct": 96,
-            "rs_1m_pct": 94,
+            "rs_1m_pct": 93,
             "rmv": 32.66,
             "price": 337.35,
             "industry": "Electrical Equipment & Parts",
@@ -3966,7 +3998,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AEIS&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 119,
+            "rank": 120,
             "ticker": "FEIM",
             "name": "Frequency Electronics, Inc.",
             "rs": 96,
@@ -3998,7 +4030,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FEIM&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 120,
+            "rank": 121,
             "ticker": "SIFY",
             "name": "Sify Technologies Limited",
             "rs": 96,
@@ -4030,12 +4062,12 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SIFY&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 121,
+            "rank": 122,
             "ticker": "KYMR",
             "name": "Kymera Therapeutics, Inc.",
             "rs": 96,
             "rs_raw": 2.0,
-            "rs_1w_pct": 95,
+            "rs_1w_pct": 94,
             "rs_1m_pct": 88,
             "rmv": 39.58,
             "price": 95.03,
@@ -4062,7 +4094,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=KYMR&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 122,
+            "rank": 123,
             "ticker": "IMOS",
             "name": "ChipMOS TECHNOLOGIES INC.",
             "rs": 96,
@@ -4094,7 +4126,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=IMOS&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 123,
+            "rank": 124,
             "ticker": "MKSI",
             "name": "MKS Inc.",
             "rs": 96,
@@ -4126,7 +4158,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MKSI&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 124,
+            "rank": 125,
             "ticker": "AVTX",
             "name": "Avalo Therapeutics, Inc.",
             "rs": 96,
@@ -4158,7 +4190,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AVTX&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 125,
+            "rank": 126,
             "ticker": "BELFA",
             "name": "Bel Fuse Inc.",
             "rs": 96,
@@ -4190,7 +4222,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=BELFA&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 126,
+            "rank": 127,
             "ticker": "PAAS",
             "name": "Pan American Silver Corp.",
             "rs": 96,
@@ -4222,7 +4254,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PAAS&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 127,
+            "rank": 128,
             "ticker": "NEXA",
             "name": "Nexa Resources S.A.",
             "rs": 96,
@@ -4254,7 +4286,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=NEXA&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 128,
+            "rank": 129,
             "ticker": "SRZN",
             "name": "Surrozen, Inc.",
             "rs": 96,
@@ -4286,7 +4318,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SRZN&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 129,
+            "rank": 130,
             "ticker": "RKLB",
             "name": "Rocket Lab Corporation",
             "rs": 96,
@@ -4318,7 +4350,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=RKLB&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 130,
+            "rank": 131,
             "ticker": "MBX",
             "name": "MBX Biosciences, Inc.",
             "rs": 96,
@@ -4350,7 +4382,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MBX&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 131,
+            "rank": 132,
             "ticker": "ASX",
             "name": "ASE Technology Holding Co., Ltd.",
             "rs": 96,
@@ -4382,7 +4414,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ASX&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 132,
+            "rank": 133,
             "ticker": "NNNN",
             "name": "Anbio Biotechnology",
             "rs": 96,
@@ -4414,7 +4446,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=NNNN&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 133,
+            "rank": 134,
             "ticker": "FTAI",
             "name": "FTAI Aviation Ltd.",
             "rs": 96,
@@ -4446,7 +4478,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FTAI&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 134,
+            "rank": 135,
             "ticker": "STRO",
             "name": "Sutro Biopharma, Inc.",
             "rs": 96,
@@ -4478,13 +4510,13 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=STRO&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 135,
+            "rank": 136,
             "ticker": "EQX",
             "name": "Equinox Gold Corp.",
             "rs": 96,
             "rs_raw": 1.94,
             "rs_1w_pct": 95,
-            "rs_1m_pct": 97,
+            "rs_1m_pct": 96,
             "rmv": 41.02,
             "price": 18.4,
             "industry": "Gold",
@@ -4510,7 +4542,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=EQX&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 136,
+            "rank": 137,
             "ticker": "ALB",
             "name": "Albemarle Corporation",
             "rs": 96,
@@ -4542,7 +4574,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ALB&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 137,
+            "rank": 138,
             "ticker": "BELFB",
             "name": "Bel Fuse Inc.",
             "rs": 96,
@@ -4574,7 +4606,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=BELFB&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 138,
+            "rank": 139,
             "ticker": "JFB",
             "name": "JFB Construction Holdings",
             "rs": 96,
@@ -4606,7 +4638,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=JFB&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 139,
+            "rank": 140,
             "ticker": "ORKA",
             "name": "Oruka Therapeutics, Inc.",
             "rs": 96,
@@ -4638,10 +4670,10 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ORKA&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 140,
+            "rank": 141,
             "ticker": "SYRE",
             "name": "Spyre Therapeutics, Inc.",
-            "rs": 96,
+            "rs": 95,
             "rs_raw": 1.92,
             "rs_1w_pct": 94,
             "rs_1m_pct": 90,
@@ -4670,7 +4702,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SYRE&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 141,
+            "rank": 142,
             "ticker": "RVMD",
             "name": "Revolution Medicines, Inc.",
             "rs": 95,
@@ -4702,7 +4734,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=RVMD&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 142,
+            "rank": 143,
             "ticker": "SSRM",
             "name": "SSR Mining Inc.",
             "rs": 95,
@@ -4734,7 +4766,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SSRM&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 143,
+            "rank": 144,
             "ticker": "ROIV",
             "name": "Roivant Sciences Ltd.",
             "rs": 95,
@@ -4766,12 +4798,12 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ROIV&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 144,
+            "rank": 145,
             "ticker": "HSHP",
             "name": "Himalaya Shipping Ltd.",
             "rs": 95,
             "rs_raw": 1.89,
-            "rs_1w_pct": 96,
+            "rs_1w_pct": 95,
             "rs_1m_pct": 90,
             "rmv": 25.61,
             "price": 14.48,
@@ -4798,7 +4830,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=HSHP&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 145,
+            "rank": 146,
             "ticker": "WBD",
             "name": "Warner Bros. Discovery, Inc.",
             "rs": 95,
@@ -4830,7 +4862,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=WBD&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 146,
+            "rank": 147,
             "ticker": "TPC",
             "name": "Tutor Perini Corporation",
             "rs": 95,
@@ -4862,7 +4894,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TPC&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 147,
+            "rank": 148,
             "ticker": "EGO",
             "name": "Eldorado Gold Corporation",
             "rs": 95,
@@ -4894,7 +4926,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=EGO&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 148,
+            "rank": 149,
             "ticker": "KGC",
             "name": "Kinross Gold Corporation",
             "rs": 95,
@@ -4926,7 +4958,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=KGC&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 149,
+            "rank": 150,
             "ticker": "ERO",
             "name": "Ero Copper Corp.",
             "rs": 95,
@@ -4958,7 +4990,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ERO&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 150,
+            "rank": 151,
             "ticker": "ATI",
             "name": "ATI Inc.",
             "rs": 95,
@@ -4990,7 +5022,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ATI&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 151,
+            "rank": 152,
             "ticker": "IDR",
             "name": "Idaho Strategic Resources, Inc.",
             "rs": 95,
@@ -5022,7 +5054,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=IDR&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 152,
+            "rank": 153,
             "ticker": "FRGE",
             "name": "Forge Global Holdings, Inc.",
             "rs": 95,
@@ -5054,7 +5086,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FRGE&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 153,
+            "rank": 154,
             "ticker": "TSEM",
             "name": "Tower Semiconductor Ltd.",
             "rs": 95,
@@ -5086,7 +5118,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TSEM&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 154,
+            "rank": 155,
             "ticker": "FSLY",
             "name": "Fastly, Inc.",
             "rs": 95,
@@ -5118,7 +5150,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FSLY&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 155,
+            "rank": 156,
             "ticker": "DRD",
             "name": "DRDGOLD Limited",
             "rs": 95,
@@ -5150,7 +5182,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=DRD&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 156,
+            "rank": 157,
             "ticker": "DGP",
             "name": "DB Gold Double Long ETN",
             "rs": 95,
@@ -5182,7 +5214,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=DGP&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 157,
+            "rank": 158,
             "ticker": "VAL",
             "name": "Valaris Limited",
             "rs": 95,
@@ -5214,7 +5246,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=VAL&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 158,
+            "rank": 159,
             "ticker": "CNL",
             "name": "Collective Mining Ltd.",
             "rs": 95,
@@ -5246,7 +5278,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CNL&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 159,
+            "rank": 160,
             "ticker": "GFI",
             "name": "Gold Fields Limited",
             "rs": 95,
@@ -5278,7 +5310,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GFI&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 160,
+            "rank": 161,
             "ticker": "NBR",
             "name": "Nabors Industries Ltd.",
             "rs": 95,
@@ -5310,7 +5342,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=NBR&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 161,
+            "rank": 162,
             "ticker": "SGML",
             "name": "Sigma Lithium Corporation",
             "rs": 95,
@@ -5342,7 +5374,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SGML&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 162,
+            "rank": 163,
             "ticker": "DRUG",
             "name": "Bright Minds Biosciences Inc.",
             "rs": 95,
@@ -5374,7 +5406,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=DRUG&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 163,
+            "rank": 164,
             "ticker": "TAYD",
             "name": "Taylor Devices, Inc.",
             "rs": 95,
@@ -5406,7 +5438,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TAYD&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 164,
+            "rank": 165,
             "ticker": "ELE",
             "name": "Elemental Royalty Corporation",
             "rs": 95,
@@ -5438,7 +5470,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ELE&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 165,
+            "rank": 166,
             "ticker": "NEM",
             "name": "Newmont Corporation",
             "rs": 95,
@@ -5470,7 +5502,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=NEM&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 166,
+            "rank": 167,
             "ticker": "DNTH",
             "name": "Dianthus Therapeutics, Inc.",
             "rs": 95,
@@ -5502,7 +5534,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=DNTH&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 167,
+            "rank": 168,
             "ticker": "VRT",
             "name": "Vertiv Holdings Co",
             "rs": 95,
@@ -5534,7 +5566,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=VRT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 168,
+            "rank": 169,
             "ticker": "ACMR",
             "name": "ACM Research, Inc.",
             "rs": 95,
@@ -5566,7 +5598,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ACMR&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 169,
+            "rank": 170,
             "ticker": "HLF",
             "name": "Herbalife Ltd.",
             "rs": 95,
@@ -5598,7 +5630,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=HLF&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 170,
+            "rank": 171,
             "ticker": "FLNC",
             "name": "Fluence Energy, Inc.",
             "rs": 94,
@@ -5630,12 +5662,12 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FLNC&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 171,
+            "rank": 172,
             "ticker": "ORLA",
             "name": "Orla Mining Ltd.",
             "rs": 94,
             "rs_raw": 1.81,
-            "rs_1w_pct": 93,
+            "rs_1w_pct": 92,
             "rs_1m_pct": 96,
             "rmv": 40.27,
             "price": 20.72,
@@ -5662,7 +5694,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ORLA&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 172,
+            "rank": 173,
             "ticker": "AMAT",
             "name": "Applied Materials, Inc.",
             "rs": 94,
@@ -5694,7 +5726,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AMAT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 173,
+            "rank": 174,
             "ticker": "EDRY",
             "name": "EuroDry Ltd.",
             "rs": 94,
@@ -5726,7 +5758,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=EDRY&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 174,
+            "rank": 175,
             "ticker": "AGX",
             "name": "Argan, Inc.",
             "rs": 94,
@@ -5758,7 +5790,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AGX&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 175,
+            "rank": 176,
             "ticker": "INDV",
             "name": "Indivior Pharmaceuticals, Inc.",
             "rs": 94,
@@ -5790,7 +5822,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=INDV&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 176,
+            "rank": 177,
             "ticker": "MRNA",
             "name": "Moderna, Inc.",
             "rs": 94,
@@ -5822,7 +5854,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MRNA&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 177,
+            "rank": 178,
             "ticker": "CAMT",
             "name": "Camtek Ltd.",
             "rs": 94,
@@ -5854,7 +5886,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CAMT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 178,
+            "rank": 179,
             "ticker": "FSM",
             "name": "Fortuna Mining Corp.",
             "rs": 94,
@@ -5886,7 +5918,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FSM&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 179,
+            "rank": 180,
             "ticker": "B",
             "name": "Barrick Mining Corporation",
             "rs": 94,
@@ -5918,7 +5950,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=B&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 180,
+            "rank": 181,
             "ticker": "PMN",
             "name": "ProMIS Neurosciences, Inc.",
             "rs": 94,
@@ -5950,12 +5982,12 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PMN&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 181,
+            "rank": 182,
             "ticker": "PRE",
             "name": "Prenetics Global Limited",
             "rs": 94,
             "rs_raw": 1.79,
-            "rs_1w_pct": 98,
+            "rs_1w_pct": 97,
             "rs_1m_pct": 97,
             "rmv": 70.66,
             "price": 17.81,
@@ -5982,7 +6014,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PRE&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 182,
+            "rank": 183,
             "ticker": "GPRE",
             "name": "Green Plains Inc.",
             "rs": 94,
@@ -6014,7 +6046,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GPRE&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 183,
+            "rank": 184,
             "ticker": "STRL",
             "name": "Sterling Infrastructure, Inc.",
             "rs": 94,
@@ -6046,7 +6078,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=STRL&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 184,
+            "rank": 185,
             "ticker": "LBRT",
             "name": "Liberty Energy Inc.",
             "rs": 94,
@@ -6078,7 +6110,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=LBRT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 185,
+            "rank": 186,
             "ticker": "KTOS",
             "name": "Kratos Defense & Security Solutions, Inc.",
             "rs": 94,
@@ -6110,13 +6142,13 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=KTOS&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 186,
+            "rank": 187,
             "ticker": "MAMA",
             "name": "Mama's Creations, Inc.",
             "rs": 94,
             "rs_raw": 1.78,
             "rs_1w_pct": 93,
-            "rs_1m_pct": 92,
+            "rs_1m_pct": 91,
             "rmv": 36.28,
             "price": 17.03,
             "industry": "Packaged Foods",
@@ -6142,7 +6174,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MAMA&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 187,
+            "rank": 188,
             "ticker": "KEN",
             "name": "Kenon Holdings Ltd.",
             "rs": 94,
@@ -6174,7 +6206,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=KEN&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 188,
+            "rank": 189,
             "ticker": "URGN",
             "name": "UroGen Pharma Ltd.",
             "rs": 94,
@@ -6206,7 +6238,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=URGN&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 189,
+            "rank": 190,
             "ticker": "ECO",
             "name": "Okeanis Eco Tankers Corp.",
             "rs": 94,
@@ -6238,7 +6270,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ECO&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 190,
+            "rank": 191,
             "ticker": "WVE",
             "name": "Wave Life Sciences Ltd.",
             "rs": 94,
@@ -6270,7 +6302,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=WVE&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 191,
+            "rank": 192,
             "ticker": "VTVT",
             "name": "vTv Therapeutics Inc.",
             "rs": 94,
@@ -6302,7 +6334,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=VTVT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 192,
+            "rank": 193,
             "ticker": "AMKR",
             "name": "Amkor Technology, Inc.",
             "rs": 94,
@@ -6334,7 +6366,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AMKR&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 193,
+            "rank": 194,
             "ticker": "MOD",
             "name": "Modine Manufacturing Company",
             "rs": 94,
@@ -6366,7 +6398,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MOD&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 194,
+            "rank": 195,
             "ticker": "RAPP",
             "name": "Rapport Therapeutics, Inc.",
             "rs": 94,
@@ -6398,7 +6430,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=RAPP&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 195,
+            "rank": 196,
             "ticker": "MT",
             "name": "ArcelorMittal S.A.",
             "rs": 94,
@@ -6430,7 +6462,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 196,
+            "rank": 197,
             "ticker": "TCMD",
             "name": "Tactile Systems Technology, Inc.",
             "rs": 94,
@@ -6462,10 +6494,10 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TCMD&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 197,
+            "rank": 198,
             "ticker": "DFTX",
             "name": "Definium Therapeutics, Inc.",
-            "rs": 94,
+            "rs": 93,
             "rs_raw": 1.74,
             "rs_1w_pct": 93,
             "rs_1m_pct": 93,
@@ -6494,7 +6526,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=DFTX&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 198,
+            "rank": 199,
             "ticker": "PRPO",
             "name": "Precipio, Inc.",
             "rs": 93,
@@ -6526,7 +6558,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PRPO&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 199,
+            "rank": 200,
             "ticker": "IE",
             "name": "Ivanhoe Electric Inc.",
             "rs": 93,
@@ -6558,7 +6590,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=IE&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 200,
+            "rank": 201,
             "ticker": "BKD",
             "name": "Brookdale Senior Living Inc.",
             "rs": 93,
@@ -6590,7 +6622,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=BKD&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 201,
+            "rank": 202,
             "ticker": "GSAT",
             "name": "Globalstar, Inc.",
             "rs": 93,
@@ -6622,7 +6654,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GSAT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 202,
+            "rank": 203,
             "ticker": "VOR",
             "name": "Vor Biopharma Inc.",
             "rs": 93,
@@ -6654,7 +6686,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=VOR&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 203,
+            "rank": 204,
             "ticker": "FRO",
             "name": "Frontline plc",
             "rs": 93,
@@ -6686,7 +6718,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FRO&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 204,
+            "rank": 205,
             "ticker": "FTI",
             "name": "TechnipFMC plc",
             "rs": 93,
@@ -6718,7 +6750,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FTI&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 205,
+            "rank": 206,
             "ticker": "SPRB",
             "name": "Spruce Biosciences, Inc.",
             "rs": 93,
@@ -6750,7 +6782,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SPRB&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 206,
+            "rank": 207,
             "ticker": "RAIL",
             "name": "FreightCar America, Inc.",
             "rs": 93,
@@ -6782,7 +6814,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=RAIL&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 207,
+            "rank": 208,
             "ticker": "PSIX",
             "name": "Power Solutions International, Inc.",
             "rs": 93,
@@ -6814,7 +6846,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PSIX&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 208,
+            "rank": 209,
             "ticker": "ZBIO",
             "name": "Zenas BioPharma, Inc.",
             "rs": 93,
@@ -6846,7 +6878,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ZBIO&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 209,
+            "rank": 210,
             "ticker": "AEM",
             "name": "Agnico Eagle Mines Limited",
             "rs": 93,
@@ -6878,7 +6910,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AEM&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 210,
+            "rank": 211,
             "ticker": "CSTM",
             "name": "Constellium SE",
             "rs": 93,
@@ -6910,7 +6942,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CSTM&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 211,
+            "rank": 212,
             "ticker": "EYPT",
             "name": "EyePoint, Inc.",
             "rs": 93,
@@ -6942,7 +6974,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=EYPT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 212,
+            "rank": 213,
             "ticker": "ESLT",
             "name": "Elbit Systems Ltd.",
             "rs": 93,
@@ -6974,7 +7006,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ESLT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 213,
+            "rank": 214,
             "ticker": "GCT",
             "name": "GigaCloud Technology Inc.",
             "rs": 93,
@@ -7006,7 +7038,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GCT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 214,
+            "rank": 215,
             "ticker": "IMNM",
             "name": "Immunome, Inc.",
             "rs": 93,
@@ -7038,7 +7070,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=IMNM&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 215,
+            "rank": 216,
             "ticker": "SIMO",
             "name": "Silicon Motion Technology Corporation",
             "rs": 93,
@@ -7070,7 +7102,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SIMO&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 216,
+            "rank": 217,
             "ticker": "GILT",
             "name": "Gilat Satellite Networks Ltd.",
             "rs": 93,
@@ -7102,7 +7134,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GILT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 217,
+            "rank": 218,
             "ticker": "FIGS",
             "name": "FIGS, Inc.",
             "rs": 93,
@@ -7134,7 +7166,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FIGS&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 218,
+            "rank": 219,
             "ticker": "FN",
             "name": "Fabrinet",
             "rs": 93,
@@ -7166,7 +7198,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FN&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 219,
+            "rank": 220,
             "ticker": "DAN",
             "name": "Dana Incorporated",
             "rs": 93,
@@ -7198,7 +7230,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=DAN&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 220,
+            "rank": 221,
             "ticker": "KLIC",
             "name": "Kulicke and Soffa Industries, Inc.",
             "rs": 93,
@@ -7230,7 +7262,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=KLIC&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 221,
+            "rank": 222,
             "ticker": "NXE",
             "name": "NexGen Energy Ltd.",
             "rs": 93,
@@ -7262,7 +7294,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=NXE&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 222,
+            "rank": 223,
             "ticker": "RCKY",
             "name": "Rocky Brands, Inc.",
             "rs": 93,
@@ -7294,7 +7326,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=RCKY&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 223,
+            "rank": 224,
             "ticker": "PLAB",
             "name": "Photronics, Inc.",
             "rs": 93,
@@ -7326,7 +7358,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PLAB&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 224,
+            "rank": 225,
             "ticker": "BWAY",
             "name": "BrainsWay Ltd.",
             "rs": 93,
@@ -7358,10 +7390,10 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=BWAY&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 225,
+            "rank": 226,
             "ticker": "UEC",
             "name": "Uranium Energy Corp.",
-            "rs": 93,
+            "rs": 92,
             "rs_raw": 1.66,
             "rs_1w_pct": 96,
             "rs_1m_pct": 96,
@@ -7390,7 +7422,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=UEC&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 226,
+            "rank": 227,
             "ticker": "CLMT",
             "name": "Calumet, Inc.",
             "rs": 92,
@@ -7422,7 +7454,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CLMT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 227,
+            "rank": 228,
             "ticker": "WLDN",
             "name": "Willdan Group, Inc.",
             "rs": 92,
@@ -7433,13 +7465,13 @@
             "price": 119.6,
             "industry": "Engineering & Construction",
             "sector": "Industrials",
-            "highlights": "Flip Setup, Not Extended, Controlled Volatility",
+            "highlights": "Not Extended, Controlled Volatility",
             "source": "AI Scanner",
             "canslim": {
                 "c": false,
                 "a": false,
                 "n": false,
-                "s": false,
+                "s": true,
                 "l": false,
                 "i": false,
                 "m": true
@@ -7449,12 +7481,12 @@
             "low_signal": true,
             "marketCap": 0.0,
             "is_minervini": true,
-            "flip": true,
+            "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=WLDN",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=WLDN&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 228,
+            "rank": 229,
             "ticker": "RCAT",
             "name": "Red Cat Holdings, Inc.",
             "rs": 92,
@@ -7486,7 +7518,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=RCAT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 229,
+            "rank": 230,
             "ticker": "TIGO",
             "name": "Millicom International Cellular S.A.",
             "rs": 92,
@@ -7518,7 +7550,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TIGO&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 230,
+            "rank": 231,
             "ticker": "AGI",
             "name": "Alamos Gold Inc.",
             "rs": 92,
@@ -7550,7 +7582,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AGI&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 231,
+            "rank": 232,
             "ticker": "GHM",
             "name": "Graham Corporation",
             "rs": 92,
@@ -7582,7 +7614,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GHM&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 232,
+            "rank": 233,
             "ticker": "IPGP",
             "name": "IPG Photonics Corporation",
             "rs": 92,
@@ -7614,7 +7646,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=IPGP&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 233,
+            "rank": 234,
             "ticker": "NBIS",
             "name": "Nebius Group N.V.",
             "rs": 92,
@@ -7646,7 +7678,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=NBIS&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 234,
+            "rank": 235,
             "ticker": "HII",
             "name": "Huntington Ingalls Industries, Inc.",
             "rs": 92,
@@ -7678,7 +7710,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=HII&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 235,
+            "rank": 236,
             "ticker": "CGON",
             "name": "CG Oncology, Inc.",
             "rs": 92,
@@ -7710,7 +7742,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CGON&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 236,
+            "rank": 237,
             "ticker": "WPM",
             "name": "Wheaton Precious Metals Corp.",
             "rs": 92,
@@ -7742,7 +7774,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=WPM&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 237,
+            "rank": 238,
             "ticker": "MTSI",
             "name": "MACOM Technology Solutions Holdings, Inc.",
             "rs": 92,
@@ -7774,7 +7806,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MTSI&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 238,
+            "rank": 239,
             "ticker": "ONTO",
             "name": "Onto Innovation Inc.",
             "rs": 92,
@@ -7806,7 +7838,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ONTO&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 239,
+            "rank": 240,
             "ticker": "CODA",
             "name": "Coda Octopus Group, Inc.",
             "rs": 92,
@@ -7838,7 +7870,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CODA&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 240,
+            "rank": 241,
             "ticker": "CYD",
             "name": "China Yuchai International Limited",
             "rs": 92,
@@ -7870,7 +7902,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CYD&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 241,
+            "rank": 242,
             "ticker": "BTU",
             "name": "Peabody Energy Corporation",
             "rs": 92,
@@ -7902,7 +7934,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=BTU&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 242,
+            "rank": 243,
             "ticker": "SHIP",
             "name": "Seanergy Maritime Holdings Corp",
             "rs": 92,
@@ -7934,7 +7966,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SHIP&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 243,
+            "rank": 244,
             "ticker": "KRMN",
             "name": "Karman Holdings Inc.",
             "rs": 92,
@@ -7966,7 +7998,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=KRMN&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 244,
+            "rank": 245,
             "ticker": "ECG",
             "name": "Everus Construction Group, Inc.",
             "rs": 92,
@@ -7998,7 +8030,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ECG&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 245,
+            "rank": 246,
             "ticker": "GEV",
             "name": "GE Vernova Inc.",
             "rs": 92,
@@ -8030,7 +8062,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=GEV&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 246,
+            "rank": 247,
             "ticker": "UMAC",
             "name": "Unusual Machines, Inc.",
             "rs": 92,
@@ -8062,7 +8094,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=UMAC&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 247,
+            "rank": 248,
             "ticker": "INTG",
             "name": "The InterGroup Corporation",
             "rs": 92,
@@ -8094,7 +8126,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=INTG&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 248,
+            "rank": 249,
             "ticker": "PAHC",
             "name": "Phibro Animal Health Corporation",
             "rs": 92,
@@ -8126,7 +8158,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PAHC&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 249,
+            "rank": 250,
             "ticker": "KEYS",
             "name": "Keysight Technologies, Inc.",
             "rs": 92,
@@ -8158,7 +8190,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=KEYS&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 250,
+            "rank": 251,
             "ticker": "USAR",
             "name": "USA Rare Earth, Inc.",
             "rs": 92,
@@ -8190,7 +8222,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=USAR&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 251,
+            "rank": 252,
             "ticker": "CCJ",
             "name": "Cameco Corporation",
             "rs": 92,
@@ -8222,7 +8254,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CCJ&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 252,
+            "rank": 253,
             "ticker": "KEP",
             "name": "Korea Electric Power Corporation",
             "rs": 92,
@@ -8254,7 +8286,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=KEP&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 253,
+            "rank": 254,
             "ticker": "VALE",
             "name": "Vale S.A.",
             "rs": 92,
@@ -8286,10 +8318,10 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=VALE&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 254,
+            "rank": 255,
             "ticker": "SITM",
             "name": "SiTime Corporation",
-            "rs": 92,
+            "rs": 91,
             "rs_raw": 1.6,
             "rs_1w_pct": 93,
             "rs_1m_pct": 92,
@@ -8318,7 +8350,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SITM&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 255,
+            "rank": 256,
             "ticker": "ASML",
             "name": "ASML Holding N.V.",
             "rs": 91,
@@ -8350,7 +8382,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ASML&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 256,
+            "rank": 257,
             "ticker": "THR",
             "name": "Thermon Group Holdings, Inc.",
             "rs": 91,
@@ -8382,7 +8414,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=THR&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 257,
+            "rank": 258,
             "ticker": "RUN",
             "name": "Sunrun Inc.",
             "rs": 91,
@@ -8414,7 +8446,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=RUN&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 258,
+            "rank": 259,
             "ticker": "FIVE",
             "name": "Five Below, Inc.",
             "rs": 91,
@@ -8446,7 +8478,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FIVE&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 259,
+            "rank": 260,
             "ticker": "CAT",
             "name": "Caterpillar Inc.",
             "rs": 91,
@@ -8478,7 +8510,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CAT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 260,
+            "rank": 261,
             "ticker": "IONS",
             "name": "Ionis Pharmaceuticals, Inc.",
             "rs": 91,
@@ -8510,7 +8542,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=IONS&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 261,
+            "rank": 262,
             "ticker": "SMTC",
             "name": "Semtech Corporation",
             "rs": 91,
@@ -8542,7 +8574,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SMTC&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 262,
+            "rank": 263,
             "ticker": "PTN",
             "name": "Palatin Technologies, Inc.",
             "rs": 91,
@@ -8574,7 +8606,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PTN&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 263,
+            "rank": 264,
             "ticker": "WF",
             "name": "Woori Financial Group Inc.",
             "rs": 91,
@@ -8606,13 +8638,13 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=WF&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 264,
+            "rank": 265,
             "ticker": "FOLD",
             "name": "Amicus Therapeutics, Inc.",
             "rs": 91,
             "rs_raw": 1.58,
             "rs_1w_pct": 91,
-            "rs_1m_pct": 93,
+            "rs_1m_pct": 92,
             "rmv": 1.79,
             "price": 14.33,
             "industry": "Biotechnology",
@@ -8638,7 +8670,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FOLD&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 265,
+            "rank": 266,
             "ticker": "IESC",
             "name": "IES Holdings, Inc.",
             "rs": 91,
@@ -8670,7 +8702,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=IESC&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 266,
+            "rank": 267,
             "ticker": "AXGN",
             "name": "Axogen, Inc.",
             "rs": 91,
@@ -8702,7 +8734,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AXGN&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 267,
+            "rank": 268,
             "ticker": "BKTI",
             "name": "BK Technologies Corporation",
             "rs": 91,
@@ -8734,7 +8766,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=BKTI&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 268,
+            "rank": 269,
             "ticker": "OR",
             "name": "OR Royalties Inc.",
             "rs": 91,
@@ -8766,7 +8798,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=OR&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 269,
+            "rank": 270,
             "ticker": "AEO",
             "name": "American Eagle Outfitters, Inc.",
             "rs": 91,
@@ -8798,7 +8830,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AEO&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 270,
+            "rank": 271,
             "ticker": "ALNT",
             "name": "Allient Inc.",
             "rs": 91,
@@ -8830,7 +8862,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ALNT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 271,
+            "rank": 272,
             "ticker": "INSW",
             "name": "International Seaways, Inc.",
             "rs": 91,
@@ -8862,7 +8894,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=INSW&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 272,
+            "rank": 273,
             "ticker": "PKST",
             "name": "Peakstone Realty Trust",
             "rs": 91,
@@ -8894,7 +8926,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PKST&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 273,
+            "rank": 274,
             "ticker": "VERA",
             "name": "Vera Therapeutics, Inc.",
             "rs": 91,
@@ -8926,7 +8958,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=VERA&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 274,
+            "rank": 275,
             "ticker": "SQM",
             "name": "Sociedad Qu\u00edmica y Minera de Chile S.A.",
             "rs": 91,
@@ -8958,7 +8990,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SQM&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 275,
+            "rank": 276,
             "ticker": "KMT",
             "name": "Kennametal Inc.",
             "rs": 91,
@@ -8990,7 +9022,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=KMT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 276,
+            "rank": 277,
             "ticker": "FCX",
             "name": "Freeport-McMoRan Inc.",
             "rs": 91,
@@ -9022,7 +9054,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=FCX&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 277,
+            "rank": 278,
             "ticker": "NVMI",
             "name": "Nova Ltd.",
             "rs": 91,
@@ -9054,7 +9086,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=NVMI&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 278,
+            "rank": 279,
             "ticker": "LINC",
             "name": "Lincoln Educational Services Corporation",
             "rs": 91,
@@ -9086,7 +9118,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=LINC&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 279,
+            "rank": 280,
             "ticker": "CECO",
             "name": "CECO Environmental Corp.",
             "rs": 91,
@@ -9118,7 +9150,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CECO&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 280,
+            "rank": 281,
             "ticker": "ACLX",
             "name": "Arcellx, Inc.",
             "rs": 91,
@@ -9150,7 +9182,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ACLX&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 281,
+            "rank": 282,
             "ticker": "NVRI",
             "name": "Enviri Corporation",
             "rs": 91,
@@ -9182,10 +9214,10 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=NVRI&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 282,
+            "rank": 283,
             "ticker": "VISN",
             "name": "Vistance Networks, Inc.",
-            "rs": 91,
+            "rs": 90,
             "rs_raw": 1.55,
             "rs_1w_pct": 95,
             "rs_1m_pct": 98,
@@ -9214,7 +9246,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=VISN&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 283,
+            "rank": 284,
             "ticker": "TEN",
             "name": "Tsakos Energy Navigation Limited",
             "rs": 90,
@@ -9246,7 +9278,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TEN&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 284,
+            "rank": 285,
             "ticker": "CMCL",
             "name": "Caledonia Mining Corporation Plc",
             "rs": 90,
@@ -9278,7 +9310,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CMCL&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 285,
+            "rank": 286,
             "ticker": "TPR",
             "name": "Tapestry, Inc.",
             "rs": 90,
@@ -9310,7 +9342,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TPR&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 286,
+            "rank": 287,
             "ticker": "TATT",
             "name": "TAT Technologies Ltd.",
             "rs": 90,
@@ -9342,7 +9374,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TATT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 287,
+            "rank": 288,
             "ticker": "ZIM",
             "name": "ZIM Integrated Shipping Services Ltd.",
             "rs": 90,
@@ -9374,7 +9406,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ZIM&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 288,
+            "rank": 289,
             "ticker": "WATT",
             "name": "Energous Corporation",
             "rs": 90,
@@ -9406,7 +9438,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=WATT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 289,
+            "rank": 290,
             "ticker": "MTZ",
             "name": "MasTec, Inc.",
             "rs": 90,
@@ -9438,7 +9470,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MTZ&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 290,
+            "rank": 291,
             "ticker": "LIND",
             "name": "Lindblad Expeditions Holdings, Inc.",
             "rs": 90,
@@ -9470,7 +9502,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=LIND&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 291,
+            "rank": 292,
             "ticker": "ELA",
             "name": "Envela Corporation",
             "rs": 90,
@@ -9502,7 +9534,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ELA&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 292,
+            "rank": 293,
             "ticker": "PPIH",
             "name": "Perma-Pipe International Holdings, Inc.",
             "rs": 90,
@@ -9534,7 +9566,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PPIH&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 293,
+            "rank": 294,
             "ticker": "TEVA",
             "name": "Teva Pharmaceutical Industries Limited",
             "rs": 90,
@@ -9566,7 +9598,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TEVA&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 294,
+            "rank": 295,
             "ticker": "EZPW",
             "name": "EZCORP, Inc.",
             "rs": 90,
@@ -9598,7 +9630,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=EZPW&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 295,
+            "rank": 296,
             "ticker": "LYEL",
             "name": "Lyell Immunopharma, Inc.",
             "rs": 90,
@@ -9630,7 +9662,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=LYEL&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 296,
+            "rank": 297,
             "ticker": "DY",
             "name": "Dycom Industries, Inc.",
             "rs": 90,
@@ -9662,7 +9694,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=DY&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 297,
+            "rank": 298,
             "ticker": "KLAC",
             "name": "KLA Corporation",
             "rs": 90,
@@ -9694,7 +9726,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=KLAC&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 298,
+            "rank": 299,
             "ticker": "RGLD",
             "name": "Royal Gold, Inc.",
             "rs": 90,
@@ -9726,7 +9758,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=RGLD&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 299,
+            "rank": 300,
             "ticker": "LUNR",
             "name": "Intuitive Machines, Inc.",
             "rs": 90,
@@ -9758,7 +9790,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=LUNR&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 300,
+            "rank": 301,
             "ticker": "AIP",
             "name": "Arteris, Inc.",
             "rs": 90,
@@ -9790,7 +9822,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=AIP&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 301,
+            "rank": 302,
             "ticker": "SION",
             "name": "Sionna Therapeutics, Inc.",
             "rs": 90,
@@ -9822,7 +9854,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=SION&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 302,
+            "rank": 303,
             "ticker": "ENTG",
             "name": "Entegris, Inc.",
             "rs": 90,
@@ -9854,7 +9886,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ENTG&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 303,
+            "rank": 304,
             "ticker": "ORN",
             "name": "Orion Group Holdings, Inc.",
             "rs": 90,
@@ -9886,7 +9918,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ORN&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 304,
+            "rank": 305,
             "ticker": "NE",
             "name": "Noble Corporation plc",
             "rs": 90,
@@ -9918,7 +9950,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=NE&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 305,
+            "rank": 306,
             "ticker": "PHAT",
             "name": "Phathom Pharmaceuticals, Inc.",
             "rs": 90,
@@ -9950,7 +9982,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PHAT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 306,
+            "rank": 307,
             "ticker": "TPB",
             "name": "Turning Point Brands, Inc.",
             "rs": 90,
@@ -9982,17 +10014,17 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TPB&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 307,
+            "rank": 308,
             "ticker": "DHT",
-            "name": "DHT Holdings, Inc.",
+            "name": "DHT",
             "rs": 90,
             "rs_raw": 1.52,
             "rs_1w_pct": 82,
             "rs_1m_pct": 63,
             "rmv": 23.86,
             "price": 19.17,
-            "industry": "Oil & Gas Midstream",
-            "sector": "Energy",
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "Confirmed Breakout, Strong Trend Alignment, Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -10014,7 +10046,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=DHT&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 308,
+            "rank": 309,
             "ticker": "CTGO",
             "name": "Contango Ore, Inc.",
             "rs": 90,
@@ -10046,7 +10078,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=CTGO&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 309,
+            "rank": 310,
             "ticker": "MP",
             "name": "MP Materials Corp.",
             "rs": 90,
@@ -10078,10 +10110,10 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MP&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 310,
+            "rank": 311,
             "ticker": "OII",
             "name": "Oceaneering International, Inc.",
-            "rs": 90,
+            "rs": 89,
             "rs_raw": 1.51,
             "rs_1w_pct": 89,
             "rs_1m_pct": 78,
@@ -10110,7 +10142,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=OII&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 311,
+            "rank": 312,
             "ticker": "BETR",
             "name": "Better Home & Finance Holding Company",
             "rs": 89,
@@ -10142,7 +10174,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=BETR&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 312,
+            "rank": 313,
             "ticker": "ESTA",
             "name": "Establishment Labs Holdings Inc.",
             "rs": 89,
@@ -10174,7 +10206,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ESTA&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 313,
+            "rank": 314,
             "ticker": "ATNI",
             "name": "ATN International, Inc.",
             "rs": 89,
@@ -10206,7 +10238,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ATNI&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 314,
+            "rank": 315,
             "ticker": "ESP",
             "name": "Espey Mfg. & Electronics Corp.",
             "rs": 89,
@@ -10238,7 +10270,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=ESP&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 315,
+            "rank": 316,
             "ticker": "PKE",
             "name": "Park Aerospace Corp.",
             "rs": 89,
@@ -10270,7 +10302,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=PKE&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 316,
+            "rank": 317,
             "ticker": "TFPM",
             "name": "Triple Flag Precious Metals Corp.",
             "rs": 89,
@@ -10302,7 +10334,7 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=TFPM&ty=c&ta=0&p=d&s=l"
         },
         {
-            "rank": 317,
+            "rank": 318,
             "ticker": "RNAM",
             "name": "RNAM",
             "rs": 89,
@@ -10332,38 +10364,6 @@
             "flip": false,
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=RNAM",
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=RNAM&ty=c&ta=0&p=d&s=l"
-        },
-        {
-            "rank": 318,
-            "ticker": "RNA",
-            "name": "Atrium Therapeutics, Inc. Common Stock",
-            "rs": 89,
-            "rs_raw": 1.5,
-            "rs_1w_pct": 90,
-            "rs_1m_pct": 91,
-            "rmv": 1.77,
-            "price": 72.8,
-            "industry": "Biotechnology",
-            "sector": "Healthcare",
-            "highlights": "Flip Setup, Not Extended, Strong Trend Alignment, Ultra Low Volatility",
-            "source": "AI Scanner",
-            "canslim": {
-                "c": false,
-                "a": false,
-                "n": true,
-                "s": false,
-                "l": false,
-                "i": true,
-                "m": true
-            },
-            "days_to_earnings": -1,
-            "is_speculative": true,
-            "low_signal": true,
-            "marketCap": 0.0,
-            "is_minervini": true,
-            "flip": true,
-            "tradingview_url": "https://www.tradingview.com/chart/?symbol=RNA",
-            "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=RNA&ty=c&ta=0&p=d&s=l"
         },
         {
             "rank": 319,
@@ -10691,7 +10691,7 @@
             "name": "Twin Disc, Incorporated",
             "rs": 89,
             "rs_raw": 1.49,
-            "rs_1w_pct": 91,
+            "rs_1w_pct": 90,
             "rs_1m_pct": 89,
             "rmv": 41.94,
             "price": 17.72,
@@ -11075,7 +11075,7 @@
             "name": "Nextpower Inc.",
             "rs": 88,
             "rs_raw": 1.47,
-            "rs_1w_pct": 92,
+            "rs_1w_pct": 91,
             "rs_1m_pct": 95,
             "rmv": 42.81,
             "price": 106.86,
@@ -19328,15 +19328,15 @@
         {
             "rank": 599,
             "ticker": "GPGI",
-            "name": "GPGI, Inc.",
+            "name": "GPGI",
             "rs": 79,
             "rs_raw": 1.27,
             "rs_1w_pct": 78,
             "rs_1m_pct": 89,
             "rmv": 33.78,
             "price": 23.12,
-            "industry": "Metal Fabrication",
-            "sector": "Industrials",
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "VCP Contraction, Not Extended, Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -22304,15 +22304,15 @@
         {
             "rank": 692,
             "ticker": "TDY",
-            "name": "Teledyne Technologies Incorporated",
+            "name": "TDY",
             "rs": 76,
             "rs_raw": 1.23,
             "rs_1w_pct": 73,
             "rs_1m_pct": 66,
             "rmv": 18.25,
             "price": 678.82,
-            "industry": "Scientific & Technical Instruments",
-            "sector": "Technology",
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "Strong Trend Alignment, Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -23439,7 +23439,7 @@
                 "c": false,
                 "a": false,
                 "n": true,
-                "s": false,
+                "s": true,
                 "l": false,
                 "i": false,
                 "m": true
@@ -33472,15 +33472,15 @@
         {
             "rank": 1041,
             "ticker": "HON",
-            "name": "HON",
+            "name": "Honeywell International Inc.",
             "rs": 64,
             "rs_raw": 1.11,
             "rs_1w_pct": 62,
             "rs_1m_pct": 43,
             "rmv": 12.73,
             "price": 240.88,
-            "industry": "unknown",
-            "sector": "unknown",
+            "industry": "Conglomerates",
+            "sector": "Industrials",
             "highlights": "VCP Contraction, Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -36224,15 +36224,15 @@
         {
             "rank": 1127,
             "ticker": "MTB",
-            "name": "M&T Bank Corporation",
+            "name": "MTB",
             "rs": 61,
             "rs_raw": 1.1,
             "rs_1w_pct": 65,
             "rs_1m_pct": 64,
             "rmv": 16.44,
             "price": 225.35,
-            "industry": "Banks - Regional",
-            "sector": "Financial Services",
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "Not Extended, Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -44288,15 +44288,15 @@
         {
             "rank": 1379,
             "ticker": "SW",
-            "name": "SW",
+            "name": "Smurfit Westrock Plc",
             "rs": 52,
             "rs_raw": 1.05,
             "rs_1w_pct": 66,
             "rs_1m_pct": 19,
             "rmv": 27.29,
             "price": 46.47,
-            "industry": "unknown",
-            "sector": "unknown",
+            "industry": "Packaging & Containers",
+            "sector": "Consumer Cyclical",
             "highlights": "Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -46624,15 +46624,15 @@
         {
             "rank": 1452,
             "ticker": "FBK",
-            "name": "FB Financial Corporation",
+            "name": "FBK",
             "rs": 50,
             "rs_raw": 1.04,
             "rs_1w_pct": 54,
             "rs_1m_pct": 54,
             "rmv": 19.87,
             "price": 57.97,
-            "industry": "Banks - Regional",
-            "sector": "Financial Services",
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "VCP Contraction, Not Extended, Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -46856,9 +46856,9 @@
             "rank": "TIP",
             "ticker": "COPX",
             "name": "Global X Copper Miners ETF",
-            "rs": 95,
+            "rs": 94,
             "rs_raw": 1.82,
-            "rs_1w_pct": 94,
+            "rs_1w_pct": 93,
             "rs_1m_pct": 95,
             "rmv": 23.54,
             "industry": "unknown",
@@ -47881,7 +47881,7 @@
             "rank": 1,
             "industry": "Silver",
             "sector": "Basic Materials",
-            "rs": 76,
+            "rs": 73,
             "rs_1w_pct": 78,
             "rs_1m_pct": 70,
             "tickers": [
@@ -47903,7 +47903,7 @@
             "rank": 2,
             "industry": "Advertising Agencies",
             "sector": "Communication Services",
-            "rs": 76,
+            "rs": 73,
             "rs_1w_pct": 79,
             "rs_1m_pct": 71,
             "tickers": [
@@ -47933,7 +47933,7 @@
             "rank": 3,
             "industry": "Drug Manufacturers - Specialty & Generic",
             "sector": "Healthcare",
-            "rs": 75,
+            "rs": 72,
             "rs_1w_pct": 79,
             "rs_1m_pct": 71,
             "tickers": [
@@ -47963,7 +47963,7 @@
             "rank": 4,
             "industry": "Semiconductor Equipment & Materials",
             "sector": "Technology",
-            "rs": 74,
+            "rs": 71,
             "rs_1w_pct": 76,
             "rs_1m_pct": 64,
             "tickers": [
@@ -47993,7 +47993,7 @@
             "rank": 5,
             "industry": "Gold",
             "sector": "Basic Materials",
-            "rs": 74,
+            "rs": 71,
             "rs_1w_pct": 77,
             "rs_1m_pct": 69,
             "tickers": [
@@ -48023,7 +48023,7 @@
             "rank": 6,
             "industry": "Other Precious Metals & Mining",
             "sector": "Basic Materials",
-            "rs": 73,
+            "rs": 70,
             "rs_1w_pct": 77,
             "rs_1m_pct": 69,
             "tickers": [
@@ -48053,8 +48053,8 @@
             "rank": 7,
             "industry": "Other Industrial Metals & Mining",
             "sector": "Basic Materials",
-            "rs": 72,
-            "rs_1w_pct": 73,
+            "rs": 69,
+            "rs_1w_pct": 74,
             "rs_1m_pct": 67,
             "tickers": [
                 {
@@ -48066,16 +48066,16 @@
                     "n": "Almonty Industries Inc."
                 },
                 {
+                    "t": "ALOY",
+                    "n": "REalloys Inc."
+                },
+                {
                     "t": "SKE",
                     "n": "Skeena Resources Limited"
                 },
                 {
                     "t": "NEXA",
                     "n": "Nexa Resources S.A."
-                },
-                {
-                    "t": "SGML",
-                    "n": "Sigma Lithium Corporation"
                 }
             ]
         },
@@ -48083,7 +48083,7 @@
             "rank": 8,
             "industry": "Copper",
             "sector": "Basic Materials",
-            "rs": 72,
+            "rs": 69,
             "rs_1w_pct": 72,
             "rs_1m_pct": 65,
             "tickers": [
@@ -48113,7 +48113,7 @@
             "rank": 9,
             "industry": "Computer Hardware",
             "sector": "Technology",
-            "rs": 71,
+            "rs": 68,
             "rs_1w_pct": 75,
             "rs_1m_pct": 66,
             "tickers": [
@@ -48143,8 +48143,8 @@
             "rank": 10,
             "industry": "Aluminum",
             "sector": "Basic Materials",
-            "rs": 70,
-            "rs_1w_pct": 74,
+            "rs": 67,
+            "rs_1w_pct": 73,
             "rs_1m_pct": 64,
             "tickers": [
                 {
@@ -48169,7 +48169,7 @@
             "rank": 11,
             "industry": "Biotechnology",
             "sector": "Healthcare",
-            "rs": 69,
+            "rs": 66,
             "rs_1w_pct": 71,
             "rs_1m_pct": 62,
             "tickers": [
@@ -48199,7 +48199,7 @@
             "rank": 12,
             "industry": "Uranium",
             "sector": "Energy",
-            "rs": 69,
+            "rs": 66,
             "rs_1w_pct": 75,
             "rs_1m_pct": 67,
             "tickers": [
@@ -48229,7 +48229,7 @@
             "rank": 13,
             "industry": "Communication Equipment",
             "sector": "Technology",
-            "rs": 68,
+            "rs": 65,
             "rs_1w_pct": 70,
             "rs_1m_pct": 61,
             "tickers": [
@@ -48259,7 +48259,7 @@
             "rank": 14,
             "industry": "Oil & Gas Drilling",
             "sector": "Energy",
-            "rs": 67,
+            "rs": 64,
             "rs_1w_pct": 70,
             "rs_1m_pct": 53,
             "tickers": [
@@ -48289,7 +48289,7 @@
             "rank": 15,
             "industry": "Shell Companies",
             "sector": "Financial Services",
-            "rs": 67,
+            "rs": 64,
             "rs_1w_pct": 72,
             "rs_1m_pct": 68,
             "tickers": [
@@ -48309,69 +48309,9 @@
         },
         {
             "rank": 16,
-            "industry": "Electrical Equipment & Parts",
-            "sector": "Industrials",
-            "rs": 66,
-            "rs_1w_pct": 68,
-            "rs_1m_pct": 60,
-            "tickers": [
-                {
-                    "t": "BE",
-                    "n": "Bloom Energy Corporation"
-                },
-                {
-                    "t": "POWL",
-                    "n": "Powell Industries, Inc."
-                },
-                {
-                    "t": "AEIS",
-                    "n": "Advanced Energy Industries, Inc."
-                },
-                {
-                    "t": "VRT",
-                    "n": "Vertiv Holdings Co"
-                },
-                {
-                    "t": "ESP",
-                    "n": "Espey Mfg. & Electronics Corp."
-                }
-            ]
-        },
-        {
-            "rank": 17,
-            "industry": "Electronic Components",
-            "sector": "Technology",
-            "rs": 65,
-            "rs_1w_pct": 68,
-            "rs_1m_pct": 60,
-            "tickers": [
-                {
-                    "t": "VICR",
-                    "n": "Vicor Corporation"
-                },
-                {
-                    "t": "TTMI",
-                    "n": "TTM Technologies, Inc."
-                },
-                {
-                    "t": "GLW",
-                    "n": "Corning Incorporated"
-                },
-                {
-                    "t": "BELFA",
-                    "n": "Bel Fuse Inc."
-                },
-                {
-                    "t": "BELFB",
-                    "n": "Bel Fuse Inc."
-                }
-            ]
-        },
-        {
-            "rank": 18,
             "industry": "Utilities - Renewable",
             "sector": "Utilities",
-            "rs": 65,
+            "rs": 63,
             "rs_1w_pct": 69,
             "rs_1m_pct": 63,
             "tickers": [
@@ -48398,10 +48338,70 @@
             ]
         },
         {
+            "rank": 17,
+            "industry": "Electronic Components",
+            "sector": "Technology",
+            "rs": 62,
+            "rs_1w_pct": 68,
+            "rs_1m_pct": 59,
+            "tickers": [
+                {
+                    "t": "VICR",
+                    "n": "Vicor Corporation"
+                },
+                {
+                    "t": "TTMI",
+                    "n": "TTM Technologies, Inc."
+                },
+                {
+                    "t": "GLW",
+                    "n": "Corning Incorporated"
+                },
+                {
+                    "t": "BELFA",
+                    "n": "Bel Fuse Inc."
+                },
+                {
+                    "t": "BELFB",
+                    "n": "Bel Fuse Inc."
+                }
+            ]
+        },
+        {
+            "rank": 18,
+            "industry": "Electrical Equipment & Parts",
+            "sector": "Industrials",
+            "rs": 62,
+            "rs_1w_pct": 68,
+            "rs_1m_pct": 60,
+            "tickers": [
+                {
+                    "t": "BE",
+                    "n": "Bloom Energy Corporation"
+                },
+                {
+                    "t": "POWL",
+                    "n": "Powell Industries, Inc."
+                },
+                {
+                    "t": "AEIS",
+                    "n": "Advanced Energy Industries, Inc."
+                },
+                {
+                    "t": "VRT",
+                    "n": "Vertiv Holdings Co"
+                },
+                {
+                    "t": "ESP",
+                    "n": "Espey Mfg. & Electronics Corp."
+                }
+            ]
+        },
+        {
             "rank": 19,
             "industry": "Oil & Gas Equipment & Services",
             "sector": "Energy",
-            "rs": 64,
+            "rs": 61,
             "rs_1w_pct": 66,
             "rs_1m_pct": 51,
             "tickers": [
@@ -48431,7 +48431,7 @@
             "rank": 20,
             "industry": "Marine Shipping",
             "sector": "Industrials",
-            "rs": 63,
+            "rs": 60,
             "rs_1w_pct": 64,
             "rs_1m_pct": 52,
             "tickers": [
@@ -48461,7 +48461,7 @@
             "rank": 21,
             "industry": "Aerospace & Defense",
             "sector": "Industrials",
-            "rs": 62,
+            "rs": 59,
             "rs_1w_pct": 67,
             "rs_1m_pct": 56,
             "tickers": [
@@ -48491,7 +48491,7 @@
             "rank": 22,
             "industry": "Consumer Electronics",
             "sector": "Technology",
-            "rs": 61,
+            "rs": 58,
             "rs_1w_pct": 64,
             "rs_1m_pct": 57,
             "tickers": [
@@ -48521,7 +48521,7 @@
             "rank": 23,
             "industry": "Engineering & Construction",
             "sector": "Industrials",
-            "rs": 61,
+            "rs": 58,
             "rs_1w_pct": 64,
             "rs_1m_pct": 53,
             "tickers": [
@@ -48551,7 +48551,7 @@
             "rank": 24,
             "industry": "Real Estate - Diversified",
             "sector": "Real Estate",
-            "rs": 60,
+            "rs": 57,
             "rs_1w_pct": 62,
             "rs_1m_pct": 55,
             "tickers": [
@@ -48569,7 +48569,7 @@
             "rank": 25,
             "industry": "Semiconductors",
             "sector": "Technology",
-            "rs": 60,
+            "rs": 57,
             "rs_1w_pct": 62,
             "rs_1m_pct": 56,
             "tickers": [
@@ -48599,8 +48599,8 @@
             "rank": 26,
             "industry": "Solar",
             "sector": "Technology",
-            "rs": 58,
-            "rs_1w_pct": 53,
+            "rs": 55,
+            "rs_1w_pct": 54,
             "rs_1m_pct": 61,
             "tickers": [
                 {
@@ -48629,7 +48629,7 @@
             "rank": 27,
             "industry": "Luxury Goods",
             "sector": "Consumer Cyclical",
-            "rs": 58,
+            "rs": 55,
             "rs_1w_pct": 60,
             "rs_1m_pct": 56,
             "tickers": [
@@ -48659,9 +48659,9 @@
             "rank": 28,
             "industry": "Metal Fabrication",
             "sector": "Industrials",
-            "rs": 57,
-            "rs_1w_pct": 59,
-            "rs_1m_pct": 46,
+            "rs": 54,
+            "rs_1w_pct": 60,
+            "rs_1m_pct": 43,
             "tickers": [
                 {
                     "t": "ATI",
@@ -48672,16 +48672,16 @@
                     "n": "Carpenter Technology Corporation"
                 },
                 {
-                    "t": "GPGI",
-                    "n": "GPGI, Inc."
-                },
-                {
                     "t": "PRLB",
                     "n": "Proto Labs, Inc."
                 },
                 {
                     "t": "MEC",
                     "n": "Mayville Engineering Company, Inc."
+                },
+                {
+                    "t": "MLI",
+                    "n": "Mueller Industries, Inc."
                 }
             ]
         },
@@ -48689,8 +48689,8 @@
             "rank": 29,
             "industry": "Capital Markets",
             "sector": "Financial Services",
-            "rs": 56,
-            "rs_1w_pct": 51,
+            "rs": 53,
+            "rs_1w_pct": 52,
             "rs_1m_pct": 56,
             "tickers": [
                 {
@@ -48717,31 +48717,31 @@
         },
         {
             "rank": 30,
-            "industry": "Scientific & Technical Instruments",
-            "sector": "Technology",
-            "rs": 56,
-            "rs_1w_pct": 55,
+            "industry": "Oil & Gas Midstream",
+            "sector": "Energy",
+            "rs": 53,
+            "rs_1w_pct": 48,
             "rs_1m_pct": 37,
             "tickers": [
                 {
-                    "t": "COHR",
-                    "n": "Coherent Corp."
+                    "t": "FRO",
+                    "n": "Frontline plc"
                 },
                 {
-                    "t": "MKSI",
-                    "n": "MKS Inc."
+                    "t": "INSW",
+                    "n": "International Seaways, Inc."
                 },
                 {
-                    "t": "KEYS",
-                    "n": "Keysight Technologies, Inc."
+                    "t": "TEN",
+                    "n": "Tsakos Energy Navigation Limited"
                 },
                 {
-                    "t": "VPG",
-                    "n": "Vishay Precision Group, Inc."
+                    "t": "TK",
+                    "n": "Teekay Corporation Ltd."
                 },
                 {
-                    "t": "CGNX",
-                    "n": "Cognex Corporation"
+                    "t": "STNG",
+                    "n": "Scorpio Tankers Inc."
                 }
             ]
         },
@@ -48749,7 +48749,7 @@
             "rank": 31,
             "industry": "Thermal Coal",
             "sector": "Energy",
-            "rs": 56,
+            "rs": 53,
             "rs_1w_pct": 59,
             "rs_1m_pct": 49,
             "tickers": [
@@ -48777,31 +48777,31 @@
         },
         {
             "rank": 32,
-            "industry": "Oil & Gas Midstream",
-            "sector": "Energy",
-            "rs": 56,
-            "rs_1w_pct": 47,
+            "industry": "Scientific & Technical Instruments",
+            "sector": "Technology",
+            "rs": 53,
+            "rs_1w_pct": 55,
             "rs_1m_pct": 37,
             "tickers": [
                 {
-                    "t": "FRO",
-                    "n": "Frontline plc"
+                    "t": "COHR",
+                    "n": "Coherent Corp."
                 },
                 {
-                    "t": "INSW",
-                    "n": "International Seaways, Inc."
+                    "t": "MKSI",
+                    "n": "MKS Inc."
                 },
                 {
-                    "t": "TEN",
-                    "n": "Tsakos Energy Navigation Limited"
+                    "t": "KEYS",
+                    "n": "Keysight Technologies, Inc."
                 },
                 {
-                    "t": "DHT",
-                    "n": "DHT Holdings, Inc."
+                    "t": "VPG",
+                    "n": "Vishay Precision Group, Inc."
                 },
                 {
-                    "t": "TK",
-                    "n": "Teekay Corporation Ltd."
+                    "t": "CGNX",
+                    "n": "Cognex Corporation"
                 }
             ]
         },
@@ -48809,8 +48809,8 @@
             "rank": 33,
             "industry": "Steel",
             "sector": "Basic Materials",
-            "rs": 55,
-            "rs_1w_pct": 57,
+            "rs": 52,
+            "rs_1w_pct": 56,
             "rs_1m_pct": 47,
             "tickers": [
                 {
@@ -48839,8 +48839,8 @@
             "rank": 34,
             "industry": "Apparel Retail",
             "sector": "Consumer Cyclical",
-            "rs": 53,
-            "rs_1w_pct": 58,
+            "rs": 50,
+            "rs_1w_pct": 57,
             "rs_1m_pct": 48,
             "tickers": [
                 {
@@ -48869,7 +48869,7 @@
             "rank": 35,
             "industry": "Integrated Freight & Logistics",
             "sector": "Industrials",
-            "rs": 53,
+            "rs": 50,
             "rs_1w_pct": 55,
             "rs_1m_pct": 49,
             "tickers": [
@@ -48899,8 +48899,8 @@
             "rank": 36,
             "industry": "Tools & Accessories",
             "sector": "Industrials",
-            "rs": 53,
-            "rs_1w_pct": 53,
+            "rs": 50,
+            "rs_1w_pct": 54,
             "rs_1m_pct": 41,
             "tickers": [
                 {
@@ -48929,9 +48929,9 @@
             "rank": 37,
             "industry": "Railroads",
             "sector": "Industrials",
-            "rs": 51,
+            "rs": 48,
             "rs_1w_pct": 46,
-            "rs_1m_pct": 23,
+            "rs_1m_pct": 22,
             "tickers": [
                 {
                     "t": "RAIL",
@@ -48959,8 +48959,8 @@
             "rank": 38,
             "industry": "Banks - Diversified",
             "sector": "Financial Services",
-            "rs": 51,
-            "rs_1w_pct": 49,
+            "rs": 48,
+            "rs_1w_pct": 50,
             "rs_1m_pct": 49,
             "tickers": [
                 {
@@ -48989,9 +48989,9 @@
             "rank": 39,
             "industry": "Farm & Heavy Construction Machinery",
             "sector": "Industrials",
-            "rs": 51,
-            "rs_1w_pct": 51,
-            "rs_1m_pct": 29,
+            "rs": 48,
+            "rs_1w_pct": 52,
+            "rs_1m_pct": 30,
             "tickers": [
                 {
                     "t": "CAT",
@@ -49019,9 +49019,9 @@
             "rank": 40,
             "industry": "Airlines",
             "sector": "Industrials",
-            "rs": 51,
-            "rs_1w_pct": 47,
-            "rs_1m_pct": 45,
+            "rs": 48,
+            "rs_1w_pct": 48,
+            "rs_1m_pct": 46,
             "tickers": [
                 {
                     "t": "ALGT",
@@ -49049,8 +49049,8 @@
             "rank": 41,
             "industry": "Trucking",
             "sector": "Industrials",
-            "rs": 50,
-            "rs_1w_pct": 50,
+            "rs": 47,
+            "rs_1w_pct": 51,
             "rs_1m_pct": 28,
             "tickers": [
                 {
@@ -49079,7 +49079,7 @@
             "rank": 42,
             "industry": "Airports & Air Services",
             "sector": "Industrials",
-            "rs": 50,
+            "rs": 47,
             "rs_1w_pct": 55,
             "rs_1m_pct": 49,
             "tickers": [
@@ -49105,9 +49105,9 @@
             "rank": 43,
             "industry": "Chemicals",
             "sector": "Basic Materials",
-            "rs": 49,
-            "rs_1w_pct": 49,
-            "rs_1m_pct": 29,
+            "rs": 45,
+            "rs_1w_pct": 50,
+            "rs_1m_pct": 30,
             "tickers": [
                 {
                     "t": "GPRE",
@@ -49133,10 +49133,40 @@
         },
         {
             "rank": 44,
+            "industry": "Telecom Services",
+            "sector": "Communication Services",
+            "rs": 45,
+            "rs_1w_pct": 48,
+            "rs_1m_pct": 37,
+            "tickers": [
+                {
+                    "t": "SATS",
+                    "n": "EchoStar Corporation"
+                },
+                {
+                    "t": "SIFY",
+                    "n": "Sify Technologies Limited"
+                },
+                {
+                    "t": "GSAT",
+                    "n": "Globalstar, Inc."
+                },
+                {
+                    "t": "TIGO",
+                    "n": "Millicom International Cellular S.A."
+                },
+                {
+                    "t": "ATNI",
+                    "n": "ATN International, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 45,
             "industry": "Auto Parts",
             "sector": "Consumer Cyclical",
-            "rs": 47,
-            "rs_1w_pct": 50,
+            "rs": 44,
+            "rs_1w_pct": 51,
             "rs_1m_pct": 39,
             "tickers": [
                 {
@@ -49162,62 +49192,28 @@
             ]
         },
         {
-            "rank": 45,
-            "industry": "Telecom Services",
-            "sector": "Communication Services",
-            "rs": 47,
-            "rs_1w_pct": 46,
-            "rs_1m_pct": 35,
-            "tickers": [
-                {
-                    "t": "SATS",
-                    "n": "EchoStar Corporation"
-                },
-                {
-                    "t": "SIFY",
-                    "n": "Sify Technologies Limited"
-                },
-                {
-                    "t": "GSAT",
-                    "n": "Globalstar, Inc."
-                },
-                {
-                    "t": "TIGO",
-                    "n": "Millicom International Cellular S.A."
-                },
-                {
-                    "t": "ATNI",
-                    "n": "ATN International, Inc."
-                }
-            ]
-        },
-        {
             "rank": 46,
-            "industry": "Beverages - Non-Alcoholic",
-            "sector": "Consumer Defensive",
-            "rs": 47,
-            "rs_1w_pct": 30,
-            "rs_1m_pct": 26,
+            "industry": "Medical Distribution",
+            "sector": "Healthcare",
+            "rs": 44,
+            "rs_1w_pct": 41,
+            "rs_1m_pct": 41,
             "tickers": [
                 {
-                    "t": "COKE",
-                    "n": "Coca-Cola Consolidated, Inc."
+                    "t": "CAH",
+                    "n": "Cardinal Health, Inc."
                 },
                 {
-                    "t": "COCO",
-                    "n": "The Vita Coco Company, Inc."
+                    "t": "MCK",
+                    "n": "McKesson Corporation"
                 },
                 {
-                    "t": "CELH",
-                    "n": "Celsius Holdings, Inc."
+                    "t": "COR",
+                    "n": "Cencora, Inc."
                 },
                 {
-                    "t": "MNST",
-                    "n": "Monster Beverage Corporation"
-                },
-                {
-                    "t": "CCEP",
-                    "n": "Coca-Cola Europacific Partners PLC"
+                    "t": "HSIC",
+                    "n": "Henry Schein, Inc."
                 }
             ]
         },
@@ -49225,7 +49221,7 @@
             "rank": 47,
             "industry": "Specialty Industrial Machinery",
             "sector": "Industrials",
-            "rs": 47,
+            "rs": 44,
             "rs_1w_pct": 46,
             "rs_1m_pct": 34,
             "tickers": [
@@ -49255,7 +49251,7 @@
             "rank": 48,
             "industry": "Real Estate - Development",
             "sector": "Real Estate",
-            "rs": 47,
+            "rs": 44,
             "rs_1w_pct": 61,
             "rs_1m_pct": 58,
             "tickers": [
@@ -49283,27 +49279,31 @@
         },
         {
             "rank": 49,
-            "industry": "Medical Distribution",
+            "industry": "Diagnostics & Research",
             "sector": "Healthcare",
-            "rs": 47,
-            "rs_1w_pct": 41,
-            "rs_1m_pct": 41,
+            "rs": 44,
+            "rs_1w_pct": 57,
+            "rs_1m_pct": 60,
             "tickers": [
                 {
-                    "t": "CAH",
-                    "n": "Cardinal Health, Inc."
+                    "t": "BNR",
+                    "n": "Burning Rock Biotech Limited"
                 },
                 {
-                    "t": "MCK",
-                    "n": "McKesson Corporation"
+                    "t": "PRE",
+                    "n": "Prenetics Global Limited"
                 },
                 {
-                    "t": "COR",
-                    "n": "Cencora, Inc."
+                    "t": "PRPO",
+                    "n": "Precipio, Inc."
                 },
                 {
-                    "t": "HSIC",
-                    "n": "Henry Schein, Inc."
+                    "t": "BDSX",
+                    "n": "Biodesix, Inc."
+                },
+                {
+                    "t": "EXAS",
+                    "n": "Exact Sciences Corporation"
                 }
             ]
         },
@@ -49311,8 +49311,8 @@
             "rank": 50,
             "industry": "Pollution & Treatment Controls",
             "sector": "Industrials",
-            "rs": 47,
-            "rs_1w_pct": 58,
+            "rs": 44,
+            "rs_1w_pct": 57,
             "rs_1m_pct": 46,
             "tickers": [
                 {
@@ -49337,7 +49337,7 @@
             "rank": 51,
             "industry": "Department Stores",
             "sector": "Consumer Cyclical",
-            "rs": 47,
+            "rs": 44,
             "rs_1w_pct": 63,
             "rs_1m_pct": 51,
             "tickers": [
@@ -49359,7 +49359,7 @@
             "rank": 52,
             "industry": "Oil & Gas Refining & Marketing",
             "sector": "Energy",
-            "rs": 46,
+            "rs": 43,
             "rs_1w_pct": 39,
             "rs_1m_pct": 34,
             "tickers": [
@@ -49389,7 +49389,7 @@
             "rank": 53,
             "industry": "Oil & Gas Integrated",
             "sector": "Energy",
-            "rs": 46,
+            "rs": 43,
             "rs_1w_pct": 44,
             "rs_1m_pct": 39,
             "tickers": [
@@ -49417,91 +49417,9 @@
         },
         {
             "rank": 54,
-            "industry": "Discount Stores",
-            "sector": "Consumer Defensive",
-            "rs": 44,
-            "rs_1w_pct": 44,
-            "rs_1m_pct": 30,
-            "tickers": [
-                {
-                    "t": "DG",
-                    "n": "Dollar General Corporation"
-                },
-                {
-                    "t": "PSMT",
-                    "n": "PriceSmart, Inc."
-                },
-                {
-                    "t": "DLTR",
-                    "n": "Dollar Tree, Inc."
-                },
-                {
-                    "t": "TBBB",
-                    "n": "BBB Foods Inc."
-                },
-                {
-                    "t": "WMT",
-                    "n": "Walmart Inc."
-                }
-            ]
-        },
-        {
-            "rank": 55,
-            "industry": "Diagnostics & Research",
-            "sector": "Healthcare",
-            "rs": 44,
-            "rs_1w_pct": 53,
-            "rs_1m_pct": 58,
-            "tickers": [
-                {
-                    "t": "BNR",
-                    "n": "Burning Rock Biotech Limited"
-                },
-                {
-                    "t": "PRE",
-                    "n": "Prenetics Global Limited"
-                },
-                {
-                    "t": "PRPO",
-                    "n": "Precipio, Inc."
-                },
-                {
-                    "t": "BDSX",
-                    "n": "Biodesix, Inc."
-                },
-                {
-                    "t": "EXAS",
-                    "n": "Exact Sciences Corporation"
-                }
-            ]
-        },
-        {
-            "rank": 56,
-            "industry": "Broadcasting",
-            "sector": "Communication Services",
-            "rs": 44,
-            "rs_1w_pct": 30,
-            "rs_1m_pct": 26,
-            "tickers": [
-                {
-                    "t": "NXST",
-                    "n": "Nexstar Media Group, Inc."
-                },
-                {
-                    "t": "TGNA",
-                    "n": "TEGNA Inc."
-                },
-                {
-                    "t": "SBGI",
-                    "n": "Sinclair, Inc."
-                }
-            ]
-        },
-        {
-            "rank": 57,
             "industry": "Lodging",
             "sector": "Consumer Cyclical",
-            "rs": 44,
+            "rs": 41,
             "rs_1w_pct": 42,
             "rs_1m_pct": 37,
             "tickers": [
@@ -49528,10 +49446,92 @@
             ]
         },
         {
+            "rank": 55,
+            "industry": "Beverages - Non-Alcoholic",
+            "sector": "Consumer Defensive",
+            "rs": 41,
+            "rs_1w_pct": 28,
+            "rs_1m_pct": 21,
+            "tickers": [
+                {
+                    "t": "COKE",
+                    "n": "Coca-Cola Consolidated, Inc."
+                },
+                {
+                    "t": "COCO",
+                    "n": "The Vita Coco Company, Inc."
+                },
+                {
+                    "t": "CELH",
+                    "n": "Celsius Holdings, Inc."
+                },
+                {
+                    "t": "MNST",
+                    "n": "Monster Beverage Corporation"
+                },
+                {
+                    "t": "CCEP",
+                    "n": "Coca-Cola Europacific Partners PLC"
+                }
+            ]
+        },
+        {
+            "rank": 56,
+            "industry": "Discount Stores",
+            "sector": "Consumer Defensive",
+            "rs": 41,
+            "rs_1w_pct": 44,
+            "rs_1m_pct": 31,
+            "tickers": [
+                {
+                    "t": "DG",
+                    "n": "Dollar General Corporation"
+                },
+                {
+                    "t": "PSMT",
+                    "n": "PriceSmart, Inc."
+                },
+                {
+                    "t": "DLTR",
+                    "n": "Dollar Tree, Inc."
+                },
+                {
+                    "t": "TBBB",
+                    "n": "BBB Foods Inc."
+                },
+                {
+                    "t": "WMT",
+                    "n": "Walmart Inc."
+                }
+            ]
+        },
+        {
+            "rank": 57,
+            "industry": "Broadcasting",
+            "sector": "Communication Services",
+            "rs": 41,
+            "rs_1w_pct": 30,
+            "rs_1m_pct": 26,
+            "tickers": [
+                {
+                    "t": "NXST",
+                    "n": "Nexstar Media Group, Inc."
+                },
+                {
+                    "t": "TGNA",
+                    "n": "TEGNA Inc."
+                },
+                {
+                    "t": "SBGI",
+                    "n": "Sinclair, Inc."
+                }
+            ]
+        },
+        {
             "rank": 58,
             "industry": "Specialty Chemicals",
             "sector": "Basic Materials",
-            "rs": 42,
+            "rs": 39,
             "rs_1w_pct": 46,
             "rs_1m_pct": 35,
             "tickers": [
@@ -49561,7 +49561,7 @@
             "rank": 59,
             "industry": "Utilities - Independent Power Producers",
             "sector": "Utilities",
-            "rs": 42,
+            "rs": 39,
             "rs_1w_pct": 39,
             "rs_1m_pct": 46,
             "tickers": [
@@ -49591,7 +49591,7 @@
             "rank": 60,
             "industry": "Coking Coal",
             "sector": "Basic Materials",
-            "rs": 42,
+            "rs": 39,
             "rs_1w_pct": 44,
             "rs_1m_pct": 54,
             "tickers": [
@@ -49615,31 +49615,31 @@
         },
         {
             "rank": 61,
-            "industry": "Food Distribution",
-            "sector": "Consumer Defensive",
-            "rs": 40,
+            "industry": "Rental & Leasing Services",
+            "sector": "Industrials",
+            "rs": 37,
             "rs_1w_pct": 44,
-            "rs_1m_pct": 35,
+            "rs_1m_pct": 34,
             "tickers": [
                 {
-                    "t": "ANDE",
-                    "n": "The Andersons, Inc."
+                    "t": "FTAI",
+                    "n": "FTAI Aviation Ltd."
                 },
                 {
-                    "t": "WILC",
-                    "n": "G. Willi-Food International Ltd."
+                    "t": "WLFC",
+                    "n": "Willis Lease Finance Corporation"
                 },
                 {
-                    "t": "USFD",
-                    "n": "US Foods Holding Corp."
+                    "t": "R",
+                    "n": "Ryder System, Inc."
                 },
                 {
-                    "t": "CVGW",
-                    "n": "Calavo Growers, Inc."
+                    "t": "AER",
+                    "n": "AerCap Holdings N.V."
                 },
                 {
-                    "t": "SYY",
-                    "n": "Sysco Corporation"
+                    "t": "PRG",
+                    "n": "PROG Holdings, Inc."
                 }
             ]
         },
@@ -49647,7 +49647,7 @@
             "rank": 62,
             "industry": "Tobacco",
             "sector": "Consumer Defensive",
-            "rs": 40,
+            "rs": 37,
             "rs_1w_pct": 31,
             "rs_1m_pct": 37,
             "tickers": [
@@ -49675,39 +49675,61 @@
         },
         {
             "rank": 63,
-            "industry": "Rental & Leasing Services",
-            "sector": "Industrials",
-            "rs": 40,
+            "industry": "Food Distribution",
+            "sector": "Consumer Defensive",
+            "rs": 37,
             "rs_1w_pct": 44,
-            "rs_1m_pct": 34,
+            "rs_1m_pct": 35,
             "tickers": [
                 {
-                    "t": "FTAI",
-                    "n": "FTAI Aviation Ltd."
+                    "t": "ANDE",
+                    "n": "The Andersons, Inc."
                 },
                 {
-                    "t": "WLFC",
-                    "n": "Willis Lease Finance Corporation"
+                    "t": "WILC",
+                    "n": "G. Willi-Food International Ltd."
                 },
                 {
-                    "t": "R",
-                    "n": "Ryder System, Inc."
+                    "t": "USFD",
+                    "n": "US Foods Holding Corp."
                 },
                 {
-                    "t": "AER",
-                    "n": "AerCap Holdings N.V."
+                    "t": "CVGW",
+                    "n": "Calavo Growers, Inc."
                 },
                 {
-                    "t": "PRG",
-                    "n": "PROG Holdings, Inc."
+                    "t": "SYY",
+                    "n": "Sysco Corporation"
                 }
             ]
         },
         {
             "rank": 64,
+            "industry": "Utilities - Diversified",
+            "sector": "Utilities",
+            "rs": 35,
+            "rs_1w_pct": 39,
+            "rs_1m_pct": 28,
+            "tickers": [
+                {
+                    "t": "AES",
+                    "n": "The AES Corporation"
+                },
+                {
+                    "t": "SRE",
+                    "n": "Sempra"
+                },
+                {
+                    "t": "AVA",
+                    "n": "Avista Corporation"
+                }
+            ]
+        },
+        {
+            "rank": 65,
             "industry": "Medical Care Facilities",
             "sector": "Healthcare",
-            "rs": 38,
+            "rs": 35,
             "rs_1w_pct": 42,
             "rs_1m_pct": 32,
             "tickers": [
@@ -49734,62 +49756,10 @@
             ]
         },
         {
-            "rank": 65,
-            "industry": "Utilities - Diversified",
-            "sector": "Utilities",
-            "rs": 38,
-            "rs_1w_pct": 39,
-            "rs_1m_pct": 28,
-            "tickers": [
-                {
-                    "t": "AES",
-                    "n": "The AES Corporation"
-                },
-                {
-                    "t": "SRE",
-                    "n": "Sempra"
-                },
-                {
-                    "t": "AVA",
-                    "n": "Avista Corporation"
-                }
-            ]
-        },
-        {
             "rank": 66,
-            "industry": "Drug Manufacturers - General",
-            "sector": "Healthcare",
-            "rs": 37,
-            "rs_1w_pct": 42,
-            "rs_1m_pct": 37,
-            "tickers": [
-                {
-                    "t": "GSK",
-                    "n": "GSK plc"
-                },
-                {
-                    "t": "NVS",
-                    "n": "Novartis AG"
-                },
-                {
-                    "t": "JNJ",
-                    "n": "Johnson & Johnson"
-                },
-                {
-                    "t": "MRK",
-                    "n": "Merck & Co., Inc."
-                },
-                {
-                    "t": "BMY",
-                    "n": "Bristol-Myers Squibb Company"
-                }
-            ]
-        },
-        {
-            "rank": 67,
             "industry": "REIT - Healthcare Facilities",
             "sector": "Real Estate",
-            "rs": 37,
+            "rs": 34,
             "rs_1w_pct": 33,
             "rs_1m_pct": 26,
             "tickers": [
@@ -49816,32 +49786,62 @@
             ]
         },
         {
-            "rank": 68,
-            "industry": "Leisure",
-            "sector": "Consumer Cyclical",
-            "rs": 35,
-            "rs_1w_pct": 41,
-            "rs_1m_pct": 34,
+            "rank": 67,
+            "industry": "unknown",
+            "sector": "unknown",
+            "rs": 34,
+            "rs_1w_pct": 35,
+            "rs_1m_pct": 41,
             "tickers": [
                 {
-                    "t": "CALY",
-                    "n": "Callaway Golf Company"
+                    "t": "GPCR",
+                    "n": "GPCR"
                 },
                 {
-                    "t": "JOUT",
-                    "n": "Johnson Outdoors Inc."
+                    "t": "SLV",
+                    "n": "iShares Silver Trust"
                 },
                 {
-                    "t": "MSGE",
-                    "n": "Madison Square Garden Entertainment Corp."
+                    "t": "DGP",
+                    "n": "DB Gold Double Long ETN"
                 },
                 {
-                    "t": "GOLF",
-                    "n": "Acushnet Holdings Corp."
+                    "t": "COPX",
+                    "n": "Global X Copper Miners ETF"
                 },
                 {
-                    "t": "HAS",
-                    "n": "Hasbro, Inc."
+                    "t": "GDX",
+                    "n": "VanEck Gold Miners ETF"
+                }
+            ]
+        },
+        {
+            "rank": 68,
+            "industry": "Drug Manufacturers - General",
+            "sector": "Healthcare",
+            "rs": 34,
+            "rs_1w_pct": 42,
+            "rs_1m_pct": 37,
+            "tickers": [
+                {
+                    "t": "GSK",
+                    "n": "GSK plc"
+                },
+                {
+                    "t": "NVS",
+                    "n": "Novartis AG"
+                },
+                {
+                    "t": "JNJ",
+                    "n": "Johnson & Johnson"
+                },
+                {
+                    "t": "MRK",
+                    "n": "Merck & Co., Inc."
+                },
+                {
+                    "t": "BMY",
+                    "n": "Bristol-Myers Squibb Company"
                 }
             ]
         },
@@ -49849,7 +49849,7 @@
             "rank": 69,
             "industry": "Oil & Gas E&P",
             "sector": "Energy",
-            "rs": 35,
+            "rs": 33,
             "rs_1w_pct": 37,
             "rs_1m_pct": 28,
             "tickers": [
@@ -49877,11 +49877,41 @@
         },
         {
             "rank": 70,
+            "industry": "Leisure",
+            "sector": "Consumer Cyclical",
+            "rs": 33,
+            "rs_1w_pct": 41,
+            "rs_1m_pct": 34,
+            "tickers": [
+                {
+                    "t": "CALY",
+                    "n": "Callaway Golf Company"
+                },
+                {
+                    "t": "JOUT",
+                    "n": "Johnson Outdoors Inc."
+                },
+                {
+                    "t": "MSGE",
+                    "n": "Madison Square Garden Entertainment Corp."
+                },
+                {
+                    "t": "GOLF",
+                    "n": "Acushnet Holdings Corp."
+                },
+                {
+                    "t": "HAS",
+                    "n": "Hasbro, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 71,
             "industry": "Recreational Vehicles",
             "sector": "Consumer Cyclical",
-            "rs": 35,
-            "rs_1w_pct": 47,
-            "rs_1m_pct": 44,
+            "rs": 33,
+            "rs_1w_pct": 48,
+            "rs_1m_pct": 45,
             "tickers": [
                 {
                     "t": "DOO",
@@ -49906,40 +49936,10 @@
             ]
         },
         {
-            "rank": 71,
-            "industry": "Banks - Regional",
-            "sector": "Financial Services",
-            "rs": 33,
-            "rs_1w_pct": 39,
-            "rs_1m_pct": 32,
-            "tickers": [
-                {
-                    "t": "WF",
-                    "n": "Woori Financial Group Inc."
-                },
-                {
-                    "t": "BAP",
-                    "n": "Credicorp Ltd."
-                },
-                {
-                    "t": "KB",
-                    "n": "KB Financial Group Inc."
-                },
-                {
-                    "t": "SHG",
-                    "n": "Shinhan Financial Group Co., Ltd."
-                },
-                {
-                    "t": "ISBA",
-                    "n": "Isabella Bank Corporation"
-                }
-            ]
-        },
-        {
             "rank": 72,
             "industry": "Confectioners",
             "sector": "Consumer Defensive",
-            "rs": 33,
+            "rs": 32,
             "rs_1w_pct": 30,
             "rs_1m_pct": 17,
             "tickers": [
@@ -49961,7 +49961,7 @@
             "rank": 73,
             "industry": "Insurance - Reinsurance",
             "sector": "Financial Services",
-            "rs": 33,
+            "rs": 32,
             "rs_1w_pct": 33,
             "rs_1m_pct": 26,
             "tickers": [
@@ -49989,39 +49989,9 @@
         },
         {
             "rank": 74,
-            "industry": "Utilities - Regulated Gas",
-            "sector": "Utilities",
-            "rs": 33,
-            "rs_1w_pct": 31,
-            "rs_1m_pct": 26,
-            "tickers": [
-                {
-                    "t": "CTRI",
-                    "n": "Centuri Holdings, Inc."
-                },
-                {
-                    "t": "BIPC",
-                    "n": "Brookfield Infrastructure Corporation"
-                },
-                {
-                    "t": "BKH",
-                    "n": "Black Hills Corporation"
-                },
-                {
-                    "t": "NWN",
-                    "n": "Northwest Natural Holding Company"
-                },
-                {
-                    "t": "SR",
-                    "n": "Spire Inc."
-                }
-            ]
-        },
-        {
-            "rank": 75,
             "industry": "Specialty Retail",
             "sector": "Consumer Cyclical",
-            "rs": 33,
+            "rs": 32,
             "rs_1w_pct": 35,
             "rs_1m_pct": 28,
             "tickers": [
@@ -50048,10 +50018,130 @@
             ]
         },
         {
+            "rank": 75,
+            "industry": "Utilities - Regulated Gas",
+            "sector": "Utilities",
+            "rs": 32,
+            "rs_1w_pct": 31,
+            "rs_1m_pct": 26,
+            "tickers": [
+                {
+                    "t": "CTRI",
+                    "n": "Centuri Holdings, Inc."
+                },
+                {
+                    "t": "BIPC",
+                    "n": "Brookfield Infrastructure Corporation"
+                },
+                {
+                    "t": "BKH",
+                    "n": "Black Hills Corporation"
+                },
+                {
+                    "t": "NWN",
+                    "n": "Northwest Natural Holding Company"
+                },
+                {
+                    "t": "SR",
+                    "n": "Spire Inc."
+                }
+            ]
+        },
+        {
             "rank": 76,
+            "industry": "Security & Protection Services",
+            "sector": "Industrials",
+            "rs": 32,
+            "rs_1w_pct": 37,
+            "rs_1m_pct": 24,
+            "tickers": [
+                {
+                    "t": "MG",
+                    "n": "Mistras Group, Inc."
+                },
+                {
+                    "t": "NSSC",
+                    "n": "Napco Security Technologies, Inc."
+                },
+                {
+                    "t": "BCO",
+                    "n": "The Brink's Company"
+                },
+                {
+                    "t": "BRC",
+                    "n": "Brady Corporation"
+                },
+                {
+                    "t": "MSA",
+                    "n": "MSA Safety Incorporated"
+                }
+            ]
+        },
+        {
+            "rank": 77,
+            "industry": "Banks - Regional",
+            "sector": "Financial Services",
+            "rs": 32,
+            "rs_1w_pct": 39,
+            "rs_1m_pct": 32,
+            "tickers": [
+                {
+                    "t": "WF",
+                    "n": "Woori Financial Group Inc."
+                },
+                {
+                    "t": "BAP",
+                    "n": "Credicorp Ltd."
+                },
+                {
+                    "t": "KB",
+                    "n": "KB Financial Group Inc."
+                },
+                {
+                    "t": "SHG",
+                    "n": "Shinhan Financial Group Co., Ltd."
+                },
+                {
+                    "t": "ISBA",
+                    "n": "Isabella Bank Corporation"
+                }
+            ]
+        },
+        {
+            "rank": 78,
+            "industry": "REIT - Hotel & Motel",
+            "sector": "Real Estate",
+            "rs": 32,
+            "rs_1w_pct": 33,
+            "rs_1m_pct": 22,
+            "tickers": [
+                {
+                    "t": "HST",
+                    "n": "Host Hotels & Resorts, Inc."
+                },
+                {
+                    "t": "XHR",
+                    "n": "Xenia Hotels & Resorts, Inc."
+                },
+                {
+                    "t": "PEB",
+                    "n": "Pebblebrook Hotel Trust"
+                },
+                {
+                    "t": "RHP",
+                    "n": "Ryman Hospitality Properties, Inc."
+                },
+                {
+                    "t": "APLE",
+                    "n": "Apple Hospitality REIT, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 79,
             "industry": "Utilities - Regulated Electric",
             "sector": "Utilities",
-            "rs": 33,
+            "rs": 32,
             "rs_1w_pct": 30,
             "rs_1m_pct": 26,
             "tickers": [
@@ -50078,11 +50168,11 @@
             ]
         },
         {
-            "rank": 77,
+            "rank": 80,
             "industry": "Conglomerates",
             "sector": "Industrials",
-            "rs": 33,
-            "rs_1w_pct": 33,
+            "rs": 32,
+            "rs_1w_pct": 35,
             "rs_1m_pct": 30,
             "tickers": [
                 {
@@ -50098,102 +50188,12 @@
                     "n": "Valmont Industries, Inc."
                 },
                 {
+                    "t": "HON",
+                    "n": "Honeywell International Inc."
+                },
+                {
                     "t": "AIRT",
                     "n": "Air T, Inc."
-                },
-                {
-                    "t": "MATW",
-                    "n": "Matthews International Corporation"
-                }
-            ]
-        },
-        {
-            "rank": 78,
-            "industry": "REIT - Hotel & Motel",
-            "sector": "Real Estate",
-            "rs": 33,
-            "rs_1w_pct": 33,
-            "rs_1m_pct": 23,
-            "tickers": [
-                {
-                    "t": "HST",
-                    "n": "Host Hotels & Resorts, Inc."
-                },
-                {
-                    "t": "XHR",
-                    "n": "Xenia Hotels & Resorts, Inc."
-                },
-                {
-                    "t": "PEB",
-                    "n": "Pebblebrook Hotel Trust"
-                },
-                {
-                    "t": "RHP",
-                    "n": "Ryman Hospitality Properties, Inc."
-                },
-                {
-                    "t": "APLE",
-                    "n": "Apple Hospitality REIT, Inc."
-                }
-            ]
-        },
-        {
-            "rank": 79,
-            "industry": "unknown",
-            "sector": "unknown",
-            "rs": 33,
-            "rs_1w_pct": 31,
-            "rs_1m_pct": 35,
-            "tickers": [
-                {
-                    "t": "SLV",
-                    "n": "iShares Silver Trust"
-                },
-                {
-                    "t": "DGP",
-                    "n": "DB Gold Double Long ETN"
-                },
-                {
-                    "t": "COPX",
-                    "n": "Global X Copper Miners ETF"
-                },
-                {
-                    "t": "GDX",
-                    "n": "VanEck Gold Miners ETF"
-                },
-                {
-                    "t": "XME",
-                    "n": "State Street SPDR S&P Metals & Mining ETF"
-                }
-            ]
-        },
-        {
-            "rank": 80,
-            "industry": "Security & Protection Services",
-            "sector": "Industrials",
-            "rs": 33,
-            "rs_1w_pct": 37,
-            "rs_1m_pct": 25,
-            "tickers": [
-                {
-                    "t": "MG",
-                    "n": "Mistras Group, Inc."
-                },
-                {
-                    "t": "NSSC",
-                    "n": "Napco Security Technologies, Inc."
-                },
-                {
-                    "t": "BCO",
-                    "n": "The Brink's Company"
-                },
-                {
-                    "t": "BRC",
-                    "n": "Brady Corporation"
-                },
-                {
-                    "t": "MSA",
-                    "n": "MSA Safety Incorporated"
                 }
             ]
         },
@@ -50201,7 +50201,7 @@
             "rank": 81,
             "industry": "Industrial Distribution",
             "sector": "Industrials",
-            "rs": 31,
+            "rs": 30,
             "rs_1w_pct": 39,
             "rs_1m_pct": 28,
             "tickers": [
@@ -50231,7 +50231,7 @@
             "rank": 82,
             "industry": "REIT - Retail",
             "sector": "Real Estate",
-            "rs": 31,
+            "rs": 30,
             "rs_1w_pct": 30,
             "rs_1m_pct": 17,
             "tickers": [
@@ -50261,9 +50261,9 @@
             "rank": 83,
             "industry": "Travel Services",
             "sector": "Consumer Cyclical",
-            "rs": 30,
-            "rs_1w_pct": 29,
-            "rs_1m_pct": 25,
+            "rs": 29,
+            "rs_1w_pct": 28,
+            "rs_1m_pct": 24,
             "tickers": [
                 {
                     "t": "LIND",
@@ -50291,8 +50291,8 @@
             "rank": 84,
             "industry": "Entertainment",
             "sector": "Communication Services",
-            "rs": 30,
-            "rs_1w_pct": 28,
+            "rs": 29,
+            "rs_1w_pct": 27,
             "rs_1m_pct": 28,
             "tickers": [
                 {
@@ -50319,31 +50319,31 @@
         },
         {
             "rank": 85,
-            "industry": "Education & Training Services",
-            "sector": "Consumer Defensive",
-            "rs": 30,
-            "rs_1w_pct": 24,
-            "rs_1m_pct": 21,
+            "industry": "Packaging & Containers",
+            "sector": "Consumer Cyclical",
+            "rs": 29,
+            "rs_1w_pct": 35,
+            "rs_1m_pct": 19,
             "tickers": [
                 {
-                    "t": "LINC",
-                    "n": "Lincoln Educational Services Corporation"
+                    "t": "MYE",
+                    "n": "Myers Industries, Inc."
                 },
                 {
-                    "t": "APEI",
-                    "n": "American Public Education, Inc."
+                    "t": "BALL",
+                    "n": "Ball Corporation"
                 },
                 {
-                    "t": "LGCY",
-                    "n": "Legacy Education Inc."
+                    "t": "SON",
+                    "n": "Sonoco Products Company"
                 },
                 {
-                    "t": "LAUR",
-                    "n": "Laureate Education, Inc."
+                    "t": "TRS",
+                    "n": "TriMas Corporation"
                 },
                 {
-                    "t": "UTI",
-                    "n": "Universal Technical Institute, Inc."
+                    "t": "CCK",
+                    "n": "Crown Holdings, Inc."
                 }
             ]
         },
@@ -50351,9 +50351,9 @@
             "rank": 86,
             "industry": "Apparel Manufacturing",
             "sector": "Consumer Cyclical",
-            "rs": 30,
+            "rs": 29,
             "rs_1w_pct": 35,
-            "rs_1m_pct": 25,
+            "rs_1m_pct": 24,
             "tickers": [
                 {
                     "t": "FIGS",
@@ -50381,7 +50381,7 @@
             "rank": 87,
             "industry": "Waste Management",
             "sector": "Industrials",
-            "rs": 30,
+            "rs": 29,
             "rs_1w_pct": 31,
             "rs_1m_pct": 32,
             "tickers": [
@@ -50409,10 +50409,40 @@
         },
         {
             "rank": 88,
+            "industry": "Education & Training Services",
+            "sector": "Consumer Defensive",
+            "rs": 29,
+            "rs_1w_pct": 23,
+            "rs_1m_pct": 21,
+            "tickers": [
+                {
+                    "t": "LINC",
+                    "n": "Lincoln Educational Services Corporation"
+                },
+                {
+                    "t": "APEI",
+                    "n": "American Public Education, Inc."
+                },
+                {
+                    "t": "LGCY",
+                    "n": "Legacy Education Inc."
+                },
+                {
+                    "t": "LAUR",
+                    "n": "Laureate Education, Inc."
+                },
+                {
+                    "t": "UTI",
+                    "n": "Universal Technical Institute, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 89,
             "industry": "REIT - Specialty",
             "sector": "Real Estate",
             "rs": 28,
-            "rs_1w_pct": 24,
+            "rs_1w_pct": 23,
             "rs_1m_pct": 14,
             "tickers": [
                 {
@@ -50438,11 +50468,11 @@
             ]
         },
         {
-            "rank": 89,
+            "rank": 90,
             "industry": "Footwear & Accessories",
             "sector": "Consumer Cyclical",
             "rs": 28,
-            "rs_1w_pct": 22,
+            "rs_1w_pct": 21,
             "rs_1m_pct": 14,
             "tickers": [
                 {
@@ -50468,41 +50498,11 @@
             ]
         },
         {
-            "rank": 90,
-            "industry": "Packaging & Containers",
-            "sector": "Consumer Cyclical",
-            "rs": 28,
-            "rs_1w_pct": 35,
-            "rs_1m_pct": 19,
-            "tickers": [
-                {
-                    "t": "MYE",
-                    "n": "Myers Industries, Inc."
-                },
-                {
-                    "t": "BALL",
-                    "n": "Ball Corporation"
-                },
-                {
-                    "t": "SON",
-                    "n": "Sonoco Products Company"
-                },
-                {
-                    "t": "TRS",
-                    "n": "TriMas Corporation"
-                },
-                {
-                    "t": "CCK",
-                    "n": "Crown Holdings, Inc."
-                }
-            ]
-        },
-        {
             "rank": 91,
             "industry": "Internet Content & Information",
             "sector": "Communication Services",
             "rs": 26,
-            "rs_1w_pct": 26,
+            "rs_1w_pct": 25,
             "rs_1m_pct": 43,
             "tickers": [
                 {
@@ -50532,8 +50532,8 @@
             "industry": "Asset Management",
             "sector": "Financial Services",
             "rs": 26,
-            "rs_1w_pct": 28,
-            "rs_1m_pct": 28,
+            "rs_1w_pct": 27,
+            "rs_1m_pct": 30,
             "tickers": [
                 {
                     "t": "SII",
@@ -50592,7 +50592,7 @@
             "industry": "Agricultural Inputs",
             "sector": "Basic Materials",
             "rs": 26,
-            "rs_1w_pct": 29,
+            "rs_1w_pct": 28,
             "rs_1m_pct": 12,
             "tickers": [
                 {
@@ -50623,7 +50623,7 @@
             "sector": "Consumer Cyclical",
             "rs": 26,
             "rs_1w_pct": 33,
-            "rs_1m_pct": 29,
+            "rs_1m_pct": 30,
             "tickers": [
                 {
                     "t": "CYD",
@@ -50683,7 +50683,7 @@
             "sector": "Consumer Defensive",
             "rs": 25,
             "rs_1w_pct": 30,
-            "rs_1m_pct": 25,
+            "rs_1m_pct": 24,
             "tickers": [
                 {
                     "t": "BG",
@@ -50712,7 +50712,7 @@
             "industry": "REIT - Diversified",
             "sector": "Real Estate",
             "rs": 25,
-            "rs_1w_pct": 20,
+            "rs_1w_pct": 21,
             "rs_1m_pct": 12,
             "tickers": [
                 {
@@ -50802,7 +50802,7 @@
             "industry": "Specialty Business Services",
             "sector": "Industrials",
             "rs": 23,
-            "rs_1w_pct": 26,
+            "rs_1w_pct": 25,
             "rs_1m_pct": 41,
             "tickers": [
                 {
@@ -50832,7 +50832,7 @@
             "industry": "Utilities - Regulated Water",
             "sector": "Utilities",
             "rs": 23,
-            "rs_1w_pct": 24,
+            "rs_1w_pct": 23,
             "rs_1m_pct": 17,
             "tickers": [
                 {
@@ -50862,8 +50862,8 @@
             "industry": "Index/ETF",
             "sector": "Market Pulse",
             "rs": 23,
-            "rs_1w_pct": 24,
-            "rs_1m_pct": 23,
+            "rs_1w_pct": 23,
+            "rs_1m_pct": 22,
             "tickers": [
                 {
                     "t": "RNAM",
@@ -50892,7 +50892,7 @@
             "industry": "Beverages - Brewers",
             "sector": "Consumer Defensive",
             "rs": 23,
-            "rs_1w_pct": 26,
+            "rs_1w_pct": 25,
             "rs_1m_pct": 21,
             "tickers": [
                 {
@@ -50922,7 +50922,7 @@
             "industry": "Packaged Foods",
             "sector": "Consumer Defensive",
             "rs": 21,
-            "rs_1w_pct": 24,
+            "rs_1w_pct": 23,
             "rs_1m_pct": 15,
             "tickers": [
                 {
@@ -50982,7 +50982,7 @@
             "industry": "Insurance - Diversified",
             "sector": "Financial Services",
             "rs": 21,
-            "rs_1w_pct": 22,
+            "rs_1w_pct": 21,
             "rs_1m_pct": 19,
             "tickers": [
                 {
@@ -51032,8 +51032,8 @@
                     "n": "EastGroup Properties, Inc."
                 },
                 {
-                    "t": "NSA",
-                    "n": "National Storage Affiliates Trust"
+                    "t": "MDV",
+                    "n": "Modiv Industrial, Inc."
                 }
             ]
         },
@@ -51072,7 +51072,7 @@
             "industry": "Medical Instruments & Supplies",
             "sector": "Healthcare",
             "rs": 19,
-            "rs_1w_pct": 22,
+            "rs_1w_pct": 21,
             "rs_1m_pct": 10,
             "tickers": [
                 {
@@ -51192,7 +51192,7 @@
             "industry": "Mortgage Finance",
             "sector": "Financial Services",
             "rs": 18,
-            "rs_1w_pct": 29,
+            "rs_1w_pct": 28,
             "rs_1m_pct": 46,
             "tickers": [
                 {
@@ -51282,7 +51282,7 @@
             "industry": "Electronics & Computer Distribution",
             "sector": "Technology",
             "rs": 17,
-            "rs_1w_pct": 24,
+            "rs_1w_pct": 23,
             "rs_1m_pct": 8,
             "tickers": [
                 {
@@ -51312,7 +51312,7 @@
             "industry": "Lumber & Wood Production",
             "sector": "Basic Materials",
             "rs": 17,
-            "rs_1w_pct": 28,
+            "rs_1w_pct": 27,
             "rs_1m_pct": 10,
             "tickers": [
                 {
@@ -51489,7 +51489,7 @@
             "sector": "Communication Services",
             "rs": 13,
             "rs_1w_pct": 11,
-            "rs_1m_pct": 25,
+            "rs_1m_pct": 24,
             "tickers": [
                 {
                     "t": "SOHU",
@@ -51515,31 +51515,31 @@
         },
         {
             "rank": 125,
-            "industry": "REIT - Office",
+            "industry": "Real Estate Services",
             "sector": "Real Estate",
             "rs": 11,
-            "rs_1w_pct": 14,
-            "rs_1m_pct": 7,
+            "rs_1w_pct": 12,
+            "rs_1m_pct": 17,
             "tickers": [
                 {
-                    "t": "PKST",
-                    "n": "Peakstone Realty Trust"
+                    "t": "MAYS",
+                    "n": "J.W. Mays, Inc."
                 },
                 {
-                    "t": "PSTL",
-                    "n": "Postal Realty Trust, Inc."
+                    "t": "ARL",
+                    "n": "American Realty Investors, Inc."
                 },
                 {
-                    "t": "CDP",
-                    "n": "COPT Defense Properties"
+                    "t": "IRS",
+                    "n": "IRSA Inversiones y Representaciones Sociedad An\u00f3nima"
                 },
                 {
-                    "t": "DEA",
-                    "n": "Easterly Government Properties, Inc."
+                    "t": "JLL",
+                    "n": "Jones Lang LaSalle Incorporated"
                 },
                 {
-                    "t": "NLOP",
-                    "n": "Net Lease Office Properties"
+                    "t": "RMR",
+                    "n": "The RMR Group Inc."
                 }
             ]
         },
@@ -51575,31 +51575,31 @@
         },
         {
             "rank": 127,
-            "industry": "Real Estate Services",
+            "industry": "REIT - Office",
             "sector": "Real Estate",
             "rs": 11,
-            "rs_1w_pct": 12,
-            "rs_1m_pct": 17,
+            "rs_1w_pct": 14,
+            "rs_1m_pct": 7,
             "tickers": [
                 {
-                    "t": "MAYS",
-                    "n": "J.W. Mays, Inc."
+                    "t": "PKST",
+                    "n": "Peakstone Realty Trust"
                 },
                 {
-                    "t": "ARL",
-                    "n": "American Realty Investors, Inc."
+                    "t": "PSTL",
+                    "n": "Postal Realty Trust, Inc."
                 },
                 {
-                    "t": "IRS",
-                    "n": "IRSA Inversiones y Representaciones Sociedad An\u00f3nima"
+                    "t": "CDP",
+                    "n": "COPT Defense Properties"
                 },
                 {
-                    "t": "JLL",
-                    "n": "Jones Lang LaSalle Incorporated"
+                    "t": "DEA",
+                    "n": "Easterly Government Properties, Inc."
                 },
                 {
-                    "t": "RMR",
-                    "n": "The RMR Group Inc."
+                    "t": "NLOP",
+                    "n": "Net Lease Office Properties"
                 }
             ]
         },
@@ -51845,36 +51845,6 @@
         },
         {
             "rank": 136,
-            "industry": "Consulting Services",
-            "sector": "Industrials",
-            "rs": 4,
-            "rs_1w_pct": 4,
-            "rs_1m_pct": 8,
-            "tickers": [
-                {
-                    "t": "FCN",
-                    "n": "FTI Consulting, Inc."
-                },
-                {
-                    "t": "HURN",
-                    "n": "Huron Consulting Group Inc."
-                },
-                {
-                    "t": "ICFI",
-                    "n": "ICF International, Inc."
-                },
-                {
-                    "t": "CRAI",
-                    "n": "CRA International, Inc."
-                },
-                {
-                    "t": "EFX",
-                    "n": "Equifax Inc."
-                }
-            ]
-        },
-        {
-            "rank": 137,
             "industry": "Staffing & Employment Services",
             "sector": "Industrials",
             "rs": 4,
@@ -51900,6 +51870,36 @@
                 {
                     "t": "KFRC",
                     "n": "Kforce Inc."
+                }
+            ]
+        },
+        {
+            "rank": 137,
+            "industry": "Consulting Services",
+            "sector": "Industrials",
+            "rs": 4,
+            "rs_1w_pct": 4,
+            "rs_1m_pct": 8,
+            "tickers": [
+                {
+                    "t": "FCN",
+                    "n": "FTI Consulting, Inc."
+                },
+                {
+                    "t": "HURN",
+                    "n": "Huron Consulting Group Inc."
+                },
+                {
+                    "t": "ICFI",
+                    "n": "ICF International, Inc."
+                },
+                {
+                    "t": "CRAI",
+                    "n": "CRA International, Inc."
+                },
+                {
+                    "t": "EFX",
+                    "n": "Equifax Inc."
                 }
             ]
         },
@@ -52311,7 +52311,7 @@
     "stages": [
         {
             "sector": "Energy",
-            "count": 138,
+            "count": 137,
             "s1": 5,
             "s2": 91,
             "s3": 2,
@@ -52384,10 +52384,6 @@
                 {
                     "t": "NE",
                     "n": "Noble Corporation plc"
-                },
-                {
-                    "t": "DHT",
-                    "n": "DHT Holdings, Inc."
                 },
                 {
                     "t": "OII",
@@ -52874,7 +52870,7 @@
         },
         {
             "sector": "Basic Materials",
-            "count": 150,
+            "count": 151,
             "s1": 5,
             "s2": 88,
             "s3": 2,
@@ -52903,6 +52899,10 @@
                 {
                     "t": "ARIS",
                     "n": "Aris Mining Corporation"
+                },
+                {
+                    "t": "ALOY",
+                    "n": "REalloys Inc."
                 },
                 {
                     "t": "SVM",
@@ -53820,7 +53820,7 @@
         },
         {
             "sector": "Financial Services",
-            "count": 663,
+            "count": 662,
             "s1": 10,
             "s2": 76,
             "s3": 2,
@@ -54559,10 +54559,6 @@
                     "n": "First Financial Corporation"
                 },
                 {
-                    "t": "MTB",
-                    "n": "M&T Bank Corporation"
-                },
-                {
                     "t": "CCNE",
                     "n": "CNB Financial Corporation"
                 },
@@ -54983,10 +54979,6 @@
                     "n": "Amerant Bancorp Inc."
                 },
                 {
-                    "t": "FBK",
-                    "n": "FB Financial Corporation"
-                },
-                {
                     "t": "NPB",
                     "n": "Northpointe Bancshares, Inc."
                 },
@@ -55233,10 +55225,6 @@
                 {
                     "t": "LARK",
                     "n": "Landmark Bancorp, Inc."
-                },
-                {
-                    "t": "FBIZ",
-                    "n": "First Business Financial Services, Inc."
                 },
                 {
                     "t": "BMN",
@@ -55545,6 +55533,10 @@
                 {
                     "t": "RMBI",
                     "n": "Richmond Mutual Bancorporation, Inc."
+                },
+                {
+                    "t": "NRIM",
+                    "n": "Northrim BanCorp, Inc."
                 },
                 {
                     "t": "WAFDP",
@@ -55909,6 +55901,10 @@
                 {
                     "t": "HOMB",
                     "n": "Home Bancshares, Inc. (Conway, AR)"
+                },
+                {
+                    "t": "HERZ",
+                    "n": "Herzfeld Credit Income Fund, Inc."
                 },
                 {
                     "t": "SEIC",
@@ -56483,7 +56479,7 @@
         },
         {
             "sector": "Industrials",
-            "count": 373,
+            "count": 374,
             "s1": 9,
             "s2": 75,
             "s3": 3,
@@ -56946,10 +56942,6 @@
                     "n": "Embraer S.A."
                 },
                 {
-                    "t": "GPGI",
-                    "n": "GPGI, Inc."
-                },
-                {
                     "t": "PRLB",
                     "n": "Proto Labs, Inc."
                 },
@@ -57250,6 +57242,10 @@
                     "n": "Leonardo DRS, Inc."
                 },
                 {
+                    "t": "HON",
+                    "n": "Honeywell International Inc."
+                },
+                {
                     "t": "KEX",
                     "n": "Kirby Corporation"
                 },
@@ -57528,6 +57524,10 @@
                 {
                     "t": "ARMK",
                     "n": "Aramark"
+                },
+                {
+                    "t": "KE",
+                    "n": "Kimball Electronics, Inc."
                 },
                 {
                     "t": "ALK",
@@ -58061,7 +58061,7 @@
         },
         {
             "sector": "Healthcare",
-            "count": 393,
+            "count": 390,
             "s1": 12,
             "s2": 66,
             "s3": 5,
@@ -58170,10 +58170,6 @@
                 {
                     "t": "GLUE",
                     "n": "Monte Rosa Therapeutics, Inc."
-                },
-                {
-                    "t": "GPCR",
-                    "n": "Structure Therapeutics Inc."
                 },
                 {
                     "t": "PACS",
@@ -58402,10 +58398,6 @@
                 {
                     "t": "ESTA",
                     "n": "Establishment Labs Holdings Inc."
-                },
-                {
-                    "t": "RNA",
-                    "n": "Atrium Therapeutics, Inc. Common Stock"
                 },
                 {
                     "t": "CGEM",
@@ -59236,10 +59228,6 @@
                     "n": "Revvity, Inc."
                 },
                 {
-                    "t": "DHR",
-                    "n": "Danaher Corporation"
-                },
-                {
                     "t": "APLS",
                     "n": "Apellis Pharmaceuticals, Inc."
                 },
@@ -59258,6 +59246,10 @@
                 {
                     "t": "TGTX",
                     "n": "TG Therapeutics, Inc."
+                },
+                {
+                    "t": "MDWD",
+                    "n": "MediWound Ltd."
                 },
                 {
                     "t": "PRTC",
@@ -59382,10 +59374,6 @@
                 {
                     "t": "STAA",
                     "n": "STAAR Surgical Company"
-                },
-                {
-                    "t": "A",
-                    "n": "Agilent Technologies, Inc."
                 },
                 {
                     "t": "HAE",
@@ -59646,7 +59634,7 @@
             "sector": "Real Estate",
             "count": 146,
             "s1": 10,
-            "s2": 65,
+            "s2": 66,
             "s3": 8,
             "s4": 16,
             "tickers": [
@@ -59903,6 +59891,10 @@
                     "n": "NNN REIT, Inc."
                 },
                 {
+                    "t": "MDV",
+                    "n": "Modiv Industrial, Inc."
+                },
+                {
                     "t": "NSA",
                     "n": "National Storage Affiliates Trust"
                 },
@@ -59973,10 +59965,6 @@
                 {
                     "t": "MRP",
                     "n": "Millrose Properties, Inc."
-                },
-                {
-                    "t": "OLP",
-                    "n": "One Liberty Properties, Inc."
                 },
                 {
                     "t": "BFS",
@@ -60239,8 +60227,8 @@
         },
         {
             "sector": "Consumer Cyclical",
-            "count": 299,
-            "s1": 16,
+            "count": 301,
+            "s1": 17,
             "s2": 61,
             "s3": 3,
             "s4": 19,
@@ -60722,6 +60710,10 @@
                     "n": "Flanigan's Enterprises, Inc."
                 },
                 {
+                    "t": "SW",
+                    "n": "Smurfit Westrock Plc"
+                },
+                {
                     "t": "SKY",
                     "n": "Champion Homes, Inc."
                 },
@@ -61190,6 +61182,10 @@
                     "n": "Kontoor Brands, Inc."
                 },
                 {
+                    "t": "SAH",
+                    "n": "Sonic Automotive, Inc."
+                },
+                {
                     "t": "PDD",
                     "n": "PDD Holdings Inc."
                 },
@@ -61446,9 +61442,9 @@
         },
         {
             "sector": "Communication Services",
-            "count": 109,
-            "s1": 17,
-            "s2": 52,
+            "count": 108,
+            "s1": 18,
+            "s2": 53,
             "s3": 2,
             "s4": 28,
             "tickers": [
@@ -61777,10 +61773,6 @@
                     "n": "News Corporation"
                 },
                 {
-                    "t": "CHTR",
-                    "n": "Charter Communications, Inc."
-                },
-                {
                     "t": "RDDT",
                     "n": "Reddit, Inc."
                 },
@@ -61893,7 +61885,7 @@
         },
         {
             "sector": "Consumer Defensive",
-            "count": 119,
+            "count": 120,
             "s1": 5,
             "s2": 50,
             "s3": 13,
@@ -62172,6 +62164,10 @@
                     "n": "Costco Wholesale Corporation"
                 },
                 {
+                    "t": "KDP",
+                    "n": "Keurig Dr Pepper Inc."
+                },
+                {
                     "t": "STZ",
                     "n": "Constellation Brands, Inc."
                 },
@@ -62380,8 +62376,8 @@
         },
         {
             "sector": "Technology",
-            "count": 365,
-            "s1": 21,
+            "count": 363,
+            "s1": 20,
             "s2": 46,
             "s3": 1,
             "s4": 32,
@@ -62829,10 +62825,6 @@
                 {
                     "t": "AVT",
                     "n": "Avnet, Inc."
-                },
-                {
-                    "t": "TDY",
-                    "n": "Teledyne Technologies Incorporated"
                 },
                 {
                     "t": "MCHP",
@@ -63525,10 +63517,6 @@
                 {
                     "t": "ORCL",
                     "n": "Oracle Corporation"
-                },
-                {
-                    "t": "LIF",
-                    "n": "Life360, Inc."
                 },
                 {
                     "t": "CRM",
