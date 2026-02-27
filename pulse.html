@@ -370,6 +370,18 @@
         .pulse-chart-link:hover .pulse-chart-overlay {
             opacity: 1;
         }
+
+        .low-signal-badge {
+            background: rgba(255, 140, 0, 0.15);
+            color: #FF8C00;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            border: 1px solid rgba(255, 140, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
     </style>
 </head>
 
@@ -465,6 +477,7 @@
                     </div>
                     <div style="text-align: right; display: flex; flex-direction: column; gap: 4px; align-items: flex-end;">
                         <span class="trend-badge ${trendClass}">${item.trend || 'Sideways'}</span>
+                        ${item.low_signal ? `<div class="low-signal-badge" title="Warning: Low Volume or Missing Fundamental Data">⚠️ Low Signal</div>` : ''}
                     </div>
                 </div>
                 
