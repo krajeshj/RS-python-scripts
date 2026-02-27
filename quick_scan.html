@@ -786,9 +786,39 @@
             transition: all 0.2s;
         }
 
-        .quality-toggle.active .quality-layer {
-            background: var(--green);
-            box-shadow: 0 0 8px rgba(0, 230, 118, 0.5);
+        @media (max-width: 480px) {
+            .container {
+                padding: 0.5rem 0.5rem;
+            }
+
+            header {
+                gap: 4px;
+                padding: 0.5rem 0;
+                margin-bottom: 0.75rem;
+                margin-top: -10px;
+            }
+
+            h1 {
+                font-size: 1.25rem;
+            }
+
+            .logo-icon {
+                font-size: 1.5rem;
+                margin-bottom: 0px;
+            }
+
+            .nav-links {
+                gap: 0.25rem;
+                flex-wrap: wrap;
+                justify-content: center;
+                margin: 2px 0;
+            }
+
+            .nav-link {
+                font-size: 0.7rem;
+                padding: 3px 6px;
+                margin-bottom: 2px;
+            }
         }
     </style>
 </head>
