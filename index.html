@@ -64,7 +64,6 @@
             margin: 0 auto;
             padding: 2rem 1.5rem;
             width: 100%;
-            overflow-x: hidden;
         }
 
         header {
@@ -810,7 +809,10 @@
         }
 
         @media (max-width: 480px) {
-            .container { padding: 4px; }
+            .container {
+                padding: 4px;
+            }
+
             header {
                 flex-direction: row;
                 flex-wrap: wrap;
@@ -820,29 +822,35 @@
                 margin-bottom: 8px;
                 gap: 4px;
             }
+
             .logo-icon {
                 font-size: 1.2rem;
                 margin: 0;
             }
+
             h1 {
                 font-size: 1.15rem;
                 margin: 0;
                 flex: 1;
                 text-align: left;
             }
-            #last-updated, .last-updated {
+
+            #last-updated,
+            .last-updated {
                 font-size: 0.65rem;
                 padding: 2px 6px;
                 margin: 0;
             }
+
             .nav-links {
                 width: 100%;
                 gap: 4px;
                 justify-content: flex-start;
                 margin: 0;
                 padding-top: 4px;
-                border-top: 1px solid rgba(255,255,255,0.05);
+                border-top: 1px solid rgba(255, 255, 255, 0.05);
             }
+
             .nav-link {
                 font-size: 0.65rem;
                 padding: 2px 6px;
