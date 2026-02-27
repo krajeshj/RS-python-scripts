@@ -383,6 +383,7 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None, 
             "canslim": s.get(TITLE_CANSLIM, {}),
             "days_to_earnings": int(s.get(TITLE_DTE, -1)),
             "is_speculative": bool(s.get("is_speculative", False)),
+            "low_signal": bool(s.get("low_signal", False)),
             "is_minervini": bool(s.get(TITLE_MINERVINI, 0) >= 8),
             "flip": bool(s.get(TITLE_FLIP, False)),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
@@ -414,6 +415,7 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None, 
             "canslim": s.get(TITLE_CANSLIM, {}),
             "days_to_earnings": int(s.get(TITLE_DTE, -1)),
             "is_speculative": bool(s.get("is_speculative", False)),
+            "low_signal": bool(s.get("low_signal", False)),
             "is_minervini": bool(s.get(TITLE_MINERVINI, 0) >= 8),
             "flip": bool(s.get(TITLE_FLIP, False)),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
@@ -442,6 +444,7 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None, 
             "canslim": s.get(TITLE_CANSLIM, {}),
             "days_to_earnings": int(s.get(TITLE_DTE, -1)),
             "is_speculative": bool(s.get("is_speculative", False)),
+            "low_signal": bool(s.get("low_signal", False)),
             "is_minervini": bool(s.get(TITLE_MINERVINI, 0) >= 8),
             "flip": bool(s.get(TITLE_FLIP, False)),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
@@ -497,6 +500,7 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None, 
             "rs_rank": int(s[TITLE_PERCENTILE]),
             "trend": s.get(TITLE_COMMENTARY, "Sideways"),
             "commentary": s.get("Commentary_Text", "Analyzing trend..."),
+            "low_signal": bool(s.get("low_signal", False)),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}"
         })
 
@@ -625,6 +629,9 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
         supply_demand = latest_daily["Volume"] > latest_daily["vol20"]
         
         avg_vol = meta.get("avg_volume", 0)
+        if avg_vol == 0 and "vol20" in latest_daily and pd.notna(latest_daily["vol20"]):
+            avg_vol = float(latest_daily["vol20"])
+            
         institutional_liquidity = avg_vol > 400_000  # Institutional-grade volume
         
         # Days to earnings
@@ -655,13 +662,16 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
         price = float(latest_daily["Close"])
         market_cap = meta.get("marketCap", 0)
         
+        # Check for missing crucial metadata to flag as low_signal
+        low_signal = (market_cap == 0) or (meta.get("trailing_eps", 0) == 0)
+        
         # Consolidation of fundamental logic (Fail-open constraints)
         is_sp = universe in ["S&P 500", "S&P 400", "S&P 600", "Nasdaq 100"]
         
         fundamental_checks = [
             (meta.get("trailing_eps", 0) > 0 or meta.get("forward_eps", 0) > 0) if meta.get("trailing_eps", 0) != 0 else True,
             price > 5,
-            meta.get("avg_volume", 0) > 100_000 if meta.get("avg_volume", 0) != 0 else True,
+            avg_vol > 100_000,
             market_cap > 50_000_000 if market_cap != 0 else True,
             meta.get("debt_to_equity", 0) < 500,
             meta.get("operating_margin", 0) > -0.8 if meta.get("operating_margin", 0) != 0 else True
@@ -688,7 +698,8 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
             trend_comment,
             stage,
             ticker_data.get("label", ""),
-            ticker_data.get("date", "")
+            ticker_data.get("date", ""),
+            bool(low_signal)
         )
     except Exception as e:
         # print(f"Error processing {ticker}: {e}")
@@ -745,7 +756,7 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
     sector_stages = {}
 
     for res in results:
-        ticker, mm, sector, industry, universe, rs, pct, rs1w, rs1m, rs3m, rs6m, rmv, close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, speculative, name, status, comment, stage, label, date = res
+        ticker, mm, sector, industry, universe, rs, pct, rs1w, rs1m, rs3m, rs6m, rmv, close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, speculative, name, status, comment, stage, label, date, low_signal = res
         
         if sector not in sector_stages:
             sector_stages[sector] = {"s1": 0, "s2": 0, "s3": 0, "s4": 0, "total": 0, "tickers": []}
@@ -764,7 +775,7 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
         relative_strengths.append((
             0, ticker, mm, sector, industry, universe,
             rs, pct, rs1w, rs1m, rs3m, rs6m, rmv,
-            close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, is_speculative, name, status, comment, stage, label, date
+            close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, is_speculative, name, status, comment, stage, label, date, low_signal
         ))
         stock_rs[ticker] = rs
 
@@ -789,7 +800,7 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
         TITLE_RS, TITLE_PERCENTILE, "RS_1W", TITLE_1M, TITLE_3M, TITLE_6M, TITLE_RMV,
         TITLE_CLOSE, TITLE_ATR_PCT, TITLE_PTC, TITLE_CONTRACTION, TITLE_BREAKOUT,
         TITLE_NOT_EXT, TITLE_FLIP, TITLE_SPY_OK, TITLE_SOURCE, TITLE_CANSLIM, TITLE_DTE, "is_speculative",
-        TITLE_NAME, TITLE_COMMENTARY, "Commentary_Text", TITLE_STAGE, "label", "date"
+        TITLE_NAME, TITLE_COMMENTARY, "Commentary_Text", TITLE_STAGE, "label", "date", "low_signal"
     ])
 
     if df.empty:
