@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-02-26T21:59:16Z",
+    "last_updated": "2026-02-26T22:02:02Z",
     "stocks": [
         {
             "rank": 1,
@@ -2727,23 +2727,19 @@
         },
         {
             "rank": 9,
-            "industry": "Internet Content & Information",
-            "sector": "Communication Services",
+            "industry": "Drug Manufacturers - General",
+            "sector": "Healthcare",
             "rs": 45,
-            "rs_1w_pct": 49,
-            "rs_1m_pct": 54,
+            "rs_1w_pct": 53,
+            "rs_1m_pct": 45,
             "tickers": [
                 {
-                    "t": "GOOGL",
-                    "n": "Alphabet Inc."
+                    "t": "GILD",
+                    "n": "Gilead Sciences, Inc."
                 },
                 {
-                    "t": "GOOG",
-                    "n": "Alphabet Inc."
-                },
-                {
-                    "t": "META",
-                    "n": "Meta Platforms, Inc."
+                    "t": "AMGN",
+                    "n": "Amgen Inc."
                 }
             ]
         },
@@ -2779,19 +2775,23 @@
         },
         {
             "rank": 11,
-            "industry": "Drug Manufacturers - General",
-            "sector": "Healthcare",
+            "industry": "Internet Content & Information",
+            "sector": "Communication Services",
             "rs": 45,
-            "rs_1w_pct": 53,
-            "rs_1m_pct": 45,
+            "rs_1w_pct": 49,
+            "rs_1m_pct": 54,
             "tickers": [
                 {
-                    "t": "GILD",
-                    "n": "Gilead Sciences, Inc."
+                    "t": "GOOGL",
+                    "n": "Alphabet Inc."
                 },
                 {
-                    "t": "AMGN",
-                    "n": "Amgen Inc."
+                    "t": "GOOG",
+                    "n": "Alphabet Inc."
+                },
+                {
+                    "t": "META",
+                    "n": "Meta Platforms, Inc."
                 }
             ]
         },
@@ -2827,6 +2827,28 @@
         },
         {
             "rank": 13,
+            "industry": "Discount Stores",
+            "sector": "Consumer Defensive",
+            "rs": 36,
+            "rs_1w_pct": 40,
+            "rs_1m_pct": 27,
+            "tickers": [
+                {
+                    "t": "WMT",
+                    "n": "Walmart Inc."
+                },
+                {
+                    "t": "TGT",
+                    "n": "Target Corporation"
+                },
+                {
+                    "t": "COST",
+                    "n": "Costco Wholesale Corporation"
+                }
+            ]
+        },
+        {
+            "rank": 14,
             "industry": "Beverages - Non-Alcoholic",
             "sector": "Consumer Defensive",
             "rs": 36,
@@ -2852,28 +2874,6 @@
                 {
                     "t": "KDP",
                     "n": "Keurig Dr Pepper Inc."
-                }
-            ]
-        },
-        {
-            "rank": 14,
-            "industry": "Discount Stores",
-            "sector": "Consumer Defensive",
-            "rs": 36,
-            "rs_1w_pct": 40,
-            "rs_1m_pct": 27,
-            "tickers": [
-                {
-                    "t": "WMT",
-                    "n": "Walmart Inc."
-                },
-                {
-                    "t": "TGT",
-                    "n": "Target Corporation"
-                },
-                {
-                    "t": "COST",
-                    "n": "Costco Wholesale Corporation"
                 }
             ]
         },
@@ -2949,24 +2949,6 @@
         },
         {
             "rank": 18,
-            "industry": "Electronic Gaming & Multimedia",
-            "sector": "Communication Services",
-            "rs": 22,
-            "rs_1w_pct": 22,
-            "rs_1m_pct": 32,
-            "tickers": [
-                {
-                    "t": "EA",
-                    "n": "Electronic Arts Inc."
-                },
-                {
-                    "t": "TTWO",
-                    "n": "Take-Two Interactive Software, Inc."
-                }
-            ]
-        },
-        {
-            "rank": 19,
             "industry": "Medical Devices",
             "sector": "Healthcare",
             "rs": 22,
@@ -2980,6 +2962,24 @@
                 {
                     "t": "DXCM",
                     "n": "DexCom, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 19,
+            "industry": "Electronic Gaming & Multimedia",
+            "sector": "Communication Services",
+            "rs": 22,
+            "rs_1w_pct": 22,
+            "rs_1m_pct": 32,
+            "tickers": [
+                {
+                    "t": "EA",
+                    "n": "Electronic Arts Inc."
+                },
+                {
+                    "t": "TTWO",
+                    "n": "Take-Two Interactive Software, Inc."
                 }
             ]
         },
