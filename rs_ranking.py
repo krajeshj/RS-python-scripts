@@ -384,6 +384,7 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None, 
             "days_to_earnings": int(s.get(TITLE_DTE, -1)),
             "is_speculative": bool(s.get("is_speculative", False)),
             "low_signal": bool(s.get("low_signal", False)),
+            "marketCap": s.get("marketCap", 0),
             "is_minervini": bool(s.get(TITLE_MINERVINI, 0) >= 8),
             "flip": bool(s.get(TITLE_FLIP, False)),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
@@ -416,6 +417,7 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None, 
             "days_to_earnings": int(s.get(TITLE_DTE, -1)),
             "is_speculative": bool(s.get("is_speculative", False)),
             "low_signal": bool(s.get("low_signal", False)),
+            "marketCap": s.get("marketCap", 0),
             "is_minervini": bool(s.get(TITLE_MINERVINI, 0) >= 8),
             "flip": bool(s.get(TITLE_FLIP, False)),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
@@ -445,6 +447,7 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None, 
             "days_to_earnings": int(s.get(TITLE_DTE, -1)),
             "is_speculative": bool(s.get("is_speculative", False)),
             "low_signal": bool(s.get("low_signal", False)),
+            "marketCap": s.get("marketCap", 0),
             "is_minervini": bool(s.get(TITLE_MINERVINI, 0) >= 8),
             "flip": bool(s.get(TITLE_FLIP, False)),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
@@ -501,6 +504,7 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None, 
             "trend": s.get(TITLE_COMMENTARY, "Sideways"),
             "commentary": s.get("Commentary_Text", "Analyzing trend..."),
             "low_signal": bool(s.get("low_signal", False)),
+            "marketCap": s.get("marketCap", 0),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}"
         })
 
@@ -699,7 +703,8 @@ def _process_single_ticker(ticker, ticker_data, ref_candles, spy_ok, minervini_s
             stage,
             ticker_data.get("label", ""),
             ticker_data.get("date", ""),
-            bool(low_signal)
+            bool(low_signal),
+            float(market_cap)
         )
     except Exception as e:
         # print(f"Error processing {ticker}: {e}")
@@ -756,7 +761,7 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
     sector_stages = {}
 
     for res in results:
-        ticker, mm, sector, industry, universe, rs, pct, rs1w, rs1m, rs3m, rs6m, rmv, close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, speculative, name, status, comment, stage, label, date, low_signal = res
+        ticker, mm, sector, industry, universe, rs, pct, rs1w, rs1m, rs3m, rs6m, rmv, close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, speculative, name, status, comment, stage, label, date, low_signal, market_cap = res
         
         if sector not in sector_stages:
             sector_stages[sector] = {"s1": 0, "s2": 0, "s3": 0, "s4": 0, "total": 0, "tickers": []}
@@ -775,7 +780,7 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
         relative_strengths.append((
             0, ticker, mm, sector, industry, universe,
             rs, pct, rs1w, rs1m, rs3m, rs6m, rmv,
-            close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, is_speculative, name, status, comment, stage, label, date, low_signal
+            close, atr, ptc, contr, brk, nextend, flip, sok, source, canslim, dte, is_speculative, name, status, comment, stage, label, date, low_signal, market_cap
         ))
         stock_rs[ticker] = rs
 
@@ -800,7 +805,7 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
         TITLE_RS, TITLE_PERCENTILE, "RS_1W", TITLE_1M, TITLE_3M, TITLE_6M, TITLE_RMV,
         TITLE_CLOSE, TITLE_ATR_PCT, TITLE_PTC, TITLE_CONTRACTION, TITLE_BREAKOUT,
         TITLE_NOT_EXT, TITLE_FLIP, TITLE_SPY_OK, TITLE_SOURCE, TITLE_CANSLIM, TITLE_DTE, "is_speculative",
-        TITLE_NAME, TITLE_COMMENTARY, "Commentary_Text", TITLE_STAGE, "label", "date", "low_signal"
+        TITLE_NAME, TITLE_COMMENTARY, "Commentary_Text", TITLE_STAGE, "label", "date", "low_signal", "marketCap"
     ])
 
     if df.empty:
