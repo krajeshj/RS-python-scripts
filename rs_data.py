@@ -586,8 +586,15 @@ def load_prices_from_yahoo(securities, info = {}):
         if chunk_start + DOWNLOAD_CHUNK < len(escaped_tickers):
             time.sleep(2)
 
-    # Metadata check - Fetch if missing entirely or missing the 'name' field
-    missing_metadata = [t for t in all_tickers if t not in TICKER_INFO_DICT or "name" not in TICKER_INFO_DICT[t].get("info", {})]
+    # Metadata check - Fetch if missing entirely or missing crucial fields like 'name', 'trailing_eps', or 'avg_volume'
+    missing_metadata = [
+        t for t in all_tickers 
+        if t not in TICKER_INFO_DICT 
+        or "name" not in TICKER_INFO_DICT[t].get("info", {})
+        or "trailing_eps" not in TICKER_INFO_DICT[t].get("info", {})
+        or "avg_volume" not in TICKER_INFO_DICT[t].get("info", {})
+        or "marketCap" not in TICKER_INFO_DICT[t].get("info", {})
+    ]
     if missing_metadata:
         load_ticker_info_batch(missing_metadata, TICKER_INFO_DICT)
         write_ticker_info_file(TICKER_INFO_DICT)
