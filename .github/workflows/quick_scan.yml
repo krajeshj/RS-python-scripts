@@ -1,0 +1,33 @@
+name: Trigger Quick Scan
+on:
+  workflow_dispatch:
+
+jobs:
+  quick-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Quick Scan
+        run: |
+          python rs_ranking.py --test --quick
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add output/quick_web_data.json
+          git commit -m "feat: updated via UI Quick Scan trigger" || echo "No changes found"
+          git push || echo "Nothing to push"
