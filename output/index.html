@@ -730,6 +730,14 @@
             animation: pulse 2s infinite;
         }
 
+        .stats-top {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
         @keyframes pulse {
             0% {
                 opacity: 0.8;
@@ -949,6 +957,27 @@
             <div class="meta-info" id="filter-count">Showing top candidates</div>
         </div>
 
+        <section class="management-section"
+            style="margin-bottom: 2rem; background: var(--glass); backdrop-filter: blur(var(--glass-b)); border-radius: var(--radius); border: 1px solid var(--border); padding: 1.5rem;">
+            <h2 class="section-title" style="color: var(--cyan); margin-bottom: 1rem; font-size: 1.25rem;">⚡ Trigger
+                Quick Scan</h2>
+            <p style="font-size: 0.85rem; color: var(--text2); margin-bottom: 1rem;">Force an immediate intraday scan
+                via GitHub Actions. Process takes ~2-3 minutes.</p>
+
+            <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 400px;">
+                <div class="input-group">
+                    <label style="display: block; font-size: 0.8rem; color: var(--text2); margin-bottom: 4px;">GitHub
+                        PAT Input (required)</label>
+                    <input type="password" id="gh-pat" placeholder="ghp_..."
+                        style="width: 100%; padding: 8px; border-radius: 6px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text);">
+                </div>
+                <button id="trigger-scan-btn" onclick="triggerQuickScan()"
+                    style="padding: 10px 16px; background: var(--cyan); color: var(--bg); font-weight: 700; border: none; border-radius: 8px; cursor: pointer;">🚀
+                    Run Intraday Scan</button>
+                <div id="scan-status-msg" style="display: none; font-size: 0.85rem; padding-top: 4px;"></div>
+            </div>
+        </section>
+
         <section>
             <div class="section-header">
                 <h2 class="section-title">✨ Top 6 Alpha Leaders</h2>
@@ -982,6 +1011,13 @@
 
         async function init() {
             try {
+                // Load saved PAT from local storage if exists
+                const savedPat = localStorage.getItem('gh_pat');
+                if (savedPat) {
+                    const patInput = document.getElementById('gh-pat');
+                    if (patInput) patInput.value = savedPat;
+                }
+
                 const response = await fetch(`web_data.json?t=${Date.now()}`);
                 allData = await response.json();
 
@@ -1111,27 +1147,29 @@
                 }
             }
             const volBadge = `<div style="${volStyle}" title="Avg Vol: ${fmtVol(s.avg_volume)}">Vol: ${fmtVol(s.volume)}</div>`;
+            const priceBadge = s.price ? `<div style="${volStyle}">Price: $${s.price.toFixed(2)}</div>` : '';
 
             return `
                 <div class="card" style="animation-delay: ${idx * 0.05}s">
                     <div class="card-delete" onclick="hideTicker('${s.ticker}')" title="Hide ${s.ticker}">✕</div>
-                    <div class="card-header">
-                        <div class="ticker-group">
-                            <div class="ticker-box">
+                    <div style="display:flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <div style="display:flex; align-items:center; gap:8px;">
                                 <a href="${s.tradingview_url}" target="_blank" class="ticker">${s.ticker}</a>
-                                <div class="company-name">${s.name}</div>
-                                <div class="meta-info" style="margin-top: 4px; font-size: 0.75rem;">${s.industry} &bull; ${s.sector}</div>
+                                <div class="rs-pct-badge" style="color: var(--cyan)">1W: ${s.rs_1w_pct || 'N/A'}%</div>
                             </div>
-                            <div class="rs-pct-badge" style="color: var(--cyan)">1W: ${s.rs_1w_pct || 'N/A'}%</div>
-                            <div class="rs-pct-badge" style="color: var(--orange)">1M: ${s.rs_1m_pct || 'N/A'}%</div>
+                            <div class="company-name">${s.name}</div>
+                            <div class="meta-info" style="margin-top: 4px; font-size: 0.75rem;">${s.industry} &bull; ${s.sector}</div>
                             ${createCanslimTray(s.canslim)}
                         </div>
-                        <div class="stats-top">
-                            <div class="rank-badge">RANK #${s.rank}</div>
+                        <div style="display:flex; flex-direction: column; align-items: flex-end; gap:4px;">
+                            <div style="font-size:0.7rem; color:var(--text2); opacity:0.8;">#${s.rank}</div>
                             ${s.flip ? `<div class="flip-badge">⚡ PRIME FLIP</div>` : ''}
-                            ${priceStr ? `<div class="source-badge">${priceStr}</div>` : ''}
-                            ${volBadge}
-                            <div class="source-badge">${s.source}</div>
+                            <div class="source-badge" style="margin-bottom: 4px;">${s.source}</div>
+                            <div style="display:flex; gap:4px; flex-wrap:wrap; justify-content: flex-end;">
+                                ${priceBadge}
+                                ${volBadge}
+                            </div>
                         </div>
                     </div>
                     
@@ -1197,6 +1235,57 @@
             const mLabel = minerviniOn ? `, Minervini Only` : '';
             const t5Label = top5On ? `, Top 5 Sectors` : '';
             document.getElementById('filter-count').textContent = `${filtered.length} of ${pool.length} candidates (RS:${minRS}-${maxRS}, RMV:${minRMV}-${maxRMV}${qLabel}${mLabel}${t5Label})`;
+        }
+
+        async function triggerQuickScan() {
+            const pat = document.getElementById('gh-pat').value;
+            const statusMsg = document.getElementById('scan-status-msg');
+            const btn = document.getElementById('trigger-scan-btn');
+
+            if (!pat) {
+                statusMsg.style.display = 'block';
+                statusMsg.style.color = 'var(--orange)';
+                statusMsg.innerText = 'Please provide your GitHub PAT.';
+                return;
+            }
+
+            localStorage.setItem('gh_pat', pat);
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            btn.innerText = '⏳ Triggering...';
+            statusMsg.style.display = 'block';
+            statusMsg.style.color = 'var(--cyan)';
+            statusMsg.innerText = 'Connecting to GitHub...';
+
+            const repo = "krajeshj/RS-python-scripts";
+            const url = `https://api.github.com/repos/${repo}/actions/workflows/quick_scan.yml/dispatches`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `token ${pat}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                    },
+                    body: JSON.stringify({ ref: 'master' })
+                });
+
+                if (response.ok) {
+                    statusMsg.style.color = 'var(--green)';
+                    statusMsg.innerText = '✅ Update triggered! Scan takes ~2-3 mins. Refresh later.';
+                } else {
+                    const err = await response.json();
+                    statusMsg.style.color = 'var(--red)';
+                    statusMsg.innerText = `❌ Error: ${err.message || 'Workflow failed'}`;
+                }
+            } catch (err) {
+                statusMsg.style.color = 'var(--red)';
+                statusMsg.innerText = `❌ Network Error: ${err.message}`;
+            }
+
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.innerText = '🚀 Run Intraday Scan';
         }
 
         init();
