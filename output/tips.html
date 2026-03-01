@@ -48,6 +48,7 @@
             line-height: 1.55;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
+            overscroll-behavior-x: none;
             background-image:
                 radial-gradient(ellipse 80% 60% at 50% -20%, rgba(108, 92, 231, .15), transparent),
                 radial-gradient(ellipse 60% 50% at 80% 110%, rgba(0, 229, 255, .08), transparent);
@@ -458,7 +459,7 @@
             outline: none;
             opacity: 0.85;
             transition: opacity 0.15s;
-            touch-action: pan-y;
+            touch-action: none;
         }
 
         .range-slider:hover {
@@ -480,7 +481,7 @@
             height: 20px;
             width: calc(100% - 18px);
             margin: 0 9px;
-            touch-action: pan-y;
+            touch-action: none;
         }
 
         .dual-range {
@@ -493,7 +494,7 @@
             top: 0;
             left: 0;
             margin: 0;
-            touch-action: pan-y;
+            touch-action: none;
         }
 
         .dual-range::-webkit-slider-runnable-track {
@@ -1099,7 +1100,9 @@
                         }
                     }
                     const volBadge = `<div style="${volStyle}" title="Avg Vol: ${fmtVol(s.avg_volume)}">Vol: ${fmtVol(s.volume)}</div>`;
-                    const priceBadge = s.price ? `<div style="${volStyle}">Price: $${s.price.toFixed(2)}</div>` : '';
+                    // Build top row stats
+                    const priceBadge = s.price ? `<div style="${volStyle}">$${s.price.toFixed(2)}</div>` : '';
+                    const alertBadge = s.earnings_alert ? `<div class="earnings-alert">⚠️ ${s.earnings_alert}</div>` : '';
                     return `
                                 <div class="card" id="tip-${s.ticker}" style="animation-delay: ${i * 0.05}s">
                                 <div class="card-delete" onclick="removeTip('${s.ticker}')" title="Hide ${s.ticker}">✕</div>
