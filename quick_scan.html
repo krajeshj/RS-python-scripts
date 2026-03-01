@@ -47,6 +47,7 @@
             line-height: 1.55;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
+            overscroll-behavior-x: none;
             background-image:
                 radial-gradient(ellipse 80% 60% at 50% -20%, rgba(255, 145, 0, .1), transparent),
                 radial-gradient(ellipse 60% 50% at 80% 110%, rgba(108, 92, 231, .08), transparent);
@@ -368,7 +369,7 @@
             outline: none;
             opacity: 0.85;
             transition: opacity 0.15s;
-            touch-action: pan-y;
+            touch-action: none;
         }
 
         .range-slider:hover {
@@ -385,13 +386,12 @@
             box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
         }
 
-        /* Dual Range Slider Styles */
         .dual-range-container {
             position: relative;
             height: 20px;
             width: calc(100% - 18px);
             margin: 0 9px;
-            touch-action: pan-y;
+            touch-action: none;
         }
 
         .dual-range {
@@ -404,7 +404,7 @@
             top: 0;
             left: 0;
             margin: 0;
-            touch-action: pan-y;
+            touch-action: none;
         }
 
         .dual-range::-webkit-slider-runnable-track {
@@ -1131,7 +1131,7 @@
                 }
             }
             const volBadge = `<div style="${volStyle}" title="Avg Vol: ${fmtVol(s.avg_volume)}">Vol: ${fmtVol(s.volume)}</div>`;
-            const priceBadge = s.price ? `<div style="${volStyle}">Price: $${s.price.toFixed(2)}</div>` : '';
+            const priceBadge = s.price ? `<div style="${volStyle}">$${s.price.toFixed(2)}</div>` : '';
 
             return `
                 <div class="card" style="animation-delay: ${idx * 0.05}s">
