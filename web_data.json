@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-03-01T06:11:49Z",
+    "last_updated": "2026-03-01T06:35:34Z",
     "stocks": [
         {
             "rank": 1,
@@ -1231,15 +1231,15 @@
         {
             "rank": 30,
             "ticker": "AAOI",
-            "name": "AAOI",
+            "name": "Applied Optoelectronics, Inc.",
             "rs": 99,
             "rs_raw": 3.36,
             "rs_1w_pct": 98,
             "rs_1m_pct": 91,
             "rmv": 79.95,
             "price": 84.23,
-            "industry": "unknown",
-            "sector": "unknown",
+            "industry": "Communication Equipment",
+            "sector": "Technology",
             "highlights": "Confirmed Breakout, Strong Trend Alignment",
             "source": "AI Scanner",
             "canslim": {
@@ -1301,15 +1301,15 @@
         {
             "rank": 32,
             "ticker": "PVLA",
-            "name": "PVLA",
+            "name": "Palvella Therapeutics, Inc.",
             "rs": 99,
             "rs_raw": 3.17,
             "rs_1w_pct": 97,
             "rs_1m_pct": 98,
             "rmv": 59.28,
             "price": 135.02,
-            "industry": "unknown",
-            "sector": "unknown",
+            "industry": "Biotechnology",
+            "sector": "Healthcare",
             "highlights": "Strong Trend Alignment",
             "source": "AI Scanner",
             "canslim": {
@@ -1322,7 +1322,7 @@
                 "m": false
             },
             "days_to_earnings": -1,
-            "is_speculative": false,
+            "is_speculative": true,
             "low_signal": true,
             "marketCap": 0.0,
             "volume": 655500.0,
@@ -7216,15 +7216,15 @@
         {
             "rank": 201,
             "ticker": "CGON",
-            "name": "CG Oncology, Inc.",
+            "name": "CGON",
             "rs": 93,
             "rs_raw": 1.72,
             "rs_1w_pct": 93,
             "rs_1m_pct": 90,
             "rmv": 35.43,
             "price": 58.8,
-            "industry": "Biotechnology",
-            "sector": "Healthcare",
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "Strong Trend Alignment, Controlled Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -7237,7 +7237,7 @@
                 "m": false
             },
             "days_to_earnings": -1,
-            "is_speculative": true,
+            "is_speculative": false,
             "low_signal": true,
             "marketCap": 0.0,
             "volume": 1062900.0,
@@ -11626,15 +11626,15 @@
         {
             "rank": 327,
             "ticker": "KRYS",
-            "name": "Krystal Biotech, Inc.",
+            "name": "KRYS",
             "rs": 89,
             "rs_raw": 1.48,
             "rs_1w_pct": 87,
             "rs_1m_pct": 91,
             "rmv": 30.75,
             "price": 275.64,
-            "industry": "Biotechnology",
-            "sector": "Healthcare",
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "Flip Setup, Not Extended, Strong Trend Alignment, Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -11647,7 +11647,7 @@
                 "m": false
             },
             "days_to_earnings": -1,
-            "is_speculative": true,
+            "is_speculative": false,
             "low_signal": true,
             "marketCap": 0.0,
             "volume": 207400.0,
@@ -15441,15 +15441,15 @@
         {
             "rank": 436,
             "ticker": "PHAT",
-            "name": "Phathom Pharmaceuticals, Inc.",
+            "name": "PHAT",
             "rs": 85,
             "rs_raw": 1.38,
             "rs_1w_pct": 84,
             "rs_1m_pct": 91,
             "rmv": 49.08,
             "price": 12.56,
-            "industry": "Biotechnology",
-            "sector": "Healthcare",
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "Not Extended",
             "source": "AI Scanner",
             "canslim": {
@@ -15462,7 +15462,7 @@
                 "m": false
             },
             "days_to_earnings": -1,
-            "is_speculative": true,
+            "is_speculative": false,
             "low_signal": true,
             "marketCap": 0.0,
             "volume": 1182100.0,
@@ -16771,15 +16771,15 @@
         {
             "rank": 474,
             "ticker": "AAMI",
-            "name": "AAMI",
+            "name": "Acadian Asset Management Inc.",
             "rs": 84,
             "rs_raw": 1.35,
             "rs_1w_pct": 84,
             "rs_1m_pct": 87,
             "rmv": 26.67,
             "price": 53.86,
-            "industry": "unknown",
-            "sector": "unknown",
+            "industry": "Asset Management",
+            "sector": "Financial Services",
             "highlights": "VCP Contraction, Not Extended, Strong Trend Alignment, Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -17611,15 +17611,15 @@
         {
             "rank": 498,
             "ticker": "DBD",
-            "name": "Diebold Nixdorf, Incorporated",
+            "name": "DBD",
             "rs": 83,
             "rs_raw": 1.32,
             "rs_1w_pct": 84,
             "rs_1m_pct": 79,
             "rmv": 29.62,
             "price": 80.0,
-            "industry": "Software - Application",
-            "sector": "Technology",
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "Strong Trend Alignment, Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -19991,15 +19991,15 @@
         {
             "rank": 566,
             "ticker": "SEI",
-            "name": "SEI",
+            "name": "Solaris Energy Infrastructure, Inc.",
             "rs": 81,
             "rs_raw": 1.29,
             "rs_1w_pct": 88,
             "rs_1m_pct": 92,
             "rmv": 61.94,
             "price": 49.63,
-            "industry": "unknown",
-            "sector": "unknown",
+            "industry": "Oil & Gas Equipment & Services",
+            "sector": "Energy",
             "highlights": "VCP Contraction, Not Extended",
             "source": "AI Scanner",
             "canslim": {
@@ -20012,7 +20012,7 @@
                 "m": false
             },
             "days_to_earnings": -1,
-            "is_speculative": false,
+            "is_speculative": true,
             "low_signal": true,
             "marketCap": 0.0,
             "volume": 2715500.0,
@@ -30491,15 +30491,15 @@
         {
             "rank": 866,
             "ticker": "JHG",
-            "name": "JHG",
+            "name": "Janus Henderson Group plc",
             "rs": 70,
             "rs_raw": 1.16,
             "rs_1w_pct": 62,
             "rs_1m_pct": 60,
             "rmv": 9.23,
             "price": 52.1,
-            "industry": "unknown",
-            "sector": "unknown",
+            "industry": "Asset Management",
+            "sector": "Financial Services",
             "highlights": "Strong Trend Alignment, Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -34096,15 +34096,15 @@
         {
             "rank": 969,
             "ticker": "IBKR",
-            "name": "Interactive Brokers Group, Inc.",
+            "name": "IBKR",
             "rs": 66,
             "rs_raw": 1.12,
             "rs_1w_pct": 64,
             "rs_1m_pct": 74,
             "rmv": 28.23,
             "price": 71.19,
-            "industry": "Capital Markets",
-            "sector": "Financial Services",
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "VCP Contraction, Not Extended, Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -34376,15 +34376,15 @@
         {
             "rank": 977,
             "ticker": "PHG",
-            "name": "Koninklijke Philips N.V.",
+            "name": "PHG",
             "rs": 66,
             "rs_raw": 1.12,
             "rs_1w_pct": 59,
             "rs_1m_pct": 46,
             "rmv": 12.48,
             "price": 32.0,
-            "industry": "Medical Devices",
-            "sector": "Healthcare",
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "Strong Trend Alignment, Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -34551,15 +34551,15 @@
         {
             "rank": 982,
             "ticker": "NRIX",
-            "name": "Nurix Therapeutics, Inc.",
+            "name": "NRIX",
             "rs": 66,
             "rs_raw": 1.12,
             "rs_1w_pct": 67,
             "rs_1m_pct": 83,
             "rmv": 32.38,
             "price": 15.97,
-            "industry": "Biotechnology",
-            "sector": "Healthcare",
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "VCP Contraction, Not Extended, Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -34572,7 +34572,7 @@
                 "m": false
             },
             "days_to_earnings": -1,
-            "is_speculative": true,
+            "is_speculative": false,
             "low_signal": true,
             "marketCap": 0.0,
             "volume": 686200.0,
@@ -38541,15 +38541,15 @@
         {
             "rank": 1096,
             "ticker": "KRUS",
-            "name": "Kura Sushi USA, Inc.",
+            "name": "KRUS",
             "rs": 62,
             "rs_raw": 1.09,
             "rs_1w_pct": 65,
             "rs_1m_pct": 33,
             "rmv": 38.57,
             "price": 70.43,
-            "industry": "Restaurants",
-            "sector": "Consumer Cyclical",
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "VCP Contraction, Not Extended, Controlled Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -40151,15 +40151,15 @@
         {
             "rank": 1142,
             "ticker": "CGO",
-            "name": "Calamos Global Total Return Fund",
+            "name": "CGO",
             "rs": 60,
             "rs_raw": 1.09,
             "rs_1w_pct": 50,
             "rs_1m_pct": 52,
             "rmv": 8.35,
             "price": 12.67,
-            "industry": "Asset Management",
-            "sector": "Financial Services",
+            "industry": "unknown",
+            "sector": "unknown",
             "highlights": "VCP Contraction, Not Extended, Strong Trend Alignment, Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -42496,15 +42496,15 @@
         {
             "rank": 1209,
             "ticker": "EPR",
-            "name": "EPR",
+            "name": "EPR Properties",
             "rs": 58,
             "rs_raw": 1.07,
             "rs_1w_pct": 50,
             "rs_1m_pct": 43,
             "rmv": 16.42,
             "price": 59.41,
-            "industry": "unknown",
-            "sector": "unknown",
+            "industry": "REIT - Specialty",
+            "sector": "Real Estate",
             "highlights": "Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -43721,15 +43721,15 @@
         {
             "rank": 1244,
             "ticker": "GWW",
-            "name": "GWW",
+            "name": "W.W. Grainger, Inc.",
             "rs": 57,
             "rs_raw": 1.07,
             "rs_1w_pct": 48,
             "rs_1m_pct": 39,
             "rmv": 18.66,
             "price": 1144.73,
-            "industry": "unknown",
-            "sector": "unknown",
+            "industry": "Industrial Distribution",
+            "sector": "Industrials",
             "highlights": "Confirmed Breakout, Not Extended, Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -46836,15 +46836,15 @@
         {
             "rank": 1333,
             "ticker": "AAON",
-            "name": "AAON",
+            "name": "AAON, Inc.",
             "rs": 54,
             "rs_raw": 1.05,
             "rs_1w_pct": 38,
             "rs_1m_pct": 19,
             "rmv": 30.16,
             "price": 101.2,
-            "industry": "unknown",
-            "sector": "unknown",
+            "industry": "Building Products & Equipment",
+            "sector": "Industrials",
             "highlights": "Ultra Low Volatility",
             "source": "AI Scanner",
             "canslim": {
@@ -52233,9 +52233,9 @@
             "rank": 1,
             "industry": "Silver",
             "sector": "Basic Materials",
-            "rs": 76,
+            "rs": 77,
             "rs_1w_pct": 74,
-            "rs_1m_pct": 71,
+            "rs_1m_pct": 68,
             "tickers": [
                 {
                     "t": "AG",
@@ -52255,9 +52255,9 @@
             "rank": 2,
             "industry": "Advertising Agencies",
             "sector": "Communication Services",
-            "rs": 76,
+            "rs": 77,
             "rs_1w_pct": 75,
-            "rs_1m_pct": 72,
+            "rs_1m_pct": 69,
             "tickers": [
                 {
                     "t": "QMMM",
@@ -52285,9 +52285,9 @@
             "rank": 3,
             "industry": "Drug Manufacturers - Specialty & Generic",
             "sector": "Healthcare",
-            "rs": 75,
+            "rs": 76,
             "rs_1w_pct": 75,
-            "rs_1m_pct": 72,
+            "rs_1m_pct": 69,
             "tickers": [
                 {
                     "t": "RGC",
@@ -52315,9 +52315,9 @@
             "rank": 4,
             "industry": "Other Precious Metals & Mining",
             "sector": "Basic Materials",
-            "rs": 74,
+            "rs": 75,
             "rs_1w_pct": 73,
-            "rs_1m_pct": 70,
+            "rs_1m_pct": 67,
             "tickers": [
                 {
                     "t": "HL",
@@ -52345,9 +52345,9 @@
             "rank": 5,
             "industry": "Gold",
             "sector": "Basic Materials",
-            "rs": 74,
+            "rs": 75,
             "rs_1w_pct": 72,
-            "rs_1m_pct": 70,
+            "rs_1m_pct": 67,
             "tickers": [
                 {
                     "t": "HYMC",
@@ -52375,9 +52375,9 @@
             "rank": 6,
             "industry": "Semiconductor Equipment & Materials",
             "sector": "Technology",
-            "rs": 73,
+            "rs": 74,
             "rs_1w_pct": 73,
-            "rs_1m_pct": 66,
+            "rs_1m_pct": 63,
             "tickers": [
                 {
                     "t": "AXTI",
@@ -52405,9 +52405,9 @@
             "rank": 7,
             "industry": "Other Industrial Metals & Mining",
             "sector": "Basic Materials",
-            "rs": 72,
+            "rs": 73,
             "rs_1w_pct": 69,
-            "rs_1m_pct": 67,
+            "rs_1m_pct": 64,
             "tickers": [
                 {
                     "t": "SCZM",
@@ -52435,9 +52435,9 @@
             "rank": 8,
             "industry": "Copper",
             "sector": "Basic Materials",
-            "rs": 72,
+            "rs": 73,
             "rs_1w_pct": 68,
-            "rs_1m_pct": 69,
+            "rs_1m_pct": 66,
             "tickers": [
                 {
                     "t": "HBM",
@@ -52465,9 +52465,9 @@
             "rank": 9,
             "industry": "Computer Hardware",
             "sector": "Technology",
-            "rs": 71,
+            "rs": 72,
             "rs_1w_pct": 71,
-            "rs_1m_pct": 68,
+            "rs_1m_pct": 65,
             "tickers": [
                 {
                     "t": "SNDK",
@@ -52495,9 +52495,9 @@
             "rank": 10,
             "industry": "Uranium",
             "sector": "Energy",
-            "rs": 70,
+            "rs": 71,
             "rs_1w_pct": 71,
-            "rs_1m_pct": 68,
+            "rs_1m_pct": 65,
             "tickers": [
                 {
                     "t": "UUUU",
@@ -52525,9 +52525,9 @@
             "rank": 11,
             "industry": "Biotechnology",
             "sector": "Healthcare",
-            "rs": 69,
-            "rs_1w_pct": 68,
-            "rs_1m_pct": 63,
+            "rs": 70,
+            "rs_1w_pct": 67,
+            "rs_1m_pct": 60,
             "tickers": [
                 {
                     "t": "ABVX",
@@ -52555,9 +52555,9 @@
             "rank": 12,
             "industry": "Aluminum",
             "sector": "Basic Materials",
-            "rs": 69,
+            "rs": 70,
             "rs_1w_pct": 70,
-            "rs_1m_pct": 65,
+            "rs_1m_pct": 62,
             "tickers": [
                 {
                     "t": "CENX",
@@ -52581,13 +52581,17 @@
             "rank": 13,
             "industry": "Communication Equipment",
             "sector": "Technology",
-            "rs": 68,
-            "rs_1w_pct": 66,
-            "rs_1m_pct": 63,
+            "rs": 69,
+            "rs_1w_pct": 67,
+            "rs_1m_pct": 60,
             "tickers": [
                 {
                     "t": "LITE",
                     "n": "Lumentum Holdings Inc."
+                },
+                {
+                    "t": "AAOI",
+                    "n": "Applied Optoelectronics, Inc."
                 },
                 {
                     "t": "CIEN",
@@ -52600,10 +52604,6 @@
                 {
                     "t": "VIAV",
                     "n": "Viavi Solutions Inc."
-                },
-                {
-                    "t": "FEIM",
-                    "n": "Frequency Electronics, Inc."
                 }
             ]
         },
@@ -52611,9 +52611,9 @@
             "rank": 14,
             "industry": "Oil & Gas Drilling",
             "sector": "Energy",
-            "rs": 67,
-            "rs_1w_pct": 67,
-            "rs_1m_pct": 56,
+            "rs": 68,
+            "rs_1w_pct": 66,
+            "rs_1m_pct": 53,
             "tickers": [
                 {
                     "t": "NBR",
@@ -52641,9 +52641,9 @@
             "rank": 15,
             "industry": "Electrical Equipment & Parts",
             "sector": "Industrials",
-            "rs": 66,
+            "rs": 67,
             "rs_1w_pct": 64,
-            "rs_1m_pct": 61,
+            "rs_1m_pct": 58,
             "tickers": [
                 {
                     "t": "BE",
@@ -52671,9 +52671,9 @@
             "rank": 16,
             "industry": "Marine Shipping",
             "sector": "Industrials",
-            "rs": 66,
+            "rs": 67,
             "rs_1w_pct": 61,
-            "rs_1m_pct": 53,
+            "rs_1m_pct": 50,
             "tickers": [
                 {
                     "t": "HSHP",
@@ -52699,41 +52699,11 @@
         },
         {
             "rank": 17,
-            "industry": "Oil & Gas Equipment & Services",
-            "sector": "Energy",
-            "rs": 65,
-            "rs_1w_pct": 63,
-            "rs_1m_pct": 51,
-            "tickers": [
-                {
-                    "t": "FET",
-                    "n": "Forum Energy Technologies, Inc."
-                },
-                {
-                    "t": "OIS",
-                    "n": "Oil States International, Inc."
-                },
-                {
-                    "t": "EFXT",
-                    "n": "Enerflex Ltd."
-                },
-                {
-                    "t": "VAL",
-                    "n": "Valaris Limited"
-                },
-                {
-                    "t": "LBRT",
-                    "n": "Liberty Energy Inc."
-                }
-            ]
-        },
-        {
-            "rank": 18,
             "industry": "Electronic Components",
             "sector": "Technology",
-            "rs": 65,
+            "rs": 66,
             "rs_1w_pct": 65,
-            "rs_1m_pct": 58,
+            "rs_1m_pct": 56,
             "tickers": [
                 {
                     "t": "VICR",
@@ -52758,12 +52728,12 @@
             ]
         },
         {
-            "rank": 19,
+            "rank": 18,
             "industry": "Utilities - Renewable",
             "sector": "Utilities",
-            "rs": 64,
+            "rs": 65,
             "rs_1w_pct": 66,
-            "rs_1m_pct": 64,
+            "rs_1m_pct": 61,
             "tickers": [
                 {
                     "t": "ENLT",
@@ -52788,12 +52758,42 @@
             ]
         },
         {
+            "rank": 19,
+            "industry": "Oil & Gas Equipment & Services",
+            "sector": "Energy",
+            "rs": 65,
+            "rs_1w_pct": 63,
+            "rs_1m_pct": 48,
+            "tickers": [
+                {
+                    "t": "FET",
+                    "n": "Forum Energy Technologies, Inc."
+                },
+                {
+                    "t": "OIS",
+                    "n": "Oil States International, Inc."
+                },
+                {
+                    "t": "EFXT",
+                    "n": "Enerflex Ltd."
+                },
+                {
+                    "t": "VAL",
+                    "n": "Valaris Limited"
+                },
+                {
+                    "t": "LBRT",
+                    "n": "Liberty Energy Inc."
+                }
+            ]
+        },
+        {
             "rank": 20,
             "industry": "Aerospace & Defense",
             "sector": "Industrials",
-            "rs": 63,
+            "rs": 64,
             "rs_1w_pct": 61,
-            "rs_1m_pct": 54,
+            "rs_1m_pct": 50,
             "tickers": [
                 {
                     "t": "PL",
@@ -52821,9 +52821,9 @@
             "rank": 21,
             "industry": "Shell Companies",
             "sector": "Financial Services",
-            "rs": 62,
+            "rs": 63,
             "rs_1w_pct": 64,
-            "rs_1m_pct": 65,
+            "rs_1m_pct": 62,
             "tickers": [
                 {
                     "t": "AFJK",
@@ -52851,9 +52851,9 @@
             "rank": 22,
             "industry": "Engineering & Construction",
             "sector": "Industrials",
-            "rs": 62,
+            "rs": 63,
             "rs_1w_pct": 61,
-            "rs_1m_pct": 51,
+            "rs_1m_pct": 48,
             "tickers": [
                 {
                     "t": "PHOE",
@@ -52879,31 +52879,19 @@
         },
         {
             "rank": 23,
-            "industry": "Semiconductors",
-            "sector": "Technology",
-            "rs": 60,
-            "rs_1w_pct": 58,
-            "rs_1m_pct": 56,
+            "industry": "Real Estate - Diversified",
+            "sector": "Real Estate",
+            "rs": 61,
+            "rs_1w_pct": 60,
+            "rs_1m_pct": 58,
             "tickers": [
                 {
-                    "t": "MU",
-                    "n": "Micron Technology, Inc."
+                    "t": "STRS",
+                    "n": "Stratus Properties Inc."
                 },
                 {
-                    "t": "LASR",
-                    "n": "nLIGHT, Inc."
-                },
-                {
-                    "t": "SKYT",
-                    "n": "SkyWater Technology, Inc."
-                },
-                {
-                    "t": "IMOS",
-                    "n": "ChipMOS TECHNOLOGIES INC."
-                },
-                {
-                    "t": "ASX",
-                    "n": "ASE Technology Holding Co., Ltd."
+                    "t": "JOE",
+                    "n": "The St. Joe Company"
                 }
             ]
         },
@@ -52911,9 +52899,9 @@
             "rank": 24,
             "industry": "Consumer Electronics",
             "sector": "Technology",
-            "rs": 60,
+            "rs": 61,
             "rs_1w_pct": 58,
-            "rs_1m_pct": 55,
+            "rs_1m_pct": 52,
             "tickers": [
                 {
                     "t": "ZEPP",
@@ -52939,19 +52927,31 @@
         },
         {
             "rank": 25,
-            "industry": "Real Estate - Diversified",
-            "sector": "Real Estate",
-            "rs": 60,
-            "rs_1w_pct": 60,
-            "rs_1m_pct": 61,
+            "industry": "Semiconductors",
+            "sector": "Technology",
+            "rs": 61,
+            "rs_1w_pct": 58,
+            "rs_1m_pct": 53,
             "tickers": [
                 {
-                    "t": "STRS",
-                    "n": "Stratus Properties Inc."
+                    "t": "MU",
+                    "n": "Micron Technology, Inc."
                 },
                 {
-                    "t": "JOE",
-                    "n": "The St. Joe Company"
+                    "t": "LASR",
+                    "n": "nLIGHT, Inc."
+                },
+                {
+                    "t": "SKYT",
+                    "n": "SkyWater Technology, Inc."
+                },
+                {
+                    "t": "IMOS",
+                    "n": "ChipMOS TECHNOLOGIES INC."
+                },
+                {
+                    "t": "ASX",
+                    "n": "ASE Technology Holding Co., Ltd."
                 }
             ]
         },
@@ -52959,9 +52959,9 @@
             "rank": 26,
             "industry": "Luxury Goods",
             "sector": "Consumer Cyclical",
-            "rs": 59,
+            "rs": 60,
             "rs_1w_pct": 56,
-            "rs_1m_pct": 59,
+            "rs_1m_pct": 57,
             "tickers": [
                 {
                     "t": "ELA",
@@ -52989,9 +52989,9 @@
             "rank": 27,
             "industry": "Oil & Gas Midstream",
             "sector": "Energy",
-            "rs": 58,
-            "rs_1w_pct": 47,
-            "rs_1m_pct": 36,
+            "rs": 59,
+            "rs_1w_pct": 46,
+            "rs_1m_pct": 34,
             "tickers": [
                 {
                     "t": "FRO",
@@ -53019,9 +53019,9 @@
             "rank": 28,
             "industry": "Metal Fabrication",
             "sector": "Industrials",
-            "rs": 57,
+            "rs": 58,
             "rs_1w_pct": 54,
-            "rs_1m_pct": 44,
+            "rs_1m_pct": 41,
             "tickers": [
                 {
                     "t": "ATI",
@@ -53049,9 +53049,9 @@
             "rank": 29,
             "industry": "Scientific & Technical Instruments",
             "sector": "Technology",
-            "rs": 57,
+            "rs": 58,
             "rs_1w_pct": 52,
-            "rs_1m_pct": 38,
+            "rs_1m_pct": 36,
             "tickers": [
                 {
                     "t": "COHR",
@@ -53079,9 +53079,9 @@
             "rank": 30,
             "industry": "Thermal Coal",
             "sector": "Energy",
-            "rs": 56,
+            "rs": 57,
             "rs_1w_pct": 51,
-            "rs_1m_pct": 50,
+            "rs_1m_pct": 47,
             "tickers": [
                 {
                     "t": "BTU",
@@ -53109,9 +53109,9 @@
             "rank": 31,
             "industry": "Integrated Freight & Logistics",
             "sector": "Industrials",
-            "rs": 55,
+            "rs": 56,
             "rs_1w_pct": 54,
-            "rs_1m_pct": 48,
+            "rs_1m_pct": 45,
             "tickers": [
                 {
                     "t": "FDX",
@@ -53137,11 +53137,41 @@
         },
         {
             "rank": 32,
+            "industry": "Steel",
+            "sector": "Basic Materials",
+            "rs": 55,
+            "rs_1w_pct": 50,
+            "rs_1m_pct": 43,
+            "tickers": [
+                {
+                    "t": "MT",
+                    "n": "ArcelorMittal S.A."
+                },
+                {
+                    "t": "NWPX",
+                    "n": "NWPX Infrastructure, Inc."
+                },
+                {
+                    "t": "WS",
+                    "n": "Worthington Steel, Inc."
+                },
+                {
+                    "t": "PKX",
+                    "n": "POSCO Holdings Inc."
+                },
+                {
+                    "t": "STLD",
+                    "n": "Steel Dynamics, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 33,
             "industry": "Tools & Accessories",
             "sector": "Industrials",
-            "rs": 54,
+            "rs": 55,
             "rs_1w_pct": 50,
-            "rs_1m_pct": 38,
+            "rs_1m_pct": 36,
             "tickers": [
                 {
                     "t": "KMT",
@@ -53166,42 +53196,12 @@
             ]
         },
         {
-            "rank": 33,
-            "industry": "Trucking",
-            "sector": "Industrials",
-            "rs": 54,
-            "rs_1w_pct": 51,
-            "rs_1m_pct": 26,
-            "tickers": [
-                {
-                    "t": "XPO",
-                    "n": "XPO, Inc."
-                },
-                {
-                    "t": "ARCB",
-                    "n": "ArcBest Corporation"
-                },
-                {
-                    "t": "KNX",
-                    "n": "Knight-Swift Transportation Holdings Inc."
-                },
-                {
-                    "t": "ODFL",
-                    "n": "Old Dominion Freight Line, Inc."
-                },
-                {
-                    "t": "SAIA",
-                    "n": "Saia, Inc."
-                }
-            ]
-        },
-        {
             "rank": 34,
             "industry": "Farm & Heavy Construction Machinery",
             "sector": "Industrials",
-            "rs": 54,
+            "rs": 55,
             "rs_1w_pct": 51,
-            "rs_1m_pct": 27,
+            "rs_1m_pct": 24,
             "tickers": [
                 {
                     "t": "CAT",
@@ -53227,41 +53227,11 @@
         },
         {
             "rank": 35,
-            "industry": "Steel",
-            "sector": "Basic Materials",
-            "rs": 54,
-            "rs_1w_pct": 50,
-            "rs_1m_pct": 46,
-            "tickers": [
-                {
-                    "t": "MT",
-                    "n": "ArcelorMittal S.A."
-                },
-                {
-                    "t": "NWPX",
-                    "n": "NWPX Infrastructure, Inc."
-                },
-                {
-                    "t": "WS",
-                    "n": "Worthington Steel, Inc."
-                },
-                {
-                    "t": "PKX",
-                    "n": "POSCO Holdings Inc."
-                },
-                {
-                    "t": "STLD",
-                    "n": "Steel Dynamics, Inc."
-                }
-            ]
-        },
-        {
-            "rank": 36,
             "industry": "Apparel Retail",
             "sector": "Consumer Cyclical",
-            "rs": 54,
+            "rs": 55,
             "rs_1w_pct": 54,
-            "rs_1m_pct": 48,
+            "rs_1m_pct": 45,
             "tickers": [
                 {
                     "t": "LVLU",
@@ -53286,42 +53256,42 @@
             ]
         },
         {
-            "rank": 37,
-            "industry": "Railroads",
+            "rank": 36,
+            "industry": "Trucking",
             "sector": "Industrials",
-            "rs": 52,
-            "rs_1w_pct": 47,
-            "rs_1m_pct": 26,
+            "rs": 55,
+            "rs_1w_pct": 51,
+            "rs_1m_pct": 23,
             "tickers": [
                 {
-                    "t": "RAIL",
-                    "n": "FreightCar America, Inc."
+                    "t": "XPO",
+                    "n": "XPO, Inc."
                 },
                 {
-                    "t": "WAB",
-                    "n": "Westinghouse Air Brake Technologies Corporation"
+                    "t": "ARCB",
+                    "n": "ArcBest Corporation"
                 },
                 {
-                    "t": "CSX",
-                    "n": "CSX Corporation"
+                    "t": "KNX",
+                    "n": "Knight-Swift Transportation Holdings Inc."
                 },
                 {
-                    "t": "TRN",
-                    "n": "Trinity Industries, Inc."
+                    "t": "ODFL",
+                    "n": "Old Dominion Freight Line, Inc."
                 },
                 {
-                    "t": "FSTR",
-                    "n": "L.B. Foster Company"
+                    "t": "SAIA",
+                    "n": "Saia, Inc."
                 }
             ]
         },
         {
-            "rank": 38,
+            "rank": 37,
             "industry": "Capital Markets",
             "sector": "Financial Services",
-            "rs": 52,
+            "rs": 54,
             "rs_1w_pct": 46,
-            "rs_1m_pct": 53,
+            "rs_1m_pct": 50,
             "tickers": [
                 {
                     "t": "IREN",
@@ -53346,12 +53316,42 @@
             ]
         },
         {
+            "rank": 38,
+            "industry": "Railroads",
+            "sector": "Industrials",
+            "rs": 53,
+            "rs_1w_pct": 46,
+            "rs_1m_pct": 23,
+            "tickers": [
+                {
+                    "t": "RAIL",
+                    "n": "FreightCar America, Inc."
+                },
+                {
+                    "t": "WAB",
+                    "n": "Westinghouse Air Brake Technologies Corporation"
+                },
+                {
+                    "t": "CSX",
+                    "n": "CSX Corporation"
+                },
+                {
+                    "t": "TRN",
+                    "n": "Trinity Industries, Inc."
+                },
+                {
+                    "t": "FSTR",
+                    "n": "L.B. Foster Company"
+                }
+            ]
+        },
+        {
             "rank": 39,
             "industry": "Telecom Services",
             "sector": "Communication Services",
-            "rs": 52,
+            "rs": 53,
             "rs_1w_pct": 44,
-            "rs_1m_pct": 35,
+            "rs_1m_pct": 32,
             "tickers": [
                 {
                     "t": "SATS",
@@ -53377,37 +53377,11 @@
         },
         {
             "rank": 40,
-            "industry": "Medical Distribution",
-            "sector": "Healthcare",
-            "rs": 50,
-            "rs_1w_pct": 40,
-            "rs_1m_pct": 38,
-            "tickers": [
-                {
-                    "t": "CAH",
-                    "n": "Cardinal Health, Inc."
-                },
-                {
-                    "t": "MCK",
-                    "n": "McKesson Corporation"
-                },
-                {
-                    "t": "COR",
-                    "n": "Cencora, Inc."
-                },
-                {
-                    "t": "HSIC",
-                    "n": "Henry Schein, Inc."
-                }
-            ]
-        },
-        {
-            "rank": 41,
             "industry": "Oil & Gas Integrated",
             "sector": "Energy",
-            "rs": 50,
+            "rs": 51,
             "rs_1w_pct": 38,
-            "rs_1m_pct": 38,
+            "rs_1m_pct": 36,
             "tickers": [
                 {
                     "t": "CVE",
@@ -53432,72 +53406,38 @@
             ]
         },
         {
+            "rank": 41,
+            "industry": "Medical Distribution",
+            "sector": "Healthcare",
+            "rs": 51,
+            "rs_1w_pct": 40,
+            "rs_1m_pct": 36,
+            "tickers": [
+                {
+                    "t": "CAH",
+                    "n": "Cardinal Health, Inc."
+                },
+                {
+                    "t": "MCK",
+                    "n": "McKesson Corporation"
+                },
+                {
+                    "t": "COR",
+                    "n": "Cencora, Inc."
+                },
+                {
+                    "t": "HSIC",
+                    "n": "Henry Schein, Inc."
+                }
+            ]
+        },
+        {
             "rank": 42,
-            "industry": "Banks - Diversified",
-            "sector": "Financial Services",
-            "rs": 49,
-            "rs_1w_pct": 47,
-            "rs_1m_pct": 49,
-            "tickers": [
-                {
-                    "t": "HSBC",
-                    "n": "HSBC Holdings plc"
-                },
-                {
-                    "t": "SAN",
-                    "n": "Banco Santander, S.A."
-                },
-                {
-                    "t": "CM",
-                    "n": "Canadian Imperial Bank of Commerce"
-                },
-                {
-                    "t": "SMFG",
-                    "n": "Sumitomo Mitsui Financial Group, Inc."
-                },
-                {
-                    "t": "BBVA",
-                    "n": "Banco Bilbao Vizcaya Argentaria, S.A."
-                }
-            ]
-        },
-        {
-            "rank": 43,
-            "industry": "Airlines",
-            "sector": "Industrials",
-            "rs": 49,
-            "rs_1w_pct": 50,
-            "rs_1m_pct": 46,
-            "tickers": [
-                {
-                    "t": "ALGT",
-                    "n": "Allegiant Travel Company"
-                },
-                {
-                    "t": "LUV",
-                    "n": "Southwest Airlines Co."
-                },
-                {
-                    "t": "SNCY",
-                    "n": "Sun Country Airlines Holdings, Inc."
-                },
-                {
-                    "t": "LTM",
-                    "n": "LATAM Airlines Group S.A."
-                },
-                {
-                    "t": "CPA",
-                    "n": "Copa Holdings, S.A."
-                }
-            ]
-        },
-        {
-            "rank": 44,
             "industry": "Chemicals",
             "sector": "Basic Materials",
-            "rs": 49,
-            "rs_1w_pct": 47,
-            "rs_1m_pct": 27,
+            "rs": 50,
+            "rs_1w_pct": 46,
+            "rs_1m_pct": 24,
             "tickers": [
                 {
                     "t": "GPRE",
@@ -53522,12 +53462,42 @@
             ]
         },
         {
-            "rank": 45,
+            "rank": 43,
+            "industry": "Banks - Diversified",
+            "sector": "Financial Services",
+            "rs": 50,
+            "rs_1w_pct": 46,
+            "rs_1m_pct": 46,
+            "tickers": [
+                {
+                    "t": "HSBC",
+                    "n": "HSBC Holdings plc"
+                },
+                {
+                    "t": "SAN",
+                    "n": "Banco Santander, S.A."
+                },
+                {
+                    "t": "CM",
+                    "n": "Canadian Imperial Bank of Commerce"
+                },
+                {
+                    "t": "SMFG",
+                    "n": "Sumitomo Mitsui Financial Group, Inc."
+                },
+                {
+                    "t": "BBVA",
+                    "n": "Banco Bilbao Vizcaya Argentaria, S.A."
+                }
+            ]
+        },
+        {
+            "rank": 44,
             "industry": "Oil & Gas Refining & Marketing",
             "sector": "Energy",
             "rs": 48,
             "rs_1w_pct": 37,
-            "rs_1m_pct": 33,
+            "rs_1m_pct": 30,
             "tickers": [
                 {
                     "t": "PARR",
@@ -53552,12 +53522,12 @@
             ]
         },
         {
-            "rank": 46,
+            "rank": 45,
             "industry": "Auto Parts",
             "sector": "Consumer Cyclical",
             "rs": 48,
-            "rs_1w_pct": 49,
-            "rs_1m_pct": 40,
+            "rs_1w_pct": 48,
+            "rs_1m_pct": 36,
             "tickers": [
                 {
                     "t": "MOD",
@@ -53582,12 +53552,12 @@
             ]
         },
         {
-            "rank": 47,
+            "rank": 46,
             "industry": "Airports & Air Services",
             "sector": "Industrials",
             "rs": 48,
             "rs_1w_pct": 51,
-            "rs_1m_pct": 46,
+            "rs_1m_pct": 44,
             "tickers": [
                 {
                     "t": "CAAP",
@@ -53608,12 +53578,12 @@
             ]
         },
         {
-            "rank": 48,
+            "rank": 47,
             "industry": "Solar",
             "sector": "Technology",
             "rs": 48,
             "rs_1w_pct": 56,
-            "rs_1m_pct": 58,
+            "rs_1m_pct": 55,
             "tickers": [
                 {
                     "t": "NXT",
@@ -53638,42 +53608,34 @@
             ]
         },
         {
-            "rank": 49,
-            "industry": "Discount Stores",
-            "sector": "Consumer Defensive",
-            "rs": 47,
-            "rs_1w_pct": 40,
-            "rs_1m_pct": 29,
+            "rank": 48,
+            "industry": "Utilities - Diversified",
+            "sector": "Utilities",
+            "rs": 46,
+            "rs_1w_pct": 37,
+            "rs_1m_pct": 23,
             "tickers": [
                 {
-                    "t": "DG",
-                    "n": "Dollar General Corporation"
+                    "t": "AES",
+                    "n": "The AES Corporation"
                 },
                 {
-                    "t": "PSMT",
-                    "n": "PriceSmart, Inc."
+                    "t": "SRE",
+                    "n": "Sempra"
                 },
                 {
-                    "t": "DLTR",
-                    "n": "Dollar Tree, Inc."
-                },
-                {
-                    "t": "WMT",
-                    "n": "Walmart Inc."
-                },
-                {
-                    "t": "TBBB",
-                    "n": "BBB Foods Inc."
+                    "t": "AVA",
+                    "n": "Avista Corporation"
                 }
             ]
         },
         {
-            "rank": 50,
+            "rank": 49,
             "industry": "Beverages - Non-Alcoholic",
             "sector": "Consumer Defensive",
-            "rs": 47,
+            "rs": 46,
             "rs_1w_pct": 30,
-            "rs_1m_pct": 20,
+            "rs_1m_pct": 17,
             "tickers": [
                 {
                     "t": "COKE",
@@ -53698,12 +53660,42 @@
             ]
         },
         {
+            "rank": 50,
+            "industry": "Discount Stores",
+            "sector": "Consumer Defensive",
+            "rs": 46,
+            "rs_1w_pct": 40,
+            "rs_1m_pct": 26,
+            "tickers": [
+                {
+                    "t": "DG",
+                    "n": "Dollar General Corporation"
+                },
+                {
+                    "t": "PSMT",
+                    "n": "PriceSmart, Inc."
+                },
+                {
+                    "t": "DLTR",
+                    "n": "Dollar Tree, Inc."
+                },
+                {
+                    "t": "WMT",
+                    "n": "Walmart Inc."
+                },
+                {
+                    "t": "TBBB",
+                    "n": "BBB Foods Inc."
+                }
+            ]
+        },
+        {
             "rank": 51,
             "industry": "Pollution & Treatment Controls",
             "sector": "Industrials",
-            "rs": 47,
+            "rs": 46,
             "rs_1w_pct": 53,
-            "rs_1m_pct": 42,
+            "rs_1m_pct": 39,
             "tickers": [
                 {
                     "t": "CECO",
@@ -53727,9 +53719,9 @@
             "rank": 52,
             "industry": "Specialty Industrial Machinery",
             "sector": "Industrials",
-            "rs": 47,
+            "rs": 46,
             "rs_1w_pct": 45,
-            "rs_1m_pct": 31,
+            "rs_1m_pct": 28,
             "tickers": [
                 {
                     "t": "TAYD",
@@ -53755,11 +53747,55 @@
         },
         {
             "rank": 53,
+            "industry": "Coking Coal",
+            "sector": "Basic Materials",
+            "rs": 44,
+            "rs_1w_pct": 45,
+            "rs_1m_pct": 53,
+            "tickers": [
+                {
+                    "t": "HCC",
+                    "n": "Warrior Met Coal, Inc."
+                },
+                {
+                    "t": "METC",
+                    "n": "Ramaco Resources, Inc."
+                },
+                {
+                    "t": "AMR",
+                    "n": "Alpha Metallurgical Resources, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 54,
+            "industry": "Broadcasting",
+            "sector": "Communication Services",
+            "rs": 44,
+            "rs_1w_pct": 29,
+            "rs_1m_pct": 19,
+            "tickers": [
+                {
+                    "t": "NXST",
+                    "n": "Nexstar Media Group, Inc."
+                },
+                {
+                    "t": "SBGI",
+                    "n": "Sinclair, Inc."
+                },
+                {
+                    "t": "TGNA",
+                    "n": "TEGNA Inc."
+                }
+            ]
+        },
+        {
+            "rank": 55,
             "industry": "Diagnostics & Research",
             "sector": "Healthcare",
-            "rs": 47,
+            "rs": 44,
             "rs_1w_pct": 44,
-            "rs_1m_pct": 59,
+            "rs_1m_pct": 55,
             "tickers": [
                 {
                     "t": "BNR",
@@ -53784,68 +53820,32 @@
             ]
         },
         {
-            "rank": 54,
-            "industry": "Utilities - Diversified",
-            "sector": "Utilities",
-            "rs": 47,
-            "rs_1w_pct": 37,
-            "rs_1m_pct": 26,
-            "tickers": [
-                {
-                    "t": "AES",
-                    "n": "The AES Corporation"
-                },
-                {
-                    "t": "SRE",
-                    "n": "Sempra"
-                },
-                {
-                    "t": "AVA",
-                    "n": "Avista Corporation"
-                }
-            ]
-        },
-        {
-            "rank": 55,
-            "industry": "Coking Coal",
-            "sector": "Basic Materials",
-            "rs": 45,
-            "rs_1w_pct": 45,
-            "rs_1m_pct": 56,
-            "tickers": [
-                {
-                    "t": "HCC",
-                    "n": "Warrior Met Coal, Inc."
-                },
-                {
-                    "t": "METC",
-                    "n": "Ramaco Resources, Inc."
-                },
-                {
-                    "t": "AMR",
-                    "n": "Alpha Metallurgical Resources, Inc."
-                }
-            ]
-        },
-        {
             "rank": 56,
-            "industry": "Department Stores",
-            "sector": "Consumer Cyclical",
-            "rs": 45,
-            "rs_1w_pct": 59,
-            "rs_1m_pct": 51,
+            "industry": "Airlines",
+            "sector": "Industrials",
+            "rs": 44,
+            "rs_1w_pct": 48,
+            "rs_1m_pct": 43,
             "tickers": [
                 {
-                    "t": "M",
-                    "n": "Macy's, Inc."
+                    "t": "ALGT",
+                    "n": "Allegiant Travel Company"
                 },
                 {
-                    "t": "DDS",
-                    "n": "Dillard's, Inc."
+                    "t": "LUV",
+                    "n": "Southwest Airlines Co."
                 },
                 {
-                    "t": "KSS",
-                    "n": "Kohl's Corporation"
+                    "t": "SNCY",
+                    "n": "Sun Country Airlines Holdings, Inc."
+                },
+                {
+                    "t": "LTM",
+                    "n": "LATAM Airlines Group S.A."
+                },
+                {
+                    "t": "CPA",
+                    "n": "Copa Holdings, S.A."
                 }
             ]
         },
@@ -53853,9 +53853,9 @@
             "rank": 57,
             "industry": "Specialty Chemicals",
             "sector": "Basic Materials",
-            "rs": 45,
+            "rs": 44,
             "rs_1w_pct": 42,
-            "rs_1m_pct": 35,
+            "rs_1m_pct": 32,
             "tickers": [
                 {
                     "t": "ALB",
@@ -53881,33 +53881,11 @@
         },
         {
             "rank": 58,
-            "industry": "Broadcasting",
-            "sector": "Communication Services",
-            "rs": 45,
-            "rs_1w_pct": 29,
-            "rs_1m_pct": 22,
-            "tickers": [
-                {
-                    "t": "NXST",
-                    "n": "Nexstar Media Group, Inc."
-                },
-                {
-                    "t": "SBGI",
-                    "n": "Sinclair, Inc."
-                },
-                {
-                    "t": "TGNA",
-                    "n": "TEGNA Inc."
-                }
-            ]
-        },
-        {
-            "rank": 59,
             "industry": "Real Estate - Development",
             "sector": "Real Estate",
-            "rs": 45,
+            "rs": 44,
             "rs_1w_pct": 56,
-            "rs_1m_pct": 62,
+            "rs_1m_pct": 59,
             "tickers": [
                 {
                     "t": "JFB",
@@ -53932,42 +53910,34 @@
             ]
         },
         {
-            "rank": 60,
-            "industry": "unknown",
-            "sector": "unknown",
-            "rs": 43,
-            "rs_1w_pct": 33,
-            "rs_1m_pct": 35,
+            "rank": 59,
+            "industry": "Department Stores",
+            "sector": "Consumer Cyclical",
+            "rs": 44,
+            "rs_1w_pct": 59,
+            "rs_1m_pct": 48,
             "tickers": [
                 {
-                    "t": "AAOI",
-                    "n": "AAOI"
+                    "t": "M",
+                    "n": "Macy's, Inc."
                 },
                 {
-                    "t": "PVLA",
-                    "n": "PVLA"
+                    "t": "DDS",
+                    "n": "Dillard's, Inc."
                 },
                 {
-                    "t": "SLV",
-                    "n": "iShares Silver Trust"
-                },
-                {
-                    "t": "DGP",
-                    "n": "DB Gold Double Long ETN"
-                },
-                {
-                    "t": "COPX",
-                    "n": "Global X Copper Miners ETF"
+                    "t": "KSS",
+                    "n": "Kohl's Corporation"
                 }
             ]
         },
         {
-            "rank": 61,
+            "rank": 60,
             "industry": "Oil & Gas E&P",
             "sector": "Energy",
             "rs": 43,
             "rs_1w_pct": 36,
-            "rs_1m_pct": 29,
+            "rs_1m_pct": 26,
             "tickers": [
                 {
                     "t": "TPL",
@@ -53992,12 +53962,12 @@
             ]
         },
         {
-            "rank": 62,
+            "rank": 61,
             "industry": "Utilities - Independent Power Producers",
             "sector": "Utilities",
-            "rs": 42,
-            "rs_1w_pct": 34,
-            "rs_1m_pct": 38,
+            "rs": 41,
+            "rs_1w_pct": 35,
+            "rs_1m_pct": 36,
             "tickers": [
                 {
                     "t": "KEN",
@@ -54022,12 +53992,12 @@
             ]
         },
         {
-            "rank": 63,
+            "rank": 62,
             "industry": "Drug Manufacturers - General",
             "sector": "Healthcare",
-            "rs": 42,
+            "rs": 41,
             "rs_1w_pct": 37,
-            "rs_1m_pct": 36,
+            "rs_1m_pct": 34,
             "tickers": [
                 {
                     "t": "GSK",
@@ -54052,12 +54022,42 @@
             ]
         },
         {
+            "rank": 63,
+            "industry": "Lodging",
+            "sector": "Consumer Cyclical",
+            "rs": 41,
+            "rs_1w_pct": 40,
+            "rs_1m_pct": 34,
+            "tickers": [
+                {
+                    "t": "INTG",
+                    "n": "The InterGroup Corporation"
+                },
+                {
+                    "t": "HTHT",
+                    "n": "H World Group Limited"
+                },
+                {
+                    "t": "CVEO",
+                    "n": "Civeo Corporation"
+                },
+                {
+                    "t": "MAR",
+                    "n": "Marriott International, Inc."
+                },
+                {
+                    "t": "HLT",
+                    "n": "Hilton Worldwide Holdings Inc."
+                }
+            ]
+        },
+        {
             "rank": 64,
             "industry": "Medical Care Facilities",
             "sector": "Healthcare",
-            "rs": 42,
+            "rs": 41,
             "rs_1w_pct": 38,
-            "rs_1m_pct": 31,
+            "rs_1m_pct": 28,
             "tickers": [
                 {
                     "t": "PACS",
@@ -54085,9 +54085,9 @@
             "rank": 65,
             "industry": "Food Distribution",
             "sector": "Consumer Defensive",
-            "rs": 42,
+            "rs": 41,
             "rs_1w_pct": 40,
-            "rs_1m_pct": 33,
+            "rs_1m_pct": 30,
             "tickers": [
                 {
                     "t": "ANDE",
@@ -54113,31 +54113,31 @@
         },
         {
             "rank": 66,
-            "industry": "Lodging",
-            "sector": "Consumer Cyclical",
-            "rs": 42,
-            "rs_1w_pct": 40,
-            "rs_1m_pct": 36,
+            "industry": "unknown",
+            "sector": "unknown",
+            "rs": 40,
+            "rs_1w_pct": 34,
+            "rs_1m_pct": 34,
             "tickers": [
                 {
-                    "t": "INTG",
-                    "n": "The InterGroup Corporation"
+                    "t": "SLV",
+                    "n": "iShares Silver Trust"
                 },
                 {
-                    "t": "HTHT",
-                    "n": "H World Group Limited"
+                    "t": "DGP",
+                    "n": "DB Gold Double Long ETN"
                 },
                 {
-                    "t": "CVEO",
-                    "n": "Civeo Corporation"
+                    "t": "COPX",
+                    "n": "Global X Copper Miners ETF"
                 },
                 {
-                    "t": "MAR",
-                    "n": "Marriott International, Inc."
+                    "t": "GDX",
+                    "n": "VanEck Gold Miners ETF"
                 },
                 {
-                    "t": "HLT",
-                    "n": "Hilton Worldwide Holdings Inc."
+                    "t": "CGON",
+                    "n": "CGON"
                 }
             ]
         },
@@ -54145,9 +54145,9 @@
             "rank": 67,
             "industry": "Rental & Leasing Services",
             "sector": "Industrials",
-            "rs": 41,
+            "rs": 40,
             "rs_1w_pct": 42,
-            "rs_1m_pct": 31,
+            "rs_1m_pct": 28,
             "tickers": [
                 {
                     "t": "FTAI",
@@ -54175,9 +54175,9 @@
             "rank": 68,
             "industry": "Tobacco",
             "sector": "Consumer Defensive",
-            "rs": 40,
+            "rs": 39,
             "rs_1w_pct": 29,
-            "rs_1m_pct": 29,
+            "rs_1m_pct": 26,
             "tickers": [
                 {
                     "t": "TPB",
@@ -54205,9 +54205,9 @@
             "rank": 69,
             "industry": "Confectioners",
             "sector": "Consumer Defensive",
-            "rs": 40,
+            "rs": 39,
             "rs_1w_pct": 29,
-            "rs_1m_pct": 15,
+            "rs_1m_pct": 13,
             "tickers": [
                 {
                     "t": "HSY",
@@ -54227,9 +54227,9 @@
             "rank": 70,
             "industry": "REIT - Healthcare Facilities",
             "sector": "Real Estate",
-            "rs": 38,
-            "rs_1w_pct": 31,
-            "rs_1m_pct": 26,
+            "rs": 37,
+            "rs_1w_pct": 32,
+            "rs_1m_pct": 23,
             "tickers": [
                 {
                     "t": "AHR",
@@ -54257,9 +54257,9 @@
             "rank": 71,
             "industry": "Utilities - Regulated Gas",
             "sector": "Utilities",
-            "rs": 38,
-            "rs_1w_pct": 31,
-            "rs_1m_pct": 26,
+            "rs": 37,
+            "rs_1w_pct": 32,
+            "rs_1m_pct": 23,
             "tickers": [
                 {
                     "t": "CTRI",
@@ -54285,41 +54285,11 @@
         },
         {
             "rank": 72,
-            "industry": "Apparel Manufacturing",
-            "sector": "Consumer Cyclical",
-            "rs": 37,
-            "rs_1w_pct": 36,
-            "rs_1m_pct": 24,
-            "tickers": [
-                {
-                    "t": "FIGS",
-                    "n": "FIGS, Inc."
-                },
-                {
-                    "t": "GIL",
-                    "n": "Gildan Activewear Inc."
-                },
-                {
-                    "t": "VFC",
-                    "n": "V.F. Corporation"
-                },
-                {
-                    "t": "RL",
-                    "n": "Ralph Lauren Corporation"
-                },
-                {
-                    "t": "LEVI",
-                    "n": "Levi Strauss & Co."
-                }
-            ]
-        },
-        {
-            "rank": 73,
             "industry": "Waste Management",
             "sector": "Industrials",
-            "rs": 37,
+            "rs": 36,
             "rs_1w_pct": 27,
-            "rs_1m_pct": 31,
+            "rs_1m_pct": 28,
             "tickers": [
                 {
                     "t": "NVRI",
@@ -54344,102 +54314,12 @@
             ]
         },
         {
-            "rank": 74,
-            "industry": "Utilities - Regulated Electric",
-            "sector": "Utilities",
-            "rs": 37,
-            "rs_1w_pct": 29,
-            "rs_1m_pct": 22,
-            "tickers": [
-                {
-                    "t": "KEP",
-                    "n": "Korea Electric Power Corporation"
-                },
-                {
-                    "t": "EIX",
-                    "n": "Edison International"
-                },
-                {
-                    "t": "NGG",
-                    "n": "National Grid plc"
-                },
-                {
-                    "t": "HE",
-                    "n": "Hawaiian Electric Industries, Inc."
-                },
-                {
-                    "t": "NEE",
-                    "n": "NextEra Energy, Inc."
-                }
-            ]
-        },
-        {
-            "rank": 75,
-            "industry": "Leisure",
-            "sector": "Consumer Cyclical",
-            "rs": 37,
-            "rs_1w_pct": 41,
-            "rs_1m_pct": 35,
-            "tickers": [
-                {
-                    "t": "CALY",
-                    "n": "Callaway Golf Company"
-                },
-                {
-                    "t": "MSGE",
-                    "n": "Madison Square Garden Entertainment Corp."
-                },
-                {
-                    "t": "JOUT",
-                    "n": "Johnson Outdoors Inc."
-                },
-                {
-                    "t": "GOLF",
-                    "n": "Acushnet Holdings Corp."
-                },
-                {
-                    "t": "HAS",
-                    "n": "Hasbro, Inc."
-                }
-            ]
-        },
-        {
-            "rank": 76,
-            "industry": "Conglomerates",
-            "sector": "Industrials",
-            "rs": 37,
-            "rs_1w_pct": 33,
-            "rs_1m_pct": 33,
-            "tickers": [
-                {
-                    "t": "DLX",
-                    "n": "Deluxe Corporation"
-                },
-                {
-                    "t": "SEB",
-                    "n": "Seaboard Corporation"
-                },
-                {
-                    "t": "VMI",
-                    "n": "Valmont Industries, Inc."
-                },
-                {
-                    "t": "HON",
-                    "n": "Honeywell International Inc."
-                },
-                {
-                    "t": "MATW",
-                    "n": "Matthews International Corporation"
-                }
-            ]
-        },
-        {
-            "rank": 77,
+            "rank": 73,
             "industry": "REIT - Retail",
             "sector": "Real Estate",
-            "rs": 37,
-            "rs_1w_pct": 31,
-            "rs_1m_pct": 18,
+            "rs": 36,
+            "rs_1w_pct": 30,
+            "rs_1m_pct": 15,
             "tickers": [
                 {
                     "t": "CBL",
@@ -54464,42 +54344,132 @@
             ]
         },
         {
-            "rank": 78,
-            "industry": "Insurance - Reinsurance",
-            "sector": "Financial Services",
-            "rs": 35,
-            "rs_1w_pct": 31,
-            "rs_1m_pct": 24,
+            "rank": 74,
+            "industry": "Conglomerates",
+            "sector": "Industrials",
+            "rs": 36,
+            "rs_1w_pct": 34,
+            "rs_1m_pct": 30,
             "tickers": [
                 {
-                    "t": "HG",
-                    "n": "Hamilton Insurance Group, Ltd."
+                    "t": "DLX",
+                    "n": "Deluxe Corporation"
                 },
                 {
-                    "t": "RNR",
-                    "n": "RenaissanceRe Holdings Ltd."
+                    "t": "SEB",
+                    "n": "Seaboard Corporation"
                 },
                 {
-                    "t": "SPNT",
-                    "n": "SiriusPoint Ltd."
+                    "t": "VMI",
+                    "n": "Valmont Industries, Inc."
                 },
                 {
-                    "t": "RGA",
-                    "n": "Reinsurance Group of America, Incorporated"
+                    "t": "HON",
+                    "n": "Honeywell International Inc."
                 },
                 {
-                    "t": "GLRE",
-                    "n": "Greenlight Capital Re, Ltd."
+                    "t": "MATW",
+                    "n": "Matthews International Corporation"
                 }
             ]
         },
         {
-            "rank": 79,
+            "rank": 75,
+            "industry": "Apparel Manufacturing",
+            "sector": "Consumer Cyclical",
+            "rs": 36,
+            "rs_1w_pct": 36,
+            "rs_1m_pct": 21,
+            "tickers": [
+                {
+                    "t": "FIGS",
+                    "n": "FIGS, Inc."
+                },
+                {
+                    "t": "GIL",
+                    "n": "Gildan Activewear Inc."
+                },
+                {
+                    "t": "VFC",
+                    "n": "V.F. Corporation"
+                },
+                {
+                    "t": "RL",
+                    "n": "Ralph Lauren Corporation"
+                },
+                {
+                    "t": "LEVI",
+                    "n": "Levi Strauss & Co."
+                }
+            ]
+        },
+        {
+            "rank": 76,
+            "industry": "Leisure",
+            "sector": "Consumer Cyclical",
+            "rs": 36,
+            "rs_1w_pct": 41,
+            "rs_1m_pct": 32,
+            "tickers": [
+                {
+                    "t": "CALY",
+                    "n": "Callaway Golf Company"
+                },
+                {
+                    "t": "MSGE",
+                    "n": "Madison Square Garden Entertainment Corp."
+                },
+                {
+                    "t": "JOUT",
+                    "n": "Johnson Outdoors Inc."
+                },
+                {
+                    "t": "GOLF",
+                    "n": "Acushnet Holdings Corp."
+                },
+                {
+                    "t": "HAS",
+                    "n": "Hasbro, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 77,
+            "industry": "Utilities - Regulated Electric",
+            "sector": "Utilities",
+            "rs": 36,
+            "rs_1w_pct": 29,
+            "rs_1m_pct": 19,
+            "tickers": [
+                {
+                    "t": "KEP",
+                    "n": "Korea Electric Power Corporation"
+                },
+                {
+                    "t": "EIX",
+                    "n": "Edison International"
+                },
+                {
+                    "t": "NGG",
+                    "n": "National Grid plc"
+                },
+                {
+                    "t": "HE",
+                    "n": "Hawaiian Electric Industries, Inc."
+                },
+                {
+                    "t": "NEE",
+                    "n": "NextEra Energy, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 78,
             "industry": "Entertainment",
             "sector": "Communication Services",
-            "rs": 35,
+            "rs": 34,
             "rs_1w_pct": 23,
-            "rs_1m_pct": 24,
+            "rs_1m_pct": 21,
             "tickers": [
                 {
                     "t": "SPHR",
@@ -54524,12 +54494,12 @@
             ]
         },
         {
-            "rank": 80,
+            "rank": 79,
             "industry": "Specialty Retail",
             "sector": "Consumer Cyclical",
-            "rs": 35,
+            "rs": 34,
             "rs_1w_pct": 36,
-            "rs_1m_pct": 27,
+            "rs_1m_pct": 24,
             "tickers": [
                 {
                     "t": "FIVE",
@@ -54554,12 +54524,12 @@
             ]
         },
         {
-            "rank": 81,
+            "rank": 80,
             "industry": "Security & Protection Services",
             "sector": "Industrials",
-            "rs": 35,
+            "rs": 34,
             "rs_1w_pct": 30,
-            "rs_1m_pct": 22,
+            "rs_1m_pct": 19,
             "tickers": [
                 {
                     "t": "MG",
@@ -54584,12 +54554,42 @@
             ]
         },
         {
+            "rank": 81,
+            "industry": "Packaging & Containers",
+            "sector": "Consumer Cyclical",
+            "rs": 34,
+            "rs_1w_pct": 34,
+            "rs_1m_pct": 15,
+            "tickers": [
+                {
+                    "t": "MYE",
+                    "n": "Myers Industries, Inc."
+                },
+                {
+                    "t": "TRS",
+                    "n": "TriMas Corporation"
+                },
+                {
+                    "t": "BALL",
+                    "n": "Ball Corporation"
+                },
+                {
+                    "t": "SON",
+                    "n": "Sonoco Products Company"
+                },
+                {
+                    "t": "GEF",
+                    "n": "Greif, Inc."
+                }
+            ]
+        },
+        {
             "rank": 82,
             "industry": "Education & Training Services",
             "sector": "Consumer Defensive",
-            "rs": 35,
+            "rs": 34,
             "rs_1w_pct": 19,
-            "rs_1m_pct": 24,
+            "rs_1m_pct": 21,
             "tickers": [
                 {
                     "t": "LINC",
@@ -54615,41 +54615,11 @@
         },
         {
             "rank": 83,
-            "industry": "Packaging & Containers",
-            "sector": "Consumer Cyclical",
-            "rs": 35,
-            "rs_1w_pct": 33,
-            "rs_1m_pct": 18,
-            "tickers": [
-                {
-                    "t": "MYE",
-                    "n": "Myers Industries, Inc."
-                },
-                {
-                    "t": "TRS",
-                    "n": "TriMas Corporation"
-                },
-                {
-                    "t": "BALL",
-                    "n": "Ball Corporation"
-                },
-                {
-                    "t": "SON",
-                    "n": "Sonoco Products Company"
-                },
-                {
-                    "t": "GEF",
-                    "n": "Greif, Inc."
-                }
-            ]
-        },
-        {
-            "rank": 84,
             "industry": "Agricultural Inputs",
             "sector": "Basic Materials",
-            "rs": 35,
+            "rs": 34,
             "rs_1w_pct": 25,
-            "rs_1m_pct": 11,
+            "rs_1m_pct": 10,
             "tickers": [
                 {
                     "t": "NTR",
@@ -54674,72 +54644,42 @@
             ]
         },
         {
+            "rank": 84,
+            "industry": "Insurance - Reinsurance",
+            "sector": "Financial Services",
+            "rs": 34,
+            "rs_1w_pct": 32,
+            "rs_1m_pct": 21,
+            "tickers": [
+                {
+                    "t": "HG",
+                    "n": "Hamilton Insurance Group, Ltd."
+                },
+                {
+                    "t": "RNR",
+                    "n": "RenaissanceRe Holdings Ltd."
+                },
+                {
+                    "t": "SPNT",
+                    "n": "SiriusPoint Ltd."
+                },
+                {
+                    "t": "RGA",
+                    "n": "Reinsurance Group of America, Incorporated"
+                },
+                {
+                    "t": "GLRE",
+                    "n": "Greenlight Capital Re, Ltd."
+                }
+            ]
+        },
+        {
             "rank": 85,
-            "industry": "REIT - Specialty",
-            "sector": "Real Estate",
-            "rs": 33,
-            "rs_1w_pct": 22,
-            "rs_1m_pct": 14,
-            "tickers": [
-                {
-                    "t": "OUT",
-                    "n": "OUTFRONT Media Inc."
-                },
-                {
-                    "t": "LAND",
-                    "n": "Gladstone Land Corporation"
-                },
-                {
-                    "t": "FPI",
-                    "n": "Farmland Partners Inc."
-                },
-                {
-                    "t": "IRM",
-                    "n": "Iron Mountain Incorporated"
-                },
-                {
-                    "t": "EQIX",
-                    "n": "Equinix, Inc."
-                }
-            ]
-        },
-        {
-            "rank": 86,
-            "industry": "Industrial Distribution",
-            "sector": "Industrials",
-            "rs": 33,
-            "rs_1w_pct": 36,
-            "rs_1m_pct": 26,
-            "tickers": [
-                {
-                    "t": "REZI",
-                    "n": "Resideo Technologies, Inc."
-                },
-                {
-                    "t": "DXPE",
-                    "n": "DXP Enterprises, Inc."
-                },
-                {
-                    "t": "QXO",
-                    "n": "QXO, Inc."
-                },
-                {
-                    "t": "WCC",
-                    "n": "WESCO International, Inc."
-                },
-                {
-                    "t": "FERG",
-                    "n": "Ferguson Enterprises Inc."
-                }
-            ]
-        },
-        {
-            "rank": 87,
             "industry": "Recreational Vehicles",
             "sector": "Consumer Cyclical",
-            "rs": 33,
-            "rs_1w_pct": 50,
-            "rs_1m_pct": 43,
+            "rs": 32,
+            "rs_1w_pct": 49,
+            "rs_1m_pct": 40,
             "tickers": [
                 {
                     "t": "DOO",
@@ -54764,12 +54704,72 @@
             ]
         },
         {
+            "rank": 86,
+            "industry": "REIT - Specialty",
+            "sector": "Real Estate",
+            "rs": 32,
+            "rs_1w_pct": 23,
+            "rs_1m_pct": 13,
+            "tickers": [
+                {
+                    "t": "OUT",
+                    "n": "OUTFRONT Media Inc."
+                },
+                {
+                    "t": "LAND",
+                    "n": "Gladstone Land Corporation"
+                },
+                {
+                    "t": "FPI",
+                    "n": "Farmland Partners Inc."
+                },
+                {
+                    "t": "IRM",
+                    "n": "Iron Mountain Incorporated"
+                },
+                {
+                    "t": "EQIX",
+                    "n": "Equinix, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 87,
+            "industry": "Industrial Distribution",
+            "sector": "Industrials",
+            "rs": 32,
+            "rs_1w_pct": 35,
+            "rs_1m_pct": 23,
+            "tickers": [
+                {
+                    "t": "REZI",
+                    "n": "Resideo Technologies, Inc."
+                },
+                {
+                    "t": "DXPE",
+                    "n": "DXP Enterprises, Inc."
+                },
+                {
+                    "t": "QXO",
+                    "n": "QXO, Inc."
+                },
+                {
+                    "t": "WCC",
+                    "n": "WESCO International, Inc."
+                },
+                {
+                    "t": "FERG",
+                    "n": "Ferguson Enterprises Inc."
+                }
+            ]
+        },
+        {
             "rank": 88,
             "industry": "REIT - Hotel & Motel",
             "sector": "Real Estate",
-            "rs": 31,
-            "rs_1w_pct": 33,
-            "rs_1m_pct": 22,
+            "rs": 30,
+            "rs_1w_pct": 34,
+            "rs_1m_pct": 19,
             "tickers": [
                 {
                     "t": "HST",
@@ -54797,9 +54797,9 @@
             "rank": 89,
             "industry": "Travel Services",
             "sector": "Consumer Cyclical",
-            "rs": 31,
+            "rs": 30,
             "rs_1w_pct": 30,
-            "rs_1m_pct": 31,
+            "rs_1m_pct": 28,
             "tickers": [
                 {
                     "t": "LIND",
@@ -54825,41 +54825,11 @@
         },
         {
             "rank": 90,
-            "industry": "Banks - Regional",
-            "sector": "Financial Services",
-            "rs": 31,
-            "rs_1w_pct": 37,
-            "rs_1m_pct": 35,
-            "tickers": [
-                {
-                    "t": "WF",
-                    "n": "Woori Financial Group Inc."
-                },
-                {
-                    "t": "BAP",
-                    "n": "Credicorp Ltd."
-                },
-                {
-                    "t": "SHG",
-                    "n": "Shinhan Financial Group Co., Ltd."
-                },
-                {
-                    "t": "KB",
-                    "n": "KB Financial Group Inc."
-                },
-                {
-                    "t": "ISBA",
-                    "n": "Isabella Bank Corporation"
-                }
-            ]
-        },
-        {
-            "rank": 91,
             "industry": "Auto Manufacturers",
             "sector": "Consumer Cyclical",
-            "rs": 31,
+            "rs": 30,
             "rs_1w_pct": 29,
-            "rs_1m_pct": 27,
+            "rs_1m_pct": 24,
             "tickers": [
                 {
                     "t": "CYD",
@@ -54884,12 +54854,42 @@
             ]
         },
         {
+            "rank": 91,
+            "industry": "Farm Products",
+            "sector": "Consumer Defensive",
+            "rs": 28,
+            "rs_1w_pct": 27,
+            "rs_1m_pct": 21,
+            "tickers": [
+                {
+                    "t": "BG",
+                    "n": "Bunge Global SA"
+                },
+                {
+                    "t": "ADM",
+                    "n": "Archer-Daniels-Midland Company"
+                },
+                {
+                    "t": "ALCO",
+                    "n": "Alico, Inc."
+                },
+                {
+                    "t": "FDP",
+                    "n": "Fresh Del Monte Produce Inc."
+                },
+                {
+                    "t": "TSN",
+                    "n": "Tyson Foods, Inc."
+                }
+            ]
+        },
+        {
             "rank": 92,
             "industry": "Asset Management",
             "sector": "Financial Services",
-            "rs": 29,
+            "rs": 28,
             "rs_1w_pct": 25,
-            "rs_1m_pct": 26,
+            "rs_1m_pct": 23,
             "tickers": [
                 {
                     "t": "SII",
@@ -54915,101 +54915,41 @@
         },
         {
             "rank": 93,
-            "industry": "Farm Products",
-            "sector": "Consumer Defensive",
-            "rs": 29,
-            "rs_1w_pct": 27,
-            "rs_1m_pct": 24,
+            "industry": "Banks - Regional",
+            "sector": "Financial Services",
+            "rs": 28,
+            "rs_1w_pct": 37,
+            "rs_1m_pct": 32,
             "tickers": [
                 {
-                    "t": "BG",
-                    "n": "Bunge Global SA"
+                    "t": "WF",
+                    "n": "Woori Financial Group Inc."
                 },
                 {
-                    "t": "ADM",
-                    "n": "Archer-Daniels-Midland Company"
+                    "t": "BAP",
+                    "n": "Credicorp Ltd."
                 },
                 {
-                    "t": "ALCO",
-                    "n": "Alico, Inc."
+                    "t": "SHG",
+                    "n": "Shinhan Financial Group Co., Ltd."
                 },
                 {
-                    "t": "FDP",
-                    "n": "Fresh Del Monte Produce Inc."
+                    "t": "KB",
+                    "n": "KB Financial Group Inc."
                 },
                 {
-                    "t": "TSN",
-                    "n": "Tyson Foods, Inc."
+                    "t": "ISBA",
+                    "n": "Isabella Bank Corporation"
                 }
             ]
         },
         {
             "rank": 94,
-            "industry": "Packaged Foods",
-            "sector": "Consumer Defensive",
-            "rs": 29,
-            "rs_1w_pct": 23,
-            "rs_1m_pct": 18,
-            "tickers": [
-                {
-                    "t": "MAMA",
-                    "n": "Mama's Creations, Inc."
-                },
-                {
-                    "t": "HLF",
-                    "n": "Herbalife Ltd."
-                },
-                {
-                    "t": "NATR",
-                    "n": "Nature's Sunshine Products, Inc."
-                },
-                {
-                    "t": "DAR",
-                    "n": "Darling Ingredients Inc."
-                },
-                {
-                    "t": "SENEA",
-                    "n": "Seneca Foods Corporation"
-                }
-            ]
-        },
-        {
-            "rank": 95,
-            "industry": "Residential Construction",
-            "sector": "Consumer Cyclical",
-            "rs": 27,
-            "rs_1w_pct": 33,
-            "rs_1m_pct": 15,
-            "tickers": [
-                {
-                    "t": "IBP",
-                    "n": "Installed Building Products, Inc."
-                },
-                {
-                    "t": "TPH",
-                    "n": "Tri Pointe Homes, Inc."
-                },
-                {
-                    "t": "TOL",
-                    "n": "Toll Brothers, Inc."
-                },
-                {
-                    "t": "PHM",
-                    "n": "PulteGroup, Inc."
-                },
-                {
-                    "t": "SKY",
-                    "n": "Champion Homes, Inc."
-                }
-            ]
-        },
-        {
-            "rank": 96,
             "industry": "Beverages - Brewers",
             "sector": "Consumer Defensive",
-            "rs": 27,
+            "rs": 26,
             "rs_1w_pct": 25,
-            "rs_1m_pct": 18,
+            "rs_1m_pct": 15,
             "tickers": [
                 {
                     "t": "BUD",
@@ -55034,42 +54974,12 @@
             ]
         },
         {
-            "rank": 97,
-            "industry": "Building Materials",
-            "sector": "Basic Materials",
-            "rs": 27,
-            "rs_1w_pct": 29,
-            "rs_1m_pct": 16,
-            "tickers": [
-                {
-                    "t": "CX",
-                    "n": "CEMEX, S.A.B. de C.V."
-                },
-                {
-                    "t": "MLM",
-                    "n": "Martin Marietta Materials, Inc."
-                },
-                {
-                    "t": "VMC",
-                    "n": "Vulcan Materials Company"
-                },
-                {
-                    "t": "JHX",
-                    "n": "James Hardie Industries plc"
-                },
-                {
-                    "t": "TTAM",
-                    "n": "Titan America SA"
-                }
-            ]
-        },
-        {
-            "rank": 98,
+            "rank": 95,
             "industry": "Building Products & Equipment",
             "sector": "Industrials",
-            "rs": 27,
-            "rs_1w_pct": 31,
-            "rs_1m_pct": 9,
+            "rs": 26,
+            "rs_1w_pct": 32,
+            "rs_1m_pct": 7,
             "tickers": [
                 {
                     "t": "PPIH",
@@ -55094,42 +55004,102 @@
             ]
         },
         {
-            "rank": 99,
-            "industry": "Utilities - Regulated Water",
-            "sector": "Utilities",
-            "rs": 25,
-            "rs_1w_pct": 20,
-            "rs_1m_pct": 16,
+            "rank": 96,
+            "industry": "Residential Construction",
+            "sector": "Consumer Cyclical",
+            "rs": 26,
+            "rs_1w_pct": 34,
+            "rs_1m_pct": 13,
             "tickers": [
                 {
-                    "t": "SBS",
-                    "n": "Companhia de Saneamento B\u00e1sico do Estado de S\u00e3o Paulo - SABESP"
+                    "t": "IBP",
+                    "n": "Installed Building Products, Inc."
                 },
                 {
-                    "t": "CWCO",
-                    "n": "Consolidated Water Co. Ltd."
+                    "t": "TPH",
+                    "n": "Tri Pointe Homes, Inc."
                 },
                 {
-                    "t": "CDZIP",
-                    "n": "Cadiz Inc."
+                    "t": "TOL",
+                    "n": "Toll Brothers, Inc."
                 },
                 {
-                    "t": "HTO",
-                    "n": "H2O America"
+                    "t": "PHM",
+                    "n": "PulteGroup, Inc."
                 },
                 {
-                    "t": "ARTNA",
-                    "n": "Artesian Resources Corporation"
+                    "t": "SKY",
+                    "n": "Champion Homes, Inc."
                 }
             ]
         },
         {
-            "rank": 100,
+            "rank": 97,
+            "industry": "Packaged Foods",
+            "sector": "Consumer Defensive",
+            "rs": 26,
+            "rs_1w_pct": 22,
+            "rs_1m_pct": 14,
+            "tickers": [
+                {
+                    "t": "MAMA",
+                    "n": "Mama's Creations, Inc."
+                },
+                {
+                    "t": "HLF",
+                    "n": "Herbalife Ltd."
+                },
+                {
+                    "t": "NATR",
+                    "n": "Nature's Sunshine Products, Inc."
+                },
+                {
+                    "t": "DAR",
+                    "n": "Darling Ingredients Inc."
+                },
+                {
+                    "t": "SENEA",
+                    "n": "Seneca Foods Corporation"
+                }
+            ]
+        },
+        {
+            "rank": 98,
+            "industry": "Building Materials",
+            "sector": "Basic Materials",
+            "rs": 26,
+            "rs_1w_pct": 29,
+            "rs_1m_pct": 14,
+            "tickers": [
+                {
+                    "t": "CX",
+                    "n": "CEMEX, S.A.B. de C.V."
+                },
+                {
+                    "t": "MLM",
+                    "n": "Martin Marietta Materials, Inc."
+                },
+                {
+                    "t": "VMC",
+                    "n": "Vulcan Materials Company"
+                },
+                {
+                    "t": "JHX",
+                    "n": "James Hardie Industries plc"
+                },
+                {
+                    "t": "TTAM",
+                    "n": "Titan America SA"
+                }
+            ]
+        },
+        {
+            "rank": 99,
             "industry": "REIT - Diversified",
             "sector": "Real Estate",
-            "rs": 25,
+            "rs": 24,
             "rs_1w_pct": 23,
-            "rs_1m_pct": 13,
+            "rs_1m_pct": 12,
             "tickers": [
                 {
                     "t": "WPC",
@@ -55154,12 +55124,42 @@
             ]
         },
         {
+            "rank": 100,
+            "industry": "Utilities - Regulated Water",
+            "sector": "Utilities",
+            "rs": 24,
+            "rs_1w_pct": 20,
+            "rs_1m_pct": 14,
+            "tickers": [
+                {
+                    "t": "SBS",
+                    "n": "Companhia de Saneamento B\u00e1sico do Estado de S\u00e3o Paulo - SABESP"
+                },
+                {
+                    "t": "CWCO",
+                    "n": "Consolidated Water Co. Ltd."
+                },
+                {
+                    "t": "CDZIP",
+                    "n": "Cadiz Inc."
+                },
+                {
+                    "t": "HTO",
+                    "n": "H2O America"
+                },
+                {
+                    "t": "ARTNA",
+                    "n": "Artesian Resources Corporation"
+                }
+            ]
+        },
+        {
             "rank": 101,
             "industry": "Footwear & Accessories",
             "sector": "Consumer Cyclical",
-            "rs": 25,
+            "rs": 24,
             "rs_1w_pct": 22,
-            "rs_1m_pct": 11,
+            "rs_1m_pct": 10,
             "tickers": [
                 {
                     "t": "RCKY",
@@ -55187,9 +55187,9 @@
             "rank": 102,
             "industry": "Home Improvement Retail",
             "sector": "Consumer Cyclical",
-            "rs": 23,
-            "rs_1w_pct": 34,
-            "rs_1m_pct": 33,
+            "rs": 22,
+            "rs_1w_pct": 35,
+            "rs_1m_pct": 30,
             "tickers": [
                 {
                     "t": "LIVE",
@@ -55215,101 +55215,11 @@
         },
         {
             "rank": 103,
-            "industry": "Insurance - Diversified",
-            "sector": "Financial Services",
-            "rs": 23,
-            "rs_1w_pct": 22,
-            "rs_1m_pct": 16,
-            "tickers": [
-                {
-                    "t": "SLF",
-                    "n": "Sun Life Financial Inc."
-                },
-                {
-                    "t": "FIHL",
-                    "n": "Fidelis Insurance Holdings Limited"
-                },
-                {
-                    "t": "HIG",
-                    "n": "The Hartford Insurance Group, Inc."
-                },
-                {
-                    "t": "ACGL",
-                    "n": "Arch Capital Group Ltd."
-                },
-                {
-                    "t": "IGIC",
-                    "n": "International General Insurance Holdings Ltd."
-                }
-            ]
-        },
-        {
-            "rank": 104,
-            "industry": "Publishing",
-            "sector": "Communication Services",
-            "rs": 23,
-            "rs_1w_pct": 17,
-            "rs_1m_pct": 16,
-            "tickers": [
-                {
-                    "t": "SCHL",
-                    "n": "Scholastic Corporation"
-                },
-                {
-                    "t": "NYT",
-                    "n": "The New York Times Company"
-                },
-                {
-                    "t": "PSO",
-                    "n": "Pearson plc"
-                },
-                {
-                    "t": "WLY",
-                    "n": "John Wiley & Sons, Inc."
-                },
-                {
-                    "t": "WLYB",
-                    "n": "John Wiley & Sons, Inc."
-                }
-            ]
-        },
-        {
-            "rank": 105,
-            "industry": "REIT - Industrial",
-            "sector": "Real Estate",
-            "rs": 23,
-            "rs_1w_pct": 20,
-            "rs_1m_pct": 11,
-            "tickers": [
-                {
-                    "t": "PLD",
-                    "n": "Prologis, Inc."
-                },
-                {
-                    "t": "FR",
-                    "n": "First Industrial Realty Trust, Inc."
-                },
-                {
-                    "t": "EGP",
-                    "n": "EastGroup Properties, Inc."
-                },
-                {
-                    "t": "NSA",
-                    "n": "National Storage Affiliates Trust"
-                },
-                {
-                    "t": "LXP",
-                    "n": "LXP Industrial Trust"
-                }
-            ]
-        },
-        {
-            "rank": 106,
             "industry": "Index/ETF",
             "sector": "Market Pulse",
-            "rs": 23,
+            "rs": 22,
             "rs_1w_pct": 22,
-            "rs_1m_pct": 20,
+            "rs_1m_pct": 17,
             "tickers": [
                 {
                     "t": "RNAM",
@@ -55334,12 +55244,102 @@
             ]
         },
         {
+            "rank": 104,
+            "industry": "REIT - Industrial",
+            "sector": "Real Estate",
+            "rs": 22,
+            "rs_1w_pct": 20,
+            "rs_1m_pct": 10,
+            "tickers": [
+                {
+                    "t": "PLD",
+                    "n": "Prologis, Inc."
+                },
+                {
+                    "t": "FR",
+                    "n": "First Industrial Realty Trust, Inc."
+                },
+                {
+                    "t": "EGP",
+                    "n": "EastGroup Properties, Inc."
+                },
+                {
+                    "t": "NSA",
+                    "n": "National Storage Affiliates Trust"
+                },
+                {
+                    "t": "LXP",
+                    "n": "LXP Industrial Trust"
+                }
+            ]
+        },
+        {
+            "rank": 105,
+            "industry": "Insurance - Diversified",
+            "sector": "Financial Services",
+            "rs": 22,
+            "rs_1w_pct": 22,
+            "rs_1m_pct": 14,
+            "tickers": [
+                {
+                    "t": "SLF",
+                    "n": "Sun Life Financial Inc."
+                },
+                {
+                    "t": "FIHL",
+                    "n": "Fidelis Insurance Holdings Limited"
+                },
+                {
+                    "t": "HIG",
+                    "n": "The Hartford Insurance Group, Inc."
+                },
+                {
+                    "t": "ACGL",
+                    "n": "Arch Capital Group Ltd."
+                },
+                {
+                    "t": "IGIC",
+                    "n": "International General Insurance Holdings Ltd."
+                }
+            ]
+        },
+        {
+            "rank": 106,
+            "industry": "Publishing",
+            "sector": "Communication Services",
+            "rs": 22,
+            "rs_1w_pct": 17,
+            "rs_1m_pct": 14,
+            "tickers": [
+                {
+                    "t": "SCHL",
+                    "n": "Scholastic Corporation"
+                },
+                {
+                    "t": "NYT",
+                    "n": "The New York Times Company"
+                },
+                {
+                    "t": "PSO",
+                    "n": "Pearson plc"
+                },
+                {
+                    "t": "WLY",
+                    "n": "John Wiley & Sons, Inc."
+                },
+                {
+                    "t": "WLYB",
+                    "n": "John Wiley & Sons, Inc."
+                }
+            ]
+        },
+        {
             "rank": 107,
             "industry": "Specialty Business Services",
             "sector": "Industrials",
-            "rs": 21,
+            "rs": 20,
             "rs_1w_pct": 22,
-            "rs_1m_pct": 43,
+            "rs_1m_pct": 40,
             "tickers": [
                 {
                     "t": "RHLD",
@@ -55365,39 +55365,9 @@
         },
         {
             "rank": 108,
-            "industry": "Internet Content & Information",
-            "sector": "Communication Services",
-            "rs": 21,
-            "rs_1w_pct": 27,
-            "rs_1m_pct": 42,
-            "tickers": [
-                {
-                    "t": "SOGP",
-                    "n": "Sound Group Inc."
-                },
-                {
-                    "t": "NBIS",
-                    "n": "Nebius Group N.V."
-                },
-                {
-                    "t": "GOOGL",
-                    "n": "Alphabet Inc."
-                },
-                {
-                    "t": "GOOG",
-                    "n": "Alphabet Inc."
-                },
-                {
-                    "t": "BIDU",
-                    "n": "Baidu, Inc."
-                }
-            ]
-        },
-        {
-            "rank": 109,
             "industry": "Household & Personal Products",
             "sector": "Consumer Defensive",
-            "rs": 21,
+            "rs": 20,
             "rs_1w_pct": 23,
             "rs_1m_pct": 6,
             "tickers": [
@@ -55424,12 +55394,72 @@
             ]
         },
         {
+            "rank": 109,
+            "industry": "Internet Content & Information",
+            "sector": "Communication Services",
+            "rs": 20,
+            "rs_1w_pct": 27,
+            "rs_1m_pct": 39,
+            "tickers": [
+                {
+                    "t": "SOGP",
+                    "n": "Sound Group Inc."
+                },
+                {
+                    "t": "NBIS",
+                    "n": "Nebius Group N.V."
+                },
+                {
+                    "t": "GOOGL",
+                    "n": "Alphabet Inc."
+                },
+                {
+                    "t": "GOOG",
+                    "n": "Alphabet Inc."
+                },
+                {
+                    "t": "BIDU",
+                    "n": "Baidu, Inc."
+                }
+            ]
+        },
+        {
             "rank": 110,
+            "industry": "Medical Instruments & Supplies",
+            "sector": "Healthcare",
+            "rs": 19,
+            "rs_1w_pct": 20,
+            "rs_1m_pct": 10,
+            "tickers": [
+                {
+                    "t": "NNNN",
+                    "n": "Anbio Biotechnology"
+                },
+                {
+                    "t": "NVST",
+                    "n": "Envista Holdings Corporation"
+                },
+                {
+                    "t": "BLCO",
+                    "n": "Bausch + Lomb Corporation"
+                },
+                {
+                    "t": "LMAT",
+                    "n": "LeMaitre Vascular, Inc."
+                },
+                {
+                    "t": "PLSE",
+                    "n": "Pulse Biosciences, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 111,
             "industry": "Software - Infrastructure",
             "sector": "Technology",
-            "rs": 20,
+            "rs": 19,
             "rs_1w_pct": 11,
-            "rs_1m_pct": 29,
+            "rs_1m_pct": 26,
             "tickers": [
                 {
                     "t": "BNAI",
@@ -55454,42 +55484,12 @@
             ]
         },
         {
-            "rank": 111,
-            "industry": "Medical Devices",
-            "sector": "Healthcare",
-            "rs": 20,
-            "rs_1w_pct": 19,
-            "rs_1m_pct": 26,
-            "tickers": [
-                {
-                    "t": "TCMD",
-                    "n": "Tactile Systems Technology, Inc."
-                },
-                {
-                    "t": "BWAY",
-                    "n": "BrainsWay Ltd."
-                },
-                {
-                    "t": "AXGN",
-                    "n": "Axogen, Inc."
-                },
-                {
-                    "t": "ESTA",
-                    "n": "Establishment Labs Holdings Inc."
-                },
-                {
-                    "t": "IRMD",
-                    "n": "IRADIMED CORPORATION"
-                }
-            ]
-        },
-        {
             "rank": 112,
             "industry": "Furnishings, Fixtures & Appliances",
             "sector": "Consumer Cyclical",
-            "rs": 20,
-            "rs_1w_pct": 31,
-            "rs_1m_pct": 16,
+            "rs": 19,
+            "rs_1w_pct": 32,
+            "rs_1m_pct": 14,
             "tickers": [
                 {
                     "t": "HOFT",
@@ -55515,41 +55515,11 @@
         },
         {
             "rank": 113,
-            "industry": "Medical Instruments & Supplies",
-            "sector": "Healthcare",
-            "rs": 20,
-            "rs_1w_pct": 20,
-            "rs_1m_pct": 11,
-            "tickers": [
-                {
-                    "t": "NNNN",
-                    "n": "Anbio Biotechnology"
-                },
-                {
-                    "t": "NVST",
-                    "n": "Envista Holdings Corporation"
-                },
-                {
-                    "t": "BLCO",
-                    "n": "Bausch + Lomb Corporation"
-                },
-                {
-                    "t": "LMAT",
-                    "n": "LeMaitre Vascular, Inc."
-                },
-                {
-                    "t": "PLSE",
-                    "n": "Pulse Biosciences, Inc."
-                }
-            ]
-        },
-        {
-            "rank": 114,
             "industry": "Internet Retail",
             "sector": "Consumer Cyclical",
             "rs": 18,
             "rs_1w_pct": 19,
-            "rs_1m_pct": 40,
+            "rs_1m_pct": 38,
             "tickers": [
                 {
                     "t": "NEGG",
@@ -55574,12 +55544,12 @@
             ]
         },
         {
-            "rank": 115,
+            "rank": 114,
             "industry": "Lumber & Wood Production",
             "sector": "Basic Materials",
             "rs": 18,
             "rs_1w_pct": 20,
-            "rs_1m_pct": 9,
+            "rs_1m_pct": 8,
             "tickers": [
                 {
                     "t": "SSD",
@@ -55600,12 +55570,42 @@
             ]
         },
         {
+            "rank": 115,
+            "industry": "Medical Devices",
+            "sector": "Healthcare",
+            "rs": 18,
+            "rs_1w_pct": 19,
+            "rs_1m_pct": 21,
+            "tickers": [
+                {
+                    "t": "TCMD",
+                    "n": "Tactile Systems Technology, Inc."
+                },
+                {
+                    "t": "BWAY",
+                    "n": "BrainsWay Ltd."
+                },
+                {
+                    "t": "AXGN",
+                    "n": "Axogen, Inc."
+                },
+                {
+                    "t": "ESTA",
+                    "n": "Establishment Labs Holdings Inc."
+                },
+                {
+                    "t": "IRMD",
+                    "n": "IRADIMED CORPORATION"
+                }
+            ]
+        },
+        {
             "rank": 116,
             "industry": "Electronics & Computer Distribution",
             "sector": "Technology",
             "rs": 18,
             "rs_1w_pct": 23,
-            "rs_1m_pct": 11,
+            "rs_1m_pct": 10,
             "tickers": [
                 {
                     "t": "ARW",
@@ -55635,7 +55635,7 @@
             "sector": "Real Estate",
             "rs": 16,
             "rs_1w_pct": 17,
-            "rs_1m_pct": 24,
+            "rs_1m_pct": 21,
             "tickers": [
                 {
                     "t": "NLY",
@@ -55665,7 +55665,7 @@
             "sector": "Financial Services",
             "rs": 16,
             "rs_1w_pct": 20,
-            "rs_1m_pct": 44,
+            "rs_1m_pct": 41,
             "tickers": [
                 {
                     "t": "BETR",
@@ -55695,7 +55695,7 @@
             "sector": "Financial Services",
             "rs": 16,
             "rs_1w_pct": 19,
-            "rs_1m_pct": 24,
+            "rs_1m_pct": 21,
             "tickers": [
                 {
                     "t": "IX",
@@ -55725,7 +55725,7 @@
             "sector": "Financial Services",
             "rs": 16,
             "rs_1w_pct": 13,
-            "rs_1m_pct": 16,
+            "rs_1m_pct": 14,
             "tickers": [
                 {
                     "t": "HRTG",
@@ -55751,11 +55751,41 @@
         },
         {
             "rank": 121,
+            "industry": "Electronic Gaming & Multimedia",
+            "sector": "Communication Services",
+            "rs": 14,
+            "rs_1w_pct": 11,
+            "rs_1m_pct": 17,
+            "tickers": [
+                {
+                    "t": "EA",
+                    "n": "Electronic Arts Inc."
+                },
+                {
+                    "t": "SOHU",
+                    "n": "Sohu.com Limited"
+                },
+                {
+                    "t": "GRVY",
+                    "n": "Gravity Co., Ltd."
+                },
+                {
+                    "t": "GDEV",
+                    "n": "GDEV Inc."
+                },
+                {
+                    "t": "NTES",
+                    "n": "NetEase, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 122,
             "industry": "Insurance - Life",
             "sector": "Financial Services",
             "rs": 14,
             "rs_1w_pct": 19,
-            "rs_1m_pct": 26,
+            "rs_1m_pct": 23,
             "tickers": [
                 {
                     "t": "PUK",
@@ -55780,7 +55810,7 @@
             ]
         },
         {
-            "rank": 122,
+            "rank": 123,
             "industry": "Resorts & Casinos",
             "sector": "Consumer Cyclical",
             "rs": 14,
@@ -55810,10 +55840,10 @@
             ]
         },
         {
-            "rank": 123,
+            "rank": 124,
             "industry": "Restaurants",
             "sector": "Consumer Cyclical",
-            "rs": 13,
+            "rs": 12,
             "rs_1w_pct": 15,
             "rs_1m_pct": 7,
             "tickers": [
@@ -55834,38 +55864,8 @@
                     "n": "Dine Brands Global, Inc."
                 },
                 {
-                    "t": "KRUS",
-                    "n": "Kura Sushi USA, Inc."
-                }
-            ]
-        },
-        {
-            "rank": 124,
-            "industry": "Electronic Gaming & Multimedia",
-            "sector": "Communication Services",
-            "rs": 13,
-            "rs_1w_pct": 11,
-            "rs_1m_pct": 20,
-            "tickers": [
-                {
-                    "t": "EA",
-                    "n": "Electronic Arts Inc."
-                },
-                {
-                    "t": "SOHU",
-                    "n": "Sohu.com Limited"
-                },
-                {
-                    "t": "GRVY",
-                    "n": "Gravity Co., Ltd."
-                },
-                {
-                    "t": "GDEV",
-                    "n": "GDEV Inc."
-                },
-                {
-                    "t": "NTES",
-                    "n": "NetEase, Inc."
+                    "t": "YUMC",
+                    "n": "Yum China Holdings, Inc."
                 }
             ]
         },
@@ -55905,7 +55905,7 @@
             "sector": "Consumer Cyclical",
             "rs": 11,
             "rs_1w_pct": 16,
-            "rs_1m_pct": 13,
+            "rs_1m_pct": 12,
             "tickers": [
                 {
                     "t": "RUSHA",
@@ -55991,41 +55991,11 @@
         },
         {
             "rank": 129,
-            "industry": "Real Estate Services",
-            "sector": "Real Estate",
-            "rs": 9,
-            "rs_1w_pct": 14,
-            "rs_1m_pct": 18,
-            "tickers": [
-                {
-                    "t": "MAYS",
-                    "n": "J.W. Mays, Inc."
-                },
-                {
-                    "t": "ARL",
-                    "n": "American Realty Investors, Inc."
-                },
-                {
-                    "t": "JLL",
-                    "n": "Jones Lang LaSalle Incorporated"
-                },
-                {
-                    "t": "IRS",
-                    "n": "IRSA Inversiones y Representaciones Sociedad An\u00f3nima"
-                },
-                {
-                    "t": "RMR",
-                    "n": "The RMR Group Inc."
-                }
-            ]
-        },
-        {
-            "rank": 130,
             "industry": "Grocery Stores",
             "sector": "Consumer Defensive",
             "rs": 9,
             "rs_1w_pct": 8,
-            "rs_1m_pct": 1,
+            "rs_1m_pct": 2,
             "tickers": [
                 {
                     "t": "IMKTA",
@@ -56050,12 +56020,42 @@
             ]
         },
         {
+            "rank": 130,
+            "industry": "Real Estate Services",
+            "sector": "Real Estate",
+            "rs": 9,
+            "rs_1w_pct": 14,
+            "rs_1m_pct": 15,
+            "tickers": [
+                {
+                    "t": "MAYS",
+                    "n": "J.W. Mays, Inc."
+                },
+                {
+                    "t": "ARL",
+                    "n": "American Realty Investors, Inc."
+                },
+                {
+                    "t": "JLL",
+                    "n": "Jones Lang LaSalle Incorporated"
+                },
+                {
+                    "t": "IRS",
+                    "n": "IRSA Inversiones y Representaciones Sociedad An\u00f3nima"
+                },
+                {
+                    "t": "RMR",
+                    "n": "The RMR Group Inc."
+                }
+            ]
+        },
+        {
             "rank": 131,
             "industry": "Insurance - Specialty",
             "sector": "Financial Services",
             "rs": 8,
             "rs_1w_pct": 8,
-            "rs_1m_pct": 11,
+            "rs_1m_pct": 10,
             "tickers": [
                 {
                     "t": "ACT",
@@ -56085,7 +56085,7 @@
             "sector": "Financial Services",
             "rs": 7,
             "rs_1w_pct": 9,
-            "rs_1m_pct": 11,
+            "rs_1m_pct": 10,
             "tickers": [
                 {
                     "t": "EZPW",
@@ -56141,41 +56141,11 @@
         },
         {
             "rank": 134,
-            "industry": "Healthcare Plans",
-            "sector": "Healthcare",
-            "rs": 6,
-            "rs_1w_pct": 9,
-            "rs_1m_pct": 9,
-            "tickers": [
-                {
-                    "t": "ALHC",
-                    "n": "Alignment Healthcare, Inc."
-                },
-                {
-                    "t": "CVS",
-                    "n": "CVS Health Corporation"
-                },
-                {
-                    "t": "CNC",
-                    "n": "Centene Corporation"
-                },
-                {
-                    "t": "CI",
-                    "n": "The Cigna Group"
-                },
-                {
-                    "t": "ELV",
-                    "n": "Elevance Health, Inc."
-                }
-            ]
-        },
-        {
-            "rank": 135,
             "industry": "Information Technology Services",
             "sector": "Technology",
             "rs": 6,
             "rs_1w_pct": 7,
-            "rs_1m_pct": 27,
+            "rs_1m_pct": 26,
             "tickers": [
                 {
                     "t": "CIFR",
@@ -56196,6 +56166,36 @@
                 {
                     "t": "LDOS",
                     "n": "Leidos Holdings, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 135,
+            "industry": "Healthcare Plans",
+            "sector": "Healthcare",
+            "rs": 6,
+            "rs_1w_pct": 9,
+            "rs_1m_pct": 8,
+            "tickers": [
+                {
+                    "t": "ALHC",
+                    "n": "Alignment Healthcare, Inc."
+                },
+                {
+                    "t": "CVS",
+                    "n": "CVS Health Corporation"
+                },
+                {
+                    "t": "CNC",
+                    "n": "Centene Corporation"
+                },
+                {
+                    "t": "CI",
+                    "n": "The Cigna Group"
+                },
+                {
+                    "t": "ELV",
+                    "n": "Elevance Health, Inc."
                 }
             ]
         },
@@ -56667,7 +56667,7 @@
     "stages": [
         {
             "sector": "Energy",
-            "count": 139,
+            "count": 140,
             "s1": 4,
             "s2": 92,
             "s3": 4,
@@ -56900,6 +56900,10 @@
                 {
                     "t": "XOM",
                     "n": "Exxon Mobil Corporation"
+                },
+                {
+                    "t": "SEI",
+                    "n": "Solaris Energy Infrastructure, Inc."
                 },
                 {
                     "t": "SU",
@@ -58263,10 +58267,10 @@
         },
         {
             "sector": "Industrials",
-            "count": 369,
+            "count": 372,
             "s1": 11,
-            "s2": 73,
-            "s3": 4,
+            "s2": 74,
+            "s3": 3,
             "s4": 12,
             "tickers": [
                 {
@@ -59174,6 +59178,10 @@
                     "n": "GATX Corporation"
                 },
                 {
+                    "t": "GWW",
+                    "n": "W.W. Grainger, Inc."
+                },
+                {
                     "t": "CSL",
                     "n": "Carlisle Companies Incorporated"
                 },
@@ -59196,6 +59204,10 @@
                 {
                     "t": "TT",
                     "n": "Trane Technologies plc"
+                },
+                {
+                    "t": "AAON",
+                    "n": "AAON, Inc."
                 },
                 {
                     "t": "EXPD",
@@ -59502,6 +59514,10 @@
                     "n": "TransDigm Group Incorporated"
                 },
                 {
+                    "t": "AAL",
+                    "n": "American Airlines Group Inc."
+                },
+                {
                     "t": "XMTR",
                     "n": "Xometry, Inc."
                 },
@@ -59750,7 +59766,7 @@
         },
         {
             "sector": "Financial Services",
-            "count": 658,
+            "count": 660,
             "s1": 14,
             "s2": 71,
             "s3": 2,
@@ -59847,6 +59863,10 @@
                 {
                     "t": "HSBC",
                     "n": "HSBC Holdings plc"
+                },
+                {
+                    "t": "AAMI",
+                    "n": "Acadian Asset Management Inc."
                 },
                 {
                     "t": "BCX",
@@ -60097,6 +60117,10 @@
                     "n": "The Gabelli Global Small and Mid Cap Value Trust"
                 },
                 {
+                    "t": "JHG",
+                    "n": "Janus Henderson Group plc"
+                },
+                {
                     "t": "CFG",
                     "n": "Citizens Financial Group, Inc."
                 },
@@ -60187,10 +60211,6 @@
                 {
                     "t": "RNR",
                     "n": "RenaissanceRe Holdings Ltd."
-                },
-                {
-                    "t": "IBKR",
-                    "n": "Interactive Brokers Group, Inc."
                 },
                 {
                     "t": "LGI",
@@ -60371,10 +60391,6 @@
                 {
                     "t": "CBNA",
                     "n": "Chain Bridge Bancorp, Inc."
-                },
-                {
-                    "t": "CGO",
-                    "n": "Calamos Global Total Return Fund"
                 },
                 {
                     "t": "NTB",
@@ -61337,6 +61353,10 @@
                     "n": "Nu Holdings Ltd."
                 },
                 {
+                    "t": "NAZ",
+                    "n": "Nuveen Arizona Quality Municipal Income Fund"
+                },
+                {
                     "t": "BMEZ",
                     "n": "BlackRock Health Sciences Term Trust"
                 },
@@ -61363,6 +61383,10 @@
                 {
                     "t": "BHRB",
                     "n": "Burke & Herbert Financial Services Corp."
+                },
+                {
+                    "t": "JGH",
+                    "n": "Nuveen Global High Income Fund"
                 },
                 {
                     "t": "CNO",
@@ -61621,10 +61645,6 @@
                     "n": "Enterprise Financial Services Corp"
                 },
                 {
-                    "t": "NRIM",
-                    "n": "Northrim BanCorp, Inc."
-                },
-                {
                     "t": "CPZ",
                     "n": "Calamos Long/Short Equity & Dynamic Income Term Trust"
                 },
@@ -61713,8 +61733,8 @@
                     "n": "W. R. Berkley Corporation"
                 },
                 {
-                    "t": "ETY",
-                    "n": "Eaton Vance Tax-Managed Diversified Equity Income Fund"
+                    "t": "SYF",
+                    "n": "Synchrony Financial"
                 },
                 {
                     "t": "FSUN",
@@ -61827,6 +61847,10 @@
                 {
                     "t": "WAL",
                     "n": "Western Alliance Bancorporation"
+                },
+                {
+                    "t": "SEIC",
+                    "n": "SEI Investments Company"
                 },
                 {
                     "t": "IIF",
@@ -61943,10 +61967,6 @@
                 {
                     "t": "LKFN",
                     "n": "Lakeland Financial Corporation"
-                },
-                {
-                    "t": "TROW",
-                    "n": "T. Rowe Price Group, Inc."
                 },
                 {
                     "t": "COFS",
@@ -62099,6 +62119,10 @@
                 {
                     "t": "GGAL",
                     "n": "Grupo Financiero Galicia S.A."
+                },
+                {
+                    "t": "SYBT",
+                    "n": "Stock Yards Bancorp, Inc."
                 },
                 {
                     "t": "HDB",
@@ -62393,9 +62417,9 @@
         },
         {
             "sector": "Healthcare",
-            "count": 392,
-            "s1": 11,
-            "s2": 66,
+            "count": 391,
+            "s1": 12,
+            "s2": 65,
             "s3": 5,
             "s4": 18,
             "tickers": [
@@ -62466,6 +62490,10 @@
                 {
                     "t": "KOD",
                     "n": "Kodiak Sciences Inc."
+                },
+                {
+                    "t": "PVLA",
+                    "n": "Palvella Therapeutics, Inc."
                 },
                 {
                     "t": "COGT",
@@ -62652,10 +62680,6 @@
                     "n": "Zenas BioPharma, Inc."
                 },
                 {
-                    "t": "CGON",
-                    "n": "CG Oncology, Inc."
-                },
-                {
                     "t": "TCMD",
                     "n": "Tactile Systems Technology, Inc."
                 },
@@ -62744,10 +62768,6 @@
                     "n": "Exact Sciences Corporation"
                 },
                 {
-                    "t": "KRYS",
-                    "n": "Krystal Biotech, Inc."
-                },
-                {
                     "t": "OCS",
                     "n": "Oculis Holding AG"
                 },
@@ -62818,10 +62838,6 @@
                 {
                     "t": "RCUS",
                     "n": "Arcus Biosciences, Inc."
-                },
-                {
-                    "t": "PHAT",
-                    "n": "Phathom Pharmaceuticals, Inc."
                 },
                 {
                     "t": "ARQT",
@@ -63130,14 +63146,6 @@
                 {
                     "t": "NGNE",
                     "n": "Neurogene Inc."
-                },
-                {
-                    "t": "PHG",
-                    "n": "Koninklijke Philips N.V."
-                },
-                {
-                    "t": "NRIX",
-                    "n": "Nurix Therapeutics, Inc."
                 },
                 {
                     "t": "SRRK",
@@ -63592,6 +63600,10 @@
                     "n": "HUTCHMED (China) Limited"
                 },
                 {
+                    "t": "CLPT",
+                    "n": "ClearPoint Neuro, Inc."
+                },
+                {
                     "t": "NBIX",
                     "n": "Neurocrine Biosciences, Inc."
                 },
@@ -63698,6 +63710,10 @@
                 {
                     "t": "OFIX",
                     "n": "Orthofix Medical Inc."
+                },
+                {
+                    "t": "A",
+                    "n": "Agilent Technologies, Inc."
                 },
                 {
                     "t": "ZTS",
@@ -63810,6 +63826,10 @@
                 {
                     "t": "ENOV",
                     "n": "Enovis Corporation"
+                },
+                {
+                    "t": "AAPG",
+                    "n": "Ascentage Pharma Group Internat"
                 },
                 {
                     "t": "SMTI",
@@ -63972,11 +63992,11 @@
         },
         {
             "sector": "Real Estate",
-            "count": 145,
+            "count": 147,
             "s1": 10,
             "s2": 65,
             "s3": 6,
-            "s4": 19,
+            "s4": 18,
             "tickers": [
                 {
                     "t": "JFB",
@@ -64131,6 +64151,10 @@
                     "n": "Brixmor Property Group Inc."
                 },
                 {
+                    "t": "EPR",
+                    "n": "EPR Properties"
+                },
+                {
                     "t": "FVR",
                     "n": "FrontView REIT, Inc."
                 },
@@ -64269,6 +64293,10 @@
                 {
                     "t": "EXR",
                     "n": "Extra Space Storage Inc."
+                },
+                {
+                    "t": "EPRT",
+                    "n": "Essential Properties Realty Trust, Inc."
                 },
                 {
                     "t": "PSA",
@@ -64563,11 +64591,11 @@
         },
         {
             "sector": "Consumer Cyclical",
-            "count": 298,
+            "count": 297,
             "s1": 19,
             "s2": 58,
             "s3": 3,
-            "s4": 19,
+            "s4": 20,
             "tickers": [
                 {
                     "t": "NEGG",
@@ -64926,10 +64954,6 @@
                     "n": "Dine Brands Global, Inc."
                 },
                 {
-                    "t": "KRUS",
-                    "n": "Kura Sushi USA, Inc."
-                },
-                {
                     "t": "VFC",
                     "n": "V.F. Corporation"
                 },
@@ -65106,8 +65130,8 @@
                     "n": "Amcor plc"
                 },
                 {
-                    "t": "MHO",
-                    "n": "M/I Homes, Inc."
+                    "t": "AAP",
+                    "n": "Advance Auto Parts, Inc."
                 },
                 {
                     "t": "SCVL",
@@ -65765,481 +65789,6 @@
             "health": "Strong"
         },
         {
-            "sector": "Consumer Defensive",
-            "count": 116,
-            "s1": 4,
-            "s2": 53,
-            "s3": 17,
-            "s4": 26,
-            "tickers": [
-                {
-                    "t": "MAMA",
-                    "n": "Mama's Creations, Inc."
-                },
-                {
-                    "t": "HLF",
-                    "n": "Herbalife Ltd."
-                },
-                {
-                    "t": "LINC",
-                    "n": "Lincoln Educational Services Corporation"
-                },
-                {
-                    "t": "NATR",
-                    "n": "Nature's Sunshine Products, Inc."
-                },
-                {
-                    "t": "DG",
-                    "n": "Dollar General Corporation"
-                },
-                {
-                    "t": "TPB",
-                    "n": "Turning Point Brands, Inc."
-                },
-                {
-                    "t": "APEI",
-                    "n": "American Public Education, Inc."
-                },
-                {
-                    "t": "DAR",
-                    "n": "Darling Ingredients Inc."
-                },
-                {
-                    "t": "ANDE",
-                    "n": "The Andersons, Inc."
-                },
-                {
-                    "t": "COKE",
-                    "n": "Coca-Cola Consolidated, Inc."
-                },
-                {
-                    "t": "BG",
-                    "n": "Bunge Global SA"
-                },
-                {
-                    "t": "COCO",
-                    "n": "The Vita Coco Company, Inc."
-                },
-                {
-                    "t": "PSMT",
-                    "n": "PriceSmart, Inc."
-                },
-                {
-                    "t": "LGCY",
-                    "n": "Legacy Education Inc."
-                },
-                {
-                    "t": "CELH",
-                    "n": "Celsius Holdings, Inc."
-                },
-                {
-                    "t": "UTI",
-                    "n": "Universal Technical Institute, Inc."
-                },
-                {
-                    "t": "HSY",
-                    "n": "The Hershey Company"
-                },
-                {
-                    "t": "SENEA",
-                    "n": "Seneca Foods Corporation"
-                },
-                {
-                    "t": "EL",
-                    "n": "The Est\u00e9e Lauder Companies Inc."
-                },
-                {
-                    "t": "SENEB",
-                    "n": "Seneca Foods Corporation"
-                },
-                {
-                    "t": "MNST",
-                    "n": "Monster Beverage Corporation"
-                },
-                {
-                    "t": "SPB",
-                    "n": "Spectrum Brands Holdings, Inc."
-                },
-                {
-                    "t": "DLTR",
-                    "n": "Dollar Tree, Inc."
-                },
-                {
-                    "t": "BUD",
-                    "n": "Anheuser-Busch InBev SA/NV"
-                },
-                {
-                    "t": "BTI",
-                    "n": "British American Tobacco p.l.c."
-                },
-                {
-                    "t": "FRPT",
-                    "n": "Freshpet, Inc."
-                },
-                {
-                    "t": "WILC",
-                    "n": "G. Willi-Food International Ltd."
-                },
-                {
-                    "t": "ADM",
-                    "n": "Archer-Daniels-Midland Company"
-                },
-                {
-                    "t": "WMT",
-                    "n": "Walmart Inc."
-                },
-                {
-                    "t": "USFD",
-                    "n": "US Foods Holding Corp."
-                },
-                {
-                    "t": "ALCO",
-                    "n": "Alico, Inc."
-                },
-                {
-                    "t": "FDP",
-                    "n": "Fresh Del Monte Produce Inc."
-                },
-                {
-                    "t": "LAUR",
-                    "n": "Laureate Education, Inc."
-                },
-                {
-                    "t": "TBBB",
-                    "n": "BBB Foods Inc."
-                },
-                {
-                    "t": "CCEP",
-                    "n": "Coca-Cola Europacific Partners PLC"
-                },
-                {
-                    "t": "JBSS",
-                    "n": "John B. Sanfilippo & Son, Inc."
-                },
-                {
-                    "t": "IMKTA",
-                    "n": "Ingles Markets, Incorporated"
-                },
-                {
-                    "t": "SYY",
-                    "n": "Sysco Corporation"
-                },
-                {
-                    "t": "MO",
-                    "n": "Altria Group, Inc."
-                },
-                {
-                    "t": "TGT",
-                    "n": "Target Corporation"
-                },
-                {
-                    "t": "FMX",
-                    "n": "Fomento Econ\u00f3mico Mexicano, S.A.B. de C.V."
-                },
-                {
-                    "t": "PEP",
-                    "n": "PepsiCo, Inc."
-                },
-                {
-                    "t": "AVO",
-                    "n": "Mission Produce, Inc."
-                },
-                {
-                    "t": "CL",
-                    "n": "Colgate-Palmolive Company"
-                },
-                {
-                    "t": "CVGW",
-                    "n": "Calavo Growers, Inc."
-                },
-                {
-                    "t": "PM",
-                    "n": "Philip Morris International Inc."
-                },
-                {
-                    "t": "KO",
-                    "n": "The Coca-Cola Company"
-                },
-                {
-                    "t": "TR",
-                    "n": "Tootsie Roll Industries, Inc."
-                },
-                {
-                    "t": "PRDO",
-                    "n": "Perdoceo Education Corporation"
-                },
-                {
-                    "t": "TSN",
-                    "n": "Tyson Foods, Inc."
-                },
-                {
-                    "t": "CHD",
-                    "n": "Church & Dwight Co., Inc."
-                },
-                {
-                    "t": "CHEF",
-                    "n": "The Chefs' Warehouse, Inc."
-                },
-                {
-                    "t": "VLGEA",
-                    "n": "Village Super Market, Inc."
-                },
-                {
-                    "t": "CENT",
-                    "n": "Central Garden & Pet Company"
-                },
-                {
-                    "t": "EDU",
-                    "n": "New Oriental Education & Technology Group Inc."
-                },
-                {
-                    "t": "DOLE",
-                    "n": "Dole plc"
-                },
-                {
-                    "t": "SJM",
-                    "n": "The J. M. Smucker Company"
-                },
-                {
-                    "t": "UL",
-                    "n": "Unilever PLC"
-                },
-                {
-                    "t": "CENTA",
-                    "n": "Central Garden & Pet Company"
-                },
-                {
-                    "t": "PG",
-                    "n": "The Procter & Gamble Company"
-                },
-                {
-                    "t": "CLX",
-                    "n": "The Clorox Company"
-                },
-                {
-                    "t": "SFD",
-                    "n": "Smithfield Foods, Inc."
-                },
-                {
-                    "t": "COST",
-                    "n": "Costco Wholesale Corporation"
-                },
-                {
-                    "t": "PRMB",
-                    "n": "Primo Brands Corporation"
-                },
-                {
-                    "t": "SAM",
-                    "n": "The Boston Beer Company, Inc."
-                },
-                {
-                    "t": "ELF",
-                    "n": "e.l.f. Beauty, Inc."
-                },
-                {
-                    "t": "STZ",
-                    "n": "Constellation Brands, Inc."
-                },
-                {
-                    "t": "PFGC",
-                    "n": "Performance Food Group Company"
-                },
-                {
-                    "t": "EPC",
-                    "n": "Edgewell Personal Care Company"
-                },
-                {
-                    "t": "PPC",
-                    "n": "Pilgrim's Pride Corporation"
-                },
-                {
-                    "t": "KR",
-                    "n": "The Kroger Co."
-                },
-                {
-                    "t": "STRA",
-                    "n": "Strategic Education, Inc."
-                },
-                {
-                    "t": "KDP",
-                    "n": "Keurig Dr Pepper Inc."
-                },
-                {
-                    "t": "MDLZ",
-                    "n": "Mondelez International, Inc."
-                },
-                {
-                    "t": "HRL",
-                    "n": "Hormel Foods Corporation"
-                },
-                {
-                    "t": "UVV",
-                    "n": "Universal Corporation"
-                },
-                {
-                    "t": "BJ",
-                    "n": "BJ's Wholesale Club Holdings, Inc."
-                },
-                {
-                    "t": "GHC",
-                    "n": "Graham Holdings Company"
-                },
-                {
-                    "t": "MKC",
-                    "n": "McCormick & Company, Incorporated"
-                },
-                {
-                    "t": "CCU",
-                    "n": "Compa\u00f1\u00eda Cervecer\u00edas Unidas S.A."
-                },
-                {
-                    "t": "CAG",
-                    "n": "Conagra Brands, Inc."
-                },
-                {
-                    "t": "IPAR",
-                    "n": "Interparfums, Inc."
-                },
-                {
-                    "t": "POST",
-                    "n": "Post Holdings, Inc."
-                },
-                {
-                    "t": "INGR",
-                    "n": "Ingredion Incorporated"
-                },
-                {
-                    "t": "KVUE",
-                    "n": "Kenvue Inc."
-                },
-                {
-                    "t": "CALM",
-                    "n": "Cal-Maine Foods, Inc."
-                },
-                {
-                    "t": "TAP",
-                    "n": "Molson Coors Beverage Company"
-                },
-                {
-                    "t": "WMK",
-                    "n": "Weis Markets, Inc."
-                },
-                {
-                    "t": "COE",
-                    "n": "51Talk Online Education Group"
-                },
-                {
-                    "t": "MZTI",
-                    "n": "The Marzetti Company"
-                },
-                {
-                    "t": "DIT",
-                    "n": "AMCON Distributing Company"
-                },
-                {
-                    "t": "FIZZ",
-                    "n": "National Beverage Corp."
-                },
-                {
-                    "t": "KHC",
-                    "n": "The Kraft Heinz Company"
-                },
-                {
-                    "t": "MAGN",
-                    "n": "Magnera Corporation"
-                },
-                {
-                    "t": "ACI",
-                    "n": "Albertsons Companies, Inc."
-                },
-                {
-                    "t": "KMB",
-                    "n": "Kimberly-Clark Corporation"
-                },
-                {
-                    "t": "GIS",
-                    "n": "General Mills, Inc."
-                },
-                {
-                    "t": "LMNR",
-                    "n": "Limoneira Company"
-                },
-                {
-                    "t": "LOPE",
-                    "n": "Grand Canyon Education, Inc."
-                },
-                {
-                    "t": "OLLI",
-                    "n": "Ollie's Bargain Outlet Holdings, Inc."
-                },
-                {
-                    "t": "DEO",
-                    "n": "Diageo plc"
-                },
-                {
-                    "t": "LRN",
-                    "n": "Stride, Inc."
-                },
-                {
-                    "t": "FTLF",
-                    "n": "FitLife Brands, Inc."
-                },
-                {
-                    "t": "LW",
-                    "n": "Lamb Weston Holdings, Inc."
-                },
-                {
-                    "t": "AFYA",
-                    "n": "Afya Limited"
-                },
-                {
-                    "t": "CPB",
-                    "n": "The Campbell's Company"
-                },
-                {
-                    "t": "JJSF",
-                    "n": "J&J Snack Foods Corp."
-                },
-                {
-                    "t": "RYM",
-                    "n": "RYTHM, Inc."
-                },
-                {
-                    "t": "NGVC",
-                    "n": "Natural Grocers by Vitamin Cottage, Inc."
-                },
-                {
-                    "t": "HELE",
-                    "n": "Helen of Troy Limited"
-                },
-                {
-                    "t": "MGPI",
-                    "n": "MGP Ingredients, Inc."
-                },
-                {
-                    "t": "FC",
-                    "n": "Franklin Covey Co."
-                },
-                {
-                    "t": "SMPL",
-                    "n": "The Simply Good Foods Company"
-                },
-                {
-                    "t": "SFM",
-                    "n": "Sprouts Farmers Market, Inc."
-                },
-                {
-                    "t": "VITL",
-                    "n": "Vital Farms, Inc."
-                },
-                {
-                    "t": "BRBR",
-                    "n": "BellRing Brands, Inc."
-                }
-            ],
-            "health": "Strong"
-        },
-        {
             "sector": "Communication Services",
             "count": 109,
             "s1": 13,
@@ -66687,8 +66236,491 @@
             "health": "Strong"
         },
         {
+            "sector": "Consumer Defensive",
+            "count": 118,
+            "s1": 4,
+            "s2": 52,
+            "s3": 17,
+            "s4": 27,
+            "tickers": [
+                {
+                    "t": "MAMA",
+                    "n": "Mama's Creations, Inc."
+                },
+                {
+                    "t": "HLF",
+                    "n": "Herbalife Ltd."
+                },
+                {
+                    "t": "LINC",
+                    "n": "Lincoln Educational Services Corporation"
+                },
+                {
+                    "t": "NATR",
+                    "n": "Nature's Sunshine Products, Inc."
+                },
+                {
+                    "t": "DG",
+                    "n": "Dollar General Corporation"
+                },
+                {
+                    "t": "TPB",
+                    "n": "Turning Point Brands, Inc."
+                },
+                {
+                    "t": "APEI",
+                    "n": "American Public Education, Inc."
+                },
+                {
+                    "t": "DAR",
+                    "n": "Darling Ingredients Inc."
+                },
+                {
+                    "t": "ANDE",
+                    "n": "The Andersons, Inc."
+                },
+                {
+                    "t": "COKE",
+                    "n": "Coca-Cola Consolidated, Inc."
+                },
+                {
+                    "t": "BG",
+                    "n": "Bunge Global SA"
+                },
+                {
+                    "t": "COCO",
+                    "n": "The Vita Coco Company, Inc."
+                },
+                {
+                    "t": "PSMT",
+                    "n": "PriceSmart, Inc."
+                },
+                {
+                    "t": "LGCY",
+                    "n": "Legacy Education Inc."
+                },
+                {
+                    "t": "CELH",
+                    "n": "Celsius Holdings, Inc."
+                },
+                {
+                    "t": "UTI",
+                    "n": "Universal Technical Institute, Inc."
+                },
+                {
+                    "t": "HSY",
+                    "n": "The Hershey Company"
+                },
+                {
+                    "t": "SENEA",
+                    "n": "Seneca Foods Corporation"
+                },
+                {
+                    "t": "EL",
+                    "n": "The Est\u00e9e Lauder Companies Inc."
+                },
+                {
+                    "t": "SENEB",
+                    "n": "Seneca Foods Corporation"
+                },
+                {
+                    "t": "MNST",
+                    "n": "Monster Beverage Corporation"
+                },
+                {
+                    "t": "SPB",
+                    "n": "Spectrum Brands Holdings, Inc."
+                },
+                {
+                    "t": "DLTR",
+                    "n": "Dollar Tree, Inc."
+                },
+                {
+                    "t": "BUD",
+                    "n": "Anheuser-Busch InBev SA/NV"
+                },
+                {
+                    "t": "BTI",
+                    "n": "British American Tobacco p.l.c."
+                },
+                {
+                    "t": "FRPT",
+                    "n": "Freshpet, Inc."
+                },
+                {
+                    "t": "WILC",
+                    "n": "G. Willi-Food International Ltd."
+                },
+                {
+                    "t": "ADM",
+                    "n": "Archer-Daniels-Midland Company"
+                },
+                {
+                    "t": "WMT",
+                    "n": "Walmart Inc."
+                },
+                {
+                    "t": "USFD",
+                    "n": "US Foods Holding Corp."
+                },
+                {
+                    "t": "ALCO",
+                    "n": "Alico, Inc."
+                },
+                {
+                    "t": "FDP",
+                    "n": "Fresh Del Monte Produce Inc."
+                },
+                {
+                    "t": "LAUR",
+                    "n": "Laureate Education, Inc."
+                },
+                {
+                    "t": "TBBB",
+                    "n": "BBB Foods Inc."
+                },
+                {
+                    "t": "CCEP",
+                    "n": "Coca-Cola Europacific Partners PLC"
+                },
+                {
+                    "t": "JBSS",
+                    "n": "John B. Sanfilippo & Son, Inc."
+                },
+                {
+                    "t": "IMKTA",
+                    "n": "Ingles Markets, Incorporated"
+                },
+                {
+                    "t": "SYY",
+                    "n": "Sysco Corporation"
+                },
+                {
+                    "t": "MO",
+                    "n": "Altria Group, Inc."
+                },
+                {
+                    "t": "TGT",
+                    "n": "Target Corporation"
+                },
+                {
+                    "t": "FMX",
+                    "n": "Fomento Econ\u00f3mico Mexicano, S.A.B. de C.V."
+                },
+                {
+                    "t": "PEP",
+                    "n": "PepsiCo, Inc."
+                },
+                {
+                    "t": "AVO",
+                    "n": "Mission Produce, Inc."
+                },
+                {
+                    "t": "CL",
+                    "n": "Colgate-Palmolive Company"
+                },
+                {
+                    "t": "CVGW",
+                    "n": "Calavo Growers, Inc."
+                },
+                {
+                    "t": "PM",
+                    "n": "Philip Morris International Inc."
+                },
+                {
+                    "t": "KO",
+                    "n": "The Coca-Cola Company"
+                },
+                {
+                    "t": "TR",
+                    "n": "Tootsie Roll Industries, Inc."
+                },
+                {
+                    "t": "PRDO",
+                    "n": "Perdoceo Education Corporation"
+                },
+                {
+                    "t": "TSN",
+                    "n": "Tyson Foods, Inc."
+                },
+                {
+                    "t": "CHD",
+                    "n": "Church & Dwight Co., Inc."
+                },
+                {
+                    "t": "CHEF",
+                    "n": "The Chefs' Warehouse, Inc."
+                },
+                {
+                    "t": "VLGEA",
+                    "n": "Village Super Market, Inc."
+                },
+                {
+                    "t": "CENT",
+                    "n": "Central Garden & Pet Company"
+                },
+                {
+                    "t": "EDU",
+                    "n": "New Oriental Education & Technology Group Inc."
+                },
+                {
+                    "t": "DOLE",
+                    "n": "Dole plc"
+                },
+                {
+                    "t": "SJM",
+                    "n": "The J. M. Smucker Company"
+                },
+                {
+                    "t": "UL",
+                    "n": "Unilever PLC"
+                },
+                {
+                    "t": "CENTA",
+                    "n": "Central Garden & Pet Company"
+                },
+                {
+                    "t": "PG",
+                    "n": "The Procter & Gamble Company"
+                },
+                {
+                    "t": "CLX",
+                    "n": "The Clorox Company"
+                },
+                {
+                    "t": "SFD",
+                    "n": "Smithfield Foods, Inc."
+                },
+                {
+                    "t": "COST",
+                    "n": "Costco Wholesale Corporation"
+                },
+                {
+                    "t": "PRMB",
+                    "n": "Primo Brands Corporation"
+                },
+                {
+                    "t": "SAM",
+                    "n": "The Boston Beer Company, Inc."
+                },
+                {
+                    "t": "ELF",
+                    "n": "e.l.f. Beauty, Inc."
+                },
+                {
+                    "t": "STZ",
+                    "n": "Constellation Brands, Inc."
+                },
+                {
+                    "t": "PFGC",
+                    "n": "Performance Food Group Company"
+                },
+                {
+                    "t": "EPC",
+                    "n": "Edgewell Personal Care Company"
+                },
+                {
+                    "t": "PPC",
+                    "n": "Pilgrim's Pride Corporation"
+                },
+                {
+                    "t": "KR",
+                    "n": "The Kroger Co."
+                },
+                {
+                    "t": "STRA",
+                    "n": "Strategic Education, Inc."
+                },
+                {
+                    "t": "KDP",
+                    "n": "Keurig Dr Pepper Inc."
+                },
+                {
+                    "t": "MDLZ",
+                    "n": "Mondelez International, Inc."
+                },
+                {
+                    "t": "HRL",
+                    "n": "Hormel Foods Corporation"
+                },
+                {
+                    "t": "UVV",
+                    "n": "Universal Corporation"
+                },
+                {
+                    "t": "BJ",
+                    "n": "BJ's Wholesale Club Holdings, Inc."
+                },
+                {
+                    "t": "GHC",
+                    "n": "Graham Holdings Company"
+                },
+                {
+                    "t": "MKC",
+                    "n": "McCormick & Company, Incorporated"
+                },
+                {
+                    "t": "CCU",
+                    "n": "Compa\u00f1\u00eda Cervecer\u00edas Unidas S.A."
+                },
+                {
+                    "t": "CAG",
+                    "n": "Conagra Brands, Inc."
+                },
+                {
+                    "t": "IPAR",
+                    "n": "Interparfums, Inc."
+                },
+                {
+                    "t": "POST",
+                    "n": "Post Holdings, Inc."
+                },
+                {
+                    "t": "INGR",
+                    "n": "Ingredion Incorporated"
+                },
+                {
+                    "t": "KVUE",
+                    "n": "Kenvue Inc."
+                },
+                {
+                    "t": "CALM",
+                    "n": "Cal-Maine Foods, Inc."
+                },
+                {
+                    "t": "TAP",
+                    "n": "Molson Coors Beverage Company"
+                },
+                {
+                    "t": "WMK",
+                    "n": "Weis Markets, Inc."
+                },
+                {
+                    "t": "COE",
+                    "n": "51Talk Online Education Group"
+                },
+                {
+                    "t": "MZTI",
+                    "n": "The Marzetti Company"
+                },
+                {
+                    "t": "DIT",
+                    "n": "AMCON Distributing Company"
+                },
+                {
+                    "t": "FIZZ",
+                    "n": "National Beverage Corp."
+                },
+                {
+                    "t": "KHC",
+                    "n": "The Kraft Heinz Company"
+                },
+                {
+                    "t": "MAGN",
+                    "n": "Magnera Corporation"
+                },
+                {
+                    "t": "ACI",
+                    "n": "Albertsons Companies, Inc."
+                },
+                {
+                    "t": "KMB",
+                    "n": "Kimberly-Clark Corporation"
+                },
+                {
+                    "t": "GIS",
+                    "n": "General Mills, Inc."
+                },
+                {
+                    "t": "LMNR",
+                    "n": "Limoneira Company"
+                },
+                {
+                    "t": "LWAY",
+                    "n": "Lifeway Foods, Inc."
+                },
+                {
+                    "t": "LOPE",
+                    "n": "Grand Canyon Education, Inc."
+                },
+                {
+                    "t": "OLLI",
+                    "n": "Ollie's Bargain Outlet Holdings, Inc."
+                },
+                {
+                    "t": "DEO",
+                    "n": "Diageo plc"
+                },
+                {
+                    "t": "LRN",
+                    "n": "Stride, Inc."
+                },
+                {
+                    "t": "FTLF",
+                    "n": "FitLife Brands, Inc."
+                },
+                {
+                    "t": "LW",
+                    "n": "Lamb Weston Holdings, Inc."
+                },
+                {
+                    "t": "USNA",
+                    "n": "USANA Health Sciences, Inc."
+                },
+                {
+                    "t": "AFYA",
+                    "n": "Afya Limited"
+                },
+                {
+                    "t": "CPB",
+                    "n": "The Campbell's Company"
+                },
+                {
+                    "t": "JJSF",
+                    "n": "J&J Snack Foods Corp."
+                },
+                {
+                    "t": "RYM",
+                    "n": "RYTHM, Inc."
+                },
+                {
+                    "t": "NGVC",
+                    "n": "Natural Grocers by Vitamin Cottage, Inc."
+                },
+                {
+                    "t": "HELE",
+                    "n": "Helen of Troy Limited"
+                },
+                {
+                    "t": "MGPI",
+                    "n": "MGP Ingredients, Inc."
+                },
+                {
+                    "t": "FC",
+                    "n": "Franklin Covey Co."
+                },
+                {
+                    "t": "SMPL",
+                    "n": "The Simply Good Foods Company"
+                },
+                {
+                    "t": "SFM",
+                    "n": "Sprouts Farmers Market, Inc."
+                },
+                {
+                    "t": "VITL",
+                    "n": "Vital Farms, Inc."
+                },
+                {
+                    "t": "BRBR",
+                    "n": "BellRing Brands, Inc."
+                }
+            ],
+            "health": "Strong"
+        },
+        {
             "sector": "Technology",
-            "count": 362,
+            "count": 361,
             "s1": 20,
             "s2": 46,
             "s3": 1,
@@ -66709,6 +66741,10 @@
                 {
                     "t": "LITE",
                     "n": "Lumentum Holdings Inc."
+                },
+                {
+                    "t": "AAOI",
+                    "n": "Applied Optoelectronics, Inc."
                 },
                 {
                     "t": "WDC",
@@ -67013,10 +67049,6 @@
                 {
                     "t": "LFUS",
                     "n": "Littelfuse, Inc."
-                },
-                {
-                    "t": "DBD",
-                    "n": "Diebold Nixdorf, Incorporated"
                 },
                 {
                     "t": "APH",
@@ -67885,10 +67917,6 @@
                 {
                     "t": "NSIT",
                     "n": "Insight Enterprises, Inc."
-                },
-                {
-                    "t": "GIB",
-                    "n": "CGI Inc."
                 },
                 {
                     "t": "ORCL",
