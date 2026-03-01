@@ -674,10 +674,27 @@
                 border-top: 1px solid rgba(255, 255, 255, 0.05);
             }
 
-            .nav-link {
-                font-size: 0.65rem;
-                padding: 2px 6px;
-                margin: 0;
+            .card {
+                padding: 0.75rem;
+            }
+
+            .card-header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .ticker {
+                font-size: 1.2rem;
+            }
+
+            .chart-link {
+                height: 110px;
+            }
+
+            .chart-img {
+                max-height: 110px;
+                object-fit: contain;
+                background: #000;
             }
         }
 
@@ -1083,10 +1100,10 @@
                                             </div>`;
                         })()}
                                     </div>
-                                    <div style="display:flex; flex-direction: column; align-items: flex-end; gap:4px;">
+                                    <div style="display:flex; flex-direction: column; align-items: flex-end; gap:4px; padding-right: 28px;">
                                         <div style="font-size:0.7rem; color:var(--text2); opacity:0.8;">#${s.rank}</div>
                                         ${s.flip ? `<div class="flip-badge">⚡ PRIME FLIP</div>` : ''}
-                                        <div style="display:flex; gap:4px; flex-wrap:wrap; justify-content: flex-end;">
+                                        <div style="display:flex; flex-direction: column; gap:4px; align-items: flex-end;">
                                             ${priceBadge}
                                             ${volBadge}
                                         </div>
