@@ -33,9 +33,10 @@
             --shadow: 0 8px 32px rgba(0, 0, 0, .45);
         }
 
-        * {
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
-            /* overflow-x: hidden; removed to allow sticky header */
             margin: 0;
             padding: 0;
         }
@@ -72,8 +73,10 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            width: 100%;
             background: rgba(6, 6, 15, 0.85);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
             padding: 1rem 0;
             margin-top: -2rem;
@@ -703,6 +706,12 @@
                 max-height: 110px;
                 object-fit: contain;
                 background: #000;
+            }
+
+            .nav-link {
+                font-size: 0.65rem;
+                padding: 2px 6px;
+                margin: 0;
             }
         }
 
