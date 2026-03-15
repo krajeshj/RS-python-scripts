@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Rajesh's Stock Screener</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,6 +11,11 @@
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
         rel="stylesheet">
     <style>
+        html {
+            overflow-x: hidden;
+            overscroll-behavior-x: none;
+        }
+
         :root {
             --bg: #06060f;
             --bg2: #0d0d1a;
@@ -965,6 +970,10 @@
                 <div class="quality-dot"></div>
                 🏆 Top 5 Sectors
             </div>
+            <div id="copy-btn" class="quality-toggle" onclick="copyTickers()">
+                <div class="quality-dot"></div>
+                📋 Copy Tickers
+            </div>
             <div class="meta-info" id="filter-count">Showing top candidates</div>
         </div>
 
@@ -1225,6 +1234,36 @@
             const mLabel = minerviniOn ? `, Minervini Only` : '';
             const t5Label = top5On ? `, Top 5 Sectors` : '';
             document.getElementById('filter-count').textContent = `${filtered.length} of ${pool.length} candidates (RS:${minRS}-${maxRS}, RMV:${minRMV}-${maxRMV}${qLabel}${mLabel}${t5Label})`;
+        }
+
+        function copyTickers() {
+            if (!allData) return;
+            const hidden = getHiddenTickers();
+            const pool = allData.all_stocks || allData.stocks || [];
+            let top5SectorsNames = [];
+            if (top5On && allData.stages && allData.stages.length >= 5) {
+                top5SectorsNames = allData.stages.slice(0, 5).map(stg => stg.sector);
+            }
+            const filtered = pool.filter(s => {
+                const rs = s.rs || 0;
+                if (rs < minRS || rs > maxRS) return false;
+                if (s.rmv < minRMV || s.rmv > maxRMV) return false;
+                if (hidden.includes(s.ticker)) return false;
+                if (qualityOn && s.is_speculative) return false;
+                if (minerviniOn && !s.is_minervini) return false;
+                if (top5On && top5SectorsNames.length > 0 && !top5SectorsNames.includes(s.sector)) return false;
+                return true;
+            });
+            const tickers = filtered.map(s => s.ticker).join(', ');
+            navigator.clipboard.writeText(tickers).then(() => {
+                const btn = document.getElementById('copy-btn');
+                btn.classList.add('active');
+                btn.innerHTML = '<div class="quality-dot"></div> ✅ Copied!';
+                setTimeout(() => {
+                    btn.classList.remove('active');
+                    btn.innerHTML = '<div class="quality-dot"></div> 📋 Copy Tickers';
+                }, 2000);
+            });
         }
 
         async function triggerQuickScan() {
