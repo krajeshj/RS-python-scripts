@@ -26,6 +26,7 @@ jobs:
       - name: run quick scan
         run: |
           python -m pip install -r requirements.txt
+          python relative-strength.py true false true
           python rs_ranking.py --quick
 
       - name: commit and push results
