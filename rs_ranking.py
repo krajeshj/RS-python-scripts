@@ -124,6 +124,12 @@ def calculate_rmv(closes: pd.Series, highs: pd.Series = None, lows: pd.Series = 
         volatility_pct = (avg_daily_range / avg_price) * 100
         rmv = min(100.0, max(0.0, volatility_pct * 7.0))
 
+        # Penalize gap-then-flat: huge single-day move + tiny subsequent ranges
+        pct_changes = closes.tail(lookback_period).pct_change().abs()
+        max_single_day = pct_changes.max()
+        if max_single_day > 0.15 and volatility_pct < 2.0:
+            rmv = max(rmv, 65.0)
+
         if pd.isna(rmv) or np.isinf(rmv):
             return 50.0
 
