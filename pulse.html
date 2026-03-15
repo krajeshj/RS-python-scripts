@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
     <title>Market Pulse - Rajesh's Stock Screener</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,9 +11,15 @@
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
         rel="stylesheet">
     <style>
-        html {
+        html,
+        body {
+            width: 100%;
+            margin: 0;
+            padding: 0;
             overflow-x: hidden;
             overscroll-behavior-x: none;
+            position: relative;
+            -webkit-overflow-scrolling: touch;
         }
 
         :root {
@@ -50,8 +56,6 @@
             min-height: 100vh;
             line-height: 1.55;
             -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-            overscroll-behavior-x: none;
             background-image:
                 radial-gradient(ellipse 80% 60% at 50% -20%, rgba(108, 92, 231, .15), transparent),
                 radial-gradient(ellipse 60% 50% at 80% 110%, rgba(0, 229, 255, .08), transparent);
@@ -59,13 +63,16 @@
         }
 
         .container {
+            width: 100%;
             max-width: 1000px;
             margin: 0 auto;
             padding: 2rem 1.5rem;
+            overflow-x: hidden;
+            box-sizing: border-box;
         }
 
         header {
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -75,12 +82,11 @@
             top: 0;
             z-index: 1000;
             width: 100%;
-            background: rgba(6, 6, 15, 0.85);
+            background: rgba(6, 6, 15, 0.9);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
             padding: 1rem 0;
-            margin-top: -2rem;
         }
 
         .logo-icon {
@@ -451,22 +457,22 @@
 </head>
 
 <body>
+    <header>
+        <div class="logo-icon">📡</div>
+        <h1>Market Pulse</h1>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Dashboard 🚀</a>
+            <a href="stages.html" class="nav-link">Sector Analysis 🏗️</a>
+            <a href="industries.html" class="nav-link">Industry Momentum 📊</a>
+            <a href="quick_scan.html" class="nav-link">Quick Scan ⚡</a>
+            <a href="pulse.html" class="nav-link active">Market Pulse 📡</a>
+            <a href="tips.html" class="nav-link">Stock Tips 🎯</a>
+        </div>
+        <div id="last-updated" class="last-updated"
+            style="font-size:0.8rem;color:var(--text2);background:var(--surface);padding:4px 12px;border-radius:20px;border:1px solid var(--border);margin-top:8px;">
+            Updating...</div>
+    </header>
     <div class="container">
-        <header>
-            <div class="logo-icon">📡</div>
-            <h1>Market Pulse</h1>
-            <div class="nav-links">
-                <a href="index.html" class="nav-link">Dashboard 🚀</a>
-                <a href="stages.html" class="nav-link">Sector Analysis 🏗️</a>
-                <a href="industries.html" class="nav-link">Industry Momentum 📊</a>
-                <a href="quick_scan.html" class="nav-link">Quick Scan ⚡</a>
-                <a href="pulse.html" class="nav-link active">Market Pulse 📡</a>
-                <a href="tips.html" class="nav-link">Stock Tips 🎯</a>
-            </div>
-            <div id="last-updated" class="last-updated"
-                style="font-size:0.8rem;color:var(--text2);background:var(--surface);padding:4px 12px;border-radius:20px;border:1px solid var(--border);margin-top:8px;">
-                Updating...</div>
-        </header>
 
         <section id="indices-section">
             <div class="section-header">
