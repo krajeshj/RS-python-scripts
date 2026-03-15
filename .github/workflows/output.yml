@@ -36,6 +36,12 @@ jobs:
           git commit -m "Quick scan update - $(date)" || echo "No changes to commit"
           git push || echo "Nothing to push"
 
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./output
+
   full-scan:
     if: github.event_name != 'push'
     runs-on: ubuntu-latest
