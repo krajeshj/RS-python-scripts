@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
+    <title>Stock Rotation - Rajesh's Stock Screener</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- React & Recharts Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-is@18/umd/react-is.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prop-types@15/prop-types.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/recharts/umd/Recharts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #06060f;
+            --bg2: #0d0d1a;
+            --surface: rgba(255, 255, 255, .04);
+            --border: rgba(255, 255, 255, .08);
+            --text: #e4e4ef;
+            --text2: #8888a8;
+            --accent: #6c5ce7;
+            --accent2: #a29bfe;
+            --cyan: #00e5ff;
+            --font: 'Outfit', system-ui, sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+
+        html, body {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+            overflow-x: hidden;
+        }
+
+        header {
+            margin-bottom: 0;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            background: rgba(6, 6, 15, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--accent2);
+            margin-bottom: 4px;
+            filter: drop-shadow(0 0 10px rgba(162, 155, 254, 0.3));
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--text) 30%, var(--accent2));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            margin: 0.5rem 0;
+        }
+
+        .nav-link {
+            color: var(--text2);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 6px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: var(--text);
+            background: var(--surface);
+        }
+
+        .nav-link.active {
+            color: var(--accent2);
+            background: rgba(162, 155, 254, 0.1);
+            border-color: rgba(162, 155, 254, 0.2);
+        }
+
+        #root {
+            min-height: calc(100vh - 160px);
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.75rem; }
+            .nav-links { gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
+            .nav-link { font-size: 0.85rem; padding: 6px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-icon">💹</div>
+        <h1>Rajesh's Stock Screener</h1>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Dashboard 🚀</a>
+            <a href="stages.html" class="nav-link">Sector Analysis 🏗️</a>
+            <a href="industries.html" class="nav-link">Industry Momentum 📊</a>
+            <a href="quick_scan.html" class="nav-link">Quick Scan ⚡</a>
+            <a href="pulse.html" class="nav-link">Market Pulse 📡</a>
+            <a href="tips.html" class="nav-link">Stock Tips 🎯</a>
+            <a href="rotation.html" class="nav-link">Sector Rotation 🔄</a>
+            <a href="stock_rotation.html" class="nav-link active">Stock Rotation 💹</a>
+        </div>
+    </header>
+
+    <div id="root"></div>
+
+    <footer style="text-align:center; padding:2rem 1rem; color:var(--text2); font-size:0.75rem; border-top:1px solid var(--border); margin-top:2rem;">
+        © 2026 Rajesh's Stock Screener. All rights reserved.
+    </footer>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        const Lib = window.Recharts || window._Recharts;
+        const { 
+            ScatterChart, Scatter, XAxis, YAxis, CartesianGrid,
+            Tooltip, ResponsiveContainer, Cell, ZAxis, ReferenceLine
+        } = Lib;
+
+        const Q_FILL = { leading: "#22c55e", weakening: "#f59e0b", lagging: "#ef4444", improving: "#60a5fa" };
+
+        function TickerBanner({ stocks }) {
+            const items = [...stocks, ...stocks]; // Duplicate for seamless scroll
+            return (
+                <div style={{
+                    background:"#040a14", borderBottom:"1px solid #1e293b", borderTop:"1px solid #1e293b",
+                    overflow:"hidden", height:32, display:"flex", alignItems:"center", marginBottom:14, position:"relative",
+                }}>
+                    <div style={{
+                        display:"flex", gap:0, animation:`ticker-scroll ${items.length * 3.2}s linear infinite`,
+                        whiteSpace:"nowrap", willChange:"transform",
+                    }}>
+                        <style>{`
+                            @keyframes ticker-scroll {
+                                0%   { transform: translateX(0); }
+                                100% { transform: translateX(-50%); }
+                            }
+                        `}</style>
+                        {items.map((item, i) => {
+                            const qColor = item.quadrant === "leading" ? "#22c55e" : "#60a5fa";
+                            return (
+                                <span key={i} style={{ display:"inline-flex", alignItems:"center", gap:6, paddingRight:28, fontSize:10.5, fontFamily:"'DM Mono', monospace"}}>
+                                    <span style={{ color:qColor, fontWeight:700 }}>{item.ticker}</span>
+                                    <span style={{ color:"#f1f5f9" }}>{item.rs} RS</span>
+                                    <span style={{ color:"#22c55e" }}>+{item.momentum.toFixed(1)}</span>
+                                    <span style={{ color:"#1e293b", paddingLeft:8 }}>│</span>
+                                </span>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        }
+
+        function StockRRG({ data }) {
+            return (
+                <div style={{ background: "#0f172a", borderRadius: 12, border: "1px solid #1e293b", padding: 12 }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: "#f1f5f9", marginBottom: 12 }}>Relative Rotation Graph (Stocks)</div>
+                    <div style={{ height: 400, position: "relative" }}>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                                <XAxis type="number" dataKey="rs" name="RS" domain={[50, 100]} stroke="#64748b" />
+                                <YAxis type="number" dataKey="momentum" name="Momentum" stroke="#64748b" />
+                                <ZAxis range={[50, 400]} />
+                                <Tooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b' }} />
+                                <ReferenceLine x={80} stroke="#475569" strokeDasharray="3 3" />
+                                <ReferenceLine y={0} stroke="#475569" strokeDasharray="3 3" />
+                                <Scatter name="Stocks" data={data}>
+                                    {data.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={Q_FILL[entry.quadrant]} />
+                                    ))}
+                                </Scatter>
+                            </ScatterChart>
+                        </ResponsiveContainer>
+                        {/* Quadrant Labels */}
+                        <div style={{ position: "absolute", top: 30, right: 30, color: "#22c55e", fontSize: 10, fontWeight: 700, opacity: 0.6 }}>LEADING</div>
+                        <div style={{ position: "absolute", top: 30, left: 70, color: "#60a5fa", fontSize: 10, fontWeight: 700, opacity: 0.6 }}>IMPROVING</div>
+                        <div style={{ position: "absolute", bottom: 60, left: 70, color: "#ef4444", fontSize: 10, fontWeight: 700, opacity: 0.6 }}>LAGGING</div>
+                        <div style={{ position: "absolute", bottom: 60, right: 30, color: "#f59e0b", fontSize: 10, fontWeight: 700, opacity: 0.6 }}>WEAKENING</div>
+                    </div>
+                </div>
+            );
+        }
+
+        function QuadrantList({ title, color, stocks }) {
+            return (
+                <div style={{ background: "#0a1120", border: `1px solid ${color}44`, borderRadius: 10, padding: 12 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                        <div style={{ width: 8, height: 8, borderRadius: "50%", background: color }} />
+                        <span style={{ fontSize: 11, fontWeight: 700, color: "#f1f5f9", textTransform: "uppercase" }}>{title}</span>
+                    </div>
+                    {stocks.map(s => (
+                        <div key={s.ticker} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
+                            <div>
+                                <span style={{ fontWeight: 800, fontSize: 12 }}>{s.ticker}</span>
+                                <div style={{ fontSize: 9, color: "#64748b" }}>{s.name.substring(0, 20)}...</div>
+                            </div>
+                            <div style={{ textAlign: "right" }}>
+                                <div style={{ fontSize: 11, fontWeight: 700 }}>{s.rs} RS</div>
+                                <div style={{ fontSize: 9, color: s.momentum >= 0 ? "#22c55e" : "#ef4444" }}>
+                                    {s.momentum >= 0 ? "+" : ""}{s.momentum.toFixed(1)}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+
+        function App() {
+            const [data, setData] = useState([]);
+            const [loading, setLoading] = useState(true);
+
+            useEffect(() => {
+                fetch('web_data.json')
+                    .then(res => res.json())
+                    .then(json => {
+                        const processed = json.stocks.map(s => {
+                            const momentum = s.rs - (s.rs_1w_pct || s.rs);
+                            let quadrant = "lagging";
+                            if (s.rs >= 85) {
+                                quadrant = momentum >= 0 ? "leading" : "weakening";
+                            } else {
+                                quadrant = momentum >= 0 ? "improving" : "lagging";
+                            }
+                            return { ...s, momentum, quadrant };
+                        });
+                        setData(processed);
+                        setLoading(false);
+                    })
+                    .catch(err => console.error(err));
+            }, []);
+
+            if (loading) return <div style={{ textAlign: "center", padding: 50 }}>Loading...</div>;
+
+            const quadrants = {
+                leading: data.filter(s => s.quadrant === "leading").sort((a,b) => b.rs - a.rs).slice(0, 5),
+                improving: data.filter(s => s.quadrant === "improving").sort((a,b) => b.momentum - a.momentum).slice(0, 5),
+                weakening: data.filter(s => s.quadrant === "weakening").sort((a,b) => a.momentum - b.momentum).slice(0, 5),
+                lagging: data.filter(s => s.quadrant === "lagging").sort((a,b) => a.rs - b.rs).slice(0, 5)
+            };
+
+            const promising = [...quadrants.leading, ...quadrants.improving].sort((a,b) => b.rs - a.rs);
+
+            return (
+                <div style={{ background: "#070d1a", minHeight: "100vh", color: "#e2e8f0", padding: "20px 15px" }}>
+                    <div style={{ marginBottom: 18 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
+                            <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#a29bfe", boxShadow: "0 0 7px #a29bfe" }} />
+                            <span style={{ fontSize: 10, color: "#a29bfe", letterSpacing: "0.2em", textTransform: "uppercase" }}>Real-time Visualization</span>
+                        </div>
+                        <h1 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#f1f5f9" }}>Individual Stock Rotation</h1>
+                    </div>
+                    
+                    <TickerBanner stocks={promising} />
+                    
+                    <StockRRG data={data.slice(0, 50)} />
+                    
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 16 }}>
+                        <QuadrantList title="Leading" color={Q_FILL.leading} stocks={quadrants.leading} />
+                        <QuadrantList title="Improving" color={Q_FILL.improving} stocks={quadrants.improving} />
+                        <QuadrantList title="Weakening" color={Q_FILL.weakening} stocks={quadrants.weakening} />
+                        <QuadrantList title="Lagging" color={Q_FILL.lagging} stocks={quadrants.lagging} />
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
