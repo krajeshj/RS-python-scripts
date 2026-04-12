@@ -36,8 +36,8 @@ jobs:
       - name: commit quick scan results only
         run: |
           git config user.name "GitHub Actions" && git config user.email "actions@github.com"
-          git add --ignore-errors output/quick_web_data.json output/rs_stocks_quick.csv output/rs_industries_quick.csv output/stock_history.json || true
-          git commit -m "Quick scan update - $(date)" || echo "No changes to commit"
+          git add --ignore-errors output/quick_web_data.json output/rs_stocks_quick.csv output/rs_industries_quick.csv output/stock_history.json output/*.html || true
+          git commit -m "Quick scan update including HTML - $(date)" || echo "No changes to commit"
           git push || echo "Nothing to push"
 
       - name: Restore daily scan data before deploy
