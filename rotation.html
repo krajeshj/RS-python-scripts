@@ -2,206 +2,139 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sector Rotation | Rajesh's Stock Screener</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
+    <title>Sector Rotation - Rajesh's Stock Screener</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- React & Recharts Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/recharts/umd/Recharts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+
     <style>
         :root {
-            --bg: #04091a;
-            --card: #0a1120;
-            --border: #1e293b;
-            --text: #f1f5f9;
-            --text-dim: #94a3b8;
-            --accent: #00e5ff;
-            --leading: #22c55e;
-            --improving: #60a5fa;
-            --weakening: #f59e0b;
-            --lagging: #ef4444;
+            --bg: #06060f;--bg2: #0d0d1a;--surface: rgba(255, 255, 255, .04);--border: rgba(255, 255, 255, .08);
+            --text: #e4e4ef;--text2: #8888a8;--accent: #6c5ce7;--accent2: #a29bfe;--cyan: #00e5ff;
+            --font: 'Outfit', system-ui, sans-serif;--mono: 'JetBrains Mono', monospace;
         }
-
-        * { box-sizing: border-box; }
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .nav { background: #070e1d; border-bottom: 2px solid var(--border); padding: 0 40px; height: 50px; display: flex; align-items: center; justify-content: space-between; position: fixed; top: 0; width: 100%; z-index: 100; backdrop-filter: blur(10px); }
-        .nav-links { display: flex; gap: 20px; }
-        .nav-link { color: var(--text-dim); text-decoration: none; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
-        .nav-link:hover, .nav-link.active { color: var(--accent); }
-
-        .container { max-width: 1000px; margin: 60px auto 20px; padding: 20px; }
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; height: 700px; }
-        .chart-container { flex: 1; position: relative; background: radial-gradient(circle at center, #0a1125 0%, #04091a 100%); }
-        
-        #loading { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 200; gap: 15px; }
-        .spinner { width: 30px; height: 30px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; border-top: 1px solid var(--border); }
-        .mini-card { background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
-        .mini-title { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 10px; }
-        .list-item { display: flex; align-items: center; gap: 8px; font-size: 11px; margin-bottom: 6px; }
-
-        .sector-tag { font-family: 'DM Mono', monospace; font-weight: 700; font-size: 10px; color: var(--accent); opacity: 0.6; }
+        html, body { width: 100%; margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font); overflow-x: hidden; }
+        #root { min-height: 100vh; }
     </style>
 </head>
 <body>
+    <div id="root"></div>
 
-    <div id="loading">
-        <div class="spinner"></div>
-        <div class="version">CALIBRATING SECTOR PULSAR v3.1...</div>
-    </div>
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+        const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, Cell, ReferenceLine } = Recharts;
 
-    <!-- Top Navigation -->
-    <nav class="nav">
-        <div style="font-weight: 900; color: #fff; font-size: 14px; letter-spacing: -0.5px;">NEURAL<span style="color:var(--accent)">RADAR</span></div>
-        <div class="nav-links">
-            <a href="index.html" class="nav-link">Dashboard</a>
-            <a href="stock_rotation.html" class="nav-link">Stocks</a>
-            <a href="rotation.html" class="nav-link active">Sectors</a>
-            <a href="industries.html" class="nav-link">Industries</a>
-            <a href="stages.html" class="nav-link">Stages</a>
-        </div>
-        <div id="syncTime" style="font-size: 10px; color: var(--text-dim); font-family: 'DM Mono';">SYNC: --:--</div>
-    </nav>
+        let SECTORS = [];
+        const Q_FILL = { leading:"#22c55e", weakening:"#f59e0b", lagging:"#ef4444", improving:"#60a5fa" };
+        const CW=350, CH=350, P=30;
 
-    <div class="container">
-        <div class="card">
-            <div class="chart-container" id="chartContainer">
-                <svg id="rrgSvg" width="100%" height="100%"></svg>
+        function px(v){ return P + ((v-96)/8)*(CW-P*2); }
+        function py(v){ return (CH-P) - ((v-96)/8)*(CH-P*2); }
+
+        function TickerBanner() {
+          return (
+            <div style={{height:30, background:"rgba(0,0,0,0.3)", borderTop:"1px solid var(--border)", borderBottom:"1px solid var(--border)", display:"flex", alignItems:"center", overflow:"hidden", marginBottom:15}}>
+              <div style={{display:"flex", whiteSpace:"nowrap", animation:"scroll 40s linear infinite"}}>
+                {[...SECTORS, ...SECTORS].map((s,i) => (
+                  <span key={i} style={{paddingRight:30, fontSize:10, fontWeight:700, fontFamily: "var(--mono)", color: Q_FILL[s.q]}}>
+                    {s.name} <span style={{color:"#475569"}}>{s.x.toFixed(1)}</span>
+                  </span>
+                ))}
+              </div>
+              <style>{`@keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }`}</style>
             </div>
-            <div class="panel-grid">
-                <div class="mini-card" id="sectorVelocity"></div>
-                <div class="mini-card" id="sectorExits"></div>
+          );
+        }
+
+        function RRGChart() {
+          const MX=px(100), MY=py(100);
+          return (
+            <svg viewBox={"0 0 "+CW+" "+CH} width="100%" style={{display:"block"}}>
+              <defs>
+                {SECTORS.map(s => (
+                  <marker key={"m"+s.name} id={"m"+s.name} markerWidth="10" markerHeight="5" refX="9" refY="2.5" orient="auto">
+                    <polygon points="0 0.6,9 2.5,0 4.4" fill={Q_FILL[s.q]}/>
+                  </marker>
+                ))}
+              </defs>
+              <rect x={P} y={P} width={MX-P} height={MY-P} fill="rgba(96,165,250,0.05)"/><rect x={MX} y={P} width={CW-P-MX} height={MY-P} fill="rgba(34,197,94,0.05)"/><rect x={P} y={MY} width={MX-P} height={CH-P-MY} fill="rgba(239,68,68,0.05)"/><rect x={MX} y={MY} width={CW-P-MX} height={CH-P-MY} fill="rgba(245,158,11,0.05)"/>
+              <line x1={MX} y1={P} x2={MX} y2={CH-P} stroke="#1e293b" strokeWidth="1" strokeDasharray="5,4"/><line x1={P} y1={MY} x2={CW-P} y2={MY} stroke="#1e293b" strokeWidth="1" strokeDasharray="5,4"/>
+              
+              {SECTORS.map(s => {
+                const curX=px(s.x), curY=py(s.y);
+                const path=[...(s.trail||[]), {x:s.x,y:s.y}];
+                const polyStr=path.map(p=>px(p.x)+","+py(p.y)).join(" ");
+                const prev = path[path.length-2] || path[0];
+                const vX = curX - px(prev.x), vY = curY - py(prev.y);
+
+                return (
+                  <g key={s.name}>
+                    <polyline points={polyStr} fill="none" stroke={Q_FILL[s.q]} strokeWidth="1.5" strokeOpacity="0.4" strokeLinecap="round" strokeLinejoin="round"/>
+                    {path.slice(0,-1).map((p,i)=>(<circle key={i} cx={px(p.x)} cy={py(p.y)} r="1.5" fill={Q_FILL[s.q]} opacity={0.1+i*0.15}/>))}
+                    <line x1={curX} y1={curY} x2={curX+vX*1.5} y2={curY+vY*1.5} stroke={Q_FILL[s.q]} strokeWidth="1.2" markerEnd={"url(#m"+s.name+")"}/>
+                    <circle cx={curX} cy={curY} r="9" fill={Q_FILL[s.q]} stroke="#000" strokeWidth="1"/>
+                    <text x={curX} y={curY+0.4} textAnchor="middle" dominantBaseline="middle" fill="#000" fontSize="7" fontWeight="800">{s.name}</text>
+                  </g>
+                );
+              })}
+            </svg>
+          );
+        }
+
+        function App() {
+          const [data, setData] = useState(null);
+          useEffect(() => {
+            fetch('web_data.json').then(r=>r.json()).then(d=>{ setData(d); SECTORS = d.sectors || []; });
+          }, []);
+
+          if (!data) return <div style={{padding:20}}>Loading Analysis...</div>;
+
+          return (
+            <div style={{background:"#070d1a", minHeight:"100vh", padding:"20px 15px"}}>
+              <div style={{marginBottom:18}}>
+                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:3}}>
+                  <div style={{width:7,height:7,borderRadius:"50%",background:"#22d3ee",boxShadow:"0 0 7px #22d3ee"}}/>
+                  <span style={{fontSize:10,color:"#22d3ee",letterSpacing:"0.2em",textTransform:"uppercase"}}>Live Analysis</span>
+                </div>
+                <h1 style={{margin:0,fontSize:20,fontWeight:700,color:"#f1f5f9"}}>Sector Rotation</h1>
+              </div>
+              
+              <TickerBanner />
+
+              <div style={{background:"#0f172a",border:"1px solid #1e293b",borderRadius:12,padding:"13px 12px",marginBottom:10}}>
+                <div style={{fontSize:13,fontWeight:700,color:"#f1f5f9",marginBottom:10}}>Relative Rotation Graph</div>
+                <div style={{background:"#0a1120",borderRadius:8,border:"1px solid #1e293b"}}>
+                    <RRGChart />
+                </div>
+              </div>
+
+              <div style={{background:"#0f172a",border:"1px solid #1e293b",borderRadius:10,padding:"12px 13px"}}>
+                <div style={{fontSize:12,fontWeight:700,color:"#f1f5f9",marginBottom:8}}>Signal Matrix</div>
+                <table style={{width:"100%",borderCollapse:"collapse",fontSize:10}}>
+                    <thead><tr style={{color:"#475569",borderBottom:"1px solid #1e293b"}}><th style={{textAlign:"left"}}>Sector</th><th style={{textAlign:"left"}}>Quadrant</th><th style={{textAlign:"left"}}>Status</th></tr></thead>
+                    <tbody>{SECTORS.map(s => (
+                        <tr key={s.name} style={{borderBottom:"1px solid #1e293b"}}>
+                            <td style={{padding:"6px 0",fontWeight:700,color:Q_FILL[s.q]}}>{s.name}</td>
+                            <td style={{color:Q_FILL[s.q]}}>{s.q}</td>
+                            <td style={{color:s.y>=100?"#22c55e":"#ef4444"}}>{s.y>=100?"STRENGTH":"WEAKNESS"}</td>
+                        </tr>
+                    ))}</tbody>
+                </table>
+              </div>
             </div>
-        </div>
-    </div>
-
-    <script>
-        const Q_COLORS = { leading: '#22c55e', improving: '#60a5fa', weakening: '#f59e0b', lagging: '#ef4444' };
-        let sectorData = [];
-        const CW = 800, CH = 600, P = 60;
-
-        async function boot() {
-            try {
-                const ts = Date.now();
-                const res = await fetch(`web_data.json?v=${ts}`);
-                const data = await res.json();
-                sectorData = data.sectors || [];
-                
-                document.getElementById('syncTime').textContent = `SYNC: ${new Date(data.last_updated).toLocaleTimeString()}`;
-                document.getElementById('loading').style.display = 'none';
-                render();
-            } catch (e) {
-                console.error(e);
-                document.getElementById('loading').innerHTML = `<div class='version'>RADAR OFFLINE</div>`;
-            }
+          );
         }
 
-        function render() {
-            // Processing: Apply Predictive Weighting and Projection
-            const processed = sectorData.map((s, idx) => {
-                const trail = s.trail || [];
-                const fullPath = [...trail, { x: s.x, y: s.y }];
-                
-                // Calculate Predictive Vector (Weighted Velocity)
-                // Weights: Last day=0.5, prev=0.3, prev=0.2
-                let vX=0, vY=0;
-                if (fullPath.length >= 3) {
-                    const p1 = fullPath[fullPath.length-1];
-                    const p2 = fullPath[fullPath.length-2];
-                    const p3 = fullPath[fullPath.length-3];
-                    vX = (p1.x - p2.x)*0.7 + (p2.x - p3.x)*0.3;
-                    vY = (p1.y - p2.y)*0.7 + (p2.y - p3.y)*0.3;
-                }
-
-                return { ...s, vX, vY, fullPath };
-            });
-
-            // Mapping
-            const X_VALS = processed.map(s => s.x);
-            const Y_VALS = processed.map(s => s.y);
-            const medX = 100, medY = 100; // Fixed 100 benchmark for standard RRG Sectors
-
-            const px = v => P + ((v - 96) / 8) * (CW - P*2);
-            const py = v => (CH - P) - ((v - 96) / 8) * (CH - P*2);
-            
-            const MX = px(medX), MY = py(medY);
-
-            const svg = document.getElementById('rrgSvg');
-            svg.setAttribute('viewBox', `0 0 ${CW} ${CH}`);
-            
-            let html = `
-                <defs><filter id="glow"><feGaussianBlur stdDeviation="2.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-                <rect x="${P}" y="${P}" width="${MX-P}" height="${MY-P}" fill="rgba(96,165,250,0.06)" />
-                <rect x="${MX}" y="${P}" width="${CW-P-MX}" height="${MY-P}" fill="rgba(34,197,94,0.06)" />
-                <rect x="${P}" y="${MY}" width="${MX-P}" height="${CH-P-MY}" fill="rgba(239,68,68,0.06)" />
-                <rect x="${MX}" y="${MY}" width="${CW-P-MX}" height="${CH-P-MY}" fill="rgba(245,158,11,0.06)" />
-                <line x1="${MX}" y1="${P}" x2="${MX}" y2="${CH-P}" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="8,4" />
-                <line x1="${P}" y1="${MY}" x2="${CW-P}" y2="${MY}" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="8,4" />
-                <text x="${P+10}" y="${P+30}" fill="#60a5fa" font-size="10" font-weight="900">IMPROVING</text>
-                <text x="${CW-P-10}" y="${P+30}" fill="#22c55e" font-size="10" font-weight="900" text-anchor="end">LEADING</text>
-                <text x="${P+10}" y="${CH-P-15}" fill="#ef4444" font-size="10" font-weight="900">LAGGING</text>
-                <text x="${CW-P-10}" y="${CH-P-15}" fill="#f59e0b" font-size="10" font-weight="900" text-anchor="end">WEAKENING</text>
-            `;
-
-            processed.forEach(s => {
-                const q = s.x >= medX ? (s.y >= medY ? 'leading' : 'weakening') : (s.y >= medY ? 'improving' : 'lagging');
-                const col = Q_COLORS[q];
-                const cx = px(s.x), cy = py(s.y);
-                const pathPts = s.fullPath.map(p => ({ x: px(p.x), y: py(p.y) }));
-                const polyLine = pathPts.map(p => `${p.x},${p.y}`).join(' ');
-
-                // Predictive Projection
-                let projStr = `${cx},${cy} `;
-                const projectionCount = 5;
-                for(let t=1; t<=projectionCount; t++) {
-                    const tx = cx + px(100 + s.vX*t)*0.1 - px(100)*0.1; // Vector scaled
-                    const ty = cy + py(100 + s.vY*t)*0.1 - py(100)*0.1;
-                    // For sectors, let's just use raw pixel vector
-                    const pX = cx + (cx - px(s.fullPath[s.fullPath.length-2].x || s.x)) * t * 0.8;
-                    const pY = cy + (cy - py(s.fullPath[s.fullPath.length-2].y || s.y)) * t * 0.8;
-                    projStr += `${pX},${pY} `;
-                }
-
-                html += `
-                    <g opacity="1">
-                        <polyline points="${polyLine}" fill="none" stroke="${col}" stroke-width="16" stroke-opacity="0.04" stroke-linecap="round"/>
-                        <polyline points="${polyLine}" fill="none" stroke="${col}" stroke-width="2.5" stroke-opacity="0.8" stroke-linecap="round" filter="url(#glow)" />
-                        
-                        <!-- Prediction -->
-                        <polyline points="${projStr}" fill="none" stroke="${col}" stroke-width="2" stroke-dasharray="4,4" opacity="0.4" />
-
-                        <!-- Crumbs -->
-                        ${pathPts.map((p, i) => `<circle cx="${p.x}" cy="${p.y}" r="2" fill="${col}" opacity="${0.1+(i*0.2)}"/>`).join('')}
-
-                        <circle cx="${cx}" cy="${cy}" r="14" fill="${col}" stroke="#0a1120" stroke-width="1.5" />
-                        <text x="${cx}" y="${cy+0.4}" text-anchor="middle" dominant-baseline="middle" fill="#04091a" font-size="8" font-weight="900" font-family="monospace">${s.name}</text>
-                    </g>
-                `;
-            });
-
-            svg.innerHTML = html;
-            renderPanels(processed);
-        }
-
-        function renderPanels(sectors) {
-            const high = sectors.sort((a,b)=>b.y-a.y).slice(0,4);
-            document.getElementById('sectorVelocity').innerHTML = `<div class="mini-title">⚡ Sector Alpha</div>` + 
-                high.map(s => `<div class="list-item"><span style="color:#22c55e;font-weight:800;width:35px">${s.name}</span> <span style="color:var(--text-dim);font-size:10px">${s.y.toFixed(1)} Mom</span></div>`).join('');
-            
-            const weakening = sectors.filter(s => s.vY < 0).slice(0,4);
-            document.getElementById('sectorExits').innerHTML = `<div class="mini-title">↻ Predicted Exits</div>` + 
-                weakening.map(s => `<div class="list-item"><span style="color:#f59e0b;font-weight:800;width:35px">${s.name}</span> <span style="color:var(--text-dim);font-size:10px">Decelerating</span></div>`).join('');
-        }
-
-            // Fixed typo in variable name in renderPanels
-        boot();
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
 </body>
 </html>
