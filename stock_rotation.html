@@ -21,21 +21,16 @@
     <div id="root"></div>
 
     <script type="text/babel">
+        /** 
+         * DASHBOARD ENGINE v2.7 PRO
+         * MISSION: ZERO-FAIL INITIALIZATION
+         */
         const { useState, useEffect, useRef } = React;
         
-        // v2.6 Fix: Robust namespace resolution for Recharts
-        const getLib = () => {
-             if (window.Recharts) return window.Recharts;
-             if (window._Recharts) return window._Recharts;
-             if (window.LineChart) return window; // Recharts sometimes dumps to global
-             return null;
-        };
-
-        const Lib = getLib();
-        if (!Lib) {
-            document.body.innerHTML = '<div style="color:white;padding:100px;text-align:center;"><h3>Fatal Error: Recharts components not found in global scope.</h3><p>Ensure Recharts.min.js loaded correctly.</p></div>';
-            throw new Error("Library Resolution Failure");
-        }
+        // Defensive component resolution
+        const Lib = window.Recharts || window._Recharts || window;
+        const LC = Lib.LineChart || window.LineChart;
+        const Resp = Lib.ResponsiveContainer || window.ResponsiveContainer;
 
         const Q_FILL = { leading: "#22c55e", weakening: "#f59e0b", lagging: "#ef4444", improving: "#60a5fa" };
         const CW = 520, CH = 440, P = 48;
@@ -87,7 +82,7 @@
                         <style>{`@keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }`}</style>
                         {items.map((item, i) => (
                             <span key={i} style={{ paddingRight: 28, fontSize: 10.5, fontFamily: "monospace" }}>
-                                <span style={{ color: Q_FILL[item.quadrant], fontWeight: 700 }}>{item.ticker}</span> <span style={{ color: "#22c55e" }}>+{item.momentum.toFixed(1)}</span>
+                                <span style={{ color: Q_FILL[item.quadrant], fontWeight: 700 }}>{item.ticker}</span> <span style={{ color: "#22c55e" }}>{item.momentum >= 0 ? "+" : ""}{item.momentum.toFixed(1)}</span>
                             </span>
                         ))}
                     </div>
@@ -150,31 +145,34 @@
                         <radialGradient id="cross-grad" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#fff" stopOpacity="0.6"/><stop offset="100%" stopColor="#fff" stopOpacity="0"/></radialGradient>
                     </defs>
 
+                    {/* Quadrants */}
                     <rect x={P} y={P} width={MX-P} height={MY-P} fill="rgba(96,165,250,0.06)" />
                     <rect x={MX} y={P} width={CW-P-MX} height={MY-P} fill="rgba(34,197,94,0.06)" />
                     <rect x={P} y={MY} width={MX-P} height={CH-P-MY} fill="rgba(239,68,68,0.06)" />
                     <rect x={MX} y={MY} width={CW-P-MX} height={CH-P-MY} fill="rgba(245,158,11,0.06)" />
 
-                    {Object.entries(conv).map(([q, n]) => n > 0 && (
-                        <text key={`c-${q}`} x={qC[q].x} y={qC[q].y} fill={Q_FILL[q]} fontSize="11" fontWeight="900" opacity="0.4" textAnchor="middle">{n} →</text>
-                    ))}
-
-                    <line x1={MX} y1={P} x2={MX} y2={CH-P} stroke="#1e293b" strokeWidth="1.2" strokeDasharray="5,4" />
-                    <line x1={P} y1={MY} x2={CW-P} y2={MY} stroke="#1e293b" strokeWidth="1.2" strokeDasharray="5,4" />
-                    
+                    {/* Labels */}
                     <text x={P+8} y={P+18} fill="#60a5fa" fontSize="10" fontWeight="900" opacity="0.8">IMPROVING</text>
                     <text x={CW-P-8} y={P+18} fill="#22c55e" fontSize="10" fontWeight="900" opacity="0.8" textAnchor="end">LEADING</text>
                     <text x={P+8} y={CH-P-8} fill="#ef4444" fontSize="10" fontWeight="900" opacity="0.8">LAGGING</text>
                     <text x={CW-P-8} y={CH-P-8} fill="#f59e0b" fontSize="10" fontWeight="900" opacity="0.8" textAnchor="end">WEAKENING</text>
+
+                    {Object.entries(conv).map(([q, n]) => n > 0 && (
+                        <text key={`c-${q}`} x={qC[q].x} y={qC[q].y} fill={Q_FILL[q]} fontSize="12" fontWeight="900" opacity="0.4" textAnchor="middle">{n} →</text>
+                    ))}
+
+                    <line x1={MX} y1={P} x2={MX} y2={CH-P} stroke="#1e293b" strokeWidth="1.2" strokeDasharray="5,4" />
+                    <line x1={P} y1={MY} x2={CW-P} y2={MY} stroke="#1e293b" strokeWidth="1.2" strokeDasharray="5,4" />
 
                     {stocks.map(s => {
                         const h = [...(s.trail || []), { x: s.rs, y: s.momentum }];
                         const pts = h.map(p => ({ x: px(p.x), y: py(p.y) }));
                         const polyStr = pts.map(p => `${p.x},${p.y}`).join(" ");
                         const cx = px(s.rs), cy = py(s.momentum);
-                        const cur = trailCurvature(h);
-                        const isV = cur > 26;
-                        const str = Math.min(1, (s.streak || 0) / 10);
+                        
+                        const isV = trailCurvature(h) > 26;
+                        const streakVal = Math.min(1, (s.streak || 0) / 10);
+                        
                         const prev = pts[pts.length-2] || pts[0];
                         const ddx = cx-prev.x, ddy = cy-prev.y;
                         const dl = Math.hypot(ddx,ddy)||1; const ux=ddx/dl, uy=ddy/dl;
@@ -183,24 +181,20 @@
                         return (
                             <g key={s.ticker} style={{ cursor: "pointer" }}>
                                 {isV && <circle cx={cx} cy={cy} r={R+9} fill="none" stroke="#f59e0b" strokeWidth="1" strokeDasharray="3,3" opacity="0.6"><animateTransform attributeName="transform" type="rotate" from={`0 ${cx} ${cy}`} to={`360 ${cx} ${cy}`} dur="4s" repeatCount="indefinite" /></circle>}
+                                
                                 <polyline points={polyStr} fill="none" stroke={Q_FILL[s.quadrant]} strokeWidth="10" strokeLinecap="round" opacity="0.04" />
                                 <polyline points={polyStr} fill="none" stroke={`url(#g-${s.ticker})`} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" opacity="0.9" />
-                                {pts.slice(0,-1).map((p,i)=>(<circle key={i} cx={p.x} cy={p.y} r={1.6} fill={Q_FILL[s.quadrant]} opacity={0.3+i*0.1} />))}
+                                
                                 <line x1={aH.x} y1={aH.y} x2={aT.x} y2={aT.y} stroke={Q_FILL[s.quadrant]} strokeWidth="1.2" markerEnd={`url(#m-${s.ticker})`} opacity="0.8" />
-                                <circle cx={cx} cy={cy} r={R+2.5} fill="none" stroke={Q_FILL[s.quadrant]} strokeWidth="1.8" opacity="0.45" strokeDasharray={`${(str*2*Math.PI*(R+2.5)).toFixed(1)} 999`} />
+                                
+                                <circle cx={cx} cy={cy} r={R+2.5} fill="none" stroke={Q_FILL[s.quadrant]} strokeWidth="1.8" opacity="0.45" strokeDasharray={`${(streakVal*2*Math.PI*(R+2.5)).toFixed(1)} 999`} />
+                                
                                 {highlightTicker === s.ticker && <circle cx={cx} cy={cy} r={R+6} fill="none" stroke="#fff" strokeWidth="1.5" opacity="0.6" />}
-                                <circle cx={cx} cy={cy} r={R} fill={Q_FILL[s.quadrant]} stroke="#0a1120" strokeWidth="1" />
+                                <circle cx={cx} cy={cy} r={R} fill={Q_FILL[s.quadrant]} stroke="#0a1120" strokeWidth="1.1" />
                                 <text x={cx} y={cy+0.5} textAnchor="middle" dominantBaseline="middle" fill="#04091a" fontSize="7.5" fontWeight="900" fontFamily="monospace">{s.ticker}</text>
                             </g>
                         );
                     })}
-
-                    {stocks.map(s => axisCrossings([...(s.trail||[]), {x:s.rs, y:s.momentum}]).map((c,i)=>(
-                        <g key={s.ticker+"p"+i}>
-                            <circle cx={px(c.x)} cy={py(c.y)} r={8} fill="url(#cross-grad)"><animate attributeName="r" values="3;10;3" dur="2s" repeatCount="indefinite" /></circle>
-                            <circle cx={px(c.x)} cy={py(c.y)} r={2} fill="#fff" opacity="0.8" />
-                        </g>
-                    )))}
                 </svg>
             );
         }
@@ -230,7 +224,11 @@
             useEffect(() => {
                 const load = async () => {
                     try {
-                        const [resMain, resHistory] = await Promise.all([fetch('web_data.json'), fetch('stock_history.json')]);
+                        const ts = Date.now();
+                        const [resMain, resHistory] = await Promise.all([
+                            fetch(`web_data.json?v=${ts}`), 
+                            fetch(`stock_history.json?v=${ts}`)
+                        ]);
                         const webData = await resMain.json();
                         const history = await resHistory.json();
                         const raw = webData.all_stocks || webData.stocks || [];
@@ -246,7 +244,6 @@
                                 let tQ = tR >= 85 ? (tM >= 0 ? "leading" : "weakening") : (tM >= 0 ? "improving" : "lagging");
                                 if (tQ === quadrant) streak++; else break;
                             }
-                            // Trail logic: sync indices with data lookback
                             const trail = h.slice(0, 10).reverse().map((v, idx) => {
                                  const revIdx = 9-idx; 
                                  const pV = h[revIdx+1] !== undefined ? h[revIdx+1] : v;
@@ -256,14 +253,16 @@
                         });
                         setData(processed); setLoading(false);
                     } catch (e) { 
-                        console.error("Dashboard Load Error:", e); 
+                        console.error("Critical Dashboard Error:", e);
                         setLoading(false); 
                     }
                 };
                 load();
             }, []);
 
-            if (loading) return <div style={{ color: "#fff", textAlign: "center", padding: 100, fontFamily: "monospace", fontSize: 13 }}>INITIALIZING RADAR v2.6...</div>;
+            if (data.length === 0 && !loading) return <div style={{ color: "#fff", textAlign: "center", padding: 100, fontFamily: "monospace", fontSize: 13 }}>FAILED TO DECODE ROTATION ARRAY.</div>;
+            if (loading) return <div style={{ color: "#fff", textAlign: "center", padding: 100, fontFamily: "monospace", fontSize: 13 }}>BOOTING RADAR v2.7 PRO...</div>;
+            
             const promising = data.filter(s => s.quadrant === 'leading' || s.quadrant === 'improving').sort((a,b) => b.rs - a.rs);
 
             return (
@@ -271,7 +270,7 @@
                     <div style={{ marginBottom: 18 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
                             <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#00e5ff", boxShadow: "0 0 7px #00e5ff" }} />
-                            <span style={{ fontSize: 10, color: "#00e5ff", letterSpacing: "0.2em" }}>STOCK ROTATION ANALYSIS v2.6</span>
+                            <span style={{ fontSize: 10, color: "#00e5ff", letterSpacing: "0.2em" }}>STOCK ROTATION ANALYSIS v2.7 PRO</span>
                         </div>
                         <h1 style={{ margin: 0, fontSize: 19, fontWeight: 900, color: "#f1f5f9" }}>Relative Strength Rotation</h1>
                     </div>
