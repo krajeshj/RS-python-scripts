@@ -157,9 +157,37 @@
         // Axes for Stocks: RS (X) from 30 to 100, Momentum (Y) from -12 to 12
         const X_MIN = 30, X_MAX = 100, X_MID = 85;
         const Y_MIN = -12, Y_MAX = 12, Y_MID = 0;
+        const DRX = X_MAX - X_MIN, DRY = Y_MAX - Y_MIN;
 
-        const px = v => P + ((v - X_MIN) / (X_MAX - X_MIN)) * (CW - P * 2);
-        const py = v => (CH - P) - ((v - Y_MIN) / (Y_MAX - Y_MIN)) * (CH - P * 2);
+        const px = v => P + ((v - X_MIN) / DRX) * (CW - P * 2);
+        const py = v => (CH - P) - ((v - Y_MIN) / DRY) * (CH - P * 2);
+
+        // --- Helper Functions from rotation.html ---
+        function trailDist(s, allPts) {
+            let d = 0;
+            for (let i = 1; i < allPts.length; i++) d += Math.hypot(allPts[i].x - allPts[i - 1].x, allPts[i].y - allPts[i - 1].y);
+            return d;
+        }
+
+        function trailCurvature(allPts) {
+            if (allPts.length < 3) return 0;
+            const mid = Math.floor(allPts.length / 2);
+            const v1 = { x: allPts[mid].x - allPts[0].x, y: allPts[mid].y - allPts[0].y };
+            const v2 = { x: allPts[allPts.length - 1].x - allPts[mid].x, y: allPts[allPts.length - 1].y - allPts[mid].y };
+            const dot = v1.x * v2.x + v1.y * v2.y;
+            const mag = Math.hypot(v1.x, v1.y) * Math.hypot(v2.x, v2.y) || 1;
+            return Math.acos(Math.max(-1, Math.min(1, dot / mag))) * 180 / Math.PI;
+        }
+
+        function axisCrossings(allPts) {
+            const crossings = [];
+            for (let i = 1; i < allPts.length; i++) {
+                const a = allPts[i - 1], b = allPts[i];
+                if ((a.x - X_MID) * (b.x - X_MID) < 0) crossings.push({ type: "RS", week: i, from: a, to: b });
+                if ((a.y - Y_MID) * (b.y - Y_MID) < 0) crossings.push({ type: "Mom", week: i, from: a, to: b });
+            }
+            return crossings;
+        }
 
         function TickerBanner({ stocks }) {
             const items = [...stocks, ...stocks]; 
@@ -195,19 +223,25 @@
             const MX = px(X_MID), MY = py(Y_MID);
             const R = 11;
 
-            const getTrailPoints = (s) => (s.trail || []).map(p => ({ x: px(p.x), y: py(p.y) }));
+            const allDists = stocks.map(s => trailDist(s, [...(s.trail || []), { x: s.rs, y: s.momentum }]));
+            const maxDist = Math.max(...allDists) || 1;
 
             return (
                 <svg viewBox={`0 0 ${CW} ${CH}`} width="100%" style={{ display: "block" }}>
                     <defs>
-                        {stocks.map(s => (
-                            <linearGradient key={`g-${s.ticker}`} id={`g-${s.ticker}`} x1={px(s.trail?.[0]?.x || s.rs)} y1={py(s.trail?.[0]?.y || s.momentum)} x2={px(s.rs)} y2={py(s.momentum)} gradientUnits="userSpaceOnUse">
-                                <stop offset="0%" stopColor={Q_FILL[s.quadrant]} stopOpacity="0" />
-                                <stop offset="100%" stopColor={Q_FILL[s.quadrant]} stopOpacity="1" />
-                            </linearGradient>
-                        ))}
+                        {stocks.map(s => {
+                            const all = [...(s.trail || []), { x: s.rs, y: s.momentum }];
+                            return (
+                                <linearGradient key={`g-${s.ticker}`} id={`g-${s.ticker}`} x1={px(all[0].x)} y1={py(all[0].y)} x2={px(s.rs)} y2={py(s.momentum)} gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stopColor={Q_FILL[s.quadrant]} stopOpacity="0" />
+                                    <stop offset="50%" stopColor={Q_FILL[s.quadrant]} stopOpacity="0.3" />
+                                    <stop offset="100%" stopColor={Q_FILL[s.quadrant]} stopOpacity="1" />
+                                </linearGradient>
+                            );
+                        })}
                         {stocks.map(s => (
                             <marker key={`m-${s.ticker}`} id={`m-${s.ticker}`} markerWidth="10" markerHeight="5" refX="9" refY="2.5" orient="auto">
+                                <polygon points="0 0.6,9 2.5,0 4.4" fill="none" stroke="#04091a" strokeWidth="0.5" opacity="0.3" />
                                 <polygon points="0 0.6,9 2.5,0 4.4" fill={Q_FILL[s.quadrant]} />
                             </marker>
                         ))}
@@ -215,36 +249,89 @@
                     </defs>
 
                     {/* Quadrant Backgrounds */}
-                    <rect x={P} y={P} width={MX-P} height={MY-P} fill="rgba(96,165,250,0.03)" />
-                    <rect x={MX} y={P} width={CW-P-MX} height={MY-P} fill="rgba(34,197,94,0.03)" />
-                    <rect x={P} y={MY} width={MX-P} height={CH-P-MY} fill="rgba(239,68,68,0.03)" />
-                    <rect x={MX} y={MY} width={CW-P-MX} height={CH-P-MY} fill="rgba(245,158,11,0.03)" />
+                    <rect x={P} y={P} width={MX-P} height={MY-P} fill="rgba(96,165,250,0.05)" />
+                    <rect x={MX} y={P} width={CW-P-MX} height={MY-P} fill="rgba(34,197,94,0.05)" />
+                    <rect x={P} y={MY} width={MX-P} height={CH-P-MY} fill="rgba(239,68,68,0.05)" />
+                    <rect x={MX} y={MY} width={CW-P-MX} height={CH-P-MY} fill="rgba(245,158,11,0.05)" />
 
                     {/* Labels */}
                     {[[P+8,P+16,"#60a5fa","IMPROVING"],[MX+8,P+16,"#22c55e","LEADING"],[P+8,MY+16,"#ef4444","LAGGING"],[MX+8,MY+16,"#f59e0b","WEAKENING"]].map(([x,y,c,l]) => (
-                        <text key={l} x={x} y={y} fill={c} fontSize="10" fontWeight="700" letterSpacing="1" opacity="0.6" fontFamily="monospace">{l}</text>
+                        <text key={l} x={x} y={y} fill={c} fontSize="10" fontWeight="700" letterSpacing="1" opacity="0.7" fontFamily="monospace">{l}</text>
                     ))}
 
                     <line x1={MX} y1={P} x2={MX} y2={CH-P} stroke="#1e293b" strokeWidth="1.2" strokeDasharray="5,4" />
                     <line x1={P} y1={MY} x2={CW-P} y2={MY} stroke="#1e293b" strokeWidth="1.2" strokeDasharray="5,4" />
-                    <text x={CW-P-4} y={MY+13} textAnchor="end" fill="#475569" fontSize="9" fontFamily="monospace">RELATIVE STRENGTH →</text>
-                    <text x={MX+5} y={P+11} fill="#475569" fontSize="9" fontFamily="monospace">MOMENTUM ↑</text>
+                    <text x={CW-P-4} y={MY+13} textAnchor="end" fill="#475569" fontSize="9" fontFamily="monospace">RS PERCENTILE →</text>
+                    <text x={MX+5} y={P+11} fill="#475569" fontSize="9" fontFamily="monospace">RS MOMENTUM ↑</text>
 
-                    {/* Stock Trails & Heads */}
+                    {/* Axis Crossings (Advanced Engineering Detail) */}
+                    {stocks.map(s => {
+                        const all = [...(s.trail || []), { x: s.rs, y: s.momentum }];
+                        return axisCrossings(all).map((cr, i) => {
+                            const crossX = cr.type === "RS" ? X_MID : cr.from.x;
+                            const crossY = cr.type === "Mom" ? Y_MID : cr.from.y;
+                            const cx2 = px(crossX), cy2 = py(crossY);
+                            return (
+                                <g key={s.ticker + "cross" + i}>
+                                    <circle cx={cx2} cy={cy2} r={7} fill="url(#cross-grad)">
+                                        <animate attributeName="r" values="5;12;5" dur="2s" repeatCount="indefinite" />
+                                        <animate attributeName="opacity" values="0.8;0.1;0.8" dur="2s" repeatCount="indefinite" />
+                                    </circle>
+                                    <circle cx={cx2} cy={cy2} r={2.5} fill="#ffffff" opacity="0.9" />
+                                </g>
+                            );
+                        });
+                    })}
+
+                    {/* Stock Paths & Heads */}
                     {stocks.map(s => {
                         const cx = px(s.rs), cy = py(s.momentum);
-                        const pts = getTrailPoints(s);
-                        const polyStr = pts.length > 0 ? pts.map(p => `${p.x},${p.y}`).join(" ") + ` ${cx},${cy}` : "";
+                        const all = [...(s.trail || []), { x: s.rs, y: s.momentum }];
+                        const svgPts = all.map(p => ({ x: px(p.x), y: py(p.y) }));
+                        const polyStr = svgPts.map(p => `${p.x},${p.y}`).join(" ");
                         
+                        const norm = trailDist(s, all) / maxDist;
+                        const curve = trailCurvature(all);
+                        const isVortex = curve > 25;
+                        const streakWeeks = Math.max(1, (s.streak || 0) / 5);
+
+                        // Arrow Engineering
+                        const prev = svgPts[svgPts.length - 2] || svgPts[0];
+                        const ddx = cx - prev.x, ddy = cy - prev.y;
+                        const dlen = Math.hypot(ddx, ddy) || 1;
+                        const ux = ddx / dlen, uy = ddy / dlen;
+                        const arrowSx = cx + ux * (R + 2), arrowSy = cy + uy * (R + 2);
+                        const arrowEx = arrowSx + ux * (10 + norm * 20), arrowEy = arrowSy + uy * (10 + norm * 20);
+
                         return (
-                            <g key={s.ticker} onMouseEnter={() => {}} style={{ cursor: "pointer" }}>
-                                {polyStr && (
-                                    <polyline points={polyStr} fill="none" stroke={`url(#g-${s.ticker})`} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.6" />
+                            <g key={s.ticker} style={{ cursor: "pointer" }}>
+                                {/* Vortex Animation */}
+                                {isVortex && (
+                                    <circle cx={cx} cy={cy} r={R + 8} fill="none" stroke="#f59e0b" strokeWidth="1" strokeDasharray="3,3" opacity="0.5">
+                                        <animateTransform attributeName="transform" type="rotate" from={`0 ${cx} ${cy}`} to={`360 ${cx} ${cy}`} dur="4s" repeatCount="indefinite" />
+                                    </circle>
                                 )}
+                                
+                                {/* Trail Polyline */}
+                                <polyline points={polyStr} fill="none" stroke={`url(#g-${s.ticker})`} strokeWidth={1.5 + norm * 2} strokeLinecap="round" strokeLinejoin="round" opacity="0.8" />
+                                
+                                {/* Bread Crumb Trails (the circles on the path) */}
+                                {svgPts.slice(0, -1).map((p, i) => (
+                                    <circle key={i} cx={p.x} cy={p.y} r={1.5} fill={Q_FILL[s.quadrant]} fillOpacity={0.1 + i * 0.1} stroke={Q_FILL[s.quadrant]} strokeWidth="0.5" strokeOpacity={0.2 + i * 0.15} />
+                                ))}
+
+                                {/* Engineering Arrow */}
+                                <line x1={arrowSx} y1={arrowSy} x2={arrowEx} y2={arrowEy} stroke="#04091a" strokeWidth={3} strokeLinecap="butt" opacity="0.3" />
+                                <line x1={arrowSx} y1={arrowSy} x2={arrowEx} y2={arrowEy} stroke={Q_FILL[s.quadrant]} strokeWidth={1} strokeLinecap="butt" markerEnd={`url(#m-${s.ticker})`} />
+
+                                {/* Streak Ring */}
+                                <circle cx={cx} cy={cy} r={R + 2.5} fill="none" stroke={Q_FILL[s.quadrant]} strokeWidth="1.5" opacity="0.5" strokeDasharray={`${((streakWeeks / 4) * 2 * Math.PI * (R + 2.5)).toFixed(1)} 9999`} strokeDashoffset={((0.25) * 2 * Math.PI * (R + 2.5)).toFixed(1)} />
+
+                                {/* Head */}
                                 {highlightTicker === s.ticker && (
                                     <circle cx={cx} cy={cy} r={R + 5} fill="none" stroke="#fff" strokeWidth="1.5" opacity="0.6" />
                                 )}
-                                <circle cx={cx} cy={cy} r={R} fill={Q_FILL[s.quadrant]} stroke="#0a1120" strokeWidth="1" />
+                                <circle cx={cx} cy={cy} r={R} fill={Q_FILL[s.quadrant]} fillOpacity="0.9" stroke="#0a1120" strokeWidth="1" />
                                 <text x={cx} y={cy + 0.5} textAnchor="middle" dominantBaseline="middle" fill="#04091a" fontSize="7" fontWeight="800" fontFamily="monospace">{s.ticker}</text>
                             </g>
                         );
@@ -255,8 +342,8 @@
 
         function SignalPanel({ stocks, onHover }) {
             const categories = {
-                vortex: stocks.filter(s => (s.streak || 0) > 4),
-                crossers: stocks.filter(s => Math.abs(s.momentum) < 1 && s.rs < 86 && s.rs > 84),
+                vortex: stocks.filter(s => trailCurvature([...(s.trail || []), { x: s.rs, y: s.momentum }]) > 25),
+                crossers: stocks.filter(s => axisCrossings([...(s.trail || []), { x: s.rs, y: s.momentum }]).length > 0),
                 leaders: stocks.filter(s => s.quadrant === 'leading').slice(0, 4)
             };
 
@@ -273,12 +360,12 @@
                         ))}
                     </div>
                     <div style={{ background: "#0a1120", border: "1px solid #1e293b", borderRadius: 8, padding: "10px 12px" }}>
-                        <div style={{ fontSize: 9, color: "#475569", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 6 }}>↻ Sustained Trend</div>
+                        <div style={{ fontSize: 9, color: "#475569", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 6 }}>↻ Vortex Setup</div>
                         {categories.vortex.slice(0, 4).map(s => (
                             <div key={s.ticker} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }} onMouseEnter={() => onHover(s.ticker)} onMouseLeave={() => onHover(null)}>
                                 <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#f59e0b" }} />
                                 <span style={{ fontSize: 10, color: "#f59e0b", fontWeight: 700 }}>{s.ticker}</span>
-                                <span style={{ fontSize: 9, color: "#475569" }}>{s.streak}d in quadrant</span>
+                                <span style={{ fontSize: 9, color: "#475569" }}>Significant curve detected</span>
                             </div>
                         ))}
                     </div>
@@ -309,7 +396,7 @@
                             <div style={{ fontSize: 10, color: "#64748b" }}>{s.name} • {s.sector}</div>
                         </div>
                         <div style={{ textAlign: "right" }}>
-                            <div style={{ fontSize: 12, fontWeight: 800 }}>${s.price}</div>
+                            <div style={{ fontSize: 12, fontWeight: 800 }}>Streak: {s.streak}d</div>
                             <div style={{ fontSize: 9, color: "#4ade80" }}>{s.quadrant.toUpperCase()}</div>
                         </div>
                     </div>
@@ -320,30 +407,32 @@
         function RankTab({ data }) {
             return (
                 <div style={{ background: "#0f172a", border: "1px solid #1e293b", borderRadius: 10, padding: "12px 13px", marginTop: 10 }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: "#f1f5f9", marginBottom: 8 }}>Stock Rotation Signals</div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: "#f1f5f9", marginBottom: 8 }}>Rotation Strategy Table</div>
                     <div style={{ overflowX: "auto" }}>
                         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 10 }}>
                             <thead>
                                 <tr style={{ color: "#475569", borderBottom: "1px solid #1e293b", textAlign: "left" }}>
                                     <th style={{ padding: 8 }}>Symbol</th>
                                     <th style={{ padding: 8 }}>Quadrant</th>
-                                    <th style={{ padding: 8 }}>RS</th>
+                                    <th style={{ padding: 8 }}>Streak</th>
                                     <th style={{ padding: 8 }}>Momentum</th>
-                                    <th style={{ padding: 8 }}>Trend</th>
+                                    <th style={{ padding: 8 }}>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.slice(0, 15).map((s, i) => (
-                                    <tr key={s.ticker} style={{ background: i % 2 === 0 ? "#0a1120" : "transparent" }}>
-                                        <td style={{ padding: 8, fontWeight: 700, color: "#fff" }}>{s.ticker}</td>
-                                        <td style={{ padding: 8, color: Q_FILL[s.quadrant] }}>{s.quadrant}</td>
-                                        <td style={{ padding: 8 }}>{s.rs}</td>
-                                        <td style={{ padding: 8, color: s.momentum >= 0 ? "#22c55e" : "#ef4444" }}>{s.momentum.toFixed(1)}</td>
-                                        <td style={{ padding: 8, fontWeight: 700, color: s.momentum > 2 ? "#22c55e" : s.momentum < -2 ? "#ef4444" : "#f59e0b" }}>
-                                            {s.momentum > 2 ? "▲ BULL" : s.momentum < -2 ? "▼ BEAR" : "— FLAT"}
-                                        </td>
-                                    </tr>
-                                ))}
+                                {data.slice(0, 15).map((s, i) => {
+                                    const action = s.quadrant === "leading" ? "▲ BUY" : s.quadrant === "improving" ? "▲ WATCH" : s.quadrant === "weakening" ? "▼ FADE" : "▼ AVOID";
+                                    const actionColor = action.startsWith("▲") ? "#22c55e" : action.startsWith("▼") ? "#ef4444" : "#f59e0b";
+                                    return (
+                                        <tr key={s.ticker} style={{ background: i % 2 === 0 ? "#0a1120" : "transparent" }}>
+                                            <td style={{ padding: 8, fontWeight: 800, color: Q_FILL[s.quadrant] }}>{s.ticker}</td>
+                                            <td style={{ padding: 8, color: "#94a3b8" }}>{s.quadrant}</td>
+                                            <td style={{ padding: 8 }}>{s.streak}d</td>
+                                            <td style={{ padding: 8, color: s.momentum >= 0 ? "#22c55e" : "#ef4444" }}>{s.momentum.toFixed(1)}</td>
+                                            <td style={{ padding: 8, fontWeight: 900, color: actionColor }}>{action}</td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>
@@ -378,7 +467,6 @@
                             if (curRS >= 85) quadrant = momentum >= 0 ? "leading" : "weakening";
                             else quadrant = momentum >= 0 ? "improving" : "lagging";
 
-                            // Streak calculation
                             let streak = 0;
                             for (let i = 0; i < h.length - momLookback; i++) {
                                 const tempRS = h[i];
@@ -393,7 +481,7 @@
                                 const lookbackIdx = 7 - idx;
                                 const pV = h[lookbackIdx + momLookback] !== undefined ? h[lookbackIdx + momLookback] : v;
                                 return { x: v, y: v - pV };
-                            });
+                            }).filter(p => !isNaN(p.y));
 
                             return { ...s, rs: curRS, momentum, quadrant, streak, trail };
                         });
@@ -404,7 +492,7 @@
                 load();
             }, []);
 
-            if (loading) return <div style={{ color: "#fff", textAlign: "center", padding: 100 }}>Initializing Rotation Engine...</div>;
+            if (loading) return <div style={{ color: "#fff", textAlign: "center", padding: 100, fontFamily: "var(--mono)", fontSize: 12 }}>BOOTING ROTATION ENGINE...</div>;
 
             const promising = data.filter(s => s.quadrant === 'leading' || s.quadrant === 'improving').sort((a,b) => b.rs - a.rs);
 
