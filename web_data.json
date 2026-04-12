@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-03-15T10:19:23Z",
+    "last_updated": "2026-04-11T19:53:11Z",
     "stocks": [
         {
             "rank": 1,
@@ -2878,7 +2878,568 @@
             "finviz_chart_url": "https://charts2.finviz.com/chart.ashx?t=MSFT&ty=c&ta=0&p=d&s=l"
         }
     ],
-    "industries": [],
+    "industries": [
+        {
+            "rank": 1,
+            "industry": "Copper",
+            "sector": "Basic Materials",
+            "rs": 97,
+            "rs_1w_pct": 90,
+            "rs_1m_pct": 87,
+            "tickers": [
+                {
+                    "t": "HBM",
+                    "n": "Hudbay Minerals Inc."
+                },
+                {
+                    "t": "SCCO",
+                    "n": "Southern Copper Corporation"
+                }
+            ]
+        },
+        {
+            "rank": 2,
+            "industry": "Aerospace & Defense",
+            "sector": "Industrials",
+            "rs": 93,
+            "rs_1w_pct": 94,
+            "rs_1m_pct": 91,
+            "tickers": [
+                {
+                    "t": "PL",
+                    "n": "Planet Labs PBC"
+                },
+                {
+                    "t": "AXON",
+                    "n": "Axon Enterprise, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 3,
+            "industry": "Computer Hardware",
+            "sector": "Technology",
+            "rs": 89,
+            "rs_1w_pct": 86,
+            "rs_1m_pct": 83,
+            "tickers": [
+                {
+                    "t": "WDC",
+                    "n": "Western Digital Corporation"
+                },
+                {
+                    "t": "STX",
+                    "n": "Seagate Technology Holdings plc"
+                },
+                {
+                    "t": "ANET",
+                    "n": "Arista Networks, Inc."
+                },
+                {
+                    "t": "SMCI",
+                    "n": "Super Micro Computer, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 4,
+            "industry": "Communication Equipment",
+            "sector": "Technology",
+            "rs": 84,
+            "rs_1w_pct": 81,
+            "rs_1m_pct": 78,
+            "tickers": [
+                {
+                    "t": "VSAT",
+                    "n": "Viasat, Inc."
+                },
+                {
+                    "t": "CSCO",
+                    "n": "Cisco Systems, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 5,
+            "industry": "Semiconductor Equipment & Materials",
+            "sector": "Technology",
+            "rs": 80,
+            "rs_1w_pct": 77,
+            "rs_1m_pct": 74,
+            "tickers": [
+                {
+                    "t": "LRCX",
+                    "n": "Lam Research Corporation"
+                },
+                {
+                    "t": "AMAT",
+                    "n": "Applied Materials, Inc."
+                },
+                {
+                    "t": "ASML",
+                    "n": "ASML Holding N.V."
+                },
+                {
+                    "t": "KLAC",
+                    "n": "KLA Corporation"
+                }
+            ]
+        },
+        {
+            "rank": 6,
+            "industry": "Oil & Gas Equipment & Services",
+            "sector": "Energy",
+            "rs": 76,
+            "rs_1w_pct": 73,
+            "rs_1m_pct": 64,
+            "tickers": [
+                {
+                    "t": "WFRD",
+                    "n": "Weatherford International plc"
+                },
+                {
+                    "t": "XPRO",
+                    "n": "Expro Group Holdings N.V."
+                },
+                {
+                    "t": "BKR",
+                    "n": "Baker Hughes Company"
+                }
+            ]
+        },
+        {
+            "rank": 7,
+            "industry": "Entertainment",
+            "sector": "Communication Services",
+            "rs": 71,
+            "rs_1w_pct": 68,
+            "rs_1m_pct": 60,
+            "tickers": [
+                {
+                    "t": "WBD",
+                    "n": "Warner Bros. Discovery, Inc."
+                },
+                {
+                    "t": "NFLX",
+                    "n": "Netflix, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 8,
+            "industry": "Semiconductors",
+            "sector": "Technology",
+            "rs": 67,
+            "rs_1w_pct": 64,
+            "rs_1m_pct": 70,
+            "tickers": [
+                {
+                    "t": "MU",
+                    "n": "Micron Technology, Inc."
+                },
+                {
+                    "t": "INTC",
+                    "n": "Intel Corporation"
+                },
+                {
+                    "t": "ADI",
+                    "n": "Analog Devices, Inc."
+                },
+                {
+                    "t": "MPWR",
+                    "n": "Monolithic Power Systems, Inc."
+                },
+                {
+                    "t": "AMD",
+                    "n": "Advanced Micro Devices, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 9,
+            "industry": "Drug Manufacturers - General",
+            "sector": "Healthcare",
+            "rs": 63,
+            "rs_1w_pct": 55,
+            "rs_1m_pct": 51,
+            "tickers": [
+                {
+                    "t": "GILD",
+                    "n": "Gilead Sciences, Inc."
+                },
+                {
+                    "t": "AMGN",
+                    "n": "Amgen Inc."
+                }
+            ]
+        },
+        {
+            "rank": 10,
+            "industry": "Internet Content & Information",
+            "sector": "Communication Services",
+            "rs": 58,
+            "rs_1w_pct": 60,
+            "rs_1m_pct": 64,
+            "tickers": [
+                {
+                    "t": "GOOGL",
+                    "n": "Alphabet Inc."
+                },
+                {
+                    "t": "GOOG",
+                    "n": "Alphabet Inc."
+                },
+                {
+                    "t": "META",
+                    "n": "Meta Platforms, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 11,
+            "industry": "unknown",
+            "sector": "unknown",
+            "rs": 54,
+            "rs_1w_pct": 51,
+            "rs_1m_pct": 55,
+            "tickers": [
+                {
+                    "t": "SLV",
+                    "n": "iShares Silver Trust"
+                },
+                {
+                    "t": "COPX",
+                    "n": "Global X Copper Miners ETF"
+                },
+                {
+                    "t": "GDX",
+                    "n": "VanEck Gold Miners ETF"
+                },
+                {
+                    "t": "XME",
+                    "n": "State Street SPDR S&P Metals & Mining ETF"
+                },
+                {
+                    "t": "OIH",
+                    "n": "VanEck Oil Services ETF"
+                }
+            ]
+        },
+        {
+            "rank": 12,
+            "industry": "Beverages - Non-Alcoholic",
+            "sector": "Consumer Defensive",
+            "rs": 50,
+            "rs_1w_pct": 41,
+            "rs_1m_pct": 37,
+            "tickers": [
+                {
+                    "t": "MNST",
+                    "n": "Monster Beverage Corporation"
+                },
+                {
+                    "t": "CCEP",
+                    "n": "Coca-Cola Europacific Partners PLC"
+                },
+                {
+                    "t": "PEP",
+                    "n": "PepsiCo, Inc."
+                },
+                {
+                    "t": "KO",
+                    "n": "The Coca-Cola Company"
+                },
+                {
+                    "t": "KDP",
+                    "n": "Keurig Dr Pepper Inc."
+                }
+            ]
+        },
+        {
+            "rank": 13,
+            "industry": "Utilities - Regulated Electric",
+            "sector": "Utilities",
+            "rs": 44,
+            "rs_1w_pct": 37,
+            "rs_1m_pct": 37,
+            "tickers": [
+                {
+                    "t": "NEE",
+                    "n": "NextEra Energy, Inc."
+                },
+                {
+                    "t": "AEP",
+                    "n": "American Electric Power Company, Inc."
+                },
+                {
+                    "t": "XEL",
+                    "n": "Xcel Energy Inc."
+                },
+                {
+                    "t": "EXC",
+                    "n": "Exelon Corporation"
+                }
+            ]
+        },
+        {
+            "rank": 14,
+            "industry": "Discount Stores",
+            "sector": "Consumer Defensive",
+            "rs": 44,
+            "rs_1w_pct": 47,
+            "rs_1m_pct": 32,
+            "tickers": [
+                {
+                    "t": "WMT",
+                    "n": "Walmart Inc."
+                },
+                {
+                    "t": "TGT",
+                    "n": "Target Corporation"
+                },
+                {
+                    "t": "COST",
+                    "n": "Costco Wholesale Corporation"
+                }
+            ]
+        },
+        {
+            "rank": 15,
+            "industry": "Utilities - Independent Power Producers",
+            "sector": "Utilities",
+            "rs": 40,
+            "rs_1w_pct": 31,
+            "rs_1m_pct": 19,
+            "tickers": [
+                {
+                    "t": "NRG",
+                    "n": "NRG Energy, Inc."
+                },
+                {
+                    "t": "CEG",
+                    "n": "Constellation Energy Corporation"
+                }
+            ]
+        },
+        {
+            "rank": 16,
+            "industry": "Biotechnology",
+            "sector": "Healthcare",
+            "rs": 35,
+            "rs_1w_pct": 41,
+            "rs_1m_pct": 47,
+            "tickers": [
+                {
+                    "t": "INSM",
+                    "n": "Insmed Incorporated"
+                },
+                {
+                    "t": "VRTX",
+                    "n": "Vertex Pharmaceuticals Incorporated"
+                },
+                {
+                    "t": "REGN",
+                    "n": "Regeneron Pharmaceuticals, Inc."
+                },
+                {
+                    "t": "ALNY",
+                    "n": "Alnylam Pharmaceuticals, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 17,
+            "industry": "Electronic Gaming & Multimedia",
+            "sector": "Communication Services",
+            "rs": 31,
+            "rs_1w_pct": 27,
+            "rs_1m_pct": 42,
+            "tickers": [
+                {
+                    "t": "EA",
+                    "n": "Electronic Arts Inc."
+                },
+                {
+                    "t": "TTWO",
+                    "n": "Take-Two Interactive Software, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 18,
+            "industry": "Medical Devices",
+            "sector": "Healthcare",
+            "rs": 27,
+            "rs_1w_pct": 31,
+            "rs_1m_pct": 24,
+            "tickers": [
+                {
+                    "t": "GEHC",
+                    "n": "GE HealthCare Technologies Inc."
+                },
+                {
+                    "t": "DXCM",
+                    "n": "DexCom, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 19,
+            "industry": "Telecom Services",
+            "sector": "Communication Services",
+            "rs": 22,
+            "rs_1w_pct": 22,
+            "rs_1m_pct": 9,
+            "tickers": [
+                {
+                    "t": "IRDM",
+                    "n": "Iridium Communications Inc."
+                },
+                {
+                    "t": "CMCSA",
+                    "n": "Comcast Corporation"
+                },
+                {
+                    "t": "TMUS",
+                    "n": "T-Mobile US, Inc."
+                },
+                {
+                    "t": "CHTR",
+                    "n": "Charter Communications, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 20,
+            "industry": "Travel Services",
+            "sector": "Consumer Cyclical",
+            "rs": 18,
+            "rs_1w_pct": 18,
+            "rs_1m_pct": 28,
+            "tickers": [
+                {
+                    "t": "ABNB",
+                    "n": "Airbnb, Inc."
+                },
+                {
+                    "t": "BKNG",
+                    "n": "Booking Holdings Inc."
+                }
+            ]
+        },
+        {
+            "rank": 21,
+            "industry": "Software - Infrastructure",
+            "sector": "Technology",
+            "rs": 14,
+            "rs_1w_pct": 14,
+            "rs_1m_pct": 14,
+            "tickers": [
+                {
+                    "t": "STNE",
+                    "n": "StoneCo Ltd."
+                },
+                {
+                    "t": "PLTR",
+                    "n": "Palantir Technologies Inc."
+                },
+                {
+                    "t": "SNPS",
+                    "n": "Synopsys, Inc."
+                },
+                {
+                    "t": "FTNT",
+                    "n": "Fortinet, Inc."
+                },
+                {
+                    "t": "MSFT",
+                    "n": "Microsoft Corporation"
+                }
+            ]
+        },
+        {
+            "rank": 22,
+            "industry": "Internet Retail",
+            "sector": "Consumer Cyclical",
+            "rs": 9,
+            "rs_1w_pct": 9,
+            "rs_1m_pct": 14,
+            "tickers": [
+                {
+                    "t": "AMZN",
+                    "n": "Amazon.com, Inc."
+                },
+                {
+                    "t": "PDD",
+                    "n": "PDD Holdings Inc."
+                },
+                {
+                    "t": "DASH",
+                    "n": "DoorDash, Inc."
+                },
+                {
+                    "t": "MELI",
+                    "n": "MercadoLibre, Inc."
+                }
+            ]
+        },
+        {
+            "rank": 23,
+            "industry": "Specialty Business Services",
+            "sector": "Industrials",
+            "rs": 5,
+            "rs_1w_pct": 5,
+            "rs_1m_pct": 5,
+            "tickers": [
+                {
+                    "t": "CTAS",
+                    "n": "Cintas Corporation"
+                },
+                {
+                    "t": "GPN",
+                    "n": "Global Payments Inc."
+                },
+                {
+                    "t": "CPRT",
+                    "n": "Copart, Inc."
+                },
+                {
+                    "t": "TRI",
+                    "n": "Thomson Reuters Corporation"
+                }
+            ]
+        },
+        {
+            "rank": 24,
+            "industry": "Software - Application",
+            "sector": "Technology",
+            "rs": 1,
+            "rs_1w_pct": 1,
+            "rs_1m_pct": 1,
+            "tickers": [
+                {
+                    "t": "CDNS",
+                    "n": "Cadence Design Systems, Inc."
+                },
+                {
+                    "t": "SHOP",
+                    "n": "Shopify Inc."
+                },
+                {
+                    "t": "ADSK",
+                    "n": "Autodesk, Inc."
+                },
+                {
+                    "t": "DDOG",
+                    "n": "Datadog, Inc."
+                },
+                {
+                    "t": "ADP",
+                    "n": "Automatic Data Processing, Inc."
+                }
+            ]
+        }
+    ],
     "pulse": [
         {
             "ticker": "IWM",
@@ -3141,5 +3702,607 @@
             "tradingview_url": "https://www.tradingview.com/chart/?symbol=ETHA"
         }
     ],
-    "stages": []
+    "stages": [
+        {
+            "sector": "Utilities",
+            "count": 8,
+            "s1": 0,
+            "s2": 100,
+            "s3": 0,
+            "s4": 0,
+            "tickers": [
+                {
+                    "t": "AES",
+                    "n": "The AES Corporation"
+                },
+                {
+                    "t": "BEPC",
+                    "n": "Brookfield Renewable Corporation"
+                },
+                {
+                    "t": "NEE",
+                    "n": "NextEra Energy, Inc."
+                },
+                {
+                    "t": "NRG",
+                    "n": "NRG Energy, Inc."
+                },
+                {
+                    "t": "AEP",
+                    "n": "American Electric Power Company, Inc."
+                },
+                {
+                    "t": "XEL",
+                    "n": "Xcel Energy Inc."
+                },
+                {
+                    "t": "EXC",
+                    "n": "Exelon Corporation"
+                },
+                {
+                    "t": "CEG",
+                    "n": "Constellation Energy Corporation"
+                }
+            ],
+            "health": "Strong"
+        },
+        {
+            "sector": "Energy",
+            "count": 5,
+            "s1": 0,
+            "s2": 100,
+            "s3": 0,
+            "s4": 0,
+            "tickers": [
+                {
+                    "t": "WFRD",
+                    "n": "Weatherford International plc"
+                },
+                {
+                    "t": "XPRO",
+                    "n": "Expro Group Holdings N.V."
+                },
+                {
+                    "t": "BKR",
+                    "n": "Baker Hughes Company"
+                },
+                {
+                    "t": "VLO",
+                    "n": "Valero Energy Corporation"
+                },
+                {
+                    "t": "FANG",
+                    "n": "Diamondback Energy, Inc."
+                }
+            ],
+            "health": "Strong"
+        },
+        {
+            "sector": "Basic Materials",
+            "count": 4,
+            "s1": 0,
+            "s2": 100,
+            "s3": 0,
+            "s4": 0,
+            "tickers": [
+                {
+                    "t": "HBM",
+                    "n": "Hudbay Minerals Inc."
+                },
+                {
+                    "t": "SCCO",
+                    "n": "Southern Copper Corporation"
+                },
+                {
+                    "t": "AA",
+                    "n": "Alcoa Corporation"
+                },
+                {
+                    "t": "LIN",
+                    "n": "Linde plc"
+                }
+            ],
+            "health": "Strong"
+        },
+        {
+            "sector": "Consumer Defensive",
+            "count": 10,
+            "s1": 0,
+            "s2": 70,
+            "s3": 20,
+            "s4": 10,
+            "tickers": [
+                {
+                    "t": "MNST",
+                    "n": "Monster Beverage Corporation"
+                },
+                {
+                    "t": "WMT",
+                    "n": "Walmart Inc."
+                },
+                {
+                    "t": "CCEP",
+                    "n": "Coca-Cola Europacific Partners PLC"
+                },
+                {
+                    "t": "TGT",
+                    "n": "Target Corporation"
+                },
+                {
+                    "t": "PEP",
+                    "n": "PepsiCo, Inc."
+                },
+                {
+                    "t": "KO",
+                    "n": "The Coca-Cola Company"
+                },
+                {
+                    "t": "COST",
+                    "n": "Costco Wholesale Corporation"
+                },
+                {
+                    "t": "KDP",
+                    "n": "Keurig Dr Pepper Inc."
+                },
+                {
+                    "t": "MDLZ",
+                    "n": "Mondelez International, Inc."
+                },
+                {
+                    "t": "KHC",
+                    "n": "The Kraft Heinz Company"
+                }
+            ],
+            "health": "Strong"
+        },
+        {
+            "sector": "Healthcare",
+            "count": 10,
+            "s1": 10,
+            "s2": 60,
+            "s3": 10,
+            "s4": 20,
+            "tickers": [
+                {
+                    "t": "INSM",
+                    "n": "Insmed Incorporated"
+                },
+                {
+                    "t": "GILD",
+                    "n": "Gilead Sciences, Inc."
+                },
+                {
+                    "t": "AMGN",
+                    "n": "Amgen Inc."
+                },
+                {
+                    "t": "VRTX",
+                    "n": "Vertex Pharmaceuticals Incorporated"
+                },
+                {
+                    "t": "REGN",
+                    "n": "Regeneron Pharmaceuticals, Inc."
+                },
+                {
+                    "t": "IDXX",
+                    "n": "IDEXX Laboratories, Inc."
+                },
+                {
+                    "t": "GEHC",
+                    "n": "GE HealthCare Technologies Inc."
+                },
+                {
+                    "t": "DXCM",
+                    "n": "DexCom, Inc."
+                },
+                {
+                    "t": "ALNY",
+                    "n": "Alnylam Pharmaceuticals, Inc."
+                },
+                {
+                    "t": "ISRG",
+                    "n": "Intuitive Surgical, Inc."
+                }
+            ],
+            "health": "Strong"
+        },
+        {
+            "sector": "Industrials",
+            "count": 13,
+            "s1": 0,
+            "s2": 54,
+            "s3": 0,
+            "s4": 46,
+            "tickers": [
+                {
+                    "t": "PL",
+                    "n": "Planet Labs PBC"
+                },
+                {
+                    "t": "ODFL",
+                    "n": "Old Dominion Freight Line, Inc."
+                },
+                {
+                    "t": "FER",
+                    "n": "Ferrovial SE"
+                },
+                {
+                    "t": "CSX",
+                    "n": "CSX Corporation"
+                },
+                {
+                    "t": "PCAR",
+                    "n": "PACCAR Inc"
+                },
+                {
+                    "t": "HON",
+                    "n": "Honeywell International Inc."
+                },
+                {
+                    "t": "FAST",
+                    "n": "Fastenal Company"
+                },
+                {
+                    "t": "CTAS",
+                    "n": "Cintas Corporation"
+                },
+                {
+                    "t": "GPN",
+                    "n": "Global Payments Inc."
+                },
+                {
+                    "t": "AXON",
+                    "n": "Axon Enterprise, Inc."
+                },
+                {
+                    "t": "CPRT",
+                    "n": "Copart, Inc."
+                },
+                {
+                    "t": "VRSK",
+                    "n": "Verisk Analytics, Inc."
+                },
+                {
+                    "t": "TRI",
+                    "n": "Thomson Reuters Corporation"
+                }
+            ],
+            "health": "Strong"
+        },
+        {
+            "sector": "Technology",
+            "count": 45,
+            "s1": 16,
+            "s2": 49,
+            "s3": 0,
+            "s4": 36,
+            "tickers": [
+                {
+                    "t": "WDC",
+                    "n": "Western Digital Corporation"
+                },
+                {
+                    "t": "MU",
+                    "n": "Micron Technology, Inc."
+                },
+                {
+                    "t": "VSAT",
+                    "n": "Viasat, Inc."
+                },
+                {
+                    "t": "STX",
+                    "n": "Seagate Technology Holdings plc"
+                },
+                {
+                    "t": "LRCX",
+                    "n": "Lam Research Corporation"
+                },
+                {
+                    "t": "AMAT",
+                    "n": "Applied Materials, Inc."
+                },
+                {
+                    "t": "ASML",
+                    "n": "ASML Holding N.V."
+                },
+                {
+                    "t": "INTC",
+                    "n": "Intel Corporation"
+                },
+                {
+                    "t": "KLAC",
+                    "n": "KLA Corporation"
+                },
+                {
+                    "t": "ADI",
+                    "n": "Analog Devices, Inc."
+                },
+                {
+                    "t": "MPWR",
+                    "n": "Monolithic Power Systems, Inc."
+                },
+                {
+                    "t": "AMD",
+                    "n": "Advanced Micro Devices, Inc."
+                },
+                {
+                    "t": "MCHP",
+                    "n": "Microchip Technology Incorporated"
+                },
+                {
+                    "t": "STNE",
+                    "n": "StoneCo Ltd."
+                },
+                {
+                    "t": "ANET",
+                    "n": "Arista Networks, Inc."
+                },
+                {
+                    "t": "TXN",
+                    "n": "Texas Instruments Incorporated"
+                },
+                {
+                    "t": "CSCO",
+                    "n": "Cisco Systems, Inc."
+                },
+                {
+                    "t": "NVDA",
+                    "n": "NVIDIA Corporation"
+                },
+                {
+                    "t": "NXPI",
+                    "n": "NXP Semiconductors N.V."
+                },
+                {
+                    "t": "AVGO",
+                    "n": "Broadcom Inc."
+                },
+                {
+                    "t": "AAPL",
+                    "n": "Apple Inc."
+                },
+                {
+                    "t": "PLTR",
+                    "n": "Palantir Technologies Inc."
+                },
+                {
+                    "t": "MRVL",
+                    "n": "Marvell Technology, Inc."
+                },
+                {
+                    "t": "CDNS",
+                    "n": "Cadence Design Systems, Inc."
+                },
+                {
+                    "t": "ARM",
+                    "n": "Arm Holdings plc"
+                },
+                {
+                    "t": "QCOM",
+                    "n": "QUALCOMM Incorporated"
+                },
+                {
+                    "t": "SNPS",
+                    "n": "Synopsys, Inc."
+                },
+                {
+                    "t": "SHOP",
+                    "n": "Shopify Inc."
+                },
+                {
+                    "t": "FTNT",
+                    "n": "Fortinet, Inc."
+                },
+                {
+                    "t": "SMCI",
+                    "n": "Super Micro Computer, Inc."
+                },
+                {
+                    "t": "MSFT",
+                    "n": "Microsoft Corporation"
+                },
+                {
+                    "t": "CTSH",
+                    "n": "Cognizant Technology Solutions Corporation"
+                },
+                {
+                    "t": "ADSK",
+                    "n": "Autodesk, Inc."
+                },
+                {
+                    "t": "DDOG",
+                    "n": "Datadog, Inc."
+                },
+                {
+                    "t": "CRWD",
+                    "n": "CrowdStrike Holdings, Inc."
+                },
+                {
+                    "t": "PANW",
+                    "n": "Palo Alto Networks, Inc."
+                },
+                {
+                    "t": "ADP",
+                    "n": "Automatic Data Processing, Inc."
+                },
+                {
+                    "t": "PAYX",
+                    "n": "Paychex, Inc."
+                },
+                {
+                    "t": "ADBE",
+                    "n": "Adobe Inc."
+                },
+                {
+                    "t": "ROP",
+                    "n": "Roper Technologies, Inc."
+                },
+                {
+                    "t": "INTU",
+                    "n": "Intuit Inc."
+                },
+                {
+                    "t": "ZS",
+                    "n": "Zscaler, Inc."
+                },
+                {
+                    "t": "WDAY",
+                    "n": "Workday, Inc."
+                },
+                {
+                    "t": "MSTR",
+                    "n": "Strategy Inc"
+                },
+                {
+                    "t": "TEAM",
+                    "n": "Atlassian Corporation"
+                }
+            ],
+            "health": "Healthy"
+        },
+        {
+            "sector": "Consumer Cyclical",
+            "count": 11,
+            "s1": 18,
+            "s2": 45,
+            "s3": 0,
+            "s4": 36,
+            "tickers": [
+                {
+                    "t": "ROST",
+                    "n": "Ross Stores, Inc."
+                },
+                {
+                    "t": "MAR",
+                    "n": "Marriott International, Inc."
+                },
+                {
+                    "t": "TSLA",
+                    "n": "Tesla, Inc."
+                },
+                {
+                    "t": "SBUX",
+                    "n": "Starbucks Corporation"
+                },
+                {
+                    "t": "ABNB",
+                    "n": "Airbnb, Inc."
+                },
+                {
+                    "t": "ORLY",
+                    "n": "O'Reilly Automotive, Inc."
+                },
+                {
+                    "t": "AMZN",
+                    "n": "Amazon.com, Inc."
+                },
+                {
+                    "t": "PDD",
+                    "n": "PDD Holdings Inc."
+                },
+                {
+                    "t": "DASH",
+                    "n": "DoorDash, Inc."
+                },
+                {
+                    "t": "BKNG",
+                    "n": "Booking Holdings Inc."
+                },
+                {
+                    "t": "MELI",
+                    "n": "MercadoLibre, Inc."
+                }
+            ],
+            "health": "Healthy"
+        },
+        {
+            "sector": "Communication Services",
+            "count": 12,
+            "s1": 17,
+            "s2": 42,
+            "s3": 8,
+            "s4": 33,
+            "tickers": [
+                {
+                    "t": "WBD",
+                    "n": "Warner Bros. Discovery, Inc."
+                },
+                {
+                    "t": "GOOGL",
+                    "n": "Alphabet Inc."
+                },
+                {
+                    "t": "GOOG",
+                    "n": "Alphabet Inc."
+                },
+                {
+                    "t": "EA",
+                    "n": "Electronic Arts Inc."
+                },
+                {
+                    "t": "IRDM",
+                    "n": "Iridium Communications Inc."
+                },
+                {
+                    "t": "CMCSA",
+                    "n": "Comcast Corporation"
+                },
+                {
+                    "t": "META",
+                    "n": "Meta Platforms, Inc."
+                },
+                {
+                    "t": "APP",
+                    "n": "AppLovin Corporation"
+                },
+                {
+                    "t": "TMUS",
+                    "n": "T-Mobile US, Inc."
+                },
+                {
+                    "t": "TTWO",
+                    "n": "Take-Two Interactive Software, Inc."
+                },
+                {
+                    "t": "CHTR",
+                    "n": "Charter Communications, Inc."
+                },
+                {
+                    "t": "NFLX",
+                    "n": "Netflix, Inc."
+                }
+            ],
+            "health": "Healthy"
+        },
+        {
+            "sector": "Real Estate",
+            "count": 1,
+            "s1": 0,
+            "s2": 0,
+            "s3": 0,
+            "s4": 100,
+            "tickers": [
+                {
+                    "t": "CSGP",
+                    "n": "CoStar Group, Inc."
+                }
+            ],
+            "health": "Weak"
+        },
+        {
+            "sector": "Financial Services",
+            "count": 1,
+            "s1": 0,
+            "s2": 0,
+            "s3": 0,
+            "s4": 100,
+            "tickers": [
+                {
+                    "t": "PYPL",
+                    "n": "PayPal Holdings, Inc."
+                }
+            ],
+            "health": "Weak"
+        }
+    ]
 }
