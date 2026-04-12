@@ -2,327 +2,200 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Rotation | Rajesh's Stock Screener</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
+    <title>Stock Rotation - Rajesh's Stock Screener</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/recharts/umd/Recharts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #04091a;
-            --card: #0a1120;
-            --border: #1e293b;
-            --text: #f1f5f9;
-            --text-dim: #94a3b8;
-            --accent: #00e5ff;
-            --leading: #22c55e;
-            --improving: #60a5fa;
-            --weakening: #f59e0b;
-            --lagging: #ef4444;
+            --bg: #06060f;--bg2: #0d0d1a;--surface: rgba(255, 255, 255, .04);--border: rgba(255, 255, 255, .08);
+            --text: #e4e4ef;--text2: #8888a8;--accent: #00e5ff;--cyan: #00e5ff;
+            --font: 'Outfit', system-ui, sans-serif;--mono: 'JetBrains Mono', monospace;
         }
-
-        * { box-sizing: border-box; }
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* Navigation */
-        .nav { background: #070e1d; border-bottom: 2px solid var(--border); padding: 0 40px; height: 50px; display: flex; align-items: center; justify-content: space-between; position: fixed; top: 0; width: 100%; z-index: 100; backdrop-filter: blur(10px); }
-        .nav-links { display: flex; gap: 20px; }
-        .nav-link { color: var(--text-dim); text-decoration: none; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+        html, body { width: 100%; margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font); overflow-x: hidden; }
+        .nav { background: rgba(6, 6, 15, 0.9); border-bottom: 1px solid var(--border); padding: 0 20px; height: 50px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(12px); }
+        .nav-links { display: flex; gap: 15px; }
+        .nav-link { color: var(--text2); text-decoration: none; font-size: 11px; font-weight: 700; text-transform: uppercase; transition: color 0.2s; }
         .nav-link:hover, .nav-link.active { color: var(--accent); }
-
-        .dashboard-layout { display: flex; margin-top: 50px; height: calc(100vh - 50px); }
-
-        /* Sidebar Filters */
-        .sidebar { width: 280px; background: #070e1d; border-right: 1px solid var(--border); padding: 25px; overflow-y: auto; flex-shrink: 0; }
-        .filter-section { margin-bottom: 25px; }
-        .filter-title { font-size: 10px; color: var(--text-dim); font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 12px; display: flex; justify-content: space-between; }
         
-        .slider-group { position: relative; padding-top: 10px; }
-        input[type="range"] { -webkit-appearance: none; width: 100%; height: 4px; border-radius: 2px; background: #1e293b; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: var(--accent); border-radius: 50%; cursor: pointer; box-shadow: 0 0 10px rgba(0,229,255,0.4); }
-
-        .toggle-group { display: flex; flex-direction: column; gap: 8px; }
-        .toggle-btn { background: #0f172a; border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px; color: var(--text-dim); font-size: 11px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; text-align: left; }
-        .toggle-btn.active { border-color: var(--accent); color: #fff; background: rgba(0, 229, 255, 0.05); }
-        .toggle-indicator { width: 12px; height: 12px; border: 1px solid currentColor; border-radius: 3px; position: relative; }
-        .toggle-btn.active .toggle-indicator::after { content: "✓"; position: absolute; left: 1px; top: -2px; font-size: 9px; }
-
-        .sector-btn { background: #0f172a; border: 1px solid var(--border); padding: 6px 10px; border-radius: 6px; color: var(--text-dim); font-size: 10px; font-weight: 600; cursor: pointer; margin: 2px; }
-        .sector-btn.active { border-color: var(--accent); color: #fff; background: rgba(0, 229, 255, 0.1); }
-
-        /* Main View */
-        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; padding: 20px; }
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .chart-container { flex: 1; position: relative; background: radial-gradient(circle at center, #0a1125 0%, #04091a 100%); mix-blend-mode: screen; }
-
-        .banner { height: 32px; background: #040a14; border-bottom: 1px solid var(--border); display: flex; align-items: center; overflow: hidden; }
-        .banner-scroll { display: flex; white-space: nowrap; animation: scroll 60s linear infinite; }
-        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        .banner-item { padding-right: 40px; font-size: 11px; font-family: 'DM Mono', monospace; }
-
-        #loading { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 200; gap: 15px; }
-        .spinner { width: 30px; height: 30px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Panels */
-        .panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; border-top: 1px solid var(--border); }
-        .mini-card { background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
-        .mini-title { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 10px; }
-        .list-item { display: flex; align-items: center; gap: 8px; font-size: 11px; margin-bottom: 6px; cursor: pointer; }
+        input[type="range"] { -webkit-appearance: none; background: #1e293b; height: 4px; border-radius: 2px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; background: var(--accent); border-radius: 50%; cursor: pointer; }
     </style>
 </head>
 <body>
+    <div id="root"></div>
 
-    <div id="loading">
-        <div class="spinner"></div>
-        <div class="version">CALIBRATING PREDICTIVE PULSAR v3.1...</div>
-    </div>
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+        const Q_FILL = { leading:"#22c55e", weakening:"#f59e0b", lagging:"#ef4444", improving:"#60a5fa" };
+        const CW=400, CH=400, P=40;
 
-    <nav class="nav">
-        <div style="font-weight: 900; color: #fff; font-size: 14px; letter-spacing: -0.5px;">NEURAL<span style="color:var(--accent)">RADAR</span></div>
-        <div class="nav-links">
-            <a href="index.html" class="nav-link">Dashboard</a>
-            <a href="stock_rotation.html" class="nav-link active">Rotation</a>
-            <a href="industries.html" class="nav-link">Industries</a>
-            <a href="stages.html" class="nav-link">Stages</a>
-            <a href="quick_scan.html" class="nav-link">Scan</a>
-        </div>
-        <div id="syncTime" style="font-size: 10px; color: var(--text-dim); font-family: 'DM Mono';">SYNC: --:--</div>
-    </nav>
-
-    <div class="dashboard-layout">
-        <aside class="sidebar">
-            <div class="filter-section">
-                <div class="filter-title"><span>RS RANGE</span> <span id="rsRangeVal">80-100</span></div>
-                <div class="slider-group">
-                    <input type="range" id="rsMin" min="0" max="99" value="80">
-                    <div style="height: 10px;"></div>
-                    <input type="range" id="rsMax" min="0" max="100" value="100">
-                </div>
+        function TickerBanner({ stocks }) {
+          return (
+            <div style={{height:30, background:"rgba(0,0,0,0.3)", borderTop:"1px solid var(--border)", borderBottom:"1px solid var(--border)", display:"flex", alignItems:"center", overflow:"hidden", marginBottom:15}}>
+              <div style={{display:"flex", whiteSpace:"nowrap", animation:"scroll 50s linear infinite"}}>
+                {[...stocks, ...stocks].map((s,i) => (
+                  <span key={i} style={{paddingRight:30, fontSize:10, fontWeight:700, fontFamily: "var(--mono)", color: s.color}}>
+                    {s.ticker} <span style={{color:"#475569"}}>{s.rs}</span>
+                  </span>
+                ))}
+              </div>
+              <style>{`@keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }`}</style>
             </div>
-
-            <div class="filter-section">
-                <div class="filter-title">PREDICTIVE SCREENS</div>
-                <div class="toggle-group">
-                    <button class="toggle-btn" id="btnMinervini"><span>Minervini Stage 2</span> <div class="toggle-indicator"></div></button>
-                    <button class="toggle-btn" id="btnLeader"><span>Leader (RS80 + Up)</span> <div class="toggle-indicator"></div></button>
-                    <button class="toggle-btn" id="btnAcceleration"><span>High Velocity Only</span> <div class="toggle-indicator"></div></button>
-                </div>
-            </div>
-
-            <div class="filter-section">
-                <div class="filter-title">SECTOR ALPHA</div>
-                <div id="sectorFilters" style="display: flex; flex-wrap: wrap;"></div>
-            </div>
-            
-            <div id="statCount" style="font-size: 10px; color: var(--text-dim); margin-top: 40px; padding: 10px; border-top: 1px solid var(--border);">
-                RADAR DEPTH: --
-            </div>
-        </aside>
-
-        <main class="main-content">
-            <div class="card">
-                <div class="banner" id="tickerBanner"></div>
-                <div class="chart-container" id="chartContainer">
-                    <svg id="rrgSvg" width="100%" height="100%"></svg>
-                </div>
-                <div class="panel-grid" id="panelGrid">
-                    <div class="mini-card" id="velocityPanel"></div>
-                    <div class="mini-card" id="vortexPanel"></div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <script>
-        const Q_COLORS = { leading: '#22c55e', improving: '#60a5fa', weakening: '#f59e0b', lagging: '#ef4444' };
-        let allData = [];
-        let history = {};
-        let config = { minRS: 80, maxRS: 100, minervini: false, leader: false, accel: false, sector: null };
-
-        // Configuration
-        const CW = 800, CH = 600, P = 60;
-        const weights = [0.35, 0.25, 0.15, 0.10, 0.05, 0.03, 0.02, 0.02, 0.02, 0.01]; // Decay weights for Exit detection
-
-        async function boot() {
-            try {
-                const ts = Date.now();
-                const [resD, resH] = await Promise.all([
-                    fetch(`web_data.json?v=${ts}`),
-                    fetch(`stock_history.json?v=${ts}`)
-                ]);
-                const webData = await resD.json();
-                history = await resH.json();
-                allData = webData.all_stocks || webData.stocks || [];
-                
-                document.getElementById('syncTime').textContent = `SYNC: ${new Date(webData.last_updated).toLocaleTimeString()}`;
-                document.getElementById('loading').style.display = 'none';
-                
-                initFilters();
-                render();
-            } catch (e) {
-                console.error(e);
-                document.getElementById('loading').innerHTML = `<div class='version'>RADAR OFFLINE</div>`;
-            }
+          );
         }
 
-        function initFilters() {
-            document.getElementById('rsMin').oninput = (e) => { config.minRS = parseInt(e.target.value); updateUI(); };
-            document.getElementById('rsMax').oninput = (e) => { config.maxRS = parseInt(e.target.value); updateUI(); };
-            document.getElementById('btnMinervini').onclick = (e) => { config.minervini = !config.minervini; e.currentTarget.classList.toggle('active'); render(); };
-            document.getElementById('btnLeader').onclick = (e) => { config.leader = !config.leader; e.currentTarget.classList.toggle('active'); render(); };
-            document.getElementById('btnAcceleration').onclick = (e) => { config.accel = !config.accel; e.currentTarget.classList.toggle('active'); render(); };
-            
-            const sectors = [...new Set(allData.map(s => s.sector))].filter(s => s && s!=='unknown').slice(0, 8);
-            const sFilters = document.getElementById('sectorFilters');
-            sectors.forEach(s => {
-                const btn = document.createElement('button');
-                btn.className = 'sector-btn';
-                btn.textContent = s;
-                btn.onclick = () => {
-                    config.sector = (config.sector === s) ? null : s;
-                    Array.from(sFilters.children).forEach(b => b.classList.toggle('active', b.textContent === config.sector));
-                    render();
-                };
-                sFilters.appendChild(btn);
+        function RRGChart({ stocks, medX, medY, minX, maxX, minY, maxY }) {
+          const px = v => P + ((v - minX) / (maxX - minX || 1)) * (CW - P*2);
+          const py = v => (CH - P) - ((v - minY) / (maxY - minY || 1)) * (CH - P*2);
+          const MX=px(medX), MY=py(medY);
+
+          return (
+            <svg viewBox={"0 0 "+CW+" "+CH} width="100%" style={{display:"block"}}>
+              <defs>
+                {stocks.map(s => (
+                  <marker key={"m"+s.ticker} id={"m"+s.ticker} markerWidth="10" markerHeight="5" refX="9" refY="2.5" orient="auto">
+                    <polygon points="0 0.6,9 2.5,0 4.4" fill={s.color}/>
+                  </marker>
+                ))}
+              </defs>
+              <rect x={P} y={P} width={MX-P} height={MY-P} fill="rgba(96,165,250,0.05)"/><rect x={MX} y={P} width={CW-P-MX} height={MY-P} fill="rgba(34,197,94,0.05)"/><rect x={P} y={MY} width={MX-P} height={CH-P-MY} fill="rgba(239,68,68,0.05)"/><rect x={MX} y={MY} width={CW-P-MX} height={CH-P-MY} fill="rgba(245,158,11,0.05)"/>
+              <line x1={MX} y1={P} x2={MX} y2={CH-P} stroke="#1e293b" strokeWidth="1" strokeDasharray="5,4"/><line x1={P} y1={MY} x2={CW-P} y2={MY} stroke="#1e293b" strokeWidth="1" strokeDasharray="5,4"/>
+              
+              {stocks.map(s => {
+                const curX=px(s.xVal), curY=py(s.mom);
+                const pathPts = (s.path || []).map(p => ({ x: px(p.x), y: py(p.y) }));
+                const polyStr = pathPts.map(p => p.x + "," + p.y).join(" ");
+                const vX = curX - (pathPts[1] ? pathPts[1].x : curX), vY = curY - (pathPts[1] ? pathPts[1].y : curY);
+
+                // Predictive Dash
+                let projStr = `${curX},${curY} `;
+                for(let t=1; t<=4; t++) {
+                     projStr += `${curX + vX*t*0.7},${curY + vY*t*0.7} `;
+                }
+
+                return (
+                  <g key={s.ticker}>
+                    <polyline points={polyStr} fill="none" stroke={s.color} strokeWidth="1.5" strokeOpacity="0.3" strokeLinecap="round" strokeLinejoin="round"/>
+                    <polyline points={projStr} fill="none" stroke={s.color} strokeWidth="2" strokeDasharray="3,2" opacity="0.3" />
+                    {pathPts.slice(0,-1).map((p,i)=>(<circle key={i} cx={p.x} cy={p.y} r="1.5" fill={s.color} opacity={0.1+i*0.1}/>))}
+                    <line x1={curX} y1={curY} x2={curX+vX*1.5} y2={curY+vY*1.5} stroke={s.color} strokeWidth="1.2" markerEnd={"url(#m"+s.ticker+")"}/>
+                    <circle cx={curX} cy={curY} r="10" fill={s.color} stroke="#000" strokeWidth="1"/>
+                    <text x={curX} y={curY+0.4} textAnchor="middle" dominantBaseline="middle" fill="#000" fontSize="7" fontWeight="800" fontFamily="monospace">{s.ticker}</text>
+                  </g>
+                );
+              })}
+            </svg>
+          );
+        }
+
+        function App() {
+          const [allData, setAllData] = useState([]);
+          const [hist, setHist] = useState({});
+          const [minRS, setMinRS] = useState(80);
+          const [filters, setFilters] = useState({ minervini: false, leader: false });
+
+          useEffect(() => {
+            const ts = Date.now();
+            Promise.all([
+                fetch(`web_data.json?v=${ts}`).then(r=>r.json()),
+                fetch(`stock_history.json?v=${ts}`).then(r=>r.json())
+            ]).then(([web, h]) => {
+                setAllData(web.all_stocks || web.stocks || []);
+                setHist(h);
             });
-        }
+          }, []);
 
-        function updateUI() {
-            document.getElementById('rsRangeVal').textContent = `${config.minRS}-${config.maxRS}`;
-            render();
-        }
-
-        function render() {
-            let filtered = allData.filter(s => {
-                const h = history[s.ticker] || [];
-                if (s.rs < config.minRS || s.rs > config.maxRS) return false;
-                if (config.minervini && !s.is_minervini) return false;
-                if (config.leader && (!s.is_up || s.rs < 80)) return false;
-                if (config.sector && s.sector !== config.sector) return false;
+          const processed = useMemo(() => {
+            const filtered = allData.filter(s => {
+                if (s.rs < minRS) return false;
+                if (filters.minervini && !s.is_minervini) return false;
+                if (filters.leader && (!s.is_up || s.rs < 80)) return false;
                 return true;
-            });
+            }).slice(0, 40);
 
-            // 1. Predictive Processing
-            const processed = filtered.map((s, idx) => {
-                const h = (history[s.ticker] || []).slice(0, 20);
-                
-                // --- WEIGHTED MOMENTUM (ROC ADAPTIVE) ---
-                let wMom = 0;
+            return filtered.map(s => {
+                const h = (hist[s.ticker] || []).slice(0, 20);
                 const path = [];
-                for(let i=0; i<10; i++) {
+                const weights = [0.4, 0.3, 0.2, 0.1];
+                let wMom = 0;
+                for(let i=0; i<8; i++) {
                     const r = h[i], r_prev = h[i+7];
                     if (r !== undefined && r_prev !== undefined) {
-                        const m = r - r_prev;
-                        path.push({ x: r, y: m });
-                        if (i < weights.length) wMom += m * weights[i];
+                      const m = r - r_prev;
+                      path.push({ x: s.rs_raw ? Math.log2(r + 1) * 15 : r, y: m });
+                      if (i < 4) wMom += m * weights[i];
                     }
                 }
-                
-                // --- ACCELERATION (2nd Derivative) ---
-                let accX = 0, accY = 0;
-                if (path.length >= 3) {
-                    const v1 = { x: path[0].x - path[1].x, y: path[0].y - path[1].y };
-                    const v2 = { x: path[1].x - path[2].x, y: path[1].y - path[2].y };
-                    accX = v1.x - v2.x;
-                    accY = v1.y - v2.y;
-                }
-
-                const jX = (Math.sin(idx * 43) * 0.8), jY = (Math.cos(idx * 43) * 0.8);
-                const xVal = s.rs_raw ? Math.log2(s.rs_raw + 1) * 15 : s.rs;
-                
-                return { ...s, xVal, mom: wMom * 3, path, jX, jY, accX, accY };
-            }).slice(0, 50);
-
-            if (config.accel) {
-                // Sorting by acceleration for "High Velocity Only"
-            }
-
-            document.getElementById('statCount').textContent = `RADAR DEPTH: ${processed.length}`;
-
-            // 2. Dynamic Scale
-            const medX = getMedian(processed.map(s => s.xVal)) || 50;
-            const medM = getMedian(processed.map(s => s.mom)) || 0;
-            
-            const px = v => P + ((v - (medX-25)) / 50) * (CW - P*2);
-            const py = v => (CH - P) - ((v - (medM-12)) / 24) * (CH - P*2);
-            
-            const MX = px(medX), MY = py(medM);
-
-            const svg = document.getElementById('rrgSvg');
-            svg.setAttribute('viewBox', `0 0 ${CW} ${CH}`);
-            
-            let html = `
-                <defs><filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-                <rect x="${P}" y="${P}" width="${MX-P}" height="${MY-P}" fill="rgba(96,165,250,0.06)" />
-                <rect x="${MX}" y="${P}" width="${CW-P-MX}" height="${MY-P}" fill="rgba(34,197,94,0.06)" />
-                <rect x="${P}" y="${MY}" width="${MX-P}" height="${CH-P-MY}" fill="rgba(239,68,68,0.06)" />
-                <rect x="${MX}" y="${MY}" width="${CW-P-MX}" height="${CH-P-MY}" fill="rgba(245,158,11,0.06)" />
-                <line x1="${MX}" y1="${P}" x2="${MX}" y2="${CH-P}" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="8,4" />
-                <line x1="${P}" y1="${MY}" x2="${CW-P}" y2="${MY}" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="8,4" />
-            `;
-
-            processed.forEach(s => {
-                const q = s.xVal >= medX ? (s.mom >= medM ? 'leading' : 'weakening') : (s.mom >= medM ? 'improving' : 'lagging');
-                const col = Q_COLORS[q];
-                const cx = px(s.xVal) + s.jX*6, cy = py(s.mom) + s.jY*6;
-                const pathPts = (s.path || []).map((p, i) => {
-                    const x = s.rs_raw ? Math.log2(p.x + 1) * 15 : p.x;
-                    return { x: px(x) + s.jX*6, y: py(p.y) + s.jY*6 };
-                });
-                const polyLine = pathPts.map(p => `${p.x},${p.y}`).join(' ');
-
-                // --- PREDICTIVE CURL PROJECTION ---
-                const vX = pathPts[0].x - pathPts[1].x, vY = pathPts[0].y - pathPts[1].y;
-                const projectionCount = 5;
-                let projStr = `${cx},${cy} `;
-                for(let t=1; t<=projectionCount; t++) {
-                    const tx = cx + vX*t*0.6, ty = cy + vY*t*0.6; // Simple velocity dash
-                    projStr += `${tx},${ty} `;
-                }
-
-                html += `
-                    <g opacity="1">
-                        <polyline points="${polyLine}" fill="none" stroke="${col}" stroke-width="12" stroke-opacity="0.04" stroke-linecap="round"/>
-                        <polyline points="${polyLine}" fill="none" stroke="${col}" stroke-width="2" stroke-opacity="0.8" stroke-linecap="round" filter="url(#glow)" />
-                        
-                        <!-- Predictive Dash -->
-                        <polyline points="${projStr}" fill="none" stroke="${col}" stroke-width="2" stroke-dasharray="3,3" opacity="0.4" />
-
-                        <circle cx="${cx}" cy="${cy}" r="11" fill="${col}" stroke="#0a1120" stroke-width="1.2" />
-                        <text x="${cx}" y="${cy+0.4}" text-anchor="middle" dominant-baseline="middle" fill="#04091a" font-size="8" font-weight="900" font-family="monospace">${s.ticker}</text>
-                    </g>
-                `;
+                const xVal = s.rs_raw ? Math.log2(s.rs + 1) * 15 : s.rs;
+                const mom = wMom * 3;
+                const q = s.rs >= 85 ? (mom >= 0 ? "leading" : "weakening") : (mom >= 0 ? "improving" : "lagging");
+                return { ...s, xVal, mom, path, q, color: Q_FILL[q] };
             });
+          }, [allData, hist, minRS, filters]);
 
-            svg.innerHTML = html;
-            renderTicker(processed);
-            renderPanels(processed);
+          const stats = useMemo(() => {
+            const x = processed.map(s=>s.xVal), y = processed.map(s=>s.mom);
+            const medX = x.length ? x.sort((a,b)=>a-b)[Math.floor(x.length/2)] : 50;
+            const medY = y.length ? y.sort((a,b)=>a-b)[Math.floor(y.length/2)] : 0;
+            return {
+                medX, medY,
+                minX: Math.min(...x, medX-10), maxX: Math.max(...x, medX+10),
+                minY: Math.min(...y, medY-5), maxY: Math.max(...y, medY+5)
+            };
+          }, [processed]);
+
+          return (
+            <div style={{minHeight:"100vh", paddingBottom:40}}>
+              <nav className="nav">
+                <div style={{fontWeight: 900, fontSize: 16}}>NEURAL<span style={{color:var(--accent)}}>RADAR</span></div>
+                <div className="nav-links">
+                    <a href="index.html" className="nav-link">Dashboard</a>
+                    <a href="stock_rotation.html" className="nav-link active">Stocks</a>
+                    <a href="rotation.html" className="nav-link">Sectors</a>
+                    <a href="industries.html" className="nav-link">Industries</a>
+                </div>
+              </nav>
+
+              <div style={{padding:"20px 15px"}}>
+                <h1 style={{fontSize:20, fontWeight:700, margin:"0 0 15px 0"}}>Stock Rotation Map</h1>
+                <TickerBanner stocks={processed} />
+                
+                <div style={{background:"#0f172a", border:"1px solid #1e293b", borderRadius:12, padding:"12px", marginBottom:12}}>
+                    <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:15}}>
+                        <div style={{fontSize:11, fontWeight:700, color:"#64748b"}}>MIN RS: <span style={{color:"#fff"}}>{minRS}</span></div>
+                        <input type="range" min="0" max="99" value={minRS} onChange={e=>setMinRS(parseInt(e.target.value))} style={{width:100}}/>
+                    </div>
+                </div>
+
+                <div style={{background:"#0f172a",border:"1px solid #1e293b",borderRadius:12,padding:"13px 12px",marginBottom:10}}>
+                  <div style={{fontSize:13,fontWeight:700,color:"#f1f5f9",marginBottom:10}}>Relative Rotation Graph</div>
+                  <div style={{background:"#0a1120",borderRadius:8,border:"1px solid #1e293b"}}>
+                      <RRGChart stocks={processed} {...stats} />
+                  </div>
+                </div>
+
+                <div style={{background:"#0f172a",border:"1px solid #1e293b",borderRadius:10,padding:"12px 13px"}}>
+                    <div style={{fontSize:12,fontWeight:700,color:"#f1f5f9",marginBottom:8}}>High Pulse Leaderboard</div>
+                    {processed.sort((a,b)=>b.mom-a.mom).slice(0,5).map(s => (
+                        <div key={s.ticker} style={{display:"flex", justifyContent:"space-between", fontSize:11, marginBottom:6}}>
+                            <span style={{color:s.color, fontWeight:700}}>{s.ticker}</span>
+                            <span style={{color:"#64748b"}}>{s.mom.toFixed(2)}v</span>
+                        </div>
+                    ))}
+                </div>
+              </div>
+            </div>
+          );
         }
 
-        const getMedian = a => a.length ? (a.slice().sort((x,y)=>x-y)[Math.floor(a.length/2)]) : 0;
-
-        function renderTicker(stocks) {
-            const list = [...stocks, ...stocks];
-            document.getElementById('tickerBanner').innerHTML = `<div class="banner-scroll">${list.map(s => `<div class="banner-item"><span style="color:#fff">${s.ticker}</span> <span style="color:var(--text-dim);opacity:0.5">${s.rs}</span></div>`).join('')}</div>`;
-        }
-
-        function renderPanels(stocks) {
-            const high = stocks.sort((a,b)=>b.mom-a.mom).slice(0,4);
-            document.getElementById('velocityPanel').innerHTML = `<div class="mini-title">⚡ Neural Velocity</div>` + 
-                high.map(s => `<div class="list-item"><span style="color:#22c55e;font-weight:800">${s.ticker}</span> <span style="color:var(--text-dim)">+${s.mom.toFixed(2)} Pulse</span></div>`).join('');
-            
-            const weakening = stocks.filter(s => s.accY < 0).slice(0,4);
-            document.getElementById('vortexPanel').innerHTML = `<div class="mini-title">↻ Momentum Decay</div>` + 
-                weakening.map(s => `<div class="list-item"><span style="color:#f59e0b;font-weight:800">${s.ticker}</span> <span style="color:var(--text-dim)">Exit Signal</span></div>`).join('');
-        }
-
-        boot();
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
 </body>
 </html>
