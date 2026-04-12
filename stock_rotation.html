@@ -7,14 +7,14 @@
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/recharts/umd/Recharts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/recharts@2.12.7/umd/Recharts.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #04091a; --card: #0a1120; --border: #1e293b; --text: #f1f5f9; --mono: 'DM Mono', monospace; }
         * { box-sizing: border-box; }
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; }
     </style>
 </head>
 <body>
@@ -22,8 +22,20 @@
 
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
-        const Lib = window.Recharts || window._Recharts;
-        const { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine, Cell } = Lib;
+        
+        // v2.6 Fix: Robust namespace resolution for Recharts
+        const getLib = () => {
+             if (window.Recharts) return window.Recharts;
+             if (window._Recharts) return window._Recharts;
+             if (window.LineChart) return window; // Recharts sometimes dumps to global
+             return null;
+        };
+
+        const Lib = getLib();
+        if (!Lib) {
+            document.body.innerHTML = '<div style="color:white;padding:100px;text-align:center;"><h3>Fatal Error: Recharts components not found in global scope.</h3><p>Ensure Recharts.min.js loaded correctly.</p></div>';
+            throw new Error("Library Resolution Failure");
+        }
 
         const Q_FILL = { leading: "#22c55e", weakening: "#f59e0b", lagging: "#ef4444", improving: "#60a5fa" };
         const CW = 520, CH = 440, P = 48;
@@ -60,8 +72,7 @@
             stocks.forEach(s => {
                 const h = s.trail || []; if (h.length < 2) return;
                 const prev = h[h.length-1];
-                const dx = s.rs - prev.x, dy = s.momentum - prev.y;
-                const tx = s.rs + dx*1.5, ty = s.momentum + dy*1.5;
+                const tx = s.rs + (s.rs-prev.x)*1.5, ty = s.momentum + (s.momentum-prev.y)*1.5;
                 const tq = tx>=85 ? (ty>=0?"leading":"weakening") : (ty>=0?"improving":"lagging");
                 counts[tq]++;
             });
@@ -93,7 +104,7 @@
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                             <div style={{ width: 8, height: 8, borderRadius: "50%", background: Q_FILL[s.quadrant] }} />
-                            <span style={{ fontSize: 11, fontWeight: 700, color: "#f1f5f9", textTransform: "uppercase" }}>Symbol Spotlight</span>
+                            <span style={{ fontSize: 11, fontWeight: 700, color: "#f1f5f9", textTransform: "uppercase" }}>Spotlight</span>
                         </div>
                         <div style={{ display: "flex", gap: 5 }}>
                             <button onClick={() => setIdx(v => (v - 1 + stocks.length) % stocks.length)} style={{ background: "#0f172a", border: "1px solid #1e293b", color: "#64748b", borderRadius: 4, padding: "2px 8px", cursor: "pointer" }}>‹</button>
@@ -103,8 +114,8 @@
                     <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
                         <div style={{ fontSize: 24, fontWeight: 900, color: "#fff" }}>{s.ticker}</div>
                         <div style={{ flex: 1 }}>
-                            <div style={{ fontSize: 13, fontWeight: 700, color: Q_FILL[s.quadrant] }}>{s.rs} RS • {s.momentum > 0 ? "+" : ""}{s.momentum.toFixed(1)} Momentum</div>
-                            <div style={{ fontSize: 10, color: "#64748b" }}>{s.name} • {s.sector}</div>
+                            <div style={{ fontSize: 13, fontWeight: 700, color: Q_FILL[s.quadrant] }}>{s.rs} RS • {s.momentum > 0 ? "+" : ""}{s.momentum.toFixed(1)}m</div>
+                            <div style={{ fontSize: 10, color: "#64748b" }}>{s.sector}</div>
                         </div>
                         <div style={{ textAlign: "right" }}>
                             <div style={{ fontSize: 12, fontWeight: 800 }}>Streak: {s.streak}d</div>
@@ -196,7 +207,7 @@
 
         function SignalPanel({ stocks, onHover }) {
             const leaders = stocks.filter(s=>s.quadrant==='leading').slice(0,4);
-            const vortex = stocks.filter(s=>trailCurvature([...(s.trail||[]),{x:s.rs,y:s.momentum}])>26).slice(0,4);
+            const vortex = stocks.filter(s=>trailCurvature([...(s.trail||[]),{x:s.rs,y:s.momentum}])>26).sort((a,b)=>trailCurvature([...(b.trail||[]),{x:b.rs,y:b.momentum}]) - trailCurvature([...(a.trail||[]),{x:a.rs,y:a.momentum}])).slice(0,4);
             return (
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 10 }}>
                     <div style={{ background: "#0a1120", border: "1px solid #1e293b", borderRadius: 8, padding: "10px 12px" }}>
@@ -205,7 +216,7 @@
                     </div>
                     <div style={{ background: "#0a1120", border: "1px solid #1e293b", borderRadius: 8, padding: "10px 12px" }}>
                         <div style={{ fontSize: 9, color: "#475569", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 6 }}>↻ Vortex Signals</div>
-                        {vortex.map(s=>(<div key={s.ticker} style={{ display:"flex", alignItems:"center", gap:6, marginBottom:4 }} onMouseEnter={()=>onHover(s.ticker)} onMouseLeave={()=>onHover(null)}><div style={{ width:7, height:7, borderRadius:"50%", background:"#f59e0b" }} /><span style={{ fontSize:10, color:"#f59e0b", fontWeight:700 }}>{s.ticker}</span><span style={{ fontSize:9, color:"#475569" }}>Trend Reversal</span></div>))}
+                        {vortex.map(s=>(<div key={s.ticker} style={{ display:"flex", alignItems:"center", gap:6, marginBottom:4 }} onMouseEnter={()=>onHover(s.ticker)} onMouseLeave={()=>onHover(null)}><div style={{ width:7, height:7, borderRadius:"50%", background:"#f59e0b" }} /><span style={{ fontSize:10, color:"#f59e0b", fontWeight:700 }}>{s.ticker}</span><span style={{ fontSize:9, color:"#475569" }}>Reversal Setup</span></div>))}
                     </div>
                 </div>
             )
@@ -222,7 +233,8 @@
                         const [resMain, resHistory] = await Promise.all([fetch('web_data.json'), fetch('stock_history.json')]);
                         const webData = await resMain.json();
                         const history = await resHistory.json();
-                        const processed = (webData.all_stocks || []).slice(0, 40).map(s => {
+                        const raw = webData.all_stocks || webData.stocks || [];
+                        const processed = raw.slice(0, 40).map(s => {
                             const h = history[s.ticker] || [];
                             const curRS = h[0] !== undefined ? h[0] : s.rs;
                             const prevRS = h[7] !== undefined ? h[7] : (s.rs_1w_pct || s.rs);
@@ -234,20 +246,24 @@
                                 let tQ = tR >= 85 ? (tM >= 0 ? "leading" : "weakening") : (tM >= 0 ? "improving" : "lagging");
                                 if (tQ === quadrant) streak++; else break;
                             }
-                            const trail = h.slice(0, 9).reverse().map((v, idx) => {
-                                const realIdx = 8 - idx;
-                                const pV = h[realIdx + 7] !== undefined ? h[realIdx + 7] : v;
-                                return { x: v, y: v - pV };
+                            // Trail logic: sync indices with data lookback
+                            const trail = h.slice(0, 10).reverse().map((v, idx) => {
+                                 const revIdx = 9-idx; 
+                                 const pV = h[revIdx+1] !== undefined ? h[revIdx+1] : v;
+                                 return { x: v, y: v - pV };
                             });
                             return { ...s, rs: curRS, momentum, quadrant, streak, trail };
                         });
                         setData(processed); setLoading(false);
-                    } catch (e) { console.error(e); setLoading(false); }
+                    } catch (e) { 
+                        console.error("Dashboard Load Error:", e); 
+                        setLoading(false); 
+                    }
                 };
                 load();
             }, []);
 
-            if (loading) return <div style={{ color: "#fff", textAlign: "center", padding: 100, fontFamily: "monospace", fontSize: 13 }}>ENGINE STARTING v2.5...</div>;
+            if (loading) return <div style={{ color: "#fff", textAlign: "center", padding: 100, fontFamily: "monospace", fontSize: 13 }}>INITIALIZING RADAR v2.6...</div>;
             const promising = data.filter(s => s.quadrant === 'leading' || s.quadrant === 'improving').sort((a,b) => b.rs - a.rs);
 
             return (
@@ -255,15 +271,15 @@
                     <div style={{ marginBottom: 18 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
                             <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#00e5ff", boxShadow: "0 0 7px #00e5ff" }} />
-                            <span style={{ fontSize: 10, color: "#00e5ff", letterSpacing: "0.2em" }}>STOCK ROTATION REAL-TIME • ENGINEERING FIDELITY</span>
+                            <span style={{ fontSize: 10, color: "#00e5ff", letterSpacing: "0.2em" }}>STOCK ROTATION ANALYSIS v2.6</span>
                         </div>
-                        <h1 style={{ margin: 0, fontSize: 20, fontWeight: 900, color: "#f1f5f9" }}>Relative Strength Rotation</h1>
+                        <h1 style={{ margin: 0, fontSize: 19, fontWeight: 900, color: "#f1f5f9" }}>Relative Strength Rotation</h1>
                     </div>
                     
                     <TickerBanner stocks={promising} />
 
-                    <div className="card" style={{ padding: "14px" }}>
-                        <div style={{ background: "#0a1120", borderRadius: 8, border: "1px solid #1e293b" }}>
+                    <div className="card">
+                        <div style={{ background: "#0a1120", borderRadius: 8, border: "1px solid #1e293b", position: "relative" }}>
                             <RRGChart stocks={data.slice(0, 30)} highlightTicker={hovered} />
                         </div>
                         <SignalPanel stocks={data} onHover={setHovered} />
