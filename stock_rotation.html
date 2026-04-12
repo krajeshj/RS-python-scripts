@@ -148,16 +148,17 @@
         } = Lib;
 
         const Q_FILL = { leading: "#22c55e", weakening: "#f59e0b", lagging: "#ef4444", improving: "#60a5fa" };
+        const Q_COLORS = { leading: "#22c55e", weakening: "#f59e0b", lagging: "#ef4444", improving: "#60a5fa" };
 
         function TickerBanner({ stocks }) {
-            const items = [...stocks, ...stocks]; // Duplicate for seamless scroll
+            const items = [...stocks, ...stocks]; 
             return (
                 <div style={{
                     background:"#040a14", borderBottom:"1px solid #1e293b", borderTop:"1px solid #1e293b",
-                    overflow:"hidden", height:32, display:"flex", alignItems:"center", marginBottom:14, position:"relative",
+                    overflow:"hidden", height:36, display:"flex", alignItems:"center", marginBottom:20, position:"relative",
                 }}>
                     <div style={{
-                        display:"flex", gap:0, animation:`ticker-scroll ${items.length * 3.2}s linear infinite`,
+                        display:"flex", gap:0, animation:`ticker-scroll ${items.length * 3.5}s linear infinite`,
                         whiteSpace:"nowrap", willChange:"transform",
                     }}>
                         <style>{`
@@ -166,70 +167,38 @@
                                 100% { transform: translateX(-50%); }
                             }
                         `}</style>
-                        {items.map((item, i) => {
-                            const qColor = item.quadrant === "leading" ? "#22c55e" : "#60a5fa";
-                            return (
-                                <span key={i} style={{ display:"inline-flex", alignItems:"center", gap:6, paddingRight:28, fontSize:10.5, fontFamily:"'DM Mono', monospace"}}>
-                                    <span style={{ color:qColor, fontWeight:700 }}>{item.ticker}</span>
-                                    <span style={{ color:"#f1f5f9" }}>{item.rs} RS</span>
-                                    <span style={{ color:"#22c55e" }}>+{item.momentum.toFixed(1)}</span>
-                                    <span style={{ color:"#1e293b", paddingLeft:8 }}>│</span>
-                                </span>
-                            );
-                        })}
+                        {items.map((item, i) => (
+                            <span key={i} style={{ display:"inline-flex", alignItems:"center", gap:8, paddingRight:32, fontSize:12, fontFamily:"var(--mono)"}}>
+                                <span style={{ color:Q_COLORS[item.quadrant], fontWeight:700 }}>{item.ticker}</span>
+                                <span style={{ color:"#f1f5f9" }}>RS {item.rs}</span>
+                                <span style={{ color:"#22c55e" }}>+{item.momentum.toFixed(1)}</span>
+                                <span style={{ color:"#1e293b", paddingLeft:10 }}>│</span>
+                            </span>
+                        ))}
                     </div>
                 </div>
             );
         }
 
-        function StockRRG({ data }) {
+        function QuadrantList({ title, color, stocks, icon }) {
             return (
-                <div style={{ background: "#0f172a", borderRadius: 12, border: "1px solid #1e293b", padding: 12 }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "#f1f5f9", marginBottom: 12 }}>Relative Rotation Graph (Stocks)</div>
-                    <div style={{ height: 400, position: "relative" }}>
-                        <ResponsiveContainer width="100%" height="100%">
-                            <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                                <XAxis type="number" dataKey="rs" name="RS" domain={[50, 100]} stroke="#64748b" />
-                                <YAxis type="number" dataKey="momentum" name="Momentum" stroke="#64748b" />
-                                <ZAxis range={[50, 400]} />
-                                <Tooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b' }} />
-                                <ReferenceLine x={80} stroke="#475569" strokeDasharray="3 3" />
-                                <ReferenceLine y={0} stroke="#475569" strokeDasharray="3 3" />
-                                <Scatter name="Stocks" data={data}>
-                                    {data.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={Q_FILL[entry.quadrant]} />
-                                    ))}
-                                </Scatter>
-                            </ScatterChart>
-                        </ResponsiveContainer>
-                        {/* Quadrant Labels */}
-                        <div style={{ position: "absolute", top: 30, right: 30, color: "#22c55e", fontSize: 10, fontWeight: 700, opacity: 0.6 }}>LEADING</div>
-                        <div style={{ position: "absolute", top: 30, left: 70, color: "#60a5fa", fontSize: 10, fontWeight: 700, opacity: 0.6 }}>IMPROVING</div>
-                        <div style={{ position: "absolute", bottom: 60, left: 70, color: "#ef4444", fontSize: 10, fontWeight: 700, opacity: 0.6 }}>LAGGING</div>
-                        <div style={{ position: "absolute", bottom: 60, right: 30, color: "#f59e0b", fontSize: 10, fontWeight: 700, opacity: 0.6 }}>WEAKENING</div>
+                <div style={{ background: "rgba(10, 17, 32, 0.6)", border: `1px solid ${color}33`, borderRadius: 12, padding: 16, backdropFilter: "blur(10px)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                        <span style={{ fontSize: 18 }}>{icon}</span>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: "#f1f5f9", textTransform: "uppercase", letterSpacing: "0.05em" }}>{title}</span>
+                        <span style={{ fontSize: 10, color: "#64748b", marginLeft: "auto" }}>Top 5</span>
                     </div>
-                </div>
-            );
-        }
-
-        function QuadrantList({ title, color, stocks }) {
-            return (
-                <div style={{ background: "#0a1120", border: `1px solid ${color}44`, borderRadius: 10, padding: 12 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                        <div style={{ width: 8, height: 8, borderRadius: "50%", background: color }} />
-                        <span style={{ fontSize: 11, fontWeight: 700, color: "#f1f5f9", textTransform: "uppercase" }}>{title}</span>
-                    </div>
+                    {stocks.length === 0 && <div style={{ fontSize: 11, color: "#475569", textAlign: "center", py: 10 }}>No assets in quadrant</div>}
                     {stocks.map(s => (
-                        <div key={s.ticker} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
+                        <div key={s.ticker} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
                             <div>
-                                <span style={{ fontWeight: 800, fontSize: 12 }}>{s.ticker}</span>
-                                <div style={{ fontSize: 9, color: "#64748b" }}>{s.name.substring(0, 20)}...</div>
+                                <span style={{ fontWeight: 800, fontSize: 13, color: "#fff" }}>{s.ticker}</span>
+                                <div style={{ fontSize: 10, color: "#94a3b8" }}>{s.name.substring(0, 18)}</div>
                             </div>
                             <div style={{ textAlign: "right" }}>
-                                <div style={{ fontSize: 11, fontWeight: 700 }}>{s.rs} RS</div>
-                                <div style={{ fontSize: 9, color: s.momentum >= 0 ? "#22c55e" : "#ef4444" }}>
-                                    {s.momentum >= 0 ? "+" : ""}{s.momentum.toFixed(1)}
+                                <div style={{ fontSize: 12, fontWeight: 700 }}>{s.rs} RS</div>
+                                <div style={{ fontSize: 10, color: s.momentum >= 0 ? "#22c55e" : "#ef4444" }}>
+                                    {s.momentum > 0 ? "+" : ""}{s.momentum.toFixed(1)}
                                 </div>
                             </div>
                         </div>
@@ -243,27 +212,66 @@
             const [loading, setLoading] = useState(true);
 
             useEffect(() => {
-                fetch('web_data.json')
-                    .then(res => res.json())
-                    .then(json => {
-                        const processed = json.stocks.map(s => {
-                            const momentum = s.rs - (s.rs_1w_pct || s.rs);
+                const loadData = async () => {
+                    try {
+                        const [resMain, resHistory] = await Promise.all([
+                            fetch('web_data.json'),
+                            fetch('stock_history.json')
+                        ]);
+                        const webData = await resMain.json();
+                        const historyData = await resHistory.json();
+                        
+                        const MOMENTUM_LOOKBACK = 7; // 1.5 weeks (7 trading days)
+
+                        // All stocks (AI Screened)
+                        const allCandidates = webData.all_stocks || [];
+                        
+                        const processed = allCandidates.map(s => {
+                            const h = historyData[s.ticker] || [];
+                            const curRS = h[0] !== undefined ? h[0] : s.rs;
+                            const prevRS = h[MOMENTUM_LOOKBACK] !== undefined ? h[MOMENTUM_LOOKBACK] : (s.rs_1w_pct || s.rs);
+                            const momentum = curRS - prevRS;
+
                             let quadrant = "lagging";
-                            if (s.rs >= 85) {
-                                quadrant = momentum >= 0 ? "leading" : "weakening";
-                            } else {
-                                quadrant = momentum >= 0 ? "improving" : "lagging";
-                            }
-                            return { ...s, momentum, quadrant };
+                            if (curRS >= 85) quadrant = momentum >= 0 ? "leading" : "weakening";
+                            else quadrant = momentum >= 0 ? "improving" : "lagging";
+
+                            // Generate tail (trail)
+                            const trail = h.slice(0, 8).reverse().map((rsVal, idx) => {
+                                // For each point in tail, calculate its own historical momentum for Y axis
+                                // This makes the "worm" rotate correctly
+                                const dayInPast = 7 - idx; 
+                                const histPrevRS = h[dayInPast + MOMENTUM_LOOKBACK] !== undefined ? h[dayInPast + MOMENTUM_LOOKBACK] : rsVal;
+                                return {
+                                    x: rsVal,
+                                    y: rsVal - histPrevRS,
+                                    opacity: (idx + 1) / 8
+                                };
+                            });
+
+                            return { ...s, rs: curRS, momentum, quadrant, trail };
                         });
+
                         setData(processed);
                         setLoading(false);
-                    })
-                    .catch(err => console.error(err));
+                    } catch (err) {
+                        console.error("Data load error:", err);
+                        setLoading(false);
+                    }
+                };
+                loadData();
             }, []);
 
-            if (loading) return <div style={{ textAlign: "center", padding: 50 }}>Loading...</div>;
+            if (loading) return (
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "60vh", gap: 20 }}>
+                    <div className="logo-icon" style={{ animation: "pulse 2s infinite" }}>💹</div>
+                    <div style={{ color: "var(--text2)", fontSize: "1.1rem", letterSpacing: "0.1em" }}>ANALYZING MARKET ROTATION...</div>
+                    <style>{`@keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }`}</style>
+                </div>
+            );
 
+            const filteredData = data.slice(0, 50);
+            
             const quadrants = {
                 leading: data.filter(s => s.quadrant === "leading").sort((a,b) => b.rs - a.rs).slice(0, 5),
                 improving: data.filter(s => s.quadrant === "improving").sort((a,b) => b.momentum - a.momentum).slice(0, 5),
@@ -274,24 +282,118 @@
             const promising = [...quadrants.leading, ...quadrants.improving].sort((a,b) => b.rs - a.rs);
 
             return (
-                <div style={{ background: "#070d1a", minHeight: "100vh", color: "#e2e8f0", padding: "20px 15px" }}>
-                    <div style={{ marginBottom: 18 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
-                            <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#a29bfe", boxShadow: "0 0 7px #a29bfe" }} />
-                            <span style={{ fontSize: 10, color: "#a29bfe", letterSpacing: "0.2em", textTransform: "uppercase" }}>Real-time Visualization</span>
-                        </div>
-                        <h1 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#f1f5f9" }}>Individual Stock Rotation</h1>
-                    </div>
-                    
+                <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 1.5rem" }}>
                     <TickerBanner stocks={promising} />
-                    
-                    <StockRRG data={data.slice(0, 50)} />
-                    
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 16 }}>
-                        <QuadrantList title="Leading" color={Q_FILL.leading} stocks={quadrants.leading} />
-                        <QuadrantList title="Improving" color={Q_FILL.improving} stocks={quadrants.improving} />
-                        <QuadrantList title="Weakening" color={Q_FILL.weakening} stocks={quadrants.weakening} />
-                        <QuadrantList title="Lagging" color={Q_FILL.lagging} stocks={quadrants.lagging} />
+
+                    <div style={{ marginBottom: 32 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 20 }}>
+                            <div>
+                                <h2 style={{ fontSize: "1.5rem", fontWeight: 700, margin: 0 }}>Market Dynamics</h2>
+                                <p style={{ color: "var(--text2)", fontSize: "0.9rem", margin: "4px 0 0 0" }}>Relative Strength vs 1.5-Week Momentum</p>
+                            </div>
+                            <div style={{ background: "var(--surface)", padding: "8px 16px", borderRadius: 12, border: "1px solid var(--border)", fontSize: "0.8rem" }}>
+                                <span style={{ color: "var(--text2)" }}>Universe: </span>
+                                <span style={{ fontWeight: 600 }}>Top 50 Momentum Stocks</span>
+                            </div>
+                        </div>
+
+                        {/* RRG Chart Container */}
+                        <div style={{ 
+                            background: "linear-gradient(180deg, rgba(16, 24, 48, 0.4) 0%, rgba(8, 12, 24, 0.4) 100%)", 
+                            borderRadius: 24, 
+                            border: "1px solid var(--border)", 
+                            padding: "24px",
+                            height: 500,
+                            position: "relative",
+                            boxShadow: "0 20px 50px rgba(0,0,0,0.3)"
+                        }}>
+                            <ResponsiveContainer width="100%" height="100%">
+                                <ScatterChart margin={{ top: 20, right: 30, bottom: 40, left: 30 }}>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                                    <XAxis 
+                                        type="number" 
+                                        dataKey="rs" 
+                                        name="RS" 
+                                        domain={[60, 100]} 
+                                        stroke="#475569" 
+                                        fontSize={11}
+                                        label={{ value: "RELATIVE STRENGTH ➔", position: "bottom", offset: 20, fill: "#64748b", fontSize: 10, fontWeight: 700 }}
+                                    />
+                                    <YAxis 
+                                        type="number" 
+                                        dataKey="momentum" 
+                                        name="Momentum" 
+                                        domain={[-10, 10]} 
+                                        stroke="#475569" 
+                                        fontSize={11}
+                                        label={{ value: "MOMENTUM ➔", angle: -90, position: "left", offset: 10, fill: "#64748b", fontSize: 10, fontWeight: 700 }}
+                                    />
+                                    <ZAxis range={[100, 500]} />
+                                    <Tooltip 
+                                        cursor={{ strokeDasharray: '3 3', stroke: "#334155" }}
+                                        content={({ active, payload }) => {
+                                            if (active && payload && payload.length) {
+                                                const s = payload[0].payload;
+                                                return (
+                                                    <div style={{ background: "#0f172a", border: "1px solid #1e293b", padding: "12px", borderRadius: 8, boxShadow: "0 10px 25px rgba(0,0,0,0.5)" }}>
+                                                        <div style={{ fontWeight: 800, fontSize: 14, color: "#fff" }}>{s.ticker}</div>
+                                                        <div style={{ fontSize: 11, color: "#94a3b8", marginBottom: 6 }}>{s.name}</div>
+                                                        <div style={{ display: "flex", gap: 12, fontSize: 12 }}>
+                                                            <span>RS: <b>{s.rs}</b></span>
+                                                            <span style={{ color: s.momentum >= 0 ? "#22c55e" : "#ef4444" }}>Mom: <b>{s.momentum.toFixed(2)}</b></span>
+                                                        </div>
+                                                        <div style={{ marginTop: 4, fontSize: 10, textTransform: "uppercase", color: Q_COLORS[s.quadrant], fontWeight: 700 }}>
+                                                            {s.quadrant} Quadrant
+                                                        </div>
+                                                    </div>
+                                                );
+                                            }
+                                            return null;
+                                        }}
+                                    />
+                                    <ReferenceLine x={85} stroke="rgba(255,255,255,0.1)" strokeWidth={2} />
+                                    <ReferenceLine y={0} stroke="rgba(255,255,255,0.1)" strokeWidth={2} />
+
+                                    {/* Trail Paths for top 15 stocks */}
+                                    {filteredData.slice(0, 15).map((s, idx) => (
+                                        s.trail && s.trail.length > 1 && s.trail.map((p, pi) => pi > 0 && (
+                                            <ReferenceLine 
+                                                key={`t-${idx}-${pi}`} 
+                                                segment={[{x: s.trail[pi-1].x, y: s.trail[pi-1].y}, {x: p.x, y: p.y}]}
+                                                stroke={Q_COLORS[s.quadrant]}
+                                                strokeWidth={2.5}
+                                                strokeOpacity={p.opacity * 0.4}
+                                            />
+                                        ))
+                                    ))}
+
+                                    <Scatter name="Stocks" data={filteredData}>
+                                        {filteredData.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={Q_FILL[entry.quadrant]} stroke="rgba(255,255,255,0.1)" strokeWidth={1} />
+                                        ))}
+                                    </Scatter>
+                                </ScatterChart>
+                            </ResponsiveContainer>
+                            
+                            {/* Overlay Labels */}
+                            <div style={{ position: "absolute", top: 40, right: 40, color: "#22c55e", fontSize: 10, fontWeight: 900, opacity: 0.4, letterSpacing: "0.3em" }}>LEADING</div>
+                            <div style={{ position: "absolute", top: 40, left: 60, color: "#60a5fa", fontSize: 10, fontWeight: 900, opacity: 0.4, letterSpacing: "0.3em" }}>IMPROVING</div>
+                            <div style={{ position: "absolute", bottom: 80, left: 60, color: "#ef4444", fontSize: 10, fontWeight: 900, opacity: 0.4, letterSpacing: "0.3em" }}>LAGGING</div>
+                            <div style={{ position: "absolute", bottom: 80, right: 40, color: "#f59e0b", fontSize: 10, fontWeight: 900, opacity: 0.4, letterSpacing: "0.3em" }}>WEAKENING</div>
+                        </div>
+                    </div>
+
+                    {/* Quadrant Detail Grid */}
+                    <div style={{ 
+                        display: "grid", 
+                        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", 
+                        gap: 16, 
+                        marginBottom: 40 
+                    }}>
+                        <QuadrantList title="Leading" color={Q_COLORS.leading} stocks={quadrants.leading} icon="🚀" />
+                        <QuadrantList title="Improving" color={Q_COLORS.improving} stocks={quadrants.improving} icon="📈" />
+                        <QuadrantList title="Weakening" color={Q_COLORS.weakening} stocks={quadrants.weakening} icon="⚠️" />
+                        <QuadrantList title="Lagging" color={Q_COLORS.lagging} stocks={quadrants.lagging} icon="📉" />
                     </div>
                 </div>
             );
