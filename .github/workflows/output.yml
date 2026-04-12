@@ -28,11 +28,12 @@ jobs:
           python -m pip install -r requirements.txt
           python relative-strength.py true false true
           python rs_ranking.py --quick
+          python seed_history.py
 
       - name: commit quick scan results only
         run: |
           git config user.name "GitHub Actions" && git config user.email "actions@github.com"
-          git add --ignore-errors output/quick_web_data.json output/rs_stocks_quick.csv output/rs_industries_quick.csv || true
+          git add --ignore-errors output/quick_web_data.json output/rs_stocks_quick.csv output/rs_industries_quick.csv output/stock_history.json || true
           git commit -m "Quick scan update - $(date)" || echo "No changes to commit"
           git push || echo "Nothing to push"
 
@@ -67,6 +68,7 @@ jobs:
         run: |
           python -m pip install -r requirements.txt
           python relative-strength.py true false true
+          python seed_history.py
 
       - name: commit and push results
         run: |
