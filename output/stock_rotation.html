@@ -4,292 +4,319 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock Rotation | Rajesh's Stock Screener</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/recharts@2.12.7/umd/Recharts.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #04091a; --card: #0a1120; --border: #1e293b; --text: #f1f5f9; --mono: 'DM Mono', monospace; }
+        :root {
+            --bg: #04091a;
+            --card: #0a1120;
+            --border: #1e293b;
+            --text: #f1f5f9;
+            --text-dim: #94a3b8;
+            --accent: #00e5ff;
+            --leading: #22c55e;
+            --improving: #60a5fa;
+            --weakening: #f59e0b;
+            --lagging: #ef4444;
+        }
+
         * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; }
+        .header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; }
+        .title-group h1 { margin: 0; font-size: 22px; font-weight: 900; }
+        .title-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+        .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+        .version { font-size: 10px; color: var(--accent); letter-spacing: 0.15em; font-weight: 700; }
+
+        /* Slider Styles */
+        .controls { display: flex; align-items: center; gap: 15px; background: rgba(30, 41, 59, 0.4); padding: 8px 16px; border-radius: 100px; border: 1px solid var(--border); }
+        .slider-label { font-size: 11px; font-weight: 700; color: var(--text-dim); }
+        input[type="range"] { -webkit-appearance: none; width: 120px; background: #1e293b; height: 4px; border-radius: 2px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; background: var(--accent); border-radius: 50%; cursor: pointer; box-shadow: 0 0 10px var(--accent); }
+
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+        .chart-container { position: relative; background: #070e1d; }
+        
+        /* Ticker Banner */
+        .banner { height: 32px; background: #040a14; border-bottom: 1px solid var(--border); display: flex; align-items: center; overflow: hidden; position: relative; }
+        .banner-scroll { display: flex; white-space: nowrap; animation: scroll 50s linear infinite; }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .banner-item { padding-right: 30px; font-size: 11px; font-family: 'DM Mono', monospace; font-weight: 700; }
+
+        /* Panels */
+        .panel-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
+        .mini-card { background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+        .mini-title { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+        .signal-item { display: flex; align-items: center; gap: 8px; font-size: 11px; margin-bottom: 5px; cursor: pointer; }
+        .signal-ticker { font-weight: 800; min-width: 35px; }
+
+        /* Spotlight */
+        .spotlight { margin: 15px; padding: 15px; background: rgba(0, 229, 255, 0.03); border: 1px dashed rgba(0, 229, 255, 0.2); border-radius: 12px; }
+        
+        #loading { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; gap: 15px; }
+        .spinner { width: 30px; height: 30px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
-    <div id="root"></div>
 
-    <script type="text/babel">
-        /** 
-         * DASHBOARD ENGINE v2.7 PRO
-         * MISSION: ZERO-FAIL INITIALIZATION
-         */
-        const { useState, useEffect, useRef } = React;
+    <div id="loading">
+        <div class="spinner"></div>
+        <div class="version">INITIALIZING NEURAL RADAR v2.9...</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="title-group">
+                <div class="title-meta">
+                    <div class="dot"></div>
+                    <div class="version">ABSOLUTE ZERO ENGINE v2.9 PRO</div>
+                </div>
+                <h1>Stock Rotation</h1>
+            </div>
+            <div class="controls">
+                <div class="slider-label">MIN RS</div>
+                <input type="range" id="rsSlider" min="0" max="99" value="80">
+                <div id="rsVal" style="font-size: 11px; font-weight: 900; color: var(--accent); min-width: 20px;">80</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="banner" id="tickerBanner"></div>
+            <div class="chart-container" id="chartContainer">
+                <svg id="rrgSvg" width="100%" height="100%"></svg>
+            </div>
+            <div class="panel-row">
+                <div class="mini-card" id="velocityPanel"></div>
+                <div class="mini-card" id="vortexPanel"></div>
+            </div>
+            <div class="spotlight" id="spotlightContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const Q_COLORS = { leading: '#22c55e', improving: '#60a5fa', weakening: '#f59e0b', lagging: '#ef4444' };
+        let allData = [];
+        let history = {};
         
-        // Defensive component resolution
-        const Lib = window.Recharts || window._Recharts || window;
-        const LC = Lib.LineChart || window.LineChart;
-        const Resp = Lib.ResponsiveContainer || window.ResponsiveContainer;
+        // Configuration
+        const CW = 600, CH = 480, P = 50;
 
-        const Q_FILL = { leading: "#22c55e", weakening: "#f59e0b", lagging: "#ef4444", improving: "#60a5fa" };
-        const CW = 520, CH = 440, P = 48;
-        
-        const X_MIN = 30, X_MAX = 100, X_MID = 85;
-        const Y_MIN = -12, Y_MAX = 12, Y_MID = 0;
-        const DRX = X_MAX - X_MIN, DRY = Y_MAX - Y_MIN;
+        async function init() {
+            try {
+                const ts = Date.now();
+                const [resD, resH] = await Promise.all([
+                    fetch(`web_data.json?v=${ts}`),
+                    fetch(`stock_history.json?v=${ts}`)
+                ]);
+                const webData = await resD.json();
+                history = await resH.json();
+                allData = webData.all_stocks || webData.stocks || [];
+                
+                document.getElementById('loading').style.display = 'none';
+                
+                const slider = document.getElementById('rsSlider');
+                slider.addEventListener('input', (e) => {
+                    document.getElementById('rsVal').textContent = e.target.value;
+                    render();
+                });
 
-        const px = v => P + ((Math.max(X_MIN, Math.min(X_MAX, v)) - X_MIN) / DRX) * (CW - P * 2);
-        const py = v => (CH - P) - ((Math.max(Y_MIN, Math.min(Y_MAX, v)) - Y_MIN) / DRY) * (CH - P * 2);
-
-        function trailCurvature(allPts) {
-            if (allPts.length < 3) return 0;
-            const m = Math.floor(allPts.length/2);
-            const v1 = { x: px(allPts[m].x)-px(allPts[0].x), y: py(allPts[m].y)-py(allPts[0].y) };
-            const v2 = { x: px(allPts[allPts.length-1].x)-px(allPts[m].x), y: py(allPts[allPts.length-1].y)-py(allPts[m].y) };
-            const dot = v1.x*v2.x + v1.y*v2.y;
-            const mag = Math.hypot(v1.x,v1.y)*Math.hypot(v2.x,v2.y)||1;
-            return Math.acos(Math.max(-1,Math.min(1,dot/mag)))*180/Math.PI;
-        }
-
-        function axisCrossings(allPts) {
-            const cr = [];
-            for (let i=1; i<allPts.length; i++) {
-                const a=allPts[i-1], b=allPts[i];
-                if ((a.x-X_MID)*(b.x-X_MID)<0) cr.push({x:X_MID, y:a.y+(b.y-a.y)*(X_MID-a.x)/(b.x-a.x)});
-                if ((a.y-Y_MID)*(b.y-Y_MID)<0) cr.push({x:a.x+(b.x-a.x)*(Y_MID-a.y)/(b.y-a.y), y:Y_MID});
+                render();
+            } catch (e) {
+                console.error("Critical Engine Error:", e);
+                document.getElementById('loading').innerHTML = `<div class='version'>FATAL BOOT ERROR</div><div style='font-size:10px;color:#ef4444'>${e.message}</div>`;
             }
-            return cr;
         }
 
-        function getConvergence(stocks) {
-            const counts = { leading: 0, weakening: 0, lagging: 0, improving: 0 };
-            stocks.forEach(s => {
-                const h = s.trail || []; if (h.length < 2) return;
-                const prev = h[h.length-1];
-                const tx = s.rs + (s.rs-prev.x)*1.5, ty = s.momentum + (s.momentum-prev.y)*1.5;
-                const tq = tx>=85 ? (ty>=0?"leading":"weakening") : (ty>=0?"improving":"lagging");
-                counts[tq]++;
-            });
-            return counts;
+        function getMedian(arr) {
+            if (arr.length === 0) return 0;
+            const sorted = [...arr].sort((a,b) => a-b);
+            const mid = Math.floor(sorted.length / 2);
+            return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid-1] + sorted[mid]) / 2;
         }
 
-        function TickerBanner({ stocks }) {
-            const items = [...stocks, ...stocks]; 
-            return (
-                <div style={{ background: "#040a14", borderBottom: "1px solid #1e293b", overflow: "hidden", height: 32, display: "flex", alignItems: "center", marginBottom: 14 }}>
-                    <div style={{ display: "flex", animation: `ticker-scroll ${items.length * 4}s linear infinite`, whiteSpace: "nowrap" }}>
-                        <style>{`@keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }`}</style>
-                        {items.map((item, i) => (
-                            <span key={i} style={{ paddingRight: 28, fontSize: 10.5, fontFamily: "monospace" }}>
-                                <span style={{ color: Q_FILL[item.quadrant], fontWeight: 700 }}>{item.ticker}</span> <span style={{ color: "#22c55e" }}>{item.momentum >= 0 ? "+" : ""}{item.momentum.toFixed(1)}</span>
-                            </span>
-                        ))}
-                    </div>
-                </div>
-            );
-        }
-
-        function SymbolSpotlight({ stocks }) {
-            const [idx, setIdx] = useState(0);
-            const s = stocks[idx] || stocks[0];
-            if (!s) return null;
-            return (
-                <div style={{ background: "#0a1120", border: `1px solid ${Q_FILL[s.quadrant]}44`, borderRadius: 10, padding: "12px", marginTop: 10 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                            <div style={{ width: 8, height: 8, borderRadius: "50%", background: Q_FILL[s.quadrant] }} />
-                            <span style={{ fontSize: 11, fontWeight: 700, color: "#f1f5f9", textTransform: "uppercase" }}>Spotlight</span>
-                        </div>
-                        <div style={{ display: "flex", gap: 5 }}>
-                            <button onClick={() => setIdx(v => (v - 1 + stocks.length) % stocks.length)} style={{ background: "#0f172a", border: "1px solid #1e293b", color: "#64748b", borderRadius: 4, padding: "2px 8px", cursor: "pointer" }}>‹</button>
-                            <button onClick={() => setIdx(v => (v + 1) % stocks.length)} style={{ background: "#0f172a", border: "1px solid #1e293b", color: "#64748b", borderRadius: 4, padding: "2px 8px", cursor: "pointer" }}>›</button>
-                        </div>
-                    </div>
-                    <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                        <div style={{ fontSize: 24, fontWeight: 900, color: "#fff" }}>{s.ticker}</div>
-                        <div style={{ flex: 1 }}>
-                            <div style={{ fontSize: 13, fontWeight: 700, color: Q_FILL[s.quadrant] }}>{s.rs} RS • {s.momentum > 0 ? "+" : ""}{s.momentum.toFixed(1)}m</div>
-                            <div style={{ fontSize: 10, color: "#64748b" }}>{s.sector}</div>
-                        </div>
-                        <div style={{ textAlign: "right" }}>
-                            <div style={{ fontSize: 12, fontWeight: 800 }}>Streak: {s.streak}d</div>
-                            <div style={{ fontSize: 9, color: "#4ade80" }}>{s.quadrant.toUpperCase()}</div>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        function RRGChart({ stocks, highlightTicker }) {
-            const MX = px(X_MID), MY = py(Y_MID);
-            const R = 11;
-            const conv = getConvergence(stocks);
-            const qC = { improving:{x:(P+MX)/2, y:(P+MY)/2}, leading:{x:(MX+CW-P)/2, y:(P+MY)/2}, lagging:{x:(P+MX)/2, y:(MY+CH-P)/2}, weakening:{x:(MX+CW-P)/2, y:(MY+CH-P)/2} };
-
-            return (
-                <svg viewBox={`0 0 ${CW} ${CH}`} width="100%" style={{ display: "block" }}>
-                    <defs>
-                        {stocks.map(s => (
-                            <linearGradient key={`g-${s.ticker}`} id={`g-${s.ticker}`} x1={px(s.trail?.[0]?.x || s.rs)} y1={py(s.trail?.[0]?.y || s.momentum)} x2={px(s.rs)} y2={py(s.momentum)} gradientUnits="userSpaceOnUse">
-                                <stop offset="0%" stopColor={Q_FILL[s.quadrant]} stopOpacity="0" />
-                                <stop offset="50%" stopColor={Q_FILL[s.quadrant]} stopOpacity="0.4" />
-                                <stop offset="100%" stopColor={Q_FILL[s.quadrant]} stopOpacity="1" />
-                            </linearGradient>
-                        ))}
-                        {stocks.map(s => (
-                            <marker key={`m-${s.ticker}`} id={`m-${s.ticker}`} markerWidth="10" markerHeight="5" refX="9" refY="2.5" orient="auto">
-                                <polygon points="0 0.6,9 2.5,0 4.4" fill={Q_FILL[s.quadrant]} />
-                            </marker>
-                        ))}
-                        <radialGradient id="cross-grad" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#fff" stopOpacity="0.6"/><stop offset="100%" stopColor="#fff" stopOpacity="0"/></radialGradient>
-                    </defs>
-
-                    {/* Quadrants */}
-                    <rect x={P} y={P} width={MX-P} height={MY-P} fill="rgba(96,165,250,0.06)" />
-                    <rect x={MX} y={P} width={CW-P-MX} height={MY-P} fill="rgba(34,197,94,0.06)" />
-                    <rect x={P} y={MY} width={MX-P} height={CH-P-MY} fill="rgba(239,68,68,0.06)" />
-                    <rect x={MX} y={MY} width={CW-P-MX} height={CH-P-MY} fill="rgba(245,158,11,0.06)" />
-
-                    {/* Labels */}
-                    <text x={P+8} y={P+18} fill="#60a5fa" fontSize="10" fontWeight="900" opacity="0.8">IMPROVING</text>
-                    <text x={CW-P-8} y={P+18} fill="#22c55e" fontSize="10" fontWeight="900" opacity="0.8" textAnchor="end">LEADING</text>
-                    <text x={P+8} y={CH-P-8} fill="#ef4444" fontSize="10" fontWeight="900" opacity="0.8">LAGGING</text>
-                    <text x={CW-P-8} y={CH-P-8} fill="#f59e0b" fontSize="10" fontWeight="900" opacity="0.8" textAnchor="end">WEAKENING</text>
-
-                    {Object.entries(conv).map(([q, n]) => n > 0 && (
-                        <text key={`c-${q}`} x={qC[q].x} y={qC[q].y} fill={Q_FILL[q]} fontSize="12" fontWeight="900" opacity="0.4" textAnchor="middle">{n} →</text>
-                    ))}
-
-                    <line x1={MX} y1={P} x2={MX} y2={CH-P} stroke="#1e293b" strokeWidth="1.2" strokeDasharray="5,4" />
-                    <line x1={P} y1={MY} x2={CW-P} y2={MY} stroke="#1e293b" strokeWidth="1.2" strokeDasharray="5,4" />
-
-                    {stocks.map(s => {
-                        const h = [...(s.trail || []), { x: s.rs, y: s.momentum }];
-                        const pts = h.map(p => ({ x: px(p.x), y: py(p.y) }));
-                        const polyStr = pts.map(p => `${p.x},${p.y}`).join(" ");
-                        const cx = px(s.rs), cy = py(s.momentum);
-                        
-                        const isV = trailCurvature(h) > 26;
-                        const streakVal = Math.min(1, (s.streak || 0) / 10);
-                        
-                        const prev = pts[pts.length-2] || pts[0];
-                        const ddx = cx-prev.x, ddy = cy-prev.y;
-                        const dl = Math.hypot(ddx,ddy)||1; const ux=ddx/dl, uy=ddy/dl;
-                        const aH = {x: cx+ux*(R+2), y: cy+uy*(R+2)}, aT = {x: aH.x+ux*30, y: aH.y+uy*30};
-
-                        return (
-                            <g key={s.ticker} style={{ cursor: "pointer" }}>
-                                {isV && <circle cx={cx} cy={cy} r={R+9} fill="none" stroke="#f59e0b" strokeWidth="1" strokeDasharray="3,3" opacity="0.6"><animateTransform attributeName="transform" type="rotate" from={`0 ${cx} ${cy}`} to={`360 ${cx} ${cy}`} dur="4s" repeatCount="indefinite" /></circle>}
-                                
-                                <polyline points={polyStr} fill="none" stroke={Q_FILL[s.quadrant]} strokeWidth="10" strokeLinecap="round" opacity="0.04" />
-                                <polyline points={polyStr} fill="none" stroke={`url(#g-${s.ticker})`} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" opacity="0.9" />
-                                
-                                <line x1={aH.x} y1={aH.y} x2={aT.x} y2={aT.y} stroke={Q_FILL[s.quadrant]} strokeWidth="1.2" markerEnd={`url(#m-${s.ticker})`} opacity="0.8" />
-                                
-                                <circle cx={cx} cy={cy} r={R+2.5} fill="none" stroke={Q_FILL[s.quadrant]} strokeWidth="1.8" opacity="0.45" strokeDasharray={`${(streakVal*2*Math.PI*(R+2.5)).toFixed(1)} 999`} />
-                                
-                                {highlightTicker === s.ticker && <circle cx={cx} cy={cy} r={R+6} fill="none" stroke="#fff" strokeWidth="1.5" opacity="0.6" />}
-                                <circle cx={cx} cy={cy} r={R} fill={Q_FILL[s.quadrant]} stroke="#0a1120" strokeWidth="1.1" />
-                                <text x={cx} y={cy+0.5} textAnchor="middle" dominantBaseline="middle" fill="#04091a" fontSize="7.5" fontWeight="900" fontFamily="monospace">{s.ticker}</text>
-                            </g>
-                        );
-                    })}
-                </svg>
-            );
-        }
-
-        function SignalPanel({ stocks, onHover }) {
-            const leaders = stocks.filter(s=>s.quadrant==='leading').slice(0,4);
-            const vortex = stocks.filter(s=>trailCurvature([...(s.trail||[]),{x:s.rs,y:s.momentum}])>26).sort((a,b)=>trailCurvature([...(b.trail||[]),{x:b.rs,y:b.momentum}]) - trailCurvature([...(a.trail||[]),{x:a.rs,y:a.momentum}])).slice(0,4);
-            return (
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 10 }}>
-                    <div style={{ background: "#0a1120", border: "1px solid #1e293b", borderRadius: 8, padding: "10px 12px" }}>
-                        <div style={{ fontSize: 9, color: "#475569", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 6 }}>🚀 Velocity Leaders</div>
-                        {leaders.map(s=>(<div key={s.ticker} style={{ display:"flex", alignItems:"center", gap:6, marginBottom:4 }} onMouseEnter={()=>onHover(s.ticker)} onMouseLeave={()=>onHover(null)}><div style={{ width:7, height:7, borderRadius:"50%", background:"#22c55e" }} /><span style={{ fontSize:10, color:"#22c55e", fontWeight:700 }}>{s.ticker}</span><span style={{ fontSize:9, color:"#475569" }}>{s.rs} RS / {s.momentum>0?"+":""}{s.momentum.toFixed(1)}</span></div>))}
-                    </div>
-                    <div style={{ background: "#0a1120", border: "1px solid #1e293b", borderRadius: 8, padding: "10px 12px" }}>
-                        <div style={{ fontSize: 9, color: "#475569", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 6 }}>↻ Vortex Signals</div>
-                        {vortex.map(s=>(<div key={s.ticker} style={{ display:"flex", alignItems:"center", gap:6, marginBottom:4 }} onMouseEnter={()=>onHover(s.ticker)} onMouseLeave={()=>onHover(null)}><div style={{ width:7, height:7, borderRadius:"50%", background:"#f59e0b" }} /><span style={{ fontSize:10, color:"#f59e0b", fontWeight:700 }}>{s.ticker}</span><span style={{ fontSize:9, color:"#475569" }}>Reversal Setup</span></div>))}
-                    </div>
-                </div>
-            )
-        }
-
-        function App() {
-            const [data, setData] = useState([]);
-            const [hovered, setHovered] = useState(null);
-            const [loading, setLoading] = useState(true);
-
-            useEffect(() => {
-                const load = async () => {
-                    try {
-                        const ts = Date.now();
-                        const [resMain, resHistory] = await Promise.all([
-                            fetch(`web_data.json?v=${ts}`), 
-                            fetch(`stock_history.json?v=${ts}`)
-                        ]);
-                        const webData = await resMain.json();
-                        const history = await resHistory.json();
-                        const raw = webData.all_stocks || webData.stocks || [];
-                        const processed = raw.slice(0, 40).map(s => {
-                            const h = history[s.ticker] || [];
-                            const curRS = h[0] !== undefined ? h[0] : s.rs;
-                            const prevRS = h[7] !== undefined ? h[7] : (s.rs_1w_pct || s.rs);
-                            const momentum = curRS - prevRS;
-                            let quadrant = curRS >= 85 ? (momentum >= 0 ? "leading" : "weakening") : (momentum >= 0 ? "improving" : "lagging");
-                            let streak = 0;
-                            for (let i=0; i<Math.max(0, h.length-7); i++) {
-                                const tR = h[i], tP = h[i+7], tM = tR - tP;
-                                let tQ = tR >= 85 ? (tM >= 0 ? "leading" : "weakening") : (tM >= 0 ? "improving" : "lagging");
-                                if (tQ === quadrant) streak++; else break;
-                            }
-                            const trail = h.slice(0, 10).reverse().map((v, idx) => {
-                                 const revIdx = 9-idx; 
-                                 const pV = h[revIdx+1] !== undefined ? h[revIdx+1] : v;
-                                 return { x: v, y: v - pV };
-                            });
-                            return { ...s, rs: curRS, momentum, quadrant, streak, trail };
-                        });
-                        setData(processed); setLoading(false);
-                    } catch (e) { 
-                        console.error("Critical Dashboard Error:", e);
-                        setLoading(false); 
-                    }
-                };
-                load();
-            }, []);
-
-            if (data.length === 0 && !loading) return <div style={{ color: "#fff", textAlign: "center", padding: 100, fontFamily: "monospace", fontSize: 13 }}>FAILED TO DECODE ROTATION ARRAY.</div>;
-            if (loading) return <div style={{ color: "#fff", textAlign: "center", padding: 100, fontFamily: "monospace", fontSize: 13 }}>BOOTING RADAR v2.7 PRO...</div>;
+        function render() {
+            const minRS = parseInt(document.getElementById('rsSlider').value);
             
-            const promising = data.filter(s => s.quadrant === 'leading' || s.quadrant === 'improving').sort((a,b) => b.rs - a.rs);
+            // 1. Process Data
+            let filtered = allData.filter(s => s.rs >= minRS).slice(0, 30);
+            
+            const processed = filtered.map(s => {
+                const h = history[s.ticker] || [];
+                const curRS = h[0] !== undefined ? h[0] : s.rs;
+                const path = [];
+                for(let i=0; i<10; i++) {
+                    const r = h[i], r_prev = h[i+7];
+                    if (r !== undefined && r_prev !== undefined) {
+                        path.push({ x: r, y: r - r_prev });
+                    }
+                }
+                const mom = path[0] ? path[0].y : 0;
+                return { ...s, rs: curRS, mom, path };
+            });
 
-            return (
-                <div className="container">
-                    <div style={{ marginBottom: 18 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
-                            <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#00e5ff", boxShadow: "0 0 7px #00e5ff" }} />
-                            <span style={{ fontSize: 10, color: "#00e5ff", letterSpacing: "0.2em" }}>STOCK ROTATION ANALYSIS v2.7 PRO</span>
-                        </div>
-                        <h1 style={{ margin: 0, fontSize: 19, fontWeight: 900, color: "#f1f5f9" }}>Relative Strength Rotation</h1>
-                    </div>
-                    
-                    <TickerBanner stocks={promising} />
+            // 2. Relative Centering Fix
+            const RS_MID = getMedian(processed.map(s => s.rs)) || 85;
+            const MOM_MID = getMedian(processed.map(s => s.mom)) || 0;
 
-                    <div className="card">
-                        <div style={{ background: "#0a1120", borderRadius: 8, border: "1px solid #1e293b", position: "relative" }}>
-                            <RRGChart stocks={data.slice(0, 30)} highlightTicker={hovered} />
-                        </div>
-                        <SignalPanel stocks={data} onHover={setHovered} />
-                        <SymbolSpotlight stocks={promising} />
-                    </div>
-                </div>
-            );
+            const RS_MIN = 30, RS_MAX = 100;
+            const M_MIN = -12, M_MAX = 12;
+
+            const px = v => P + ((Math.max(RS_MIN, Math.min(RS_MAX, v)) - RS_MIN) / (RS_MAX-RS_MIN)) * (CW - P*2);
+            const py = v => (CH - P) - ((Math.max(M_MIN, Math.min(M_MAX, v)) - M_MIN) / (M_MAX-M_MIN)) * (CH - P*2);
+            
+            const MX = px(RS_MID), MY = py(MOM_MID);
+
+            // 4. Draw SVG
+            const svg = document.getElementById('rrgSvg');
+            svg.setAttribute('viewBox', `0 0 ${CW} ${CH}`);
+            
+            let html = `
+                <defs>
+                    <radialGradient id="nodeGlow"><stop offset="0%" stop-color="#fff" stop-opacity="0.8"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></radialGradient>
+                    <filter id="glow"><feGaussianBlur stdDeviation="2" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                </defs>
+
+                <rect x="${P}" y="${P}" width="${MX-P}" height="${MY-P}" fill="rgba(96,165,250,0.06)" />
+                <rect x="${MX}" y="${P}" width="${CW-P-MX}" height="${MY-P}" fill="rgba(34,197,94,0.06)" />
+                <rect x="${P}" y="${MY}" width="${MX-P}" height="${CH-P-MY}" fill="rgba(239,68,68,0.06)" />
+                <rect x="${MX}" y="${MY}" width="${CW-P-MX}" height="${CH-P-MY}" fill="rgba(245,158,11,0.06)" />
+
+                <text x="${P+10}" y="${P+30}" fill="#60a5fa" font-size="10" font-weight="900" style="letter-spacing:1px">IMPROVING</text>
+                <text x="${CW-P-10}" y="${P+30}" fill="#22c55e" font-size="10" font-weight="900" style="letter-spacing:1px" text-anchor="end">LEADING</text>
+                <text x="${P+10}" y="${CH-P-15}" fill="#ef4444" font-size="10" font-weight="900" style="letter-spacing:1px">LAGGING</text>
+                <text x="${CW-P-10}" y="${CH-P-15}" fill="#f59e0b" font-size="10" font-weight="900" style="letter-spacing:1px" text-anchor="end">WEAKENING</text>
+
+                <line x1="${MX}" y1="${P}" x2="${MX}" y2="${CH-P}" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="8,4" />
+                <line x1="${P}" y1="${MY}" x2="${CW-P}" y2="${MY}" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="8,4" />
+            `;
+
+            processed.forEach(s => {
+                const q = s.rs >= RS_MID ? (s.mom >= MOM_MID ? 'leading' : 'weakening') : (s.mom >= MOM_MID ? 'improving' : 'lagging');
+                const col = Q_COLORS[q];
+                const curX = px(s.rs), curY = py(s.mom);
+                
+                const pts = (s.path || []).map(p => ({ x: px(p.x), y: py(p.y) }));
+                const polyLine = pts.map(p => `${p.x},${p.y}`).join(' ');
+
+                let isVortex = false;
+                if (pts.length >= 3) {
+                    const v1 = { x: pts[1].x-pts[0].x, y: pts[1].y-pts[0].y };
+                    const v2 = { x: pts[2].x-pts[1].x, y: pts[2].y-pts[1].y };
+                    const dot = v1.x*v2.x + v1.y*v2.y;
+                    const cos = dot / (Math.hypot(v1.x,v1.y)*Math.hypot(v2.x,v2.y) || 1);
+                    if (Math.acos(Math.max(-1,Math.min(1,cos))) > 0.45) isVortex = true;
+                }
+
+                html += `
+                    <g opacity="1" style="cursor:pointer" onclick="showSpotlight('${s.ticker}')">
+                        <polyline points="${polyLine}" fill="none" stroke="${col}" stroke-width="12" stroke-opacity="0.04" stroke-linecap="round"/>
+                        <polyline points="${polyLine}" fill="none" stroke="${col}" stroke-width="2" stroke-opacity="0.8" stroke-linecap="round" filter="url(#glow)" />
+                        
+                        ${pts.map((p, i) => `
+                            <circle cx="${p.x}" cy="${p.y}" r="1.8" fill="${col}" opacity="${0.1 + (i*0.15)}"/>
+                        `).join('')}
+
+                        ${isVortex ? `
+                            <circle cx="${curX}" cy="${curY}" r="18" fill="none" stroke="${col}" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.6">
+                                <animateTransform attributeName="transform" type="rotate" from="0 ${curX} ${curY}" to="360 ${curX} ${curY}" dur="4s" repeatCount="indefinite" />
+                            </circle>
+                        ` : ''}
+
+                        ${pts[1] ? `
+                            <line x1="${curX}" y1="${curY}" x2="${curX + (curX-pts[1].x)*1.5}" y2="${curY + (curY-pts[1].y)*1.5}" stroke="${col}" stroke-width="1" opacity="0.5" />
+                        ` : ''}
+
+                        <circle cx="${curX}" cy="${curY}" r="11" fill="${col}" stroke="#0a1120" stroke-width="1.2" />
+                        <text x="${curX}" y="${curY+0.4}" text-anchor="middle" dominant-baseline="middle" fill="#04091a" font-size="8" font-weight="900" font-family="monospace">${s.ticker}</text>
+                    </g>
+                `;
+            });
+
+            svg.innerHTML = html;
+            renderTicker(processed);
+            renderPanels(processed);
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        function renderTicker(stocks) {
+            const list = [...stocks, ...stocks];
+            document.getElementById('tickerBanner').innerHTML = `
+                <div class="banner-scroll">
+                    ${list.map(s => `
+                        <div class="banner-item">
+                            <span style="color:${Q_COLORS[s.rs >= 85 ? (s.mom >= 0 ? 'leading' : 'weakening'):(s.mom >= 0 ? 'improving' : 'lagging')] || '#fff'}">${s.ticker}</span> 
+                            <span style="color:rgba(255,255,255,0.4)">${s.rs}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderPanels(stocks) {
+            const leading = stocks.filter(s => s.rs >= 85 && s.mom >= 0).sort((a,b)=>b.mom-a.mom).slice(0,4);
+            document.getElementById('velocityPanel').innerHTML = `
+                <div class="mini-title">⚡ High Velocity</div>
+                ${leading.map(s => `
+                    <div class="signal-item" onclick="showSpotlight('${s.ticker}')">
+                        <span class="signal-ticker" style="color:#22c55e">${s.ticker}</span>
+                        <span style="color:#475569">${s.rs} RS / +${s.mom.toFixed(1)}</span>
+                    </div>
+                `).join('')}
+            `;
+
+            const vortex = stocks.filter(s => {
+                const pts = s.path || [];
+                if (pts.length < 3) return false;
+                const v1 = { x: pts[1].x-pts[0].x, y: pts[1].y-pts[0].y };
+                const v2 = { x: pts[2].x-pts[1].x, y: pts[2].y-pts[1].y };
+                const dot = v1.x*v2.x + v1.y*v2.y;
+                const cos = dot / (Math.hypot(v1.x,v1.y)*Math.hypot(v2.x,v2.y) || 1);
+                return Math.acos(Math.max(-1,Math.min(1,cos))) > 0.45;
+            }).slice(0,4);
+
+            document.getElementById('vortexPanel').innerHTML = `
+                <div class="mini-title">↻ Vortex Reversals</div>
+                ${vortex.map(s => `
+                    <div class="signal-item" onclick="showSpotlight('${s.ticker}')">
+                        <span class="signal-ticker" style="color:#f59e0b">${s.ticker}</span>
+                        <span style="color:#475569">Arcing Rotation</span>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        function showSpotlight(ticker) {
+            const s = allData.find(x => x.ticker === ticker);
+            if (!s) return;
+            const h = history[ticker] || [];
+            const mom = h[0] !== undefined && h[7] !== undefined ? (h[0]-h[7]).toFixed(1) : "0.0";
+            
+            document.getElementById('spotlightContent').innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="display:flex; gap:15px; align-items:center;">
+                        <span style="font-size:24px; font-weight:900; color:#fff;">${s.ticker}</span>
+                        <div>
+                            <div style="font-size:13px; font-weight:700; color:var(--accent);">${s.rs} RS • ${mom >= 0 ? '+':''}${mom} Momentum</div>
+                            <div style="font-size:10px; color:var(--text-dim);">${s.sector}</div>
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        <a href="https://www.tradingview.com/chart/?symbol=${s.ticker}" target="_blank" style="color:var(--accent); font-size:10px; text-decoration:none;">VIEW CHART ↗</a>
+                        <div style="font-size:10px; color:var(--text-dim); margin-top:4px;">${s.industry}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        init();
     </script>
 </body>
 </html>

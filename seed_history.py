@@ -9,7 +9,7 @@ DIR = os.path.dirname(os.path.realpath(__file__))
 PRICE_DATA = os.path.join(DIR, "data", "price_history.json")
 HISTORY_FILE = os.path.join(DIR, "output", "stock_history.json")
 REFERENCE_TICKER = "SPY"
-HISTORY_WINDOW = 10 
+HISTORY_WINDOW = 20
 
 def quarters_rs(closes: pd.Series, closes_ref: pd.Series, n):
     try:
