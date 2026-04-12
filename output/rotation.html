@@ -22,41 +22,59 @@
             --font: 'Outfit', system-ui, sans-serif;--mono: 'JetBrains Mono', monospace;
         }
         html, body { width: 100%; margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font); overflow-x: hidden; }
+        header { margin-bottom: 0; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1000; width: 100%; background: rgba(6, 6, 15, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 1rem 0; }
+        .logo-icon { font-size: 2.5rem; color: var(--cyan); margin-bottom: 4px; filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.3)); }
+        h1 { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, var(--text) 30%, var(--accent2)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        .nav-links { display: flex; gap: 1rem; margin: 0.5rem 0; flex-wrap: wrap; justify-content: center; }
+        .nav-link { color: var(--text2); text-decoration: none; font-weight: 600; font-size: 0.85rem; padding: 6px 12px; border-radius: 20px; transition: all 0.3s ease; border: 1px solid transparent; }
+        .nav-link.active { color: var(--cyan); background: rgba(0, 229, 255, 0.1); border-color: rgba(0, 229, 255, 0.2); }
         #root { min-height: 100vh; }
     </style>
 </head>
 <body>
+    <header>
+        <div class="logo-icon">🔄</div>
+        <h1>Rajesh's Stock Screener</h1>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Dashboard 🚀</a>
+            <a href="stages.html" class="nav-link">Sector Analysis 🏗️</a>
+            <a href="industries.html" class="nav-link">Industry Momentum 📊</a>
+            <a href="quick_scan.html" class="nav-link">Quick Scan ⚡</a>
+            <a href="rotation.html" class="nav-link active">Sector Rotation 🔄</a>
+            <a href="stock_rotation.html" class="nav-link">Stock Rotation 💹</a>
+        </div>
+    </header>
+
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useEffect, useMemo } = React;
-        const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, Cell, ReferenceLine } = Recharts;
+        const Lib = window.Recharts;
+        if (!Lib) { alert("Recharts loading failed"); }
+        const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, Cell, ReferenceLine } = Lib;
 
-        let SECTORS = [];
+        const SECTORS = [
+          { name:"XLK",  q:"leading",   color:"#22d3ee", x:102,  y:101,  streakWeeks:3, trail:[{x:98,y:97},{x:99,y:98},{x:100,y:99},{x:101,y:100}] },
+          { name:"XLE",  q:"leading",   color:"#4ade80", x:104,  y:103,  streakWeeks:5, trail:[{x:101,y:100},{x:102,y:101},{x:103,y:101.5},{x:103.5,y:102}] },
+          { name:"XLI",  q:"leading",   color:"#a3e635", x:101,  y:102,  streakWeeks:4, trail:[{x:99,y:99},{x:99.5,y:100},{x:100,y:101},{x:100.5,y:101.5}] },
+          { name:"XLF",  q:"weakening", color:"#fb923c", x:103,  y:99,   streakWeeks:2, trail:[{x:102,y:102},{x:102.5,y:101.5},{x:103,y:101},{x:103,y:100}] },
+          { name:"XLV",  q:"lagging",   color:"#f87171", x:99,   y:98,   streakWeeks:3, trail:[{x:101,y:101},{x:100.5,y:100},{x:100,y:99},{x:99.5,y:98.5}] },
+          { name:"XLY",  q:"lagging",   color:"#e879f9", x:98,   y:97,   streakWeeks:6, trail:[{x:100,y:99},{x:99.5,y:98.5},{x:99,y:98},{x:98.5,y:97.5}] },
+          { name:"XLC",  q:"lagging",   color:"#f43f5e", x:97,   y:99,   streakWeeks:4, trail:[{x:99,y:101},{x:98.5,y:100.5},{x:98,y:100},{x:97.5,y:99.5}] },
+          { name:"XLP",  q:"improving", color:"#60a5fa", x:99,   y:101,  streakWeeks:2, trail:[{x:97,y:98},{x:97.5,y:98.5},{x:98,y:99},{x:98.5,y:100}] },
+          { name:"XLU",  q:"improving", color:"#818cf8", x:98,   y:100,  streakWeeks:1, trail:[{x:96,y:97},{x:96.5,y:97.5},{x:97,y:98.5},{x:97.5,y:99}] },
+          { name:"XLRE", q:"improving", color:"#38bdf8", x:97,   y:101,  streakWeeks:3, trail:[{x:95.5,y:98},{x:96,y:99},{x:96.5,y:99.5},{x:97,y:100.5}] },
+        ];
+
         const Q_FILL = { leading:"#22c55e", weakening:"#f59e0b", lagging:"#ef4444", improving:"#60a5fa" };
-        const CW=350, CH=350, P=30;
-
+        const CW=520, CH=440, P=48; R=11;
         function px(v){ return P + ((v-96)/8)*(CW-P*2); }
         function py(v){ return (CH-P) - ((v-96)/8)*(CH-P*2); }
-
-        function TickerBanner() {
-          return (
-            <div style={{height:30, background:"rgba(0,0,0,0.3)", borderTop:"1px solid var(--border)", borderBottom:"1px solid var(--border)", display:"flex", alignItems:"center", overflow:"hidden", marginBottom:15}}>
-              <div style={{display:"flex", whiteSpace:"nowrap", animation:"scroll 40s linear infinite"}}>
-                {[...SECTORS, ...SECTORS].map((s,i) => (
-                  <span key={i} style={{paddingRight:30, fontSize:10, fontWeight:700, fontFamily: "var(--mono)", color: Q_FILL[s.q]}}>
-                    {s.name} <span style={{color:"#475569"}}>{s.x.toFixed(1)}</span>
-                  </span>
-                ))}
-              </div>
-              <style>{`@keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }`}</style>
-            </div>
-          );
-        }
 
         function RRGChart() {
           const MX=px(100), MY=py(100);
           return (
+            <div style={{background:"#0a1120", borderRadius:12, border:"1px solid #1e293b", padding:10}}>
             <svg viewBox={"0 0 "+CW+" "+CH} width="100%" style={{display:"block"}}>
               <defs>
                 {SECTORS.map(s => (
@@ -77,57 +95,32 @@
 
                 return (
                   <g key={s.name}>
-                    <polyline points={polyStr} fill="none" stroke={Q_FILL[s.q]} strokeWidth="1.5" strokeOpacity="0.4" strokeLinecap="round" strokeLinejoin="round"/>
-                    {path.slice(0,-1).map((p,i)=>(<circle key={i} cx={px(p.x)} cy={py(p.y)} r="1.5" fill={Q_FILL[s.q]} opacity={0.1+i*0.15}/>))}
-                    <line x1={curX} y1={curY} x2={curX+vX*1.5} y2={curY+vY*1.5} stroke={Q_FILL[s.q]} strokeWidth="1.2" markerEnd={"url(#m"+s.name+")"}/>
-                    <circle cx={curX} cy={curY} r="9" fill={Q_FILL[s.q]} stroke="#000" strokeWidth="1"/>
-                    <text x={curX} y={curY+0.4} textAnchor="middle" dominantBaseline="middle" fill="#000" fontSize="7" fontWeight="800">{s.name}</text>
+                    <polyline points={polyStr} fill="none" stroke={Q_FILL[s.q]} strokeWidth="2.5" strokeOpacity="0.4" strokeLinecap="round" strokeLinejoin="round"/>
+                    {path.slice(0,-1).map((p,i)=>(<circle key={i} cx={px(p.x)} cy={py(p.y)} r="2" fill={Q_FILL[s.q]} opacity={0.1+i*0.2}/>))}
+                    <line x1={curX} y1={curY} x2={curX+vX*1.5} y2={curY+vY*1.5} stroke={Q_FILL[s.q]} strokeWidth="1.5" markerEnd={"url(#m"+s.name+")"}/>
+                    <circle cx={curX} cy={curY} r={R} fill={Q_FILL[s.q]} stroke="#000" strokeWidth="1"/>
+                    <text x={curX} y={curY+0.4} textAnchor="middle" dominantBaseline="middle" fill="#000" fontSize="7" fontWeight="800" fontFamily="var(--mono)">{s.name}</text>
                   </g>
                 );
               })}
             </svg>
+            </div>
           );
         }
 
         function App() {
-          const [data, setData] = useState(null);
-          useEffect(() => {
-            fetch('web_data.json').then(r=>r.json()).then(d=>{ setData(d); SECTORS = d.sectors || []; });
-          }, []);
-
-          if (!data) return <div style={{padding:20}}>Loading Analysis...</div>;
-
           return (
-            <div style={{background:"#070d1a", minHeight:"100vh", padding:"20px 15px"}}>
-              <div style={{marginBottom:18}}>
-                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:3}}>
-                  <div style={{width:7,height:7,borderRadius:"50%",background:"#22d3ee",boxShadow:"0 0 7px #22d3ee"}}/>
-                  <span style={{fontSize:10,color:"#22d3ee",letterSpacing:"0.2em",textTransform:"uppercase"}}>Live Analysis</span>
-                </div>
-                <h1 style={{margin:0,fontSize:20,fontWeight:700,color:"#f1f5f9"}}>Sector Rotation</h1>
-              </div>
-              
-              <TickerBanner />
-
-              <div style={{background:"#0f172a",border:"1px solid #1e293b",borderRadius:12,padding:"13px 12px",marginBottom:10}}>
-                <div style={{fontSize:13,fontWeight:700,color:"#f1f5f9",marginBottom:10}}>Relative Rotation Graph</div>
-                <div style={{background:"#0a1120",borderRadius:8,border:"1px solid #1e293b"}}>
-                    <RRGChart />
-                </div>
-              </div>
-
-              <div style={{background:"#0f172a",border:"1px solid #1e293b",borderRadius:10,padding:"12px 13px"}}>
-                <div style={{fontSize:12,fontWeight:700,color:"#f1f5f9",marginBottom:8}}>Signal Matrix</div>
-                <table style={{width:"100%",borderCollapse:"collapse",fontSize:10}}>
-                    <thead><tr style={{color:"#475569",borderBottom:"1px solid #1e293b"}}><th style={{textAlign:"left"}}>Sector</th><th style={{textAlign:"left"}}>Quadrant</th><th style={{textAlign:"left"}}>Status</th></tr></thead>
-                    <tbody>{SECTORS.map(s => (
-                        <tr key={s.name} style={{borderBottom:"1px solid #1e293b"}}>
-                            <td style={{padding:"6px 0",fontWeight:700,color:Q_FILL[s.q]}}>{s.name}</td>
-                            <td style={{color:Q_FILL[s.q]}}>{s.q}</td>
-                            <td style={{color:s.y>=100?"#22c55e":"#ef4444"}}>{s.y>=100?"STRENGTH":"WEAKNESS"}</td>
-                        </tr>
-                    ))}</tbody>
-                </table>
+            <div style={{padding:"20px 15px"}}>
+              <RRGChart />
+              <div style={{marginTop:20, background:"#0f172a", border:"1px solid #1e293b", borderRadius:12, padding:15}}>
+                <div style={{fontSize:12, fontWeight:700, marginBottom:10}}>Signal Overview</div>
+                {SECTORS.map(s => (
+                  <div key={s.name} style={{display:"flex", justifyContent:"space-between", fontSize:11, marginBottom:8}}>
+                    <span style={{color:Q_FILL[s.q], fontWeight:700}}>{s.name}</span>
+                    <span style={{color:"#64748b"}}>{s.q.toUpperCase()}</span>
+                    <span style={{color:"#22c55e", fontWeight:700}}>{s.x >= 100 ? "STRENGTH" : "RECOVERY"}</span>
+                  </div>
+                ))}
               </div>
             </div>
           );
