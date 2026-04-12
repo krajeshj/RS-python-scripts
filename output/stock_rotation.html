@@ -14,9 +14,7 @@
         * { box-sizing: border-box; }
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
-        header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
-        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-        .card { background: var(--card); border: 1px solid var(--border); borderRadius: 12px; padding: 20px; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
     </style>
 </head>
 <body>
@@ -30,7 +28,6 @@
         const Q_FILL = { leading: "#22c55e", weakening: "#f59e0b", lagging: "#ef4444", improving: "#60a5fa" };
         const CW = 520, CH = 440, P = 48;
         
-        // Stock Axes: RS (X) from 30 to 100, Momentum (Y) from -12 to 12
         const X_MIN = 30, X_MAX = 100, X_MID = 85;
         const Y_MIN = -12, Y_MAX = 12, Y_MID = 0;
         const DRX = X_MAX - X_MIN, DRY = Y_MAX - Y_MIN;
@@ -63,11 +60,59 @@
             stocks.forEach(s => {
                 const h = s.trail || []; if (h.length < 2) return;
                 const prev = h[h.length-1];
-                const tx = s.rs + (s.rs-prev.x)*1.5, ty = s.momentum + (s.momentum-prev.y)*1.5;
+                const dx = s.rs - prev.x, dy = s.momentum - prev.y;
+                const tx = s.rs + dx*1.5, ty = s.momentum + dy*1.5;
                 const tq = tx>=85 ? (ty>=0?"leading":"weakening") : (ty>=0?"improving":"lagging");
                 counts[tq]++;
             });
             return counts;
+        }
+
+        function TickerBanner({ stocks }) {
+            const items = [...stocks, ...stocks]; 
+            return (
+                <div style={{ background: "#040a14", borderBottom: "1px solid #1e293b", overflow: "hidden", height: 32, display: "flex", alignItems: "center", marginBottom: 14 }}>
+                    <div style={{ display: "flex", animation: `ticker-scroll ${items.length * 4}s linear infinite`, whiteSpace: "nowrap" }}>
+                        <style>{`@keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }`}</style>
+                        {items.map((item, i) => (
+                            <span key={i} style={{ paddingRight: 28, fontSize: 10.5, fontFamily: "monospace" }}>
+                                <span style={{ color: Q_FILL[item.quadrant], fontWeight: 700 }}>{item.ticker}</span> <span style={{ color: "#22c55e" }}>+{item.momentum.toFixed(1)}</span>
+                            </span>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        function SymbolSpotlight({ stocks }) {
+            const [idx, setIdx] = useState(0);
+            const s = stocks[idx] || stocks[0];
+            if (!s) return null;
+            return (
+                <div style={{ background: "#0a1120", border: `1px solid ${Q_FILL[s.quadrant]}44`, borderRadius: 10, padding: "12px", marginTop: 10 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <div style={{ width: 8, height: 8, borderRadius: "50%", background: Q_FILL[s.quadrant] }} />
+                            <span style={{ fontSize: 11, fontWeight: 700, color: "#f1f5f9", textTransform: "uppercase" }}>Symbol Spotlight</span>
+                        </div>
+                        <div style={{ display: "flex", gap: 5 }}>
+                            <button onClick={() => setIdx(v => (v - 1 + stocks.length) % stocks.length)} style={{ background: "#0f172a", border: "1px solid #1e293b", color: "#64748b", borderRadius: 4, padding: "2px 8px", cursor: "pointer" }}>‹</button>
+                            <button onClick={() => setIdx(v => (v + 1) % stocks.length)} style={{ background: "#0f172a", border: "1px solid #1e293b", color: "#64748b", borderRadius: 4, padding: "2px 8px", cursor: "pointer" }}>›</button>
+                        </div>
+                    </div>
+                    <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                        <div style={{ fontSize: 24, fontWeight: 900, color: "#fff" }}>{s.ticker}</div>
+                        <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: 13, fontWeight: 700, color: Q_FILL[s.quadrant] }}>{s.rs} RS • {s.momentum > 0 ? "+" : ""}{s.momentum.toFixed(1)} Momentum</div>
+                            <div style={{ fontSize: 10, color: "#64748b" }}>{s.name} • {s.sector}</div>
+                        </div>
+                        <div style={{ textAlign: "right" }}>
+                            <div style={{ fontSize: 12, fontWeight: 800 }}>Streak: {s.streak}d</div>
+                            <div style={{ fontSize: 9, color: "#4ade80" }}>{s.quadrant.toUpperCase()}</div>
+                        </div>
+                    </div>
+                </div>
+            );
         }
 
         function RRGChart({ stocks, highlightTicker }) {
@@ -184,13 +229,14 @@
                             const momentum = curRS - prevRS;
                             let quadrant = curRS >= 85 ? (momentum >= 0 ? "leading" : "weakening") : (momentum >= 0 ? "improving" : "lagging");
                             let streak = 0;
-                            for (let i=0; i<h.length-7; i++) {
+                            for (let i=0; i<Math.max(0, h.length-7); i++) {
                                 const tR = h[i], tP = h[i+7], tM = tR - tP;
                                 let tQ = tR >= 85 ? (tM >= 0 ? "leading" : "weakening") : (tM >= 0 ? "improving" : "lagging");
                                 if (tQ === quadrant) streak++; else break;
                             }
                             const trail = h.slice(0, 9).reverse().map((v, idx) => {
-                                const pV = h[8-idx+7] !== undefined ? h[8-idx+7] : v;
+                                const realIdx = 8 - idx;
+                                const pV = h[realIdx + 7] !== undefined ? h[realIdx + 7] : v;
                                 return { x: v, y: v - pV };
                             });
                             return { ...s, rs: curRS, momentum, quadrant, streak, trail };
@@ -201,7 +247,8 @@
                 load();
             }, []);
 
-            if (loading) return <div style={{ color: "#fff", textAlign: "center", padding: 100, fontFamily: "monospace", fontSize: 13 }}>ENGINE STARTING v2.4...</div>;
+            if (loading) return <div style={{ color: "#fff", textAlign: "center", padding: 100, fontFamily: "monospace", fontSize: 13 }}>ENGINE STARTING v2.5...</div>;
+            const promising = data.filter(s => s.quadrant === 'leading' || s.quadrant === 'improving').sort((a,b) => b.rs - a.rs);
 
             return (
                 <div className="container">
@@ -212,11 +259,15 @@
                         </div>
                         <h1 style={{ margin: 0, fontSize: 20, fontWeight: 900, color: "#f1f5f9" }}>Relative Strength Rotation</h1>
                     </div>
+                    
+                    <TickerBanner stocks={promising} />
+
                     <div className="card" style={{ padding: "14px" }}>
                         <div style={{ background: "#0a1120", borderRadius: 8, border: "1px solid #1e293b" }}>
                             <RRGChart stocks={data.slice(0, 30)} highlightTicker={hovered} />
                         </div>
                         <SignalPanel stocks={data} onHover={setHovered} />
+                        <SymbolSpotlight stocks={promising} />
                     </div>
                 </div>
             );
