@@ -2,504 +2,206 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
-    <title>Sector Rotation - Rajesh's Stock Screener</title>
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
-    <!-- React & Recharts Dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/react-is@18/umd/react-is.production.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prop-types@15/prop-types.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/recharts/umd/Recharts.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sector Rotation | Rajesh's Stock Screener</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #06060f;
-            --bg2: #0d0d1a;
-            --surface: rgba(255, 255, 255, .04);
-            --border: rgba(255, 255, 255, .08);
-            --text: #e4e4ef;
-            --text2: #8888a8;
-            --accent: #6c5ce7;
-            --accent2: #a29bfe;
-            --cyan: #00e5ff;
-            --font: 'Outfit', system-ui, sans-serif;
-            --mono: 'JetBrains Mono', monospace;
+            --bg: #04091a;
+            --card: #0a1120;
+            --border: #1e293b;
+            --text: #f1f5f9;
+            --text-dim: #94a3b8;
+            --accent: #00e5ff;
+            --leading: #22c55e;
+            --improving: #60a5fa;
+            --weakening: #f59e0b;
+            --lagging: #ef4444;
         }
 
-        html, body {
-            width: 100%;
+        * { box-sizing: border-box; }
+        body {
             margin: 0;
-            padding: 0;
+            font-family: 'Inter', sans-serif;
             background: var(--bg);
             color: var(--text);
-            font-family: var(--font);
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        header {
-            margin-bottom: 0;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            width: 100%;
-            background: rgba(6, 6, 15, 0.9);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 0;
-        }
+        .nav { background: #070e1d; border-bottom: 2px solid var(--border); padding: 0 40px; height: 50px; display: flex; align-items: center; justify-content: space-between; position: fixed; top: 0; width: 100%; z-index: 100; backdrop-filter: blur(10px); }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-link { color: var(--text-dim); text-decoration: none; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+        .nav-link:hover, .nav-link.active { color: var(--accent); }
 
-        .logo-icon {
-            font-size: 2.5rem;
-            color: var(--cyan);
-            margin-bottom: 4px;
-            filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.3));
-        }
+        .container { max-width: 1000px; margin: 60px auto 20px; padding: 20px; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; height: 700px; }
+        .chart-container { flex: 1; position: relative; background: radial-gradient(circle at center, #0a1125 0%, #04091a 100%); }
+        
+        #loading { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 200; gap: 15px; }
+        .spinner { width: 30px; height: 30px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        h1 {
-            font-size: 2.25rem;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, var(--text) 30%, var(--accent2));
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 0;
-        }
+        .panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; border-top: 1px solid var(--border); }
+        .mini-card { background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+        .mini-title { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 10px; }
+        .list-item { display: flex; align-items: center; gap: 8px; font-size: 11px; margin-bottom: 6px; }
 
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-            margin: 0.5rem 0;
-        }
-
-        .nav-link {
-            color: var(--text2);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            padding: 6px 16px;
-            border-radius: 20px;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-        }
-
-        .nav-link:hover {
-            color: var(--text);
-            background: var(--surface);
-        }
-
-        .nav-link.active {
-            color: var(--cyan);
-            background: rgba(0, 229, 255, 0.1);
-            border-color: rgba(0, 229, 255, 0.2);
-        }
-
-        #root {
-            min-height: calc(100vh - 160px);
-        }
-
-        @media (max-width: 768px) {
-            h1 { font-size: 1.75rem; }
-            .nav-links { gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
-            .nav-link { font-size: 0.85rem; padding: 6px 12px; }
-        }
+        .sector-tag { font-family: 'DM Mono', monospace; font-weight: 700; font-size: 10px; color: var(--accent); opacity: 0.6; }
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo-icon">🔄</div>
-        <h1>Rajesh's Stock Screener</h1>
+
+    <div id="loading">
+        <div class="spinner"></div>
+        <div class="version">CALIBRATING SECTOR PULSAR v3.1...</div>
+    </div>
+
+    <!-- Top Navigation -->
+    <nav class="nav">
+        <div style="font-weight: 900; color: #fff; font-size: 14px; letter-spacing: -0.5px;">NEURAL<span style="color:var(--accent)">RADAR</span></div>
         <div class="nav-links">
-            <a href="index.html" class="nav-link">Dashboard 🚀</a>
-            <a href="stages.html" class="nav-link">Sector Analysis 🏗️</a>
-            <a href="industries.html" class="nav-link">Industry Momentum 📊</a>
-            <a href="quick_scan.html" class="nav-link">Quick Scan ⚡</a>
-            <a href="pulse.html" class="nav-link">Market Pulse 📡</a>
-            <a href="tips.html" class="nav-link">Stock Tips 🎯</a>
-            <a href="rotation.html" class="nav-link active">Sector Rotation 🔄</a>
-            <a href="stock_rotation.html" class="nav-link">Stock Rotation 💹</a>
+            <a href="index.html" class="nav-link">Dashboard</a>
+            <a href="stock_rotation.html" class="nav-link">Stocks</a>
+            <a href="rotation.html" class="nav-link active">Sectors</a>
+            <a href="industries.html" class="nav-link">Industries</a>
+            <a href="stages.html" class="nav-link">Stages</a>
         </div>
-    </header>
+        <div id="syncTime" style="font-size: 10px; color: var(--text-dim); font-family: 'DM Mono';">SYNC: --:--</div>
+    </nav>
 
-    <div id="root"></div>
-
-    <footer style="text-align:center; padding:2rem 1rem; color:var(--text2); font-size:0.75rem; border-top:1px solid var(--border); margin-top:2rem;">
-        © 2026 Rajesh's Stock Screener. All rights reserved.
-    </footer>
-
-    <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
-        const Lib = window.Recharts || window._Recharts;
-        if (!Lib) {
-            document.body.innerHTML = '<div style="color:white;padding:20px;text-align:center;"><h3>Error: Recharts library failed to load.</h3><p>Please check your internet connection or try refreshing.</p></div>';
-            throw new Error("Recharts not found");
-        }
-        const { 
-            LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid,
-            Tooltip, Legend, ResponsiveContainer, ReferenceLine, Cell, ScatterChart, Scatter 
-        } = Lib;
-
-        // --- CONTENT FROM sector-rotation.jsx ---
-        
-        const CONTRIBUTORS = {
-          XLK: [
-            { ticker:"NVDA", name:"Nvidia",    flow:+312, chg:+4.2, mktcap:"$2.1T" },
-            { ticker:"AAPL", name:"Apple",     flow:+198, chg:+1.8, mktcap:"$2.8T" },
-            { ticker:"MSFT", name:"Microsoft", flow:+154, chg:+2.3, mktcap:"$3.1T" },
-          ],
-          XLE: [
-            { ticker:"XOM",  name:"ExxonMobil",  flow:+187, chg:+3.1, mktcap:"$430B" },
-            { ticker:"CVX",  name:"Chevron",     flow:+122, chg:+2.6, mktcap:"$290B" },
-            { ticker:"COP",  name:"ConocoPhil.", flow:+89,  chg:+3.8, mktcap:"$148B" },
-          ],
-          XLI: [
-            { ticker:"GE",   name:"GE Aerospace",flow:+143, chg:+2.9, mktcap:"$172B" },
-            { ticker:"CAT",  name:"Caterpillar", flow:+97,  chg:+1.7, mktcap:"$168B" },
-            { ticker:"RTX",  name:"Raytheon",    flow:+74,  chg:+2.1, mktcap:"$139B" },
-          ],
-          XLP: [
-            { ticker:"PG",   name:"Procter&G",   flow:+63,  chg:+0.9, mktcap:"$345B" },
-            { ticker:"KO",   name:"Coca-Cola",   flow:+41,  chg:+0.7, mktcap:"$262B" },
-            { ticker:"COST", name:"Costco",      flow:+38,  chg:+1.1, mktcap:"$398B" },
-          ],
-          XLU: [
-            { ticker:"NEE",  name:"NextEra",     flow:+52,  chg:+1.4, mktcap:"$142B" },
-            { ticker:"SO",   name:"Southern Co.",flow:+34,  chg:+0.8, mktcap:"$92B"  },
-            { ticker:"DUK",  name:"Duke Energy", flow:+28,  chg:+0.6, mktcap:"$88B"  },
-          ],
-          XLRE: [
-            { ticker:"PLD",  name:"Prologis",    flow:+47,  chg:+1.9, mktcap:"$98B"  },
-            { ticker:"AMT",  name:"Amer. Tower", flow:+31,  chg:+1.4, mktcap:"$85B"  },
-            { ticker:"EQIX", name:"Equinix",     flow:+26,  chg:+2.1, mktcap:"$78B"  },
-          ],
-        };
-
-        const Q_FILL_BANNER = {
-          XLK:"#22d3ee", XLE:"#4ade80", XLI:"#a3e635",
-          XLP:"#60a5fa", XLU:"#818cf8", XLRE:"#38bdf8",
-        };
-
-        const BANNER_ITEMS = Object.entries(CONTRIBUTORS).flatMap(([sector, stocks]) => {
-          const sec = ["XLK","XLE","XLI"].includes(sector) ? "leading" : "improving";
-          return stocks.map(s => ({ ...s, sector, q: sec }));
-        });
-
-        function TickerBanner() {
-          const items = [...BANNER_ITEMS, ...BANNER_ITEMS]; 
-          return (
-            <div style={{
-              background:"#040a14", borderBottom:"1px solid #1e293b", borderTop:"1px solid #1e293b",
-              overflow:"hidden", height:32, display:"flex", alignItems:"center", marginBottom:14, position:"relative",
-            }}>
-              <div style={{position:"absolute",left:0,top:0,bottom:0,width:40, background:"linear-gradient(to right,#040a14,transparent)",zIndex:2,pointerEvents:"none"}}/>
-              <div style={{position:"absolute",right:0,top:0,bottom:0,width:40, background:"linear-gradient(to left,#040a14,transparent)",zIndex:2,pointerEvents:"none"}}/>
-              <div style={{
-                display:"flex", gap:0, animation:`ticker-scroll ${items.length * 3.2}s linear infinite`,
-                whiteSpace:"nowrap", willChange:"transform",
-              }}>
-                <style>{`
-                  @keyframes ticker-scroll {
-                    0%   { transform: translateX(0); }
-                    100% { transform: translateX(-50%); }
-                  }
-                `}</style>
-                {items.map((item, i) => {
-                  const qColor = item.q === "leading" ? "#22c55e" : "#60a5fa";
-                  return (
-                    <span key={i} style={{ display:"inline-flex", alignItems:"center", gap:6, paddingRight:28, fontSize:10.5, fontFamily:"'DM Mono', monospace"}}>
-                      <span style={{ background:qColor+"22", border:`1px solid ${qColor}55`, borderRadius:3, padding:"1px 5px", fontSize:9, color:qColor, fontWeight:700, letterSpacing:"0.08em" }}>{item.sector}</span>
-                      <span style={{color:"#f1f5f9",fontWeight:700}}>{item.ticker}</span>
-                      <span style={{color:"#22c55e",fontWeight:600}}>+{item.chg}%</span>
-                      <span style={{color:"#64748b"}}>${item.flow}M ↑</span>
-                      <span style={{color:"#1e293b",paddingLeft:8}}>│</span>
-                    </span>
-                  );
-                })}
-              </div>
+    <div class="container">
+        <div class="card">
+            <div class="chart-container" id="chartContainer">
+                <svg id="rrgSvg" width="100%" height="100%"></svg>
             </div>
-          );
+            <div class="panel-grid">
+                <div class="mini-card" id="sectorVelocity"></div>
+                <div class="mini-card" id="sectorExits"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const Q_COLORS = { leading: '#22c55e', improving: '#60a5fa', weakening: '#f59e0b', lagging: '#ef4444' };
+        let sectorData = [];
+        const CW = 800, CH = 600, P = 60;
+
+        async function boot() {
+            try {
+                const ts = Date.now();
+                const res = await fetch(`web_data.json?v=${ts}`);
+                const data = await res.json();
+                sectorData = data.sectors || [];
+                
+                document.getElementById('syncTime').textContent = `SYNC: ${new Date(data.last_updated).toLocaleTimeString()}`;
+                document.getElementById('loading').style.display = 'none';
+                render();
+            } catch (e) {
+                console.error(e);
+                document.getElementById('loading').innerHTML = `<div class='version'>RADAR OFFLINE</div>`;
+            }
         }
 
-        const SECTORS = [
-          { name:"XLK",  q:"leading",   color:"#22d3ee", x:102,  y:101,  streakWeeks:3, trail:[{x:98,y:97},{x:99,y:98},{x:100,y:99},{x:101,y:100}] },
-          { name:"XLE",  q:"leading",   color:"#4ade80", x:104,  y:103,  streakWeeks:5, trail:[{x:101,y:100},{x:102,y:101},{x:103,y:101.5},{x:103.5,y:102}] },
-          { name:"XLI",  q:"leading",   color:"#a3e635", x:101,  y:102,  streakWeeks:4, trail:[{x:99,y:99},{x:99.5,y:100},{x:100,y:101},{x:100.5,y:101.5}] },
-          { name:"XLF",  q:"weakening", color:"#fb923c", x:103,  y:99,   streakWeeks:2, trail:[{x:102,y:102},{x:102.5,y:101.5},{x:103,y:101},{x:103,y:100}] },
-          { name:"XLV",  q:"lagging",   color:"#f87171", x:99,   y:98,   streakWeeks:3, trail:[{x:101,y:101},{x:100.5,y:100},{x:100,y:99},{x:99.5,y:98.5}] },
-          { name:"XLY",  q:"lagging",   color:"#e879f9", x:98,   y:97,   streakWeeks:6, trail:[{x:100,y:99},{x:99.5,y:98.5},{x:99,y:98},{x:98.5,y:97.5}] },
-          { name:"XLC",  q:"lagging",   color:"#f43f5e", x:97,   y:99,   streakWeeks:4, trail:[{x:99,y:101},{x:98.5,y:100.5},{x:98,y:100},{x:97.5,y:99.5}] },
-          { name:"XLP",  q:"improving", color:"#60a5fa", x:99,   y:101,  streakWeeks:2, trail:[{x:97,y:98},{x:97.5,y:98.5},{x:98,y:99},{x:98.5,y:100}] },
-          { name:"XLU",  q:"improving", color:"#818cf8", x:98,   y:100,  streakWeeks:1, trail:[{x:96,y:97},{x:96.5,y:97.5},{x:97,y:98.5},{x:97.5,y:99}] },
-          { name:"XLRE", q:"improving", color:"#38bdf8", x:97,   y:101,  streakWeeks:3, trail:[{x:95.5,y:98},{x:96,y:99},{x:96.5,y:99.5},{x:97,y:100.5}] },
-        ];
+        function render() {
+            // Processing: Apply Predictive Weighting and Projection
+            const processed = sectorData.map((s, idx) => {
+                const trail = s.trail || [];
+                const fullPath = [...trail, { x: s.x, y: s.y }];
+                
+                // Calculate Predictive Vector (Weighted Velocity)
+                // Weights: Last day=0.5, prev=0.3, prev=0.2
+                let vX=0, vY=0;
+                if (fullPath.length >= 3) {
+                    const p1 = fullPath[fullPath.length-1];
+                    const p2 = fullPath[fullPath.length-2];
+                    const p3 = fullPath[fullPath.length-3];
+                    vX = (p1.x - p2.x)*0.7 + (p2.x - p3.x)*0.3;
+                    vY = (p1.y - p2.y)*0.7 + (p2.y - p3.y)*0.3;
+                }
 
-        const Q_FILL = { leading:"#22c55e", weakening:"#f59e0b", lagging:"#ef4444", improving:"#60a5fa" };
-        const LINE_COLORS = { XLK:"#22d3ee", XLU:"#818cf8", XLE:"#4ade80", XLP:"#60a5fa", XLI:"#a3e635" };
-        const CW=520, CH=440, P=48;
-        const DMIN=94.5, DMAX=105.5, DR=DMAX-DMIN;
-        const px = v => P + ((v-DMIN)/DR)*(CW-P*2);
-        const py = v => (CH-P) - ((v-DMIN)/DR)*(CH-P*2);
+                return { ...s, vX, vY, fullPath };
+            });
 
-        function trailDist(s) {
-          const pts = [...s.trail, {x:s.x,y:s.y}];
-          let d=0;
-          for (let i=1;i<pts.length;i++) d+=Math.hypot(pts[i].x-pts[i-1].x, pts[i].y-pts[i-1].y);
-          return d;
-        }
-        const allDist = SECTORS.map(trailDist);
-        const maxDist = Math.max(...allDist);
+            // Mapping
+            const X_VALS = processed.map(s => s.x);
+            const Y_VALS = processed.map(s => s.y);
+            const medX = 100, medY = 100; // Fixed 100 benchmark for standard RRG Sectors
 
-        function trailCurvature(s) {
-          const pts = [...s.trail, {x:s.x,y:s.y}];
-          const mid = Math.floor(pts.length/2);
-          const v1 = { x:pts[mid].x-pts[0].x, y:pts[mid].y-pts[0].y };
-          const v2 = { x:pts[pts.length-1].x-pts[mid].x, y:pts[pts.length-1].y-pts[mid].y };
-          const dot = v1.x*v2.x + v1.y*v2.y;
-          const mag = Math.hypot(v1.x,v1.y)*Math.hypot(v2.x,v2.y) || 1;
-          return Math.acos(Math.max(-1, Math.min(1, dot/mag))) * 180/Math.PI;
-        }
+            const px = v => P + ((v - 96) / 8) * (CW - P*2);
+            const py = v => (CH - P) - ((v - 96) / 8) * (CH - P*2);
+            
+            const MX = px(medX), MY = py(medY);
 
-        function axisCrossings(s) {
-          const pts = [...s.trail, {x:s.x,y:s.y}];
-          const crossings = [];
-          for (let i=1;i<pts.length;i++) {
-            const a=pts[i-1], b=pts[i];
-            if ((a.x-100)*(b.x-100)<0) crossings.push({ type:"RS", week:i, from:a, to:b });
-            if ((a.y-100)*(b.y-100)<0) crossings.push({ type:"Mom", week:i, from:a, to:b });
-          }
-          return crossings;
-        }
+            const svg = document.getElementById('rrgSvg');
+            svg.setAttribute('viewBox', `0 0 ${CW} ${CH}`);
+            
+            let html = `
+                <defs><filter id="glow"><feGaussianBlur stdDeviation="2.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+                <rect x="${P}" y="${P}" width="${MX-P}" height="${MY-P}" fill="rgba(96,165,250,0.06)" />
+                <rect x="${MX}" y="${P}" width="${CW-P-MX}" height="${MY-P}" fill="rgba(34,197,94,0.06)" />
+                <rect x="${P}" y="${MY}" width="${MX-P}" height="${CH-P-MY}" fill="rgba(239,68,68,0.06)" />
+                <rect x="${MX}" y="${MY}" width="${CW-P-MX}" height="${CH-P-MY}" fill="rgba(245,158,11,0.06)" />
+                <line x1="${MX}" y1="${P}" x2="${MX}" y2="${CH-P}" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="8,4" />
+                <line x1="${P}" y1="${MY}" x2="${CW-P}" y2="${MY}" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="8,4" />
+                <text x="${P+10}" y="${P+30}" fill="#60a5fa" font-size="10" font-weight="900">IMPROVING</text>
+                <text x="${CW-P-10}" y="${P+30}" fill="#22c55e" font-size="10" font-weight="900" text-anchor="end">LEADING</text>
+                <text x="${P+10}" y="${CH-P-15}" fill="#ef4444" font-size="10" font-weight="900">LAGGING</text>
+                <text x="${CW-P-10}" y="${CH-P-15}" fill="#f59e0b" font-size="10" font-weight="900" text-anchor="end">WEAKENING</text>
+            `;
 
-        function getConvergence() {
-          const counts = { leading:0, weakening:0, lagging:0, improving:0 };
-          SECTORS.forEach(s => {
-            const prev = s.trail[s.trail.length-1];
-            const dx = s.x-prev.x, dy = s.y-prev.y;
-            const heading = { x: s.x+dx*2, y: s.y+dy*2 };
-            const tq = heading.x>100 ? (heading.y>100?"leading":"weakening")
-                                      : (heading.y>100?"improving":"lagging");
-            counts[tq]++;
-          });
-          return counts;
-        }
+            processed.forEach(s => {
+                const q = s.x >= medX ? (s.y >= medY ? 'leading' : 'weakening') : (s.y >= medY ? 'improving' : 'lagging');
+                const col = Q_COLORS[q];
+                const cx = px(s.x), cy = py(s.y);
+                const pathPts = s.fullPath.map(p => ({ x: px(p.x), y: py(p.y) }));
+                const polyLine = pathPts.map(p => `${p.x},${p.y}`).join(' ');
 
-        function nearestDist(target) {
-          const tx=px(target.x), ty=py(target.y);
-          return Math.min(...SECTORS.filter(s=>s.name!==target.name).map(s=>Math.hypot(px(s.x)-tx,py(s.y)-ty)));
-        }
+                // Predictive Projection
+                let projStr = `${cx},${cy} `;
+                const projectionCount = 5;
+                for(let t=1; t<=projectionCount; t++) {
+                    const tx = cx + px(100 + s.vX*t)*0.1 - px(100)*0.1; // Vector scaled
+                    const ty = cy + py(100 + s.vY*t)*0.1 - py(100)*0.1;
+                    // For sectors, let's just use raw pixel vector
+                    const pX = cx + (cx - px(s.fullPath[s.fullPath.length-2].x || s.x)) * t * 0.8;
+                    const pY = cy + (cy - py(s.fullPath[s.fullPath.length-2].y || s.y)) * t * 0.8;
+                    projStr += `${pX},${pY} `;
+                }
 
-        function RRGChart({ highlightSector }) {
-          const MX=px(100), MY=py(100); const R=11;
-          const convergence = getConvergence();
-          const maxConv = Math.max(...Object.values(convergence));
-          const qCenters = {
-            improving: { x:(P+MX)/2,    y:(P+MY)/2    },
-            leading:   { x:(MX+CW-P)/2, y:(P+MY)/2    },
-            lagging:   { x:(P+MX)/2,    y:(MY+CH-P)/2 },
-            weakening: { x:(MX+CW-P)/2, y:(MY+CH-P)/2 },
-          };
-          return (
-            <svg viewBox={"0 0 "+CW+" "+CH} width="100%" style={{display:"block"}}>
-              <defs>
-                {SECTORS.map(s => {
-                  const all=[...s.trail,{x:s.x,y:s.y}];
-                  return (
-                    <linearGradient key={"g"+s.name} id={"g"+s.name} x1={px(all[0].x)} y1={py(all[0].y)} x2={px(all[all.length-1].x)} y2={py(all[all.length-1].y)} gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stopColor={s.color} stopOpacity="0"/><stop offset="50%" stopColor={s.color} stopOpacity="0.3"/><stop offset="100%" stopColor={s.color} stopOpacity="1"/>
-                    </linearGradient>
-                  );
-                })}
-                {SECTORS.map(s => (
-                  <marker key={"m"+s.name} id={"m"+s.name} markerWidth="10" markerHeight="5" refX="9" refY="2.5" orient="auto">
-                    <polygon points="0 0.6,9 2.5,0 4.4" fill="none" stroke="#04091a" strokeWidth="0.5" opacity="0.3"/>
-                    <polygon points="0 0.6,9 2.5,0 4.4" fill={Q_FILL[s.q]}/>
-                  </marker>
-                ))}
-                <radialGradient id="vortex-grad" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#f59e0b" stopOpacity="0.0"/><stop offset="70%" stopColor="#f59e0b" stopOpacity="0.25"/><stop offset="100%" stopColor="#f59e0b" stopOpacity="0.0"/></radialGradient>
-                <radialGradient id="cross-grad" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#ffffff" stopOpacity="0.6"/><stop offset="100%" stopColor="#ffffff" stopOpacity="0.0"/></radialGradient>
-                {Object.entries(Q_FILL).map(([q,c]) => (
-                  <radialGradient key={"conv-"+q} id={"conv-"+q} cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor={c} stopOpacity="0.18"/><stop offset="100%" stopColor={c} stopOpacity="0.0"/></radialGradient>
-                ))}
-              </defs>
-              {Object.entries(convergence).map(([q, count]) => {
-                if (count === 0) return null;
-                const {x,y} = qCenters[q]; const r = 30 + (count/maxConv)*55;
-                return (
-                  <g key={"conv-"+q}>
-                    <circle cx={x} cy={y} r={r} fill={"url(#conv-"+q+")"}><animate attributeName="r" values={r+";"+r*1.18+";"+r} dur="2.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0.5;1" dur="2.8s" repeatCount="indefinite"/></circle>
-                    {count >= 2 && <text x={x} y={y+3} textAnchor="middle" dominantBaseline="middle" fill={Q_FILL[q]} fontSize="9" fontWeight="700" fontFamily="monospace" opacity="0.55">{count} →</text>}
-                  </g>
-                );
-              })}
-              <rect x={P} y={P} width={MX-P} height={MY-P} fill="rgba(96,165,250,0.05)"/><rect x={MX} y={P} width={CW-P-MX} height={MY-P} fill="rgba(34,197,94,0.05)"/><rect x={P} y={MY} width={MX-P} height={CH-P-MY} fill="rgba(239,68,68,0.05)"/><rect x={MX} y={MY} width={CW-P-MX} height={CH-P-MY} fill="rgba(245,158,11,0.05)"/>
-              {[[P+8,P+16,"#60a5fa","IMPROVING"],[MX+8,P+16,"#22c55e","LEADING"],[P+8,MY+16,"#ef4444","LAGGING"],[MX+8,MY+16,"#f59e0b","WEAKENING"]].map(([x,y,c,l]) => (
-                <text key={l} x={x} y={y} fill={c} fontSize="10" fontWeight="700" letterSpacing="1" opacity="0.7" fontFamily="monospace">{l}</text>
-              ))}
-              <line x1={MX} y1={P} x2={MX} y2={CH-P} stroke="#1e293b" strokeWidth="1.2" strokeDasharray="5,4"/><line x1={P} y1={MY} x2={CW-P} y2={MY} stroke="#1e293b" strokeWidth="1.2" strokeDasharray="5,4"/>
-              <text x={CW-P-4} y={MY+13} textAnchor="end" fill="#475569" fontSize="9" fontFamily="monospace">RS →</text><text x={MX+5} y={P+11} fill="#475569" fontSize="9" fontFamily="monospace">Momentum ↑</text>
-              {SECTORS.map(s => axisCrossings(s).map((cr, i) => {
-                  const t = cr.type==="RS" ? (100-cr.from.x)/(cr.to.x-cr.from.x||1) : (100-cr.from.y)/(cr.to.y-cr.from.y||1);
-                  const cx2 = px(cr.from.x + t*(cr.to.x-cr.from.x)); const cy2 = py(cr.from.y + t*(cr.to.y-cr.from.y));
-                  return (
-                    <g key={s.name+"cross"+i}>
-                      <circle cx={cx2} cy={cy2} r={7} fill="url(#cross-grad)"><animate attributeName="r" values="5;12;5" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.8;0.1;0.8" dur="2s" repeatCount="indefinite"/></circle>
-                      <circle cx={cx2} cy={cy2} r={2.5} fill="#ffffff" opacity="0.9"/><text x={cx2+5} y={cy2-5} fill="#ffffff" fontSize="7" fontFamily="monospace" opacity="0.7">{cr.type}✕</text>
+                html += `
+                    <g opacity="1">
+                        <polyline points="${polyLine}" fill="none" stroke="${col}" stroke-width="16" stroke-opacity="0.04" stroke-linecap="round"/>
+                        <polyline points="${polyLine}" fill="none" stroke="${col}" stroke-width="2.5" stroke-opacity="0.8" stroke-linecap="round" filter="url(#glow)" />
+                        
+                        <!-- Prediction -->
+                        <polyline points="${projStr}" fill="none" stroke="${col}" stroke-width="2" stroke-dasharray="4,4" opacity="0.4" />
+
+                        <!-- Crumbs -->
+                        ${pathPts.map((p, i) => `<circle cx="${p.x}" cy="${p.y}" r="2" fill="${col}" opacity="${0.1+(i*0.2)}"/>`).join('')}
+
+                        <circle cx="${cx}" cy="${cy}" r="14" fill="${col}" stroke="#0a1120" stroke-width="1.5" />
+                        <text x="${cx}" y="${cy+0.4}" text-anchor="middle" dominant-baseline="middle" fill="#04091a" font-size="8" font-weight="900" font-family="monospace">${s.name}</text>
                     </g>
-                  );
-              }))}
-              {SECTORS.map(s => {
-                const norm = trailDist(s)/maxDist; const curve = trailCurvature(s); const isVortex = curve > 28;
-                const cx=px(s.x), cy=py(s.y); const svgPts=[...s.trail,{x:s.x,y:s.y}].map(p=>({x:px(p.x),y:py(p.y)}));
-                const polyStr=svgPts.map(p=>p.x+","+p.y).join(" "); const prev=svgPts[svgPts.length-2];
-                const ddx=cx-prev.x, ddy=cy-prev.y; const dlen=Math.hypot(ddx,ddy)||1; const ux=ddx/dlen, uy=ddy/dlen;
-                const arrowSx=cx+ux*(R+2), arrowSy=cy+uy*(R+2); const arrowLen=12+norm*36; const arrowEx=arrowSx+ux*arrowLen, arrowEy=arrowSy+uy*arrowLen;
-                const rw=1+norm*3; const arrowSW=0.7+norm*0.6; const needsOutline=nearestDist(s)<R*2.5; const streakOpacity=Math.min(1, 0.4+s.streakWeeks*0.08);
-                return (
-                  <g key={s.name}>
-                    {isVortex && <circle cx={cx} cy={cy} r={R+8} fill="none" stroke="#f59e0b" strokeWidth="1" strokeDasharray="3,3" opacity="0.5"><animateTransform attributeName="transform" type="rotate" from={"0 "+cx+" "+cy} to={"360 "+cx+" "+cy} dur="4s" repeatCount="indefinite"/></circle>}
-                    {norm>0.55 && <polyline points={polyStr} fill="none" stroke={s.color} strokeWidth={rw+9} strokeLinecap="round" strokeLinejoin="round" opacity="0.045"/>}
-                    <polyline points={polyStr} fill="none" stroke={"url(#g"+s.name+")"} strokeWidth={rw} strokeLinecap="round" strokeLinejoin="round" opacity={streakOpacity}/>
-                    {svgPts.slice(0,-1).map((p,i)=>(<circle key={i} cx={p.x} cy={p.y} r={1.8} fill={s.color} fillOpacity={0.08+i*0.2} stroke={s.color} strokeWidth="0.5" strokeOpacity={0.15+i*0.2}/>))}
-                    {needsOutline && <line x1={arrowSx} y1={arrowSy} x2={arrowEx} y2={arrowEy} stroke="#04091a" strokeWidth={arrowSW+2.5} strokeLinecap="butt" opacity="0.4"/>}
-                    <line x1={arrowSx} y1={arrowSy} x2={arrowEx} y2={arrowEy} stroke={Q_FILL[s.q]} strokeWidth={arrowSW} strokeLinecap="butt" markerEnd={"url(#m"+s.name+")"}/>
-                    {highlightSector===s.name && <circle cx={cx} cy={cy} r={R+5} fill="none" stroke="#ffffff" strokeWidth="1.5" opacity="0.6"/>}
-                    <circle cx={cx} cy={cy} r={R} fill={Q_FILL[s.q]} fillOpacity="0.88" stroke="#0a1120" strokeWidth="1"/>
-                    <circle cx={cx} cy={cy} r={R+2.5} fill="none" stroke={Q_FILL[s.q]} strokeWidth="1.5" opacity="0.5" strokeDasharray={((s.streakWeeks/8)*2*Math.PI*(R+2.5)).toFixed(1)+" 9999"} strokeDashoffset={((0.25)*2*Math.PI*(R+2.5)).toFixed(1)} />
-                    <text x={cx} y={cy+0.5} textAnchor="middle" dominantBaseline="middle" fill="#04091a" fontSize="7.5" fontWeight="800" fontFamily="monospace">{s.name}</text>
-                  </g>
-                );
-              })}
-            </svg>
-          );
+                `;
+            });
+
+            svg.innerHTML = html;
+            renderPanels(processed);
         }
 
-        function SignalPanel({ onHover }) {
-          const convergence = getConvergence();
-          const crossers = SECTORS.filter(s => axisCrossings(s).length > 0);
-          const vortexes = SECTORS.filter(s => trailCurvature(s) > 28);
-          return (
-            <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginTop:10}}>
-              <div style={{background:"#0a1120", border:"1px solid #1e293b", borderRadius:8, padding:"10px 12px"}}>
-                <div style={{fontSize:9,color:"#475569",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:6}}>⟶ Convergence Zones</div>
-                {Object.entries(convergence).sort((a,b)=>b[1]-a[1]).map(([q,count])=>(
-                  <div key={q} style={{display:"flex",alignItems:"center",gap:6,marginBottom:4}}>
-                    <div style={{width:7,height:7,borderRadius:"50%",background:Q_FILL[q],flexShrink:0}}/><div style={{flex:1,height:3,borderRadius:2,background:"#1e293b",overflow:"hidden"}}><div style={{width:(count/10*100)+"%",height:"100%",background:Q_FILL[q],opacity:0.7}}/></div>
-                    <span style={{fontSize:9,color:Q_FILL[q],fontWeight:700,minWidth:14}}>{count}</span><span style={{fontSize:9,color:"#475569",textTransform:"uppercase",letterSpacing:"0.05em"}}>{q}</span>
-                  </div>
-                ))}
-              </div>
-              <div style={{background:"#0a1120", border:"1px solid #1e293b", borderRadius:8, padding:"10px 12px"}}>
-                <div style={{fontSize:9,color:"#475569",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:6}}>↻ Vortex (Direction Change)</div>
-                {vortexes.length===0 ? <div style={{fontSize:10,color:"#334155"}}>No significant curves</div> : vortexes.map(s=>(
-                  <div key={s.name} style={{display:"flex",alignItems:"center",gap:6,marginBottom:4}} onMouseEnter={()=>onHover(s.name)} onMouseLeave={()=>onHover(null)}>
-                    <div style={{width:7,height:7,borderRadius:"50%",background:"#f59e0b",flexShrink:0}}/><span style={{fontSize:10,color:"#f59e0b",fontWeight:700}}>{s.name}</span><span style={{fontSize:9,color:"#475569"}}>curving {trailCurvature(s).toFixed(0)}°</span>
-                  </div>
-                ))}
-              </div>
-              <div style={{background:"#0a1120", border:"1px solid #1e293b", borderRadius:8, padding:"10px 12px"}}>
-                <div style={{fontSize:9,color:"#475569",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:6}}>✕ Axis Crossings</div>
-                {crossers.length===0 ? <div style={{fontSize:10,color:"#334155"}}>No recent crossings</div> : crossers.map(s=>axisCrossings(s).map((cr,i)=>(
-                  <div key={s.name+i} style={{display:"flex",alignItems:"center",gap:6,marginBottom:4}} onMouseEnter={()=>onHover(s.name)} onMouseLeave={()=>onHover(null)}>
-                    <div style={{width:7,height:7,borderRadius:"50%",background:"#ffffff",flexShrink:0}}/><span style={{fontSize:10,color:"#e2e8f0",fontWeight:700}}>{s.name}</span><span style={{fontSize:9,color:"#64748b"}}>crossed {cr.type} axis</span>
-                  </div>
-                )))}
-              </div>
-              <div style={{background:"#0a1120", border:"1px solid #1e293b", borderRadius:8, padding:"10px 12px"}}>
-                <div style={{fontSize:9,color:"#475569",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:6}}>━ Streak (Weeks)</div>
-                {[...SECTORS].sort((a,b)=>b.streakWeeks-a.streakWeeks).slice(0,4).map(s=>(
-                  <div key={s.name} style={{display:"flex",alignItems:"center",gap:6,marginBottom:3}} onMouseEnter={()=>onHover(s.name)} onMouseLeave={()=>onHover(null)}>
-                    <span style={{fontSize:9,color:Q_FILL[s.q],fontWeight:700,minWidth:30}}>{s.name}</span><div style={{flex:1,height:3,borderRadius:2,background:"#1e293b",overflow:"hidden"}}><div style={{width:(s.streakWeeks/8*100)+"%",height:"100%",background:Q_FILL[s.q],opacity:0.7}}/></div><span style={{fontSize:9,color:"#475569"}}>{s.streakWeeks}w</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
+        function renderPanels(sectors) {
+            const high = sectors.sort((a,b)=>b.y-a.y).slice(0,4);
+            document.getElementById('sectorVelocity').innerHTML = `<div class="mini-title">⚡ Sector Alpha</div>` + 
+                high.map(s => `<div class="list-item"><span style="color:#22c55e;font-weight:800;width:35px">${s.name}</span> <span style="color:var(--text-dim);font-size:10px">${s.y.toFixed(1)} Mom</span></div>`).join('');
+            
+            const weakening = sectors.filter(s => s.vY < 0).slice(0,4);
+            document.getElementById('sectorExits').innerHTML = `<div class="mini-title">↻ Predicted Exits</div>` + 
+                weakening.map(s => `<div class="list-item"><span style="color:#f59e0b;font-weight:800;width:35px">${s.name}</span> <span style="color:var(--text-dim);font-size:10px">Decelerating</span></div>`).join('');
         }
 
-        function ContributorWheel() {
-          const [activeIdx, setActiveIdx] = useState(0); const sectors = Object.keys(CONTRIBUTORS); const sector = sectors[activeIdx]; const stocks = CONTRIBUTORS[sector];
-          const q = ["XLK","XLE","XLI"].includes(sector) ? "leading" : "improving"; const qColor = Q_FILL[q]; const secColor = Q_FILL_BANNER[sector];
-          return (
-            <div style={{ background:"#0a1120", border:`1px solid ${qColor}44`, borderRadius:10, padding:"10px 12px", marginTop:10 }}>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8}}>
-                <div style={{display:"flex",alignItems:"center",gap:8}}><div style={{width:8,height:8,borderRadius:"50%",background:qColor}}/><span style={{fontSize:10,color:"#475569",textTransform:"uppercase",letterSpacing:"0.12em"}}>Top Contributors</span></div>
-                <div style={{display:"flex",alignItems:"center",gap:4}}><button onClick={()=>setActiveIdx(i=>(i-1+sectors.length)%sectors.length)} style={{background:"#0f172a",border:"1px solid #1e293b",borderRadius:4,color:"#64748b",fontSize:12,cursor:"pointer",padding:"2px 7px"}}>‹</button><span style={{fontSize:11,fontWeight:700,color:secColor,minWidth:38,textAlign:"center"}}>{sector}</span><button onClick={()=>setActiveIdx(i=>(i+1)%sectors.length)} style={{background:"#0f172a",border:"1px solid #1e293b",borderRadius:4,color:"#64748b",fontSize:12,cursor:"pointer",padding:"2px 7px"}}>›</button></div>
-              </div>
-              {stocks.map((stock, i) => {
-                const barPct = (stock.flow / 320) * 100;
-                return (
-                  <div key={stock.ticker} style={{ display:"flex",alignItems:"center",gap:8, padding:"7px 8px",marginBottom:4, background: i===0 ? "#0f172a" : "transparent", borderRadius:6, border: i===0 ? `1px solid ${secColor}33` : "1px solid transparent" }}>
-                    <div style={{ width:16,height:16,borderRadius:"50%", background: i===0 ? secColor+"33" : "#1e293b", display:"flex",alignItems:"center",justifyContent:"center", fontSize:8,fontWeight:700,color: i===0 ? secColor : "#475569" }}>{i+1}</div>
-                    <div style={{flex:1}}><div style={{display:"flex",alignItems:"baseline",gap:5}}><span style={{fontSize:11,fontWeight:800,color:"#f1f5f9"}}>{stock.ticker}</span><span style={{fontSize:9,color:"#475569"}}>{stock.name}</span></div><div style={{height:2,background:"#1e293b",borderRadius:1,marginTop:3}}><div style={{width:barPct+"%",height:"100%",background:secColor}}/></div></div>
-                    <div style={{textAlign:"right"}}><div style={{fontSize:10,fontWeight:700,color:"#22c55e"}}>+{stock.chg}%</div><div style={{fontSize:9,color:"#475569"}}>+${stock.flow}M</div></div>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        }
-
-        const weeklyRankData = [ { week:"Wk 1", XLK:8, XLU:2, XLE:5, XLP:3, XLI:4 }, { week:"Wk 2", XLK:7, XLU:3, XLE:4, XLP:2, XLI:5 }, { week:"Wk 3", XLK:6, XLU:4, XLE:3, XLP:1, XLI:6 }, { week:"Wk 4", XLK:4, XLU:6, XLE:2, XLP:3, XLI:5 }, { week:"Wk 5", XLK:2, XLU:8, XLE:1, XLP:4, XLI:3 }, { week:"Wk 6", XLK:1, XLU:9, XLE:3, XLP:5, XLI:4 } ];
-        const relativeReturnData = [ { week:"Wk 1", XLK:-2.1, XLU:1.8,  XLE:0.4  }, { week:"Wk 2", XLK:-1.4, XLU:1.2,  XLE:0.8  }, { week:"Wk 3", XLK: 0.2, XLU:0.6,  XLE:1.4  }, { week:"Wk 4", XLK: 1.1, XLU:-0.3, XLE:1.9  }, { week:"Wk 5", XLK: 2.4, XLU:-1.2, XLE:2.1  }, { week:"Wk 6", XLK: 3.1, XLU:-1.8, XLE:1.7  } ];
-        const flowData = [ { sector:"XLE Energy", flow: 2.8 }, { sector:"XLI Indust.", flow: 1.9 }, { sector:"XLK Tech", flow: 1.2 }, { sector:"XLF Finance", flow: 0.4 }, { sector:"XLP Staples", flow:-0.6 }, { sector:"XLV Health", flow:-1.1 }, { sector:"XLY Discret.", flow:-1.7 }, { sector:"XLU Utility", flow:-2.3 } ];
-
-        function RankTab() {
-          const crossers = new Set(SECTORS.filter(s=>axisCrossings(s).length>0).map(s=>s.name));
-          const vortexSet = new Set(SECTORS.filter(s=>trailCurvature(s)>28).map(s=>s.name));
-          return (
-            <>
-              <Panel title="Weekly Sector Rank (1 = Best)" sub="Lower rank = better.">
-                <ResponsiveContainer width="100%" height={270}>
-                  <LineChart data={weeklyRankData} margin={{top:8,right:8,left:-22,bottom:0}}>
-                    <CartesianGrid stroke="#1e293b" strokeDasharray="3 3"/><XAxis dataKey="week" tick={{fill:"#64748b",fontSize:10}}/><YAxis reversed tick={{fill:"#64748b",fontSize:10}} domain={[1,11]}/><Tooltip content={<Tip/>}/><Legend wrapperStyle={{fontSize:10}}/>
-                    {Object.entries(LINE_COLORS).map(([k,c]) => ( <Line key={k} type="monotone" dataKey={k} stroke={c} strokeWidth={2.2} dot={{r:3.5,fill:c,strokeWidth:0}} strokeDasharray={vortexSet.has(k) ? "6 3" : undefined}/> ))}
-                  </LineChart>
-                </ResponsiveContainer>
-              </Panel>
-              <div style={{background:"#0f172a",border:"1px solid #1e293b",borderRadius:10,padding:"12px 13px",marginBottom:10}}><div style={{fontSize:12,fontWeight:700,color:"#f1f5f9",marginBottom:8}}>RRG Signal Map</div>
-                <div style={{overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontSize:10,fontFamily:"monospace"}}><thead><tr style={{color:"#475569",borderBottom:"1px solid #1e293b"}}>{["Sector","Quadrant","Streak","Rank Signal"].map(h=>(<th key={h} style={{padding:"4px 8px",textAlign:"left"}}>{h}</th>))}</tr></thead>
-                <tbody>{[...SECTORS].sort((a,b)=>a.q.localeCompare(b.q)).map((s,i)=>{
-                  const signal=s.q==="leading"?"▲ BUY":s.q==="improving"?"▲ WATCH":s.q==="weakening"?"▼ FADE":s.q==="lagging"?"▼ AVOID":"— HOLD";
-                  const sigColor=signal.startsWith("▲")?"#22c55e":signal.startsWith("▼")?"#ef4444":"#f59e0b";
-                  return (<tr key={s.name} style={{background:i%2===0?"#0a1120":"transparent"}}><td style={{padding:"5px 8px",color:Q_FILL[s.q],fontWeight:700}}>{s.name}</td><td style={{padding:"5px 8px",color:Q_FILL[s.q]}}>{s.q}</td><td style={{padding:"5px 8px",color:"#94a3b8"}}>{s.streakWeeks}w</td><td style={{padding:"5px 8px",color:sigColor,fontWeight:700}}>{signal}</td></tr>);
-                })}</tbody></table></div></div>
-            </>
-          );
-        }
-
-        const Tip = ({active,payload,label}) => active&&payload?.length ? (<div style={{background:"#0f172a",border:"1px solid #334155",borderRadius:8,padding:"9px 13px"}}><div style={{color:"#94a3b8",fontSize:11,marginBottom:5}}>{label}</div>{payload.map(p=>(<div key={p.name} style={{color:p.color||p.fill,fontSize:12}}><b>{p.name}</b>: {p.value>0?"+":""}{p.value}</div>))}</div>) : null;
-        function Panel({title,sub,children}) { return (<div style={{background:"#0f172a",border:"1px solid #1e293b",borderRadius:12,padding:"13px 12px",marginBottom:10}}><div style={{fontSize:13,fontWeight:700,color:"#f1f5f9",marginBottom:2}}>{title}</div><div style={{fontSize:10,color:"#475569",marginBottom:9}}>{sub}</div>{children}</div>); }
-
-        function App() {
-          const [tab, setTab] = useState("rrg"); const [hoveredSector, setHoveredSector] = useState(null);
-          const TABS = [{id:"rrg",label:"Rotation Map"},{id:"rank",label:"Rank + Signals"},{id:"return",label:"vs S&P 500"},{id:"flow",label:"Fund Flows"}];
-          return (
-            <div style={{background:"#070d1a",minHeight:"100vh",color:"#e2e8f0",padding:"20px 15px"}}>
-              <div style={{marginBottom:18}}><div style={{display:"flex",alignItems:"center",gap:8,marginBottom:3}}><div style={{width:7,height:7,borderRadius:"50%",background:"#22d3ee",boxShadow:"0 0 7px #22d3ee"}}/><span style={{fontSize:10,color:"#22d3ee",letterSpacing:"0.2em",textTransform:"uppercase"}}>Live · Apr 11 2026</span></div>
-              <h1 style={{margin:0,fontSize:18,fontWeight:700,color:"#f1f5f9"}}>Sector Rotation Dashboard</h1></div>
-              <TickerBanner /><div style={{display:"flex",gap:5,marginBottom:16,flexWrap:"wrap"}}>{TABS.map(t=>(<button key={t.id} onClick={()=>setTab(t.id)} style={{padding:"5px 12px",borderRadius:6,cursor:"pointer",fontSize:11,fontWeight:600,border:tab===t.id?"1px solid #22d3ee":"1px solid #1e293b",background:tab===t.id?"rgba(34,211,238,0.1)":"#0f172a",color:tab===t.id?"#22d3ee":"#64748b"}}>{t.label}</button>))}</div>
-              {tab==="rrg" && <div style={{background:"#0f172a",border:"1px solid #1e293b",borderRadius:12,padding:"13px 12px",marginBottom:10}}><div style={{fontSize:13,fontWeight:700,color:"#f1f5f9",marginBottom:1}}>Relative Rotation Graph</div><div style={{background:"#0a1120",borderRadius:8,border:"1px solid #1e293b"}}><RRGChart highlightSector={hoveredSector}/></div><SignalPanel onHover={setHoveredSector}/><ContributorWheel /></div>}
-              {tab==="rank" && <RankTab/>}
-              {tab==="return" && <Panel title="Return vs. S&P 500 (%)"><ResponsiveContainer width="100%" height={270}><LineChart data={relativeReturnData} margin={{top:8,right:8,left:-22,bottom:0}}><CartesianGrid stroke="#1e293b"/><XAxis dataKey="week"/><YAxis/><Tooltip content={<Tip/>}/><ReferenceLine y={0} stroke="#334155"/><Legend/><Line type="monotone" dataKey="XLK" stroke="#22d3ee"/><Line type="monotone" dataKey="XLU" stroke="#818cf8"/><Line type="monotone" dataKey="XLE" stroke="#4ade80"/></LineChart></ResponsiveContainer></Panel>}
-              {tab==="flow" && <Panel title="Fund Flows ($B)"><ResponsiveContainer width="100%" height={290}><BarChart data={flowData} layout="vertical" margin={{top:4,right:18,left:62,bottom:4}}><CartesianGrid stroke="#1e293b"/><XAxis type="number"/><YAxis type="category" dataKey="sector" width={64}/><Tooltip content={<Tip/>}/><ReferenceLine x={0} stroke="#334155"/><Bar dataKey="flow">{flowData.map((e,i)=>(<Cell key={i} fill={e.flow>0?"#22c55e":"#ef4444"}/>))}</Bar></BarChart></ResponsiveContainer></Panel>}
-            </div>
-          );
-        }
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+            // Fixed typo in variable name in renderPanels
+        boot();
     </script>
 </body>
 </html>
