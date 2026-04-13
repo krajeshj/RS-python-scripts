@@ -114,29 +114,27 @@
     </div>
 
     <script>
-        let allStocks = [], webData = null, stockHist = {};
-        let minRS = 75, maxRS = 100, minRMV = 10, maxRMV = 45;
-        let filters = { quality: true, minervini: false, top5: false };
-        let activeQuadrants = { leading: true, improving: true, weakening: true, lagging: true };
-        const CW = 600, CH = 600, P = 60, R = 15;
-        const Q_FILL = { leading: "#22c55e", weakening: "#f59e0b", lagging: "#ef4444", improving: "#60a5fa" };
-        const TRAIL_DAYS = 10;
+        var allStocks = [], webData = null, stockHist = {};
+        var minRS = 75, maxRS = 100, minRMV = 10, maxRMV = 45;
+        var filters = { quality: true, minervini: false, top5: false };
+        var activeQuadrants = { leading: true, improving: true, weakening: true, lagging: true };
+        var CW = 600, CH = 600, P = 65, R = 15;
+        var Q_FILL = { leading: "#22c55e", weakening: "#f59e0b", lagging: "#ef4444", improving: "#60a5fa" };
 
-        async function init() {
-            const ts = Date.now();
-            try {
-                const [webRes, histRes] = await Promise.all([
-                    fetch('web_data.json?v=' + ts).then(r => r.json()),
-                    fetch('stock_history.json?v=' + ts).then(r => r.json())
-                ]);
-                webData = webRes;
-                allStocks = webRes.all_stocks || webRes.stocks || [];
-                stockHist = histRes || {};
+        function init() {
+            var ts = Date.now();
+            Promise.all([
+                fetch('web_data.json?v=' + ts).then(function(r) { return r.json(); }),
+                fetch('stock_history.json?v=' + ts).then(function(r) { return r.json(); })
+            ]).then(function(res) {
+                webData = res[0];
+                allStocks = res[0].all_stocks || res[0].stocks || [];
+                stockHist = res[1] || {};
                 wireSliders();
                 render();
-            } catch (e) {
+            }).catch(function(e) {
                 document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:red;">Data sync error: ' + e.message + '</div>';
-            }
+            });
         }
 
         function wireSliders() {
@@ -151,18 +149,8 @@
             if (type === 'rmv') { var f = document.getElementById('rmv-fill'); f.style.left = minRMV + '%'; f.style.right = (100 - maxRMV) + '%'; }
         }
 
-        function toggle(key) {
-            filters[key] = !filters[key];
-            document.getElementById(key + '-btn').classList.toggle('active', filters[key]);
-            render();
-        }
-
-        function toggleQ(btn) {
-            var q = btn.getAttribute('data-q');
-            activeQuadrants[q] = !activeQuadrants[q];
-            btn.classList.toggle('active', activeQuadrants[q]);
-            render();
-        }
+        function toggle(key) { filters[key] = !filters[key]; document.getElementById(key + '-btn').classList.toggle('active', filters[key]); render(); }
+        function toggleQ(btn) { var q = btn.getAttribute('data-q'); activeQuadrants[q] = !activeQuadrants[q]; btn.classList.toggle('active', activeQuadrants[q]); render(); }
 
         function copyTickers() {
             var cards = document.querySelectorAll('[data-ticker]');
@@ -176,8 +164,15 @@
             });
         }
 
+        // Median helper
+        function median(arr) {
+            if (!arr.length) return 0;
+            var s = arr.slice().sort(function(a, b) { return a - b; });
+            var m = Math.floor(s.length / 2);
+            return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+        }
+
         function render() {
-            // 1. FILTER (matching dashboard logic exactly)
             var top5Names = [];
             if (filters.top5 && webData && webData.stages && webData.stages.length >= 5) {
                 top5Names = webData.stages.slice(0, 5).map(function(s) { return s.sector; });
@@ -203,58 +198,80 @@
                 return;
             }
 
-            // 2. BUILD TRAIL DATA from stock_history.json (10-day lookback)
-            var rsArr = filtered.map(function(s) { return s.rs; }).sort(function(a, b) { return a - b; });
-            var medRS = rsArr[Math.floor(rsArr.length / 2)];
-            if (medRS === 0) medRS = 1;
-
-            var processed = filtered.map(function(s) {
-                var h = (stockHist[s.ticker] || []).slice(0, TRAIL_DAYS + 7);
-                var trail = []; // Each entry: {x, y} in normalized coords
-                var weights = [0.65, 0.25, 0.1, 0];
+            // =============================================
+            // CORE RRG MATH: Dual-Median Normalization
+            // =============================================
+            // Step 1: Compute raw RS and weighted momentum for each stock
+            var rawData = filtered.map(function(s) {
+                var h = (stockHist[s.ticker] || []).slice(0, 17);
+                // Front-weighted momentum: recent RS change vs 7 days ago
+                var weights = [0.65, 0.25, 0.1];
                 var wMom = 0;
-
-                // Build trail points from history (index 0 = today, 1 = yesterday, etc.)
-                for (var i = 0; i < TRAIL_DAYS; i++) {
-                    var r = h[i], r_prev = h[i + 7];
-                    if (r !== undefined && r_prev !== undefined) {
-                        var mom_i = (r - r_prev);
-                        var normX_i = (r / medRS) * 100;
-                        trail.push({ x: normX_i, y: mom_i });
-                        if (i < 4) wMom += mom_i * weights[i];
+                var momCount = 0;
+                for (var i = 0; i < 3; i++) {
+                    if (h[i] !== undefined && h[i + 7] !== undefined) {
+                        wMom += (h[i] - h[i + 7]) * weights[i];
+                        momCount++;
                     }
                 }
+                // Acceleration = change in momentum
+                var mom0 = (h[0] !== undefined && h[7] !== undefined) ? (h[0] - h[7]) : 0;
+                var mom1 = (h[1] !== undefined && h[8] !== undefined) ? (h[1] - h[8]) : 0;
+                var acc = mom0 - mom1;
 
-                var curM = trail[0] ? trail[0].y : 0;
-                var prevM = trail[1] ? trail[1].y : 0;
-                var acc = curM - prevM;
-
-                // X = percentile rank for spread
-                var rank = rsArr.indexOf(s.rs);
-                var pctRank = rsArr.length > 1 ? (rank / (rsArr.length - 1)) : 0.5;
-                var xVal = 80 + pctRank * 40;
-
-                var mom = wMom * 6;
-                var q = xVal >= 100 ? (mom >= 0 ? "leading" : "weakening") : (mom >= 0 ? "improving" : "lagging");
-
-                var outlook = 'neutral';
-                if (mom > 1 && acc >= 0) outlook = 'rallying';
-                else if (mom > 0 && acc < -0.3) outlook = 'curling';
-                else if (mom <= 0 && acc < 0) outlook = 'declining';
-                else if (mom <= 0 && acc >= 0) outlook = 'recovering';
+                // Build 10-day trail: each point is {rs, mom} for that day
+                var trail = [];
+                for (var t = 0; t < 10; t++) {
+                    if (h[t] !== undefined && h[t + 7] !== undefined) {
+                        trail.push({ rs: h[t], mom: h[t] - h[t + 7] });
+                    }
+                }
 
                 return {
                     ticker: s.ticker, name: s.name, rs: s.rs, rmv: s.rmv, rank: s.rank,
                     industry: s.industry, sector: s.sector, is_minervini: s.is_minervini,
                     tradingview_url: s.tradingview_url,
-                    xVal: xVal, mom: mom, acc: acc, trail: trail, q: q, color: Q_FILL[q], outlook: outlook
+                    rawRS: s.rs, rawMom: wMom, acc: acc, trail: trail
                 };
             });
 
-            // 3. Quadrant filter
+            // Step 2: Find MEDIANS of RS and Momentum for the group
+            var medianRS = median(rawData.map(function(d) { return d.rawRS; }));
+            var medianMom = median(rawData.map(function(d) { return d.rawMom; }));
+
+            // Step 3: Normalize to median-centered coordinates
+            // X = RS relative to group median (centered at 0)
+            // Y = Momentum relative to group median (centered at 0)
+            var processed = rawData.map(function(d) {
+                var xVal = d.rawRS - medianRS;   // positive = above median RS
+                var yVal = d.rawMom - medianMom;  // positive = above median momentum
+
+                var q = xVal >= 0 ? (yVal >= 0 ? "leading" : "weakening") : (yVal >= 0 ? "improving" : "lagging");
+
+                // Normalize trail relative to medians too
+                var trailNorm = d.trail.map(function(tp) {
+                    return { x: tp.rs - medianRS, y: (tp.mom) - medianMom };
+                });
+
+                // Outlook based on momentum direction + acceleration
+                var outlook = 'neutral';
+                if (yVal > 0 && d.acc >= 0) outlook = 'rallying';
+                else if (yVal > 0 && d.acc < 0) outlook = 'curling';
+                else if (yVal <= 0 && d.acc < 0) outlook = 'declining';
+                else if (yVal <= 0 && d.acc >= 0) outlook = 'recovering';
+
+                return {
+                    ticker: d.ticker, name: d.name, rs: d.rs, rmv: d.rmv, rank: d.rank,
+                    industry: d.industry, sector: d.sector, is_minervini: d.is_minervini,
+                    tradingview_url: d.tradingview_url,
+                    xVal: xVal, yVal: yVal, acc: d.acc, trail: trailNorm,
+                    q: q, color: Q_FILL[q], outlook: outlook
+                };
+            });
+
+            // Quadrant filter
             var visible = processed.filter(function(s) { return activeQuadrants[s.q]; });
-            var totalFiltered = filtered.length;
-            document.getElementById('filter-count').textContent = visible.length + ' of ' + totalFiltered + ' stocks';
+            document.getElementById('filter-count').textContent = visible.length + ' of ' + filtered.length + ' stocks';
 
             if (!visible.length) {
                 document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text2);">No stocks in selected quadrants.</div>';
@@ -262,105 +279,124 @@
                 return;
             }
 
-            // 4. SVG RENDERING
-            var xs = visible.map(function(s) { return s.xVal; });
-            var ys = visible.map(function(s) { return s.mom; });
-            var gMinX = Math.min.apply(null, xs.concat([78])), gMaxX = Math.max.apply(null, xs.concat([122]));
-            var gMinY = Math.min.apply(null, ys.concat([-10])), gMaxY = Math.max.apply(null, ys.concat([10]));
+            // =============================================
+            // SVG RENDERING - Symmetrical axis scaling
+            // =============================================
+            var allX = [], allY = [];
+            visible.forEach(function(s) {
+                allX.push(s.xVal);
+                allY.push(s.yVal);
+                s.trail.forEach(function(tp) { allX.push(tp.x); allY.push(tp.y); });
+            });
+            // Force symmetry: range must include 0 and extend equally both sides
+            var maxAbsX = Math.max(Math.abs(Math.min.apply(null, allX)), Math.abs(Math.max.apply(null, allX)), 2);
+            var maxAbsY = Math.max(Math.abs(Math.min.apply(null, allY)), Math.abs(Math.max.apply(null, allY)), 0.5);
+            // Add 20% padding
+            maxAbsX *= 1.25;
+            maxAbsY *= 1.25;
 
-            function tX(v) { return P + ((v - gMinX) / (gMaxX - gMinX || 1)) * (CW - P * 2); }
-            function tY(v) { return (CH - P) - ((v - gMinY) / (gMaxY - gMinY || 1)) * (CH - P * 2); }
-            var MX = tX(100), MY = tY(0);
+            function tX(v) { return P + ((v + maxAbsX) / (2 * maxAbsX)) * (CW - P * 2); }
+            function tY(v) { return (CH - P) - ((v + maxAbsY) / (2 * maxAbsY)) * (CH - P * 2); }
+            var MX = tX(0), MY = tY(0); // Crosshairs at median
 
             var defs = '';
             var stockG = '';
 
             visible.forEach(function(s) {
-                var cx = tX(s.xVal), cy = tY(s.mom);
+                var cx = tX(s.xVal), cy = tY(s.yVal);
                 // Deterministic jitter
                 var jh = 0;
                 for (var ci = 0; ci < s.ticker.length; ci++) jh += s.ticker.charCodeAt(ci);
-                var dx = ((jh % 17) - 8) * 1.8, dy = (((jh * 7) % 17) - 8) * 1.8;
+                var dx = ((jh % 17) - 8) * 1.5, dy = (((jh * 7) % 17) - 8) * 1.5;
                 var jcx = cx + dx, jcy = cy + dy;
 
                 // --- BREADCRUMB TRAIL (10-day lookback) ---
+                // Render oldest to newest: bigger/brighter as we approach today
                 var trailSvg = '';
                 var trailPts = [];
                 for (var ti = s.trail.length - 1; ti >= 0; ti--) {
                     var tp = s.trail[ti];
-                    // Use percentile-rank-based X for trail too, but approximate via RS ratio
                     var tx_v = tX(tp.x), ty_v = tY(tp.y);
                     trailPts.push(tx_v + ',' + ty_v);
-                    var opacity = 0.12 + (1 - ti / s.trail.length) * 0.35;
-                    var radius = 2 + (1 - ti / s.trail.length) * 2;
-                    trailSvg += '<circle cx="' + tx_v + '" cy="' + ty_v + '" r="' + radius.toFixed(1) + '" fill="' + s.color + '" opacity="' + opacity.toFixed(2) + '"/>';
+                    var age = ti / Math.max(s.trail.length - 1, 1); // 0=newest, 1=oldest
+                    var opacity = 0.15 + (1 - age) * 0.45;
+                    var radius = 2.5 + (1 - age) * 3;
+                    trailSvg += '<circle cx="' + tx_v + '" cy="' + ty_v + '" r="' + radius.toFixed(1) + '" fill="' + s.color + '" opacity="' + opacity.toFixed(2) + '" stroke="#000" stroke-width="0.5"/>';
                 }
-                // Trail polyline (ghostrail)
+                // Ghostrail polyline connecting all trail dots
                 if (trailPts.length > 1) {
-                    trailSvg += '<polyline points="' + trailPts.join(' ') + '" fill="none" stroke="' + s.color + '" stroke-width="2" stroke-opacity="0.15" stroke-linecap="round"/>';
+                    trailSvg += '<polyline points="' + trailPts.join(' ') + '" fill="none" stroke="' + s.color + '" stroke-width="1.5" stroke-opacity="0.2" stroke-linecap="round" stroke-dasharray="3,3"/>';
                 }
 
-                // --- PREDICTIVE CURL ARROW (engineering style) ---
-                // Velocity from last two trail points
+                // --- PREDICTIVE CURL ARROW (engineering style with cubic Bezier) ---
                 var vX = 0, vY = 0;
                 if (s.trail.length >= 2) {
                     vX = tX(s.trail[0].x) - tX(s.trail[1].x);
                     vY = tY(s.trail[0].y) - tY(s.trail[1].y);
                 }
+                // Scale acceleration for visible curvature
+                var accScale = maxAbsY > 0 ? (1 / maxAbsY) * 15 : 1;
 
-                // Build quadratic Bezier curve for predictive path
-                // acc determines curvature: positive = curving up, negative = curving down
+                // 5-point forecast
                 var predPts = [];
                 predPts.push({ x: jcx, y: jcy });
                 for (var pi = 1; pi <= 5; pi++) {
-                    var px = jcx + vX * pi * 1.2 + s.acc * pi * pi * 0.5;
-                    var py = jcy + vY * pi * 1.2 + s.acc * pi * pi * 1.0;
+                    var px = jcx + vX * pi * 1.0;
+                    var py = jcy + vY * pi * 1.0 + s.acc * accScale * pi * pi * 0.4;
                     predPts.push({ x: px, y: py });
                 }
 
-                // SVG path with smooth curve (C for cubic bezier)
-                var curvePath = 'M ' + predPts[0].x + ' ' + predPts[0].y;
+                // SVG smooth cubic Bezier
+                var curvePath = 'M ' + predPts[0].x.toFixed(1) + ' ' + predPts[0].y.toFixed(1);
                 if (predPts.length >= 4) {
-                    curvePath += ' C ' + predPts[1].x + ' ' + predPts[1].y + ', ' +
-                                        predPts[2].x + ' ' + predPts[2].y + ', ' +
-                                        predPts[3].x + ' ' + predPts[3].y;
+                    curvePath += ' C ' + predPts[1].x.toFixed(1) + ' ' + predPts[1].y.toFixed(1) + ', ' +
+                        predPts[2].x.toFixed(1) + ' ' + predPts[2].y.toFixed(1) + ', ' +
+                        predPts[3].x.toFixed(1) + ' ' + predPts[3].y.toFixed(1);
                     if (predPts.length >= 6) {
-                        curvePath += ' S ' + predPts[4].x + ' ' + predPts[4].y + ', ' +
-                                            predPts[5].x + ' ' + predPts[5].y;
+                        curvePath += ' S ' + predPts[4].x.toFixed(1) + ' ' + predPts[4].y.toFixed(1) + ', ' +
+                            predPts[5].x.toFixed(1) + ' ' + predPts[5].y.toFixed(1);
                     }
                 }
 
-                // Engineering arrowhead marker (larger, hollow-looking)
+                // Engineering arrowhead
                 var markerId = 'eng-' + s.ticker;
-                defs += '<marker id="' + markerId + '" markerWidth="14" markerHeight="10" refX="13" refY="5" orient="auto" markerUnits="userSpaceOnUse">' +
-                    '<path d="M0,1 L13,5 L0,9 L3,5 Z" fill="' + s.color + '" stroke="#000" stroke-width="0.5"/>' +
+                defs += '<marker id="' + markerId + '" markerWidth="16" markerHeight="12" refX="14" refY="6" orient="auto" markerUnits="userSpaceOnUse">' +
+                    '<path d="M0,1.5 L14,6 L0,10.5 L4,6 Z" fill="' + s.color + '" stroke="#000" stroke-width="0.6"/>' +
                     '</marker>';
 
                 stockG += '<g>' +
                     trailSvg +
-                    '<path d="' + curvePath + '" fill="none" stroke="' + s.color + '" stroke-width="2.8" stroke-dasharray="7,5" opacity="0.75" marker-end="url(#' + markerId + ')"/>' +
-                    '<circle cx="' + jcx + '" cy="' + jcy + '" r="' + R + '" fill="' + s.color + '" stroke="#000" stroke-width="2"/>' +
-                    '<text x="' + jcx + '" y="' + (jcy + 0.5) + '" text-anchor="middle" dominant-baseline="middle" fill="#000" font-size="8.5" font-weight="950" font-family="var(--mono)">' + s.ticker + '</text>' +
+                    '<path d="' + curvePath + '" fill="none" stroke="' + s.color + '" stroke-width="2.5" stroke-dasharray="8,5" opacity="0.75" marker-end="url(#' + markerId + ')"/>' +
+                    '<circle cx="' + jcx + '" cy="' + jcy + '" r="' + R + '" fill="' + s.color + '" stroke="#000" stroke-width="2.5"/>' +
+                    '<text x="' + jcx + '" y="' + (jcy + 0.5) + '" text-anchor="middle" dominant-baseline="middle" fill="#000" font-size="8" font-weight="950" font-family="var(--mono)">' + s.ticker + '</text>' +
                     '</g>';
             });
+
+            // Axis labels
+            var axisInfo = '<text x="' + (CW / 2) + '" y="' + (CH - 10) + '" text-anchor="middle" fill="#334155" font-size="9" font-weight="600">← Lower RS (Relative) — Higher RS (Relative) →</text>' +
+                '<text x="12" y="' + (CH / 2) + '" text-anchor="middle" fill="#334155" font-size="9" font-weight="600" transform="rotate(-90,' + 12 + ',' + (CH / 2) + ')">← Losing Momentum — Gaining Momentum →</text>';
 
             document.getElementById('rrg-container').innerHTML =
                 '<svg viewBox="0 0 ' + CW + ' ' + CH + '">' +
                 '<defs>' + defs + '</defs>' +
+                // Quadrant backgrounds
                 '<rect x="' + P + '" y="' + P + '" width="' + (MX - P) + '" height="' + (MY - P) + '" fill="rgba(96,165,250,0.08)"/>' +
                 '<rect x="' + MX + '" y="' + P + '" width="' + (CW - P - MX) + '" height="' + (MY - P) + '" fill="rgba(34,197,94,0.08)"/>' +
                 '<rect x="' + P + '" y="' + MY + '" width="' + (MX - P) + '" height="' + (CH - P - MY) + '" fill="rgba(239,68,68,0.08)"/>' +
                 '<rect x="' + MX + '" y="' + MY + '" width="' + (CW - P - MX) + '" height="' + (CH - P - MY) + '" fill="rgba(245,158,11,0.08)"/>' +
+                // Crosshairs at median
                 '<line x1="' + MX + '" y1="' + P + '" x2="' + MX + '" y2="' + (CH - P) + '" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="5,4"/>' +
                 '<line x1="' + P + '" y1="' + MY + '" x2="' + (CW - P) + '" y2="' + MY + '" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="5,4"/>' +
-                '<text x="' + (P + 12) + '" y="' + (P + 22) + '" fill="#60a5fa" font-size="11" font-weight="900" opacity="0.5">IMPROVING</text>' +
-                '<text x="' + (CW - P - 70) + '" y="' + (P + 22) + '" fill="#22c55e" font-size="11" font-weight="900" opacity="0.5">LEADING</text>' +
-                '<text x="' + (P + 12) + '" y="' + (CH - P - 12) + '" fill="#ef4444" font-size="11" font-weight="900" opacity="0.5">LAGGING</text>' +
-                '<text x="' + (CW - P - 85) + '" y="' + (CH - P - 12) + '" fill="#f59e0b" font-size="11" font-weight="900" opacity="0.5">WEAKENING</text>' +
+                // Quadrant labels
+                '<text x="' + (P + 10) + '" y="' + (P + 20) + '" fill="#60a5fa" font-size="12" font-weight="900" opacity="0.5">IMPROVING</text>' +
+                '<text x="' + (CW - P - 75) + '" y="' + (P + 20) + '" fill="#22c55e" font-size="12" font-weight="900" opacity="0.5">LEADING</text>' +
+                '<text x="' + (P + 10) + '" y="' + (CH - P - 10) + '" fill="#ef4444" font-size="12" font-weight="900" opacity="0.5">LAGGING</text>' +
+                '<text x="' + (CW - P - 90) + '" y="' + (CH - P - 10) + '" fill="#f59e0b" font-size="12" font-weight="900" opacity="0.5">WEAKENING</text>' +
+                axisInfo +
                 stockG +
                 '</svg>';
 
-            // 5. STOCK CARDS with predictive outlook
+            // STOCK CARDS
             var cardsHtml = '';
             visible.forEach(function(s) {
                 var outlookLabel = s.outlook === 'rallying' ? '➚ Momentum Rallying' :
