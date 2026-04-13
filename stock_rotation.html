@@ -127,13 +127,10 @@
                 fetch('web_data.json?v=' + ts).then(function(r) { return r.json(); }),
                 fetch('stock_history.json?v=' + ts).then(function(r) { return r.json(); })
             ]).then(function(res) {
-                webData = res[0];
-                allStocks = res[0].all_stocks || res[0].stocks || [];
-                stockHist = res[1] || {};
-                wireSliders();
-                render();
+                webData = res[0]; allStocks = res[0].all_stocks || res[0].stocks || []; stockHist = res[1] || {};
+                wireSliders(); render();
             }).catch(function(e) {
-                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:red;">Data sync error: ' + e.message + '</div>';
+                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:red;">Data sync error.</div>';
             });
         }
 
@@ -143,44 +140,30 @@
             document.getElementById('rmv-min-slider').addEventListener('input', function(e) { minRMV = Math.min(+e.target.value, maxRMV - 1); e.target.value = minRMV; document.getElementById('rmv-min-val').textContent = minRMV; updateFill('rmv'); render(); });
             document.getElementById('rmv-max-slider').addEventListener('input', function(e) { maxRMV = Math.max(+e.target.value, minRMV + 1); e.target.value = maxRMV; document.getElementById('rmv-max-val').textContent = maxRMV; updateFill('rmv'); render(); });
         }
-
         function updateFill(type) {
             if (type === 'rs') { var f = document.getElementById('rs-fill'); f.style.left = ((minRS - 50) * 2) + '%'; f.style.right = (100 - (maxRS - 50) * 2) + '%'; }
             if (type === 'rmv') { var f = document.getElementById('rmv-fill'); f.style.left = minRMV + '%'; f.style.right = (100 - maxRMV) + '%'; }
         }
-
         function toggle(key) { filters[key] = !filters[key]; document.getElementById(key + '-btn').classList.toggle('active', filters[key]); render(); }
         function toggleQ(btn) { var q = btn.getAttribute('data-q'); activeQuadrants[q] = !activeQuadrants[q]; btn.classList.toggle('active', activeQuadrants[q]); render(); }
-
         function copyTickers() {
-            var cards = document.querySelectorAll('[data-ticker]');
-            var tickers = [];
+            var cards = document.querySelectorAll('[data-ticker]'); var tickers = [];
             cards.forEach(function(c) { tickers.push(c.getAttribute('data-ticker')); });
             navigator.clipboard.writeText(tickers.join(', ')).then(function() {
-                var btn = document.getElementById('copy-btn');
-                btn.classList.add('active');
+                var btn = document.getElementById('copy-btn'); btn.classList.add('active');
                 btn.innerHTML = '<div class="toggle-dot"></div> ✅ Copied!';
                 setTimeout(function() { btn.classList.remove('active'); btn.innerHTML = '<div class="toggle-dot"></div> 📋 Copy Tickers'; }, 2000);
             });
         }
-
-        // Median helper
-        function median(arr) {
-            if (!arr.length) return 0;
-            var s = arr.slice().sort(function(a, b) { return a - b; });
-            var m = Math.floor(s.length / 2);
-            return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
-        }
+        function median(arr) { if (!arr.length) return 0; var s = arr.slice().sort(function(a, b) { return a - b; }); var m = Math.floor(s.length / 2); return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; }
 
         function render() {
             var top5Names = [];
             if (filters.top5 && webData && webData.stages && webData.stages.length >= 5) {
                 top5Names = webData.stages.slice(0, 5).map(function(s) { return s.sector; });
             }
-
             var filtered = allStocks.filter(function(s) {
-                var rs = s.rs || 0;
-                var rmv = (s.rmv !== undefined && s.rmv !== null) ? s.rmv : -1;
+                var rs = s.rs || 0; var rmv = (s.rmv != null) ? s.rmv : -1;
                 if (rs < minRS || rs > maxRS) return false;
                 if (rmv < minRMV || rmv > maxRMV) return false;
                 if (filters.quality && s.is_speculative) return false;
@@ -192,68 +175,78 @@
             filtered = filtered.slice(0, 40);
 
             if (!filtered.length) {
-                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text2);">No stocks match filters. Adjust sliders or toggle Quality off.</div>';
+                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text2);">No stocks match filters.</div>';
                 document.getElementById('stock-grid').innerHTML = '';
                 document.getElementById('filter-count').textContent = '0 stocks';
                 return;
             }
 
-            // =============================================
-            // CORE RRG MATH: Dual-Median Normalization
-            // =============================================
-            // Step 1: Compute raw RS and weighted momentum for each stock
+            // =====================================================================
+            // AXIS MATH — Using HIGH-GRANULARITY data for real spread
+            // X-axis: rs_raw (actual relative strength ratio, e.g. 1.7 to 2.66)
+            // Y-axis: rs_1w_pct - rs_1m_pct (short-term vs medium-term momentum)
+            //   Positive = recent week is stronger than month → IMPROVING/ACCELERATING
+            //   Negative = recent week is weaker than month → WEAKENING/DECELERATING
+            // =====================================================================
             var rawData = filtered.map(function(s) {
                 var h = (stockHist[s.ticker] || []).slice(0, 17);
-                // Front-weighted momentum: recent RS change vs 7 days ago
-                var weights = [0.65, 0.25, 0.1];
-                var wMom = 0;
-                var momCount = 0;
-                for (var i = 0; i < 3; i++) {
-                    if (h[i] !== undefined && h[i + 7] !== undefined) {
-                        wMom += (h[i] - h[i + 7]) * weights[i];
-                        momCount++;
-                    }
-                }
-                // Acceleration = change in momentum
-                var mom0 = (h[0] !== undefined && h[7] !== undefined) ? (h[0] - h[7]) : 0;
-                var mom1 = (h[1] !== undefined && h[8] !== undefined) ? (h[1] - h[8]) : 0;
-                var acc = mom0 - mom1;
+                var xRaw = s.rs_raw || 0;
 
-                // Build 10-day trail: each point is {rs, mom} for that day
+                // Y = Multi-timeframe momentum signal
+                // Primary: (1W percentile - 1M percentile) → captures recent rotation
+                var mom1w = s.rs_1w_pct || s.rs;
+                var mom1m = s.rs_1m_pct || s.rs;
+                var yMom = mom1w - mom1m;
+
+                // Add a secondary signal: (current RS pct - 1W RS pct) for recent velocity
+                var recentVelocity = s.rs - mom1w;
+                // Composite Y: weight primary 70%, secondary 30%
+                var yComposite = yMom * 0.7 + recentVelocity * 0.3;
+
+                // Acceleration: change in momentum over last few days from history
+                var acc = 0;
+                if (h.length >= 9) {
+                    var mom_today = (h[0] || 0) - (h[7] || 0);
+                    var mom_yesterday = (h[1] || 0) - (h[8] || 0);
+                    acc = mom_today - mom_yesterday;
+                }
+
+                // Build trail from history — simulate historical (x, y) positions
+                // For each day t: x = percentile at time t, y = rolling 1w-1m proxy
                 var trail = [];
-                for (var t = 0; t < 10; t++) {
-                    if (h[t] !== undefined && h[t + 7] !== undefined) {
-                        trail.push({ rs: h[t], mom: h[t] - h[t + 7] });
-                    }
+                for (var t = 0; t < Math.min(10, h.length - 7); t++) {
+                    var trailRS = h[t] || 0;
+                    // Approximate raw RS for trail point using ratio to current
+                    var trailXRaw = xRaw * (trailRS / (s.rs || 1));
+                    // Approximate momentum at this point: h[t]-h[t+7] is 7-day change in percentile
+                    var trailYMom = (h[t] || 0) - (h[t + 7] || 0);
+                    trail.push({ x: trailXRaw, y: trailYMom });
                 }
 
                 return {
-                    ticker: s.ticker, name: s.name, rs: s.rs, rmv: s.rmv, rank: s.rank,
-                    industry: s.industry, sector: s.sector, is_minervini: s.is_minervini,
-                    tradingview_url: s.tradingview_url,
-                    rawRS: s.rs, rawMom: wMom, acc: acc, trail: trail
+                    ticker: s.ticker, name: s.name, rs: s.rs, rs_raw: xRaw, rmv: s.rmv,
+                    rank: s.rank, industry: s.industry, sector: s.sector,
+                    is_minervini: s.is_minervini, tradingview_url: s.tradingview_url,
+                    xRaw: xRaw, yComposite: yComposite, acc: acc, trail: trail,
+                    rs_1w_pct: mom1w, rs_1m_pct: mom1m
                 };
             });
 
-            // Step 2: Find MEDIANS of RS and Momentum for the group
-            var medianRS = median(rawData.map(function(d) { return d.rawRS; }));
-            var medianMom = median(rawData.map(function(d) { return d.rawMom; }));
+            // Center on group medians
+            var medX = median(rawData.map(function(d) { return d.xRaw; }));
+            var medY = median(rawData.map(function(d) { return d.yComposite; }));
 
-            // Step 3: Normalize to median-centered coordinates
-            // X = RS relative to group median (centered at 0)
-            // Y = Momentum relative to group median (centered at 0)
             var processed = rawData.map(function(d) {
-                var xVal = d.rawRS - medianRS;   // positive = above median RS
-                var yVal = d.rawMom - medianMom;  // positive = above median momentum
-
+                var xVal = d.xRaw - medX;
+                var yVal = d.yComposite - medY;
                 var q = xVal >= 0 ? (yVal >= 0 ? "leading" : "weakening") : (yVal >= 0 ? "improving" : "lagging");
 
-                // Normalize trail relative to medians too
+                // Normalize trail relative to medians
+                // For trail Y: center on median of the trail Y values for THAT stock vs group
                 var trailNorm = d.trail.map(function(tp) {
-                    return { x: tp.rs - medianRS, y: (tp.mom) - medianMom };
+                    return { x: tp.x - medX, y: tp.y - medY };
                 });
 
-                // Outlook based on momentum direction + acceleration
                 var outlook = 'neutral';
                 if (yVal > 0 && d.acc >= 0) outlook = 'rallying';
                 else if (yVal > 0 && d.acc < 0) outlook = 'curling';
@@ -261,9 +254,10 @@
                 else if (yVal <= 0 && d.acc >= 0) outlook = 'recovering';
 
                 return {
-                    ticker: d.ticker, name: d.name, rs: d.rs, rmv: d.rmv, rank: d.rank,
-                    industry: d.industry, sector: d.sector, is_minervini: d.is_minervini,
-                    tradingview_url: d.tradingview_url,
+                    ticker: d.ticker, name: d.name, rs: d.rs, rs_raw: d.rs_raw, rmv: d.rmv,
+                    rank: d.rank, industry: d.industry, sector: d.sector,
+                    is_minervini: d.is_minervini, tradingview_url: d.tradingview_url,
+                    rs_1w_pct: d.rs_1w_pct, rs_1m_pct: d.rs_1m_pct,
                     xVal: xVal, yVal: yVal, acc: d.acc, trail: trailNorm,
                     q: q, color: Q_FILL[q], outlook: outlook
                 };
@@ -279,160 +273,136 @@
                 return;
             }
 
-            // =============================================
-            // SVG RENDERING - Symmetrical axis scaling
-            // =============================================
+            // =====================================================================
+            // SVG RENDERING — Symmetrical axis scaling
+            // =====================================================================
             var allX = [], allY = [];
             visible.forEach(function(s) {
-                allX.push(s.xVal);
-                allY.push(s.yVal);
+                allX.push(s.xVal); allY.push(s.yVal);
                 s.trail.forEach(function(tp) { allX.push(tp.x); allY.push(tp.y); });
             });
-            // Force symmetry: range must include 0 and extend equally both sides
-            var maxAbsX = Math.max(Math.abs(Math.min.apply(null, allX)), Math.abs(Math.max.apply(null, allX)), 2);
-            var maxAbsY = Math.max(Math.abs(Math.min.apply(null, allY)), Math.abs(Math.max.apply(null, allY)), 0.5);
-            // Add 20% padding
-            maxAbsX *= 1.25;
-            maxAbsY *= 1.25;
+            var maxAbsX = Math.max(Math.abs(Math.min.apply(null, allX)), Math.abs(Math.max.apply(null, allX)), 0.1);
+            var maxAbsY = Math.max(Math.abs(Math.min.apply(null, allY)), Math.abs(Math.max.apply(null, allY)), 1);
+            maxAbsX *= 1.3; maxAbsY *= 1.3;
 
             function tX(v) { return P + ((v + maxAbsX) / (2 * maxAbsX)) * (CW - P * 2); }
             function tY(v) { return (CH - P) - ((v + maxAbsY) / (2 * maxAbsY)) * (CH - P * 2); }
-            var MX = tX(0), MY = tY(0); // Crosshairs at median
+            var MX = tX(0), MY = tY(0);
 
             var defs = '';
             var stockG = '';
 
             visible.forEach(function(s) {
                 var cx = tX(s.xVal), cy = tY(s.yVal);
-                // Deterministic jitter
                 var jh = 0;
                 for (var ci = 0; ci < s.ticker.length; ci++) jh += s.ticker.charCodeAt(ci);
                 var dx = ((jh % 17) - 8) * 1.5, dy = (((jh * 7) % 17) - 8) * 1.5;
                 var jcx = cx + dx, jcy = cy + dy;
 
-                // --- BREADCRUMB TRAIL (10-day lookback) ---
-                // Render oldest to newest: bigger/brighter as we approach today
+                // BREADCRUMB TRAIL (oldest to newest = increasing size/opacity)
                 var trailSvg = '';
                 var trailPts = [];
                 for (var ti = s.trail.length - 1; ti >= 0; ti--) {
                     var tp = s.trail[ti];
                     var tx_v = tX(tp.x), ty_v = tY(tp.y);
                     trailPts.push(tx_v + ',' + ty_v);
-                    var age = ti / Math.max(s.trail.length - 1, 1); // 0=newest, 1=oldest
-                    var opacity = 0.15 + (1 - age) * 0.45;
-                    var radius = 2.5 + (1 - age) * 3;
-                    trailSvg += '<circle cx="' + tx_v + '" cy="' + ty_v + '" r="' + radius.toFixed(1) + '" fill="' + s.color + '" opacity="' + opacity.toFixed(2) + '" stroke="#000" stroke-width="0.5"/>';
+                    var age = ti / Math.max(s.trail.length - 1, 1);
+                    var opacity = 0.15 + (1 - age) * 0.5;
+                    var radius = 2 + (1 - age) * 3.5;
+                    trailSvg += '<circle cx="' + tx_v.toFixed(1) + '" cy="' + ty_v.toFixed(1) + '" r="' + radius.toFixed(1) + '" fill="' + s.color + '" opacity="' + opacity.toFixed(2) + '" stroke="#000" stroke-width="0.5"/>';
                 }
-                // Ghostrail polyline connecting all trail dots
                 if (trailPts.length > 1) {
                     trailSvg += '<polyline points="' + trailPts.join(' ') + '" fill="none" stroke="' + s.color + '" stroke-width="1.5" stroke-opacity="0.2" stroke-linecap="round" stroke-dasharray="3,3"/>';
                 }
 
-                // --- PREDICTIVE CURL ARROW (engineering style with cubic Bezier) ---
+                // PREDICTIVE CURL (cubic Bezier with engineering arrowhead)
                 var vX = 0, vY = 0;
                 if (s.trail.length >= 2) {
                     vX = tX(s.trail[0].x) - tX(s.trail[1].x);
                     vY = tY(s.trail[0].y) - tY(s.trail[1].y);
                 }
-                // Scale acceleration for visible curvature
-                var accScale = maxAbsY > 0 ? (1 / maxAbsY) * 15 : 1;
+                var accScale = maxAbsY > 0 ? (1 / maxAbsY) * 20 : 1;
 
-                // 5-point forecast
-                var predPts = [];
-                predPts.push({ x: jcx, y: jcy });
+                var predPts = [{ x: jcx, y: jcy }];
                 for (var pi = 1; pi <= 5; pi++) {
-                    var px = jcx + vX * pi * 1.0;
-                    var py = jcy + vY * pi * 1.0 + s.acc * accScale * pi * pi * 0.4;
-                    predPts.push({ x: px, y: py });
+                    predPts.push({
+                        x: jcx + vX * pi * 1.0,
+                        y: jcy + vY * pi * 1.0 + s.acc * accScale * pi * pi * 0.5
+                    });
                 }
-
-                // SVG smooth cubic Bezier
                 var curvePath = 'M ' + predPts[0].x.toFixed(1) + ' ' + predPts[0].y.toFixed(1);
                 if (predPts.length >= 4) {
-                    curvePath += ' C ' + predPts[1].x.toFixed(1) + ' ' + predPts[1].y.toFixed(1) + ', ' +
-                        predPts[2].x.toFixed(1) + ' ' + predPts[2].y.toFixed(1) + ', ' +
+                    curvePath += ' C ' + predPts[1].x.toFixed(1) + ' ' + predPts[1].y.toFixed(1) + ',' +
+                        predPts[2].x.toFixed(1) + ' ' + predPts[2].y.toFixed(1) + ',' +
                         predPts[3].x.toFixed(1) + ' ' + predPts[3].y.toFixed(1);
                     if (predPts.length >= 6) {
-                        curvePath += ' S ' + predPts[4].x.toFixed(1) + ' ' + predPts[4].y.toFixed(1) + ', ' +
+                        curvePath += ' S ' + predPts[4].x.toFixed(1) + ' ' + predPts[4].y.toFixed(1) + ',' +
                             predPts[5].x.toFixed(1) + ' ' + predPts[5].y.toFixed(1);
                     }
                 }
 
-                // Engineering arrowhead
-                var markerId = 'eng-' + s.ticker;
-                defs += '<marker id="' + markerId + '" markerWidth="16" markerHeight="12" refX="14" refY="6" orient="auto" markerUnits="userSpaceOnUse">' +
-                    '<path d="M0,1.5 L14,6 L0,10.5 L4,6 Z" fill="' + s.color + '" stroke="#000" stroke-width="0.6"/>' +
-                    '</marker>';
+                var markerId = 'a-' + s.ticker;
+                defs += '<marker id="' + markerId + '" markerWidth="16" markerHeight="12" refX="14" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,1.5 L14,6 L0,10.5 L4,6 Z" fill="' + s.color + '" stroke="#000" stroke-width="0.6"/></marker>';
 
-                stockG += '<g>' +
-                    trailSvg +
+                stockG += '<g>' + trailSvg +
                     '<path d="' + curvePath + '" fill="none" stroke="' + s.color + '" stroke-width="2.5" stroke-dasharray="8,5" opacity="0.75" marker-end="url(#' + markerId + ')"/>' +
                     '<circle cx="' + jcx + '" cy="' + jcy + '" r="' + R + '" fill="' + s.color + '" stroke="#000" stroke-width="2.5"/>' +
-                    '<text x="' + jcx + '" y="' + (jcy + 0.5) + '" text-anchor="middle" dominant-baseline="middle" fill="#000" font-size="8" font-weight="950" font-family="var(--mono)">' + s.ticker + '</text>' +
-                    '</g>';
+                    '<text x="' + jcx + '" y="' + (jcy + 0.5) + '" text-anchor="middle" dominant-baseline="middle" fill="#000" font-size="8" font-weight="950" font-family="var(--mono)">' + s.ticker + '</text></g>';
             });
 
-            // Axis labels
-            var axisInfo = '<text x="' + (CW / 2) + '" y="' + (CH - 10) + '" text-anchor="middle" fill="#334155" font-size="9" font-weight="600">← Lower RS (Relative) — Higher RS (Relative) →</text>' +
-                '<text x="12" y="' + (CH / 2) + '" text-anchor="middle" fill="#334155" font-size="9" font-weight="600" transform="rotate(-90,' + 12 + ',' + (CH / 2) + ')">← Losing Momentum — Gaining Momentum →</text>';
-
             document.getElementById('rrg-container').innerHTML =
-                '<svg viewBox="0 0 ' + CW + ' ' + CH + '">' +
-                '<defs>' + defs + '</defs>' +
-                // Quadrant backgrounds
+                '<svg viewBox="0 0 ' + CW + ' ' + CH + '"><defs>' + defs + '</defs>' +
                 '<rect x="' + P + '" y="' + P + '" width="' + (MX - P) + '" height="' + (MY - P) + '" fill="rgba(96,165,250,0.08)"/>' +
                 '<rect x="' + MX + '" y="' + P + '" width="' + (CW - P - MX) + '" height="' + (MY - P) + '" fill="rgba(34,197,94,0.08)"/>' +
                 '<rect x="' + P + '" y="' + MY + '" width="' + (MX - P) + '" height="' + (CH - P - MY) + '" fill="rgba(239,68,68,0.08)"/>' +
                 '<rect x="' + MX + '" y="' + MY + '" width="' + (CW - P - MX) + '" height="' + (CH - P - MY) + '" fill="rgba(245,158,11,0.08)"/>' +
-                // Crosshairs at median
                 '<line x1="' + MX + '" y1="' + P + '" x2="' + MX + '" y2="' + (CH - P) + '" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="5,4"/>' +
                 '<line x1="' + P + '" y1="' + MY + '" x2="' + (CW - P) + '" y2="' + MY + '" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="5,4"/>' +
-                // Quadrant labels
                 '<text x="' + (P + 10) + '" y="' + (P + 20) + '" fill="#60a5fa" font-size="12" font-weight="900" opacity="0.5">IMPROVING</text>' +
                 '<text x="' + (CW - P - 75) + '" y="' + (P + 20) + '" fill="#22c55e" font-size="12" font-weight="900" opacity="0.5">LEADING</text>' +
                 '<text x="' + (P + 10) + '" y="' + (CH - P - 10) + '" fill="#ef4444" font-size="12" font-weight="900" opacity="0.5">LAGGING</text>' +
                 '<text x="' + (CW - P - 90) + '" y="' + (CH - P - 10) + '" fill="#f59e0b" font-size="12" font-weight="900" opacity="0.5">WEAKENING</text>' +
-                axisInfo +
-                stockG +
-                '</svg>';
+                '<text x="' + (CW / 2) + '" y="' + (CH - 8) + '" text-anchor="middle" fill="#334155" font-size="9" font-weight="600">← Lower RS Raw — Higher RS Raw →</text>' +
+                '<text x="12" y="' + (CH / 2) + '" text-anchor="middle" fill="#334155" font-size="9" font-weight="600" transform="rotate(-90,12,' + (CH / 2) + ')">← 1W Weaker than 1M — 1W Stronger than 1M →</text>' +
+                stockG + '</svg>';
 
             // STOCK CARDS
             var cardsHtml = '';
             visible.forEach(function(s) {
                 var outlookLabel = s.outlook === 'rallying' ? '➚ Momentum Rallying' :
-                    s.outlook === 'curling' ? '⤹ Momentum Curling Down' :
+                    s.outlook === 'curling' ? '⤹ Momentum Curling' :
                     s.outlook === 'declining' ? '↘ Momentum Declining' :
                     s.outlook === 'recovering' ? '↗ Momentum Recovering' : '→ Neutral';
-                var outlookClass = s.outlook === 'rallying' || s.outlook === 'recovering' ? 'outlook-rallying' :
+                var outlookClass = (s.outlook === 'rallying' || s.outlook === 'recovering') ? 'outlook-rallying' :
                     s.outlook === 'curling' ? 'outlook-curling' : 'outlook-declining';
                 var hiTag = s.is_minervini ? '<span class="highlight-tag">Strong Trend Alignment</span>' : '';
-                var ctrlTag = (s.rmv !== undefined && s.rmv <= 45) ? '<span class="highlight-tag">Controlled Volatility</span>' : '';
+                var ctrlTag = (s.rmv != null && s.rmv <= 45) ? '<span class="highlight-tag">Controlled Volatility</span>' : '';
 
                 cardsHtml += '<div class="stock-card" data-ticker="' + s.ticker + '">' +
-                    '<div style="display:flex; justify-content:space-between; align-items:flex-start;">' +
+                    '<div style="display:flex;justify-content:space-between;align-items:flex-start;">' +
                         '<div>' +
-                            '<a href="' + (s.tradingview_url || '#') + '" target="_blank" style="font-size:1.3rem; font-weight:800; color:var(--cyan); font-family:var(--mono); text-decoration:none;">' + s.ticker + '</a>' +
-                            '<div style="font-size:0.75rem; color:var(--text2); margin-top:2px;">' + (s.name || s.ticker) + '</div>' +
-                            '<div style="font-size:0.7rem; color:var(--text2); margin-top:2px;">' + (s.industry || '') + ' &bull; ' + (s.sector || '') + '</div>' +
+                            '<a href="' + (s.tradingview_url || '#') + '" target="_blank" style="font-size:1.3rem;font-weight:800;color:var(--cyan);font-family:var(--mono);text-decoration:none;">' + s.ticker + '</a>' +
+                            '<div style="font-size:0.75rem;color:var(--text2);margin-top:2px;">' + (s.name || '') + '</div>' +
+                            '<div style="font-size:0.7rem;color:var(--text2);margin-top:2px;">' + (s.industry || '') + ' &bull; ' + (s.sector || '') + '</div>' +
                         '</div>' +
-                        '<div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">' +
-                            '<span style="font-size:0.65rem; padding:2px 8px; border-radius:4px; background:' + s.color + '22; color:' + s.color + '; border:1px solid ' + s.color + '44; font-weight:800;">' + s.q.toUpperCase() + '</span>' +
-                            '<span style="font-size:0.6rem; color:var(--text2);">#' + (s.rank || '') + '</span>' +
+                        '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">' +
+                            '<span style="font-size:0.65rem;padding:2px 8px;border-radius:4px;background:' + s.color + '22;color:' + s.color + ';border:1px solid ' + s.color + '44;font-weight:800;">' + s.q.toUpperCase() + '</span>' +
+                            '<span style="font-size:0.6rem;color:var(--text2);">#' + (s.rank || '') + '</span>' +
                         '</div>' +
                     '</div>' +
-                    '<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; background:var(--surface); padding:10px; border-radius:8px;">' +
-                        '<div><div style="font-size:0.6rem; color:var(--text2); text-transform:uppercase; letter-spacing:0.1em;">RS Rank</div><div style="font-size:1.1rem; font-weight:700; color:var(--cyan); font-family:var(--mono);">' + s.rs + '</div></div>' +
-                        '<div><div style="font-size:0.6rem; color:var(--text2); text-transform:uppercase; letter-spacing:0.1em;">RMV</div><div style="font-size:1.1rem; font-weight:700; font-family:var(--mono);">' + (s.rmv !== undefined ? s.rmv : 'N/A') + '</div></div>' +
+                    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;background:var(--surface);padding:10px;border-radius:8px;">' +
+                        '<div><div style="font-size:0.55rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;">RS</div><div style="font-size:1rem;font-weight:700;color:var(--cyan);font-family:var(--mono);">' + s.rs + '</div></div>' +
+                        '<div><div style="font-size:0.55rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;">1W Pct</div><div style="font-size:1rem;font-weight:700;font-family:var(--mono);">' + s.rs_1w_pct + '</div></div>' +
+                        '<div><div style="font-size:0.55rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;">1M Pct</div><div style="font-size:1rem;font-weight:700;font-family:var(--mono);">' + s.rs_1m_pct + '</div></div>' +
                     '</div>' +
-                    '<div style="display:flex; flex-wrap:wrap; gap:6px;">' + hiTag + ctrlTag + '</div>' +
-                    '<div style="display:flex; flex-wrap:wrap; gap:6px; border-top:1px solid var(--border); padding-top:8px;">' +
+                    '<div style="display:flex;flex-wrap:wrap;gap:6px;">' + hiTag + ctrlTag + '</div>' +
+                    '<div style="display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--border);padding-top:8px;">' +
                         '<span class="outlook-tag ' + outlookClass + '">' + outlookLabel + '</span>' +
                     '</div>' +
                 '</div>';
             });
             document.getElementById('stock-grid').innerHTML = cardsHtml;
         }
-
         init();
     </script>
 </body>
