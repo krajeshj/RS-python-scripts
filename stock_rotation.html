@@ -4,33 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
     <title>Stock Rotation - Rajesh's Stock Screener</title>
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
-    <!-- React & Recharts Dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/recharts/umd/Recharts.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #06060f;--bg2: #0d0d1a;--surface: rgba(255, 255, 255, .04);--border: rgba(255, 255, 255, .08);
             --text: #e4e4ef;--text2: #8888a8;--accent: #00e5ff;--cyan: #00e5ff;
             --font: 'Outfit', system-ui, sans-serif;--mono: 'JetBrains Mono', monospace;
+            --q-leading: #22c55e; --q-weakening: #f59e0b; --q-lagging: #ef4444; --q-improving: #60a5fa;
         }
         html, body { width: 100%; margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font); overflow-x: hidden; }
         header { margin-bottom: 0; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1000; width: 100%; background: rgba(6, 6, 15, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 1rem 0; }
-        .logo-icon { font-size: 2.5rem; color: var(--cyan); margin-bottom: 4px; filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.3)); }
+        .logo-icon { font-size: 2.5rem; color: var(--cyan); margin-bottom: 4px; }
         h1 { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, var(--text) 30%, var(--accent)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
         .nav-links { display: flex; gap: 1rem; margin: 0.5rem 0; flex-wrap: wrap; justify-content: center; }
-        .nav-link { color: var(--text2); text-decoration: none; font-weight: 600; font-size: 0.85rem; padding: 6px 12px; border-radius: 20px; transition: all 0.3s ease; border: 1px solid transparent; }
+        .nav-link { color: var(--text2); text-decoration: none; font-weight: 600; font-size: 0.85rem; padding: 6px 16px; border-radius: 20px; transition: all 0.3s ease; border: 1px solid transparent; }
         .nav-link.active { color: var(--cyan); background: rgba(0, 229, 255, 0.1); border-color: rgba(0, 229, 255, 0.2); }
-        
-        input[type="range"] { -webkit-appearance: none; background: #1e293b; height: 4px; border-radius: 2px; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; background: var(--cyan); border-radius: 50%; cursor: pointer; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px 15px; }
+        .card { background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+        .rrg-box { background: #0a1120; border: 1px solid #1e293b; border-radius: 8px; position: relative; width: 100%; aspect-ratio: 1/1; }
+        svg { width: 100%; height: 100%; display: block; }
+        input[type="range"] { -webkit-appearance: none; background: #1e293b; height: 4px; border-radius: 2px; width: 100%; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: var(--cyan); border-radius: 50%; cursor: pointer; border: 2px solid #fff; }
     </style>
 </head>
 <body>
@@ -47,83 +43,64 @@
         </div>
     </header>
 
-    <div id="root"></div>
-
-    <script type="text/babel">
-        const { useState, useEffect, useMemo } = React;
-        const Lib = window.Recharts;
-        const Q_FILL = { leading:"#22c55e", weakening:"#f59e0b", lagging:"#ef4444", improving:"#60a5fa" };
-        const CW=480, CH=440, P=40;
-
-        function RRGChart({ stocks, medX, medY, minX, maxX, minY, maxY }) {
-          const px = v => P + ((v - minX) / (maxX - minX || 1)) * (CW - P*2);
-          const py = v => (CH - P) - ((v - minY) / (maxY - minY || 1)) * (CH - P*2);
-          const MX=px(medX), MY=py(medY);
-
-          return (
-            <div style={{background:"#0a1120", borderRadius:12, border:"1px solid #1e293b", padding:10}}>
-            <svg viewBox={"0 0 "+CW+" "+CH} width="100%" style={{display:"block"}}>
-              <defs>
-                {stocks.map(s => (
-                  <marker key={"m"+s.ticker} id={"m"+s.ticker} markerWidth="10" markerHeight="5" refX="9" refY="2.5" orient="auto">
-                    <polygon points="0 0.6,9 2.5,0 4.4" fill={s.color}/>
-                  </marker>
-                ))}
-              </defs>
-              <rect x={P} y={P} width={MX-P} height={MY-P} fill="rgba(96,165,250,0.05)"/><rect x={MX} y={P} width={CW-P-MX} height={MY-P} fill="rgba(34,197,94,0.05)"/><rect x={P} y={MY} width={MX-P} height={CH-P-MY} fill="rgba(239,68,68,0.05)"/><rect x={MX} y={MY} width={CW-P-MX} height={CH-P-MY} fill="rgba(245,158,11,0.05)"/>
-              <line x1={MX} y1={P} x2={MX} y2={CH-P} stroke="#1e293b" strokeWidth="1" strokeDasharray="5,4"/><line x1={P} y1={MY} x2={CW-P} y2={MY} stroke="#1e293b" strokeWidth="1" strokeDasharray="5,4"/>
-              
-              {stocks.map(s => {
-                const curX=px(s.xVal), curY=py(s.mom);
-                const pathPts = (s.path || []).map(p => ({ x: px(p.x), y: py(p.y) }));
-                const polyStr = pathPts.map(p => p.x + "," + p.y).join(" ");
-                const prev = pathPts[pathPts.length-1] || {x:curX, y:curY};
-                const vX = curX - prev.x, vY = curY - prev.y;
-
-                // Predictive Dash
-                let projStr = `${curX},${curY} `;
-                for(let t=1; t<=4; t++) {
-                     projStr += `${curX + vX*t*0.7},${curY + vY*t*0.7} `;
-                }
-
-                return (
-                  <g key={s.ticker}>
-                    <polyline points={polyStr} fill="none" stroke={s.color} strokeWidth="2.5" strokeOpacity="0.3" strokeLinecap="round" strokeLinejoin="round"/>
-                    <polyline points={projStr} fill="none" stroke={s.color} strokeWidth="2.2" strokeDasharray="4,3" opacity="0.4" />
-                    {pathPts.map((p,i)=>(<circle key={i} cx={p.x} cy={p.y} r="2" fill={s.color} opacity={0.1+i*0.1}/>))}
-                    <line x1={curX} y1={curY} x2={curX+vX*1.5} y2={curY+vY*1.5} stroke={s.color} strokeWidth="1.5" markerEnd={"url(#m"+s.ticker+")"}/>
-                    <circle cx={curX} cy={curY} r="11" fill={s.color} stroke="#000" strokeWidth="1.2"/>
-                    <text x={curX} y={curY+0.4} textAnchor="middle" dominantBaseline="middle" fill="#000" fontSize="7.5" fontWeight="900" fontFamily="var(--mono)">{s.ticker}</text>
-                  </g>
-                );
-              })}
-            </svg>
+    <div class="container">
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <div style="font-size: 11px; font-weight: 700; color: var(--text2); letter-spacing: 0.1em;">FILTER: MIN RS <span id="rs-val" style="color: #fff;">80</span></div>
+                <div style="width: 150px;"><input type="range" id="rs-slider" min="0" max="99" value="80"></div>
             </div>
-          );
+        </div>
+
+        <div class="card">
+            <div style="font-size: 14px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                <div style="width: 8px; height: 8px; background: var(--cyan); border-radius: 50%; box-shadow: 0 0 10px var(--cyan);"></div>
+                Neural Momentum Radar
+            </div>
+            <div class="rrg-box" id="rrg-container">
+                <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text2); font-size: 11px;">Syncing Neural Data...</div>
+            </div>
+        </div>
+
+        <div class="card" id="leaderboard" style="padding: 15px;">
+            <div style="font-size: 12px; font-weight: 700; margin-bottom: 12px; color: #f1f5f9;">Weighted Velocity Leaders</div>
+            <div id="leaders-list"></div>
+        </div>
+    </div>
+
+    <script shadow>
+        let allStocks = []; let stockHist = {}; let minRS = 80;
+        const CW=500, CH=500, P=45; const R=14;
+        const Q_FILL = { leading:"#22c55e", weakening:"#f59e0b", lagging:"#ef4444", improving:"#60a5fa" };
+
+        async function init() {
+            const ts = Date.now();
+            try {
+                const [webRes, histRes] = await Promise.all([
+                    fetch(`web_data.json?v=${ts}`).then(r => r.json()),
+                    fetch(`stock_history.json?v=${ts}`).then(r => r.json())
+                ]);
+                allStocks = webRes.all_stocks || webRes.stocks || [];
+                stockHist = histRes || {};
+                
+                document.getElementById('rs-slider').oninput = (e) => {
+                    minRS = parseInt(e.target.value);
+                    document.getElementById('rs-val').innerText = minRS;
+                    render();
+                };
+                
+                render();
+            } catch (e) {
+                console.error(e);
+                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px; text-align:center; color:red;">JSON Load Failed. Check console.</div>';
+            }
         }
 
-        function App() {
-          const [allData, setAllData] = useState([]);
-          const [hist, setHist] = useState({});
-          const [minRS, setMinRS] = useState(80);
-
-          useEffect(() => {
-            const ts = Date.now();
-            Promise.all([
-                fetch(`web_data.json?v=${ts}`).then(r=>r.json()),
-                fetch(`stock_history.json?v=${ts}`).then(r=>r.json())
-            ]).then(([web, h]) => {
-                setAllData(web.all_stocks || web.stocks || []);
-                setHist(h);
-            });
-          }, []);
-
-          const processed = useMemo(() => {
-            const filtered = allData.filter(s => s.rs >= minRS).slice(0, 40);
-            return filtered.map(s => {
-                const h = (hist[s.ticker] || []).slice(0, 15);
+        function render() {
+            const filtered = allStocks.filter(s => s.rs >= minRS).slice(0, 35);
+            const processed = filtered.map(s => {
+                const h = (stockHist[s.ticker] || []).slice(0, 15);
                 const path = [];
-                const weights = [0.4, 0.3, 0.2, 0.1];
+                const weights = [0.45, 0.3, 0.15, 0.1];
                 let wMom = 0;
                 for(let i=0; i<8; i++) {
                     const r = h[i], r_prev = h[i+7];
@@ -134,51 +111,72 @@
                     }
                 }
                 const xVal = s.rs_raw ? Math.log2(s.rs + 1) * 15 : s.rs;
-                const mom = wMom * 3.5;
+                const mom = wMom * 4;
                 const q = s.rs >= 85 ? (mom >= 0 ? "leading" : "weakening") : (mom >= 0 ? "improving" : "lagging");
                 return { ...s, xVal, mom, path, q, color: Q_FILL[q] };
             });
-          }, [allData, hist, minRS]);
 
-          const stats = useMemo(() => {
-            if (!processed.length) return {medX:50, medY:0, minX:0, maxX:100, minY:-5, maxY:5};
-            const x = processed.map(s=>s.xVal), y = processed.map(s=>s.mom);
+            if(!processed.length) {
+                 document.getElementById('rrg-container').innerHTML = '<div style="padding:40px; text-align:center;">No stocks above RS ' + minRS + '</div>';
+                 return;
+            }
+
+            const x = processed.map(s => s.xVal), y = processed.map(s => s.mom);
             const medX = x.slice().sort((a,b)=>a-b)[Math.floor(x.length/2)];
             const medY = y.slice().sort((a,b)=>a-b)[Math.floor(y.length/2)];
-            return {
-                medX, medY,
-                minX: Math.min(...x, medX-15), maxX: Math.max(...x, medX+15),
-                minY: Math.min(...y, medY-6), maxY: Math.max(...y, medY+6)
-            };
-          }, [processed]);
+            const minX = Math.min(...x, medX-18), maxX = Math.max(...x, medX+18);
+            const minY = Math.min(...y, medY-8), maxY = Math.max(...y, medY+8);
 
-          return (
-            <div style={{padding:"20px 15px"}}>
-              <div style={{background:"#0f172a", border:"1px solid #1e293b", borderRadius:12, padding:"12px 15px", marginBottom:15}}>
-                <div style={{display:"flex", justifyContent:"space-between", fontSize:11, fontWeight:700, marginBottom:10}}>
-                    <div>FILTER: MIN RS <span style={{color:"#fff"}}>{minRS}</span></div>
-                    <input type="range" min="0" max="99" value={minRS} onChange={e=>setMinRS(parseInt(e.target.value))} style={{width:100}}/>
+            const tX = v => P + ((v - minX) / (maxX - minX || 1)) * (CW - P*2);
+            const tY = v => (CH - P) - ((v - minY) / (maxY - minY || 1)) * (CH - P*2);
+            const MX=tX(medX), MY=tY(medY);
+
+            // Render SVG
+            let svgContent = `
+                <svg viewBox="0 0 ${CW} ${CH}">
+                    <defs>
+                        ${processed.map(s => `<marker id="m-${s.ticker}" markerWidth="10" markerHeight="6" refX="9" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="${s.color}" /></marker>`).join('')}
+                    </defs>
+                    <rect x="${P}" y="${P}" width="${MX-P}" height="${MY-P}" fill="rgba(96,165,250,0.06)"/>
+                    <rect x="${MX}" y="${P}" width="${CW-P-MX}" height="${MY-P}" fill="rgba(34,197,94,0.06)"/>
+                    <rect x="${P}" y="${MY}" width="${MX-P}" height="${CH-P-MY}" fill="rgba(239,68,68,0.06)"/>
+                    <rect x="${MX}" y="${MY}" width="${CW-P-MX}" height="${CH-P-MY}" fill="rgba(245,158,11,0.06)"/>
+                    <line x1="${MX}" y1="${P}" x2="${MX}" y2="${CH-P}" stroke="#1e293b" stroke-width="1.2" stroke-dasharray="5,4"/>
+                    <line x1="${P}" y1="${MY}" x2="${CW-P}" y2="${MY}" stroke="#1e293b" stroke-width="1.2" stroke-dasharray="5,4"/>
+                    ${processed.map(s => {
+                        const cx=tX(s.xVal), cy=tY(s.mom);
+                        const pathLines = s.path.map(p => tX(p.x) + ',' + tY(p.y)).join(' ');
+                        const prev = s.path[1] ? {x:tX(s.path[1].x), y:tY(s.path[1].y)} : {x:cx, y:cy};
+                        const vX = cx - prev.x, vY = cy - prev.y;
+                        
+                        let pred = `${cx},${cy} `;
+                        for(let i=1; i<=4; i++) pred += `${cx + vX*i*0.7},${cy + vY*i*0.7} `;
+
+                        return `
+                        <g>
+                            <polyline points="${pathLines}" fill="none" stroke="${s.color}" stroke-width="3" stroke-opacity="0.3" stroke-linecap="round" />
+                            <polyline points="${pred}" fill="none" stroke="${s.color}" stroke-width="2.5" stroke-dasharray="4,4" opacity="0.4" />
+                            <line x1="${cx}" y1="${cy}" x2="${cx+vX*1.5}" y2="${cy+vY*1.5}" stroke="${s.color}" stroke-width="1.5" marker-end="url(#m-${s.ticker})" />
+                            <circle cx="${cx}" cy="${cy}" r="${R}" fill="${s.color}" stroke="#000" stroke-width="1.5" />
+                            <text x="${cx}" y="${cy+0.5}" text-anchor="middle" dominant-baseline="middle" fill="#000" font-size="9" font-weight="950" font-family="var(--mono)">${s.ticker}</text>
+                        </g>`;
+                    }).join('')}
+                </svg>
+            `;
+            document.getElementById('rrg-container').innerHTML = svgContent;
+
+            // Render Leaders
+            const leaders = processed.sort((a,b) => b.mom - a.mom).slice(0, 6);
+            document.getElementById('leaders-list').innerHTML = leaders.map(s => `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 11px;">
+                    <span style="color: ${s.color}; font-weight: 800;">${s.ticker}</span>
+                    <span style="color: var(--text2);">${s.rs} RS</span>
+                    <span style="color: #22c55e; font-weight: 700;">+${s.mom.toFixed(2)}v</span>
                 </div>
-              </div>
-
-              <RRGChart stocks={processed} {...stats} />
-
-              <div style={{marginTop:20, background:"#0f172a", border:"1px solid #1e293b", borderRadius:12, padding:18}}>
-                <div style={{fontSize:12, fontWeight:700, marginBottom:12}}>Momentum Leaderboard</div>
-                {processed.sort((a,b)=>b.mom-a.mom).slice(0,6).map(s => (
-                  <div key={s.ticker} style={{display:"flex", justifyContent:"space-between", fontSize:11, marginBottom:10}}>
-                    <span style={{color:s.color, fontWeight:800}}>{s.ticker}</span>
-                    <span style={{color:"#94a3b8"}}>{s.rs} RS</span>
-                    <span style={{color:"#22c55e", fontWeight:700}}>+{s.mom.toFixed(2)}v</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
+            `).join('');
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        init();
     </script>
 </body>
 </html>
