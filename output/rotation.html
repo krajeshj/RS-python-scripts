@@ -4,31 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
     <title>Sector Rotation - Rajesh's Stock Screener</title>
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
-    <!-- React & Recharts Dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/recharts/umd/Recharts.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #06060f;--bg2: #0d0d1a;--surface: rgba(255, 255, 255, .04);--border: rgba(255, 255, 255, .08);
             --text: #e4e4ef;--text2: #8888a8;--accent: #6c5ce7;--accent2: #a29bfe;--cyan: #00e5ff;
             --font: 'Outfit', system-ui, sans-serif;--mono: 'JetBrains Mono', monospace;
+            --q-leading: #22c55e; --q-weakening: #f59e0b; --q-lagging: #ef4444; --q-improving: #60a5fa;
         }
         html, body { width: 100%; margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font); overflow-x: hidden; }
         header { margin-bottom: 0; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1000; width: 100%; background: rgba(6, 6, 15, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 1rem 0; }
-        .logo-icon { font-size: 2.5rem; color: var(--cyan); margin-bottom: 4px; filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.3)); }
+        .logo-icon { font-size: 2.5rem; color: var(--cyan); margin-bottom: 4px; }
         h1 { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, var(--text) 30%, var(--accent2)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
         .nav-links { display: flex; gap: 1rem; margin: 0.5rem 0; flex-wrap: wrap; justify-content: center; }
-        .nav-link { color: var(--text2); text-decoration: none; font-weight: 600; font-size: 0.85rem; padding: 6px 12px; border-radius: 20px; transition: all 0.3s ease; border: 1px solid transparent; }
+        .nav-link { color: var(--text2); text-decoration: none; font-weight: 600; font-size: 0.85rem; padding: 6px 16px; border-radius: 20px; transition: all 0.3s ease; border: 1px solid transparent; }
         .nav-link.active { color: var(--cyan); background: rgba(0, 229, 255, 0.1); border-color: rgba(0, 229, 255, 0.2); }
-        #root { min-height: 100vh; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px 15px; }
+        .card { background: #0f172a; border: 1px solid #1e293b; borderRadius: 12px; padding: 15px; margin-bottom: 15px; }
+        .rrg-box { background: #0a1120; border: 1px solid #1e293b; border-radius: 8px; position: relative; width: 100%; aspect-ratio: 1/1; }
+        svg { width: 100%; height: 100%; display: block; }
+        .ticker-bar { height: 32px; background: rgba(0,0,0,0.3); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); display: flex; align-items: center; overflow: hidden; margin: 15px 0; }
+        .ticker-scroll { display: flex; white-space: nowrap; animation: scroll 50s linear infinite; }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
     </style>
 </head>
 <body>
@@ -45,16 +44,31 @@
         </div>
     </header>
 
-    <div id="root"></div>
+    <div class="container" id="app">
+        <div class="ticker-bar">
+            <div class="ticker-scroll" id="banner">
+                <!-- Tickers here -->
+            </div>
+        </div>
 
-    <script type="text/babel">
-        const { useState, useEffect, useMemo } = React;
-        const Lib = window.Recharts;
-        if (!Lib) { alert("Recharts loading failed"); }
-        const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, Cell, ReferenceLine } = Lib;
+        <div class="card">
+            <div style="font-size: 14px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                <div style="width: 8px; height: 8px; background: var(--cyan); border-radius: 50%; box-shadow: 0 0 10px var(--cyan);"></div>
+                Sector Rotation Graph
+            </div>
+            <div class="rrg-box" id="rrg-container">
+                <!-- SVG here -->
+            </div>
+        </div>
 
+        <div id="signal-grid" style="display: grid; grid-template-columns: 1fr; gap: 10px;">
+            <!-- Signals here -->
+        </div>
+    </div>
+
+    <script>
         const SECTORS = [
-          { name:"XLK",  q:"leading",   color:"#22d3ee", x:102,  y:101,  streakWeeks:3, trail:[{x:98,y:97},{x:99,y:98},{x:100,y:99},{x:101,y:100}] },
+          { name:"XLK",  q:"leading",   color:"#22c55e", x:102,  y:101,  streakWeeks:3, trail:[{x:98,y:97},{x:99,y:98},{x:100,y:99},{x:101,y:100}] },
           { name:"XLE",  q:"leading",   color:"#4ade80", x:104,  y:103,  streakWeeks:5, trail:[{x:101,y:100},{x:102,y:101},{x:103,y:101.5},{x:103.5,y:102}] },
           { name:"XLI",  q:"leading",   color:"#a3e635", x:101,  y:102,  streakWeeks:4, trail:[{x:99,y:99},{x:99.5,y:100},{x:100,y:101},{x:100.5,y:101.5}] },
           { name:"XLF",  q:"weakening", color:"#fb923c", x:103,  y:99,   streakWeeks:2, trail:[{x:102,y:102},{x:102.5,y:101.5},{x:103,y:101},{x:103,y:100}] },
@@ -67,67 +81,95 @@
         ];
 
         const Q_FILL = { leading:"#22c55e", weakening:"#f59e0b", lagging:"#ef4444", improving:"#60a5fa" };
-        const CW=520, CH=440, P=48; R=11;
-        function px(v){ return P + ((v-96)/8)*(CW-P*2); }
-        function py(v){ return (CH-P) - ((v-96)/8)*(CH-P*2); }
+        const CW=500, CH=500, P=50; const R=12;
+        const px = v => P + ((v-96)/8)*(CW-P*2);
+        const py = v => (CH-P) - ((v-96)/8)*(CH-P*2);
 
-        function RRGChart() {
-          const MX=px(100), MY=py(100);
-          return (
-            <div style={{background:"#0a1120", borderRadius:12, border:"1px solid #1e293b", padding:10}}>
-            <svg viewBox={"0 0 "+CW+" "+CH} width="100%" style={{display:"block"}}>
-              <defs>
-                {SECTORS.map(s => (
-                  <marker key={"m"+s.name} id={"m"+s.name} markerWidth="10" markerHeight="5" refX="9" refY="2.5" orient="auto">
-                    <polygon points="0 0.6,9 2.5,0 4.4" fill={Q_FILL[s.q]}/>
-                  </marker>
-                ))}
-              </defs>
-              <rect x={P} y={P} width={MX-P} height={MY-P} fill="rgba(96,165,250,0.05)"/><rect x={MX} y={P} width={CW-P-MX} height={MY-P} fill="rgba(34,197,94,0.05)"/><rect x={P} y={MY} width={MX-P} height={CH-P-MY} fill="rgba(239,68,68,0.05)"/><rect x={MX} y={MY} width={CW-P-MX} height={CH-P-MY} fill="rgba(245,158,11,0.05)"/>
-              <line x1={MX} y1={P} x2={MX} y2={CH-P} stroke="#1e293b" strokeWidth="1" strokeDasharray="5,4"/><line x1={P} y1={MY} x2={CW-P} y2={MY} stroke="#1e293b" strokeWidth="1" strokeDasharray="5,4"/>
-              
-              {SECTORS.map(s => {
-                const curX=px(s.x), curY=py(s.y);
-                const path=[...(s.trail||[]), {x:s.x,y:s.y}];
-                const polyStr=path.map(p=>px(p.x)+","+py(p.y)).join(" ");
-                const prev = path[path.length-2] || path[0];
-                const vX = curX - px(prev.x), vY = curY - py(prev.y);
-
-                return (
-                  <g key={s.name}>
-                    <polyline points={polyStr} fill="none" stroke={Q_FILL[s.q]} strokeWidth="2.5" strokeOpacity="0.4" strokeLinecap="round" strokeLinejoin="round"/>
-                    {path.slice(0,-1).map((p,i)=>(<circle key={i} cx={px(p.x)} cy={py(p.y)} r="2" fill={Q_FILL[s.q]} opacity={0.1+i*0.2}/>))}
-                    <line x1={curX} y1={curY} x2={curX+vX*1.5} y2={curY+vY*1.5} stroke={Q_FILL[s.q]} strokeWidth="1.5" markerEnd={"url(#m"+s.name+")"}/>
-                    <circle cx={curX} cy={curY} r={R} fill={Q_FILL[s.q]} stroke="#000" strokeWidth="1"/>
-                    <text x={curX} y={curY+0.4} textAnchor="middle" dominantBaseline="middle" fill="#000" fontSize="7" fontWeight="800" fontFamily="var(--mono)">{s.name}</text>
-                  </g>
-                );
-              })}
-            </svg>
-            </div>
-          );
+        function init() {
+            renderBanner();
+            renderSVG();
+            renderSignals();
         }
 
-        function App() {
-          return (
-            <div style={{padding:"20px 15px"}}>
-              <RRGChart />
-              <div style={{marginTop:20, background:"#0f172a", border:"1px solid #1e293b", borderRadius:12, padding:15}}>
-                <div style={{fontSize:12, fontWeight:700, marginBottom:10}}>Signal Overview</div>
-                {SECTORS.map(s => (
-                  <div key={s.name} style={{display:"flex", justifyContent:"space-between", fontSize:11, marginBottom:8}}>
-                    <span style={{color:Q_FILL[s.q], fontWeight:700}}>{s.name}</span>
-                    <span style={{color:"#64748b"}}>{s.q.toUpperCase()}</span>
-                    <span style={{color:"#22c55e", fontWeight:700}}>{s.x >= 100 ? "STRENGTH" : "RECOVERY"}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
+        function renderBanner() {
+            const banner = document.getElementById('banner');
+            const items = [...SECTORS, ...SECTORS].map(s => `
+                <span style="padding-right: 30px; font-size: 11px; font-weight: 700; color: ${Q_FILL[s.q]}">
+                    ${s.name} <span style="color: #475569; font-family: var(--mono);">${s.x.toFixed(1)}</span>
+                </span>
+            `).join('');
+            banner.innerHTML = items;
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        function renderSVG() {
+            const container = document.getElementById('rrg-container');
+            const MX=px(100), MY=py(100);
+
+            let markers = SECTORS.map(s => `
+                <marker id="m-${s.name}" markerWidth="10" markerHeight="6" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="${Q_FILL[s.q]}" />
+                </marker>
+            `).join('');
+
+            let sectorG = SECTORS.map(s => {
+                const cx=px(s.x), cy=py(s.y);
+                const fullPath = [...s.trail, {x:s.x, y:s.y}];
+                const polyStr = fullPath.map(p => px(p.x)+','+py(p.y)).join(' ');
+                const prev = fullPath[fullPath.length-2] || fullPath[0];
+                const vX = cx - px(prev.x), vY = cy - py(prev.y);
+                const lineEnd = { x: cx + vX*1.5, y: cy + vY*1.5 };
+
+                return `
+                    <g>
+                        <polyline points="${polyStr}" fill="none" stroke="${Q_FILL[s.q]}" stroke-width="2.5" stroke-opacity="0.3" stroke-linecap="round" />
+                        ${fullPath.slice(0,-1).map((p,i)=>`<circle cx="${px(p.x)}" cy="${py(p.y)}" r="2" fill="${Q_FILL[s.q]}" opacity="${0.1+i*0.15}"/>`).join('')}
+                        <line x1="${cx}" y1="${cy}" x2="${lineEnd.x}" y2="${lineEnd.y}" stroke="${Q_FILL[s.q]}" stroke-width="1.5" marker-end="url(#m-${s.name})" />
+                        <circle cx="${cx}" cy="${cy}" r="${R}" fill="${Q_FILL[s.q]}" stroke="#000" stroke-width="1" />
+                        <text x="${cx}" y="${cy+0.5}" text-anchor="middle" dominant-baseline="middle" fill="#000" font-size="8" font-weight="900" font-family="var(--mono)">${s.name}</text>
+                    </g>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <svg viewBox="0 0 ${CW} ${CH}">
+                    <defs>${markers}</defs>
+                    <rect x="${P}" y="${P}" width="${MX-P}" height="${MY-P}" fill="rgba(96,165,250,0.05)"/>
+                    <rect x="${MX}" y="${P}" width="${CW-P-MX}" height="${MY-P}" fill="rgba(34,197,94,0.05)"/>
+                    <rect x="${P}" y="${MY}" width="${MX-P}" height="${CH-P-MY}" fill="rgba(239,68,68,0.05)"/>
+                    <rect x="${MX}" y="${MY}" width="${CW-P-MX}" height="${CH-P-MY}" fill="rgba(245,158,11,0.05)"/>
+                    <line x1="${MX}" y1="${P}" x2="${MX}" y2="${CH-P}" stroke="#1e293b" stroke-width="1" stroke-dasharray="5,4"/>
+                    <line x1="${P}" y1="${MY}" x2="${CW-P}" y2="${MY}" stroke="#1e293b" stroke-width="1" stroke-dasharray="5,4"/>
+                    <text x="${P+10}" y="${P+20}" fill="#60a5fa" font-size="10" font-weight="800" opacity="0.6">IMPROVING</text>
+                    <text x="${CW-P-60}" y="${P+20}" fill="#22c55e" font-size="10" font-weight="800" opacity="0.6">LEADING</text>
+                    <text x="${P+10}" y="${CH-P-10}" fill="#ef4444" font-size="10" font-weight="800" opacity="0.6">LAGGING</text>
+                    <text x="${CW-P-70}" y="${CH-P-10}" fill="#f59e0b" font-size="10" font-weight="800" opacity="0.6">WEAKENING</text>
+                    ${sectorG}
+                </svg>
+            `;
+        }
+
+        function renderSignals() {
+            const grid = document.getElementById('signal-grid');
+            grid.innerHTML = `
+                <div class="card" style="padding: 12px 15px;">
+                    <div style="font-size: 13px; font-weight: 700; color: #f1f5f9; margin-bottom: 12px;">Rotation Matrix</div>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                        <tbody>
+                            ${SECTORS.map(s => `
+                                <tr style="border-bottom: 1px solid #1e293b;">
+                                    <td style="padding: 10px 0; font-weight: 700; color: ${Q_FILL[s.q]}">${s.name}</td>
+                                    <td style="color: ${Q_FILL[s.q]}; text-transform: uppercase;">${s.q}</td>
+                                    <td style="color: #64748b; text-align: right;">${s.streakWeeks}w STREAK</td>
+                                    <td style="color: ${s.x >= 100 ? '#22c55e' : '#ef4444'}; text-align: right; font-weight: 700;">${s.x >= 100 ? 'STRENGTH' : 'WEAKNESS'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        window.onload = init;
     </script>
 </body>
 </html>
