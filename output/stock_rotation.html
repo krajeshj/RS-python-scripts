@@ -21,14 +21,14 @@
         .nav-links { display: flex; gap: 1rem; margin: 0.5rem 0; flex-wrap: wrap; justify-content: center; }
         .nav-link { color: var(--text2); text-decoration: none; font-weight: 600; font-size: 0.85rem; padding: 6px 16px; border-radius: 20px; transition: all 0.3s ease; border: 1px solid transparent; }
         .nav-link.active { color: var(--cyan); background: rgba(0, 229, 255, 0.1); border-color: rgba(0, 229, 255, 0.2); }
-        .container { max-width: 600px; margin: 0 auto; padding: 15px 15px; }
+        .container { max-width: 650px; margin: 0 auto; padding: 15px 15px; }
         .card { background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
-        .filter-btn { padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 700; border: 1px solid #1e293b; background: #0a1120; color: #64748b; }
+        .filter-btn { padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 700; border: 1px solid #1e293b; background: #0a1120; color: #64748b; }
         .filter-btn.active { border-color: var(--cyan); color: var(--cyan); background: rgba(0, 229, 255, 0.05); }
-        .rrg-box { background: #0a1120; border: 1px solid #1e293b; border-radius: 8px; position: relative; width: 100%; aspect-ratio: 1/1; }
-        svg { width: 100%; height: 100%; display: block; }
+        .rrg-box { background: #0a1120; border: 1px solid #1e293b; border-radius: 12px; position: relative; width: 100%; aspect-ratio: 1/1; box-shadow: 0 10px 40px rgba(0,0,0,0.4); }
+        svg { width: 100%; height: 100%; display: block; border-radius: 12px; }
         input[type="range"] { -webkit-appearance: none; background: #1e293b; height: 4px; border-radius: 2px; width: 100%; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: var(--cyan); border-radius: 50%; cursor: pointer; border: 2px solid #fff; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: var(--cyan); border-radius: 50%; cursor: pointer; border: 3px solid #fff; }
     </style>
 </head>
 <body>
@@ -47,31 +47,26 @@
 
     <div class="container">
         <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <div style="font-size: 11px; font-weight: 700; color: var(--text2); letter-spacing: 0.05em;">MIN RS: <span id="rs-val" style="color: #fff;">80</span></div>
-                <div style="width: 120px;"><input type="range" id="rs-slider" min="0" max="99" value="80"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <div style="font-size: 11px; font-weight: 800; color: var(--text2); letter-spacing: 0.1em;">MIN RS: <span id="rs-val" style="color: #fff;">85</span></div>
+                <div style="width: 140px;"><input type="range" id="rs-slider" min="0" max="99" value="85"></div>
             </div>
-            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                 <button class="filter-btn" id="btn-minervini" onclick="toggleFilter('minervini')">VCP/MINERVINI</button>
                 <button class="filter-btn" id="btn-up" onclick="toggleFilter('is_up')">LEADERS ONLY</button>
+                <div style="font-size: 10px; color: #64748b; margin-top: 5px; margin-left: auto;">Centered on Median RS</div>
             </div>
         </div>
 
-        <div class="card">
-            <div style="font-size: 14px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                <div style="width: 8px; height: 8px; background: var(--cyan); border-radius: 50%; box-shadow: 0 0 10px var(--cyan);"></div>
-                Predictive Momentum Radar
-            </div>
-            <div class="rrg-box" id="rrg-container"></div>
-        </div>
-
-        <div id="signal-list"></div>
+        <div class="rrg-box" id="rrg-container"></div>
+        
+        <div id="signal-list" style="margin-top: 15px;"></div>
     </div>
 
     <script shadow>
-        let allStocks = []; let stockHist = {}; let minRS = 80;
+        let allStocks = []; let stockHist = {}; let minRS = 85;
         let activeFilters = { minervini: false, is_up: false };
-        const CW=520, CH=520, P=48; const R=14;
+        const CW=600, CH=600, P=60; const R=16;
         const Q_FILL = { leading:"#22c55e", weakening:"#f59e0b", lagging:"#ef4444", improving:"#60a5fa" };
 
         async function init() {
@@ -103,92 +98,112 @@
         }
 
         function render() {
-            const filtered = allStocks.filter(s => {
+            let filtered = allStocks.filter(s => {
                 if(s.rs < minRS) return false;
                 if(activeFilters.minervini && !s.is_minervini) return false;
                 if(activeFilters.is_up && !s.is_up) return false;
                 return true;
-            }).slice(0, 40);
+            });
 
+            // If too many, take top 40 by RS
+            filtered = filtered.sort((a,b)=>b.rs-a.rs).slice(0, 35);
+
+            if(!filtered.length) { 
+                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text2);">No stocks matching criteria.</div>'; 
+                return; 
+            }
+
+            // RELATIVE NORMALIZATION MATH
+            const rsValues = filtered.map(s => s.rs);
+            const medianRS = rsValues.slice().sort((a,b)=>a-b)[Math.floor(rsValues.length/2)];
+            
             const processed = filtered.map(s => {
-                const h = (stockHist[s.ticker] || []).slice(0, 16);
+                const h = (stockHist[s.ticker] || []).slice(0, 20);
                 const path = [];
-                // WEGTHTED LOOKBACK: 60% on last 3 days, 30% on next 4, 10% on tails.
-                const weights = [0.6, 0.3, 0.1, 0];
+                const weights = [0.65, 0.25, 0.1, 0]; // Heavy front-weighted
                 let wMom = 0; let acc = 0;
-                for(let i=0; i<8; i++) {
+                
+                for(let i=0; i<10; i++) {
                     const r = h[i], r_prev = h[i+7];
                     if (r !== undefined && r_prev !== undefined) {
-                      const m = r - r_prev;
-                      path.push({ x: s.rs_raw ? Math.log2(r + 1) * 15 : r, y: m });
+                      const m = (r - r_prev);
+                      // Normalized X for path
+                      const normX = (r / medianRS) * 100;
+                      path.push({ x: normX, y: m });
                       if (i < 4) wMom += m * weights[i];
                     }
                 }
                 const curM = path[0] ? path[0].y : 0;
                 const prevM = path[1] ? path[1].y : 0;
-                acc = (curM - prevM); // Second derivative (acceleration)
+                acc = (curM - prevM); // Acceleration for curl
 
-                const xVal = s.rs_raw ? Math.log2(s.rs+1)*15 : s.rs;
-                const mom = wMom * 4;
-                const q = s.rs >= 85 ? (mom >= 0 ? "leading" : "weakening") : (mom >= 0 ? "improving" : "lagging");
+                const xVal = (s.rs / medianRS) * 100;
+                const mom = wMom * 5;
+                const q = xVal >= 100 ? (mom >= 0 ? "leading" : "weakening") : (mom >= 0 ? "improving" : "lagging");
                 return { ...s, xVal, mom, acc, path, q, color: Q_FILL[q] };
             });
 
-            const rrg = document.getElementById('rrg-container');
-            if(!processed.length) { rrg.innerHTML = '<div style="padding:40px;text-align:center;">No hits.</div>'; return; }
-
             const x = processed.map(s => s.xVal), y = processed.map(s => s.mom);
-            const medX = x.slice().sort((a,b)=>a-b)[Math.floor(x.length/2)];
-            const medY = y.slice().sort((a,b)=>a-b)[Math.floor(y.length/2)];
-            const minX = Math.min(...x, medX-18), maxX = Math.max(...x, medX+18);
-            const minY = Math.min(...y, medY-10), maxY = Math.max(...y, medY+10);
+            const medX = 100; // Force center at 100
+            const medY = 0;   // Force center at 0
+            
+            const minX = Math.min(...x, 90), maxX = Math.max(...x, 110);
+            const minY = Math.min(...y, -8), maxY = Math.max(...y, 8);
 
             const tX = v => P + ((v - minX) / (maxX - minX || 1)) * (CW - P*2);
             const tY = v => (CH - P) - ((v - minY) / (maxY - minY || 1)) * (CH - P*2);
-            const MX=tX(medX), MY=tY(medY);
+            const MX=tX(100), MY=tY(0);
 
-            rrg.innerHTML = `
+            let stockG = processed.map(s => {
+                const cx=tX(s.xVal), cy=tY(s.mom);
+                const points = (s.path || []).map(p => tX(p.x) + ',' + tY(p.y)).join(' ');
+                const lastP = s.path[0] ? {x:tX(s.path[0].x), y:tY(s.path[0].y)} : {x:cx,y:cy};
+                const vX = cx - tX( (s.path[1]||s.path[0]||{x:s.xVal}).x ), vY = cy - tY( (s.path[1]||s.path[0]||{y:s.mom}).y );
+                
+                // PREDICTIVE CURVE with ARROW
+                let curve = `M ${cx} ${cy} `;
+                let lx = cx, ly = cy, ex = cx, ey = cy;
+                for(let i=1; i<=3; i++) {
+                    ex = cx + vX*i*1.1 + (s.acc * i * i * 0.3);
+                    ey = cy + vY*i*1.1 + (s.acc * i * i * 0.6);
+                    curve += `L ${ex} ${ey} `;
+                }
+
+                return `
+                <g>
+                    <polyline points="${points}" fill="none" stroke="${s.color}" stroke-width="3" stroke-opacity="0.25" stroke-linecap="round" />
+                    <path d="${curve}" fill="none" stroke="${s.color}" stroke-width="2.5" stroke-dasharray="6,4" opacity="0.7" marker-end="url(#arrow-${s.ticker})" />
+                    <circle cx="${cx}" cy="${cy}" r="${R}" fill="${s.color}" stroke="#000" stroke-width="2" />
+                    <text x="${cx}" y="${cy+0.5}" text-anchor="middle" dominant-baseline="middle" fill="#000" font-size="9" font-weight="950" font-family="var(--mono)">${s.ticker}</text>
+                </g>`;
+            }).join('');
+
+            document.getElementById('rrg-container').innerHTML = `
                 <svg viewBox="0 0 ${CW} ${CH}">
-                    <defs>${processed.map(s => `<marker id="m-${s.ticker}" markerWidth="10" markerHeight="6" refX="9" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="${s.color}" /></marker>`).join('')}</defs>
-                    <rect x="${P}" y="${P}" width="${MX-P}" height="${MY-P}" fill="rgba(96,165,250,0.06)"/><rect x="${MX}" y="${P}" width="${CW-P-MX}" height="${MY-P}" fill="rgba(34,197,94,0.06)"/><rect x="${P}" y="${MY}" width="${MX-P}" height="${CH-P-MY}" fill="rgba(239,68,68,0.06)"/><rect x="${MX}" y="${MY}" width="${CW-P-MX}" height="${CH-P-MY}" fill="rgba(245,158,11,0.06)"/>
-                    <line x1="${MX}" y1="${P}" x2="${MX}" y2="${CH-P}" stroke="#1e293b" stroke-width="1.2" stroke-dasharray="5,4"/><line x1="${P}" y1="${MY}" x2="${CW-P}" y2="${MY}" stroke="#1e293b" stroke-width="1.2" stroke-dasharray="5,4"/>
-                    ${processed.map(s => {
-                        const cx=tX(s.xVal), cy=tY(s.mom);
-                        const points = (s.path || []).map(p => tX(p.x) + ',' + tY(p.y)).join(' ');
-                        const prev = s.path[0] ? {x:tX(s.path[0].x), y:tY(s.path[0].y)} : {x:cx,y:cy};
-                        const vX = cx - prev.x, vY = cy - prev.y;
-                        
-                        // DASHED CURL (Predictive): quadratic curve based on acceleration
-                        let curve = `M ${cx} ${cy} `;
-                        let lx = cx, ly = cy;
-                        for(let i=1; i<=4; i++) {
-                            const stepX = vX * i + (s.acc * i * i * 0.2); // Accel-based curl
-                            const stepY = vY * i + (s.acc * i * i * 0.5);
-                            curve += `L ${cx + stepX} ${cy + stepY} `;
-                        }
-
-                        return `
-                        <g>
-                            <polyline points="${points}" fill="none" stroke="${s.color}" stroke-width="3" stroke-opacity="0.3" stroke-linecap="round" />
-                            <path d="${curve}" fill="none" stroke="${s.color}" stroke-width="2.2" stroke-dasharray="5,4" opacity="0.6" />
-                            <line x1="${cx}" y1="${cy}" x2="${cx+vX*1.5}" y2="${cy+vY*1.5}" stroke="${s.color}" stroke-width="1.5" marker-end="url(#m-${s.ticker})" />
-                            <circle cx="${cx}" cy="${cy}" r="${R}" fill="${s.color}" stroke="#000" stroke-width="1.5" />
-                            <text x="${cx}" y="${cy+0.5}" text-anchor="middle" dominant-baseline="middle" fill="#000" font-size="9" font-weight="950" font-family="var(--mono)">${s.ticker}</text>
-                        </g>`;
-                    }).join('')}
+                    <defs>
+                        ${processed.map(s => `<marker id="arrow-${s.ticker}" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><path d="M0,0 L10,3.5 L0,7 Z" fill="${s.color}" /></marker>`).join('')}
+                    </defs>
+                    <rect x="${P}" y="${P}" width="${MX-P}" height="${MY-P}" fill="rgba(96,165,250,0.08)"/><rect x="${MX}" y="${P}" width="${CW-P-MX}" height="${MY-P}" fill="rgba(34,197,94,0.08)"/><rect x="${P}" y="${MY}" width="${MX-P}" height="${CH-P-MY}" fill="rgba(239,68,68,0.08)"/><rect x="${MX}" y="${MY}" width="${CW-P-MX}" height="${CH-P-MY}" fill="rgba(245,158,11,0.08)"/>
+                    <line x1="${MX}" y1="${P}" x2="${MX}" y2="${CH-P}" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="5,4"/><line x1="${P}" y1="${MY}" x2="${CW-P}" y2="${MY}" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="5,4"/>
+                    <text x="${P+12}" y="${P+24}" fill="#60a5fa" font-size="11" font-weight="900" opacity="0.5">IMPROVING</text>
+                    <text x="${CW-P-70}" y="${P+24}" fill="#22c55e" font-size="11" font-weight="900" opacity="0.5">LEADING</text>
+                    <text x="${P+12}" y="${CH-P-15}" fill="#ef4444" font-size="11" font-weight="900" opacity="0.5">LAGGING</text>
+                    <text x="${CW-P-85}" y="${CH-P-15}" fill="#f59e0b" font-size="11" font-weight="900" opacity="0.5">WEAKENING</text>
+                    ${stockG}
                 </svg>
             `;
 
             document.getElementById('signal-list').innerHTML = `
-                <div class="card" style="padding:12px 15px;">
-                    <div style="font-size:11px;font-weight:700;color:#64748b;margin-bottom:10px;">PROJECTION ALPHA (PREDICTIVE VELOCITY)</div>
-                    ${processed.sort((a,b)=>b.mom-a.mom).slice(0,5).map(s => `
-                        <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:6px;">
-                            <span style="color:${s.color}; font-weight:800;">${s.ticker}</span>
-                            <span style="color:${s.acc<0?'#ef4444':'#22c55e'}; font-weight:700;">${s.acc < 0 ? '⤹ CURL' : '➚ RALLY'}</span>
-                            <span style="color:#64748b;">v:${s.mom.toFixed(2)}</span>
+                <div class="card" style="padding:12px 18px;">
+                    <div style="font-size:11px;font-weight:800;color:#64748b;margin-bottom:12px;letter-spacing:0.05em;">PREDICTIVE VELOCITY ALPHA</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    ${processed.sort((a,b)=>b.mom-a.mom).slice(0,10).map(s => `
+                        <div style="display:flex; justify-content:space-between; font-size:11px; padding:6px 0; border-bottom:1px solid #1e293b;">
+                            <span style="color:${s.color}; font-weight:800; width:45px;">${s.ticker}</span>
+                            <span style="color:${s.acc<0?'#ef4444':'#22c55e'}; font-weight:700;">${s.acc < 0 ? '⤹ CURLING' : '➚ RALLYING'}</span>
                         </div>
                     `).join('')}
+                    </div>
                 </div>
             `;
         }
