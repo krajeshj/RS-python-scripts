@@ -22,12 +22,11 @@
         .nav-link { color: var(--text2); text-decoration: none; font-weight: 600; font-size: 0.85rem; padding: 6px 16px; border-radius: 20px; transition: all 0.3s ease; border: 1px solid transparent; }
         .nav-link.active { color: var(--cyan); background: rgba(0, 229, 255, 0.1); border-color: rgba(0, 229, 255, 0.2); }
         .container { max-width: 600px; margin: 0 auto; padding: 20px 15px; }
-        .card { background: #0f172a; border: 1px solid #1e293b; borderRadius: 12px; padding: 15px; margin-bottom: 15px; }
+        .tab-btn { padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: 600; border: 1px solid #1e293b; background: #0f172a; color: #64748b; transition: all 0.2s; }
+        .tab-btn.active { border-color: var(--cyan); background: rgba(0, 229, 255, 0.1); color: var(--cyan); }
+        .card { background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
         .rrg-box { background: #0a1120; border: 1px solid #1e293b; border-radius: 8px; position: relative; width: 100%; aspect-ratio: 1/1; }
         svg { width: 100%; height: 100%; display: block; }
-        .ticker-bar { height: 32px; background: rgba(0,0,0,0.3); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); display: flex; align-items: center; overflow: hidden; margin: 15px 0; }
-        .ticker-scroll { display: flex; white-space: nowrap; animation: scroll 50s linear infinite; }
-        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
     </style>
 </head>
 <body>
@@ -44,72 +43,52 @@
         </div>
     </header>
 
-    <div class="container" id="app">
-        <div class="ticker-bar">
-            <div class="ticker-scroll" id="banner">
-                <!-- Tickers here -->
-            </div>
+    <div class="container">
+        <div style="display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap;" id="tabs">
+            <button class="tab-btn active" onclick="setTab('rrg')">Rotation Map</button>
+            <button class="tab-btn" onclick="setTab('rank')">Rank Signals</button>
+            <button class="tab-btn" onclick="setTab('flow')">Fund Flows</button>
         </div>
 
-        <div class="card">
-            <div style="font-size: 14px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
-                <div style="width: 8px; height: 8px; background: var(--cyan); border-radius: 50%; box-shadow: 0 0 10px var(--cyan);"></div>
-                Sector Rotation Graph
-            </div>
-            <div class="rrg-box" id="rrg-container">
-                <!-- SVG here -->
-            </div>
-        </div>
-
-        <div id="signal-grid" style="display: grid; grid-template-columns: 1fr; gap: 10px;">
-            <!-- Signals here -->
-        </div>
+        <div id="content"></div>
     </div>
 
     <script>
         const SECTORS = [
-          { name:"XLK",  q:"leading",   color:"#22c55e", x:102,  y:101,  streakWeeks:3, trail:[{x:98,y:97},{x:99,y:98},{x:100,y:99},{x:101,y:100}] },
-          { name:"XLE",  q:"leading",   color:"#4ade80", x:104,  y:103,  streakWeeks:5, trail:[{x:101,y:100},{x:102,y:101},{x:103,y:101.5},{x:103.5,y:102}] },
-          { name:"XLI",  q:"leading",   color:"#a3e635", x:101,  y:102,  streakWeeks:4, trail:[{x:99,y:99},{x:99.5,y:100},{x:100,y:101},{x:100.5,y:101.5}] },
-          { name:"XLF",  q:"weakening", color:"#fb923c", x:103,  y:99,   streakWeeks:2, trail:[{x:102,y:102},{x:102.5,y:101.5},{x:103,y:101},{x:103,y:100}] },
-          { name:"XLV",  q:"lagging",   color:"#f87171", x:99,   y:98,   streakWeeks:3, trail:[{x:101,y:101},{x:100.5,y:100},{x:100,y:99},{x:99.5,y:98.5}] },
-          { name:"XLY",  q:"lagging",   color:"#e879f9", x:98,   y:97,   streakWeeks:6, trail:[{x:100,y:99},{x:99.5,y:98.5},{x:99,y:98},{x:98.5,y:97.5}] },
-          { name:"XLC",  q:"lagging",   color:"#f43f5e", x:97,   y:99,   streakWeeks:4, trail:[{x:99,y:101},{x:98.5,y:100.5},{x:98,y:100},{x:97.5,y:99.5}] },
-          { name:"XLP",  q:"improving", color:"#60a5fa", x:99,   y:101,  streakWeeks:2, trail:[{x:97,y:98},{x:97.5,y:98.5},{x:98,y:99},{x:98.5,y:100}] },
-          { name:"XLU",  q:"improving", color:"#818cf8", x:98,   y:100,  streakWeeks:1, trail:[{x:96,y:97},{x:96.5,y:97.5},{x:97,y:98.5},{x:97.5,y:99}] },
-          { name:"XLRE", q:"improving", color:"#38bdf8", x:97,   y:101,  streakWeeks:3, trail:[{x:95.5,y:98},{x:96,y:99},{x:96.5,y:99.5},{x:97,y:100.5}] },
+          { name:"XLK",  q:"leading",   color:"#22d3ee", x:102,  y:101,  streakWeeks:3, trail:[{x:98,y:97},{x:99,y:98},{x:100,y:99},{x:101,y:100}], flow:185 },
+          { name:"XLE",  q:"leading",   color:"#4ade80", x:104,  y:103,  streakWeeks:5, trail:[{x:101,y:100},{x:102,y:101},{x:103,y:101.5},{x:103.5,y:102}], flow:212 },
+          { name:"XLI",  q:"leading",   color:"#a3e635", x:101,  y:102,  streakWeeks:4, trail:[{x:99,y:99},{x:99.5,y:100},{x:100,y:101},{x:100.5,y:101.5}], flow:145 },
+          { name:"XLF",  q:"weakening", color:"#fb923c", x:103,  y:99,   streakWeeks:2, trail:[{x:102,y:102},{x:102.5,y:101.5},{x:103,y:101},{x:103,y:100}], flow:92 },
+          { name:"XLV",  q:"lagging",   color:"#f87171", x:99,   y:98,   streakWeeks:3, trail:[{x:101,y:101},{x:100.5,y:100},{x:100,y:99},{x:99.5,y:98.5}], flow:-45 },
+          { name:"XLY",  q:"lagging",   color:"#e879f9", x:98,   y:97,   streakWeeks:6, trail:[{x:100,y:99},{x:99.5,y:98.5},{x:99,y:98},{x:98.5,y:97.5}], flow:-112 },
+          { name:"XLC",  q:"lagging",   color:"#f43f5e", x:97,   y:99,   streakWeeks:4, trail:[{x:99,y:101},{x:98.5,y:100.5},{x:98,y:100},{x:97.5,y:99.5}], flow:-28 },
+          { name:"XLP",  q:"improving", color:"#60a5fa", x:99,   y:101,  streakWeeks:2, trail:[{x:97,y:98},{x:97.5,y:98.5},{x:98,y:99},{x:98.5,y:100}], flow:54 },
+          { name:"XLU",  q:"improving", color:"#818cf8", x:98,   y:100,  streakWeeks:1, trail:[{x:96,y:97},{x:96.5,y:97.5},{x:97,y:98.5},{x:97.5,y:99}], flow:31 },
+          { name:"XLRE", q:"improving", color:"#38bdf8", x:97,   y:101,  streakWeeks:3, trail:[{x:95.5,y:98},{x:96,y:99},{x:96.5,y:99.5},{x:97,y:100.5}], flow:18 },
         ];
 
+        let activeTab = 'rrg';
         const Q_FILL = { leading:"#22c55e", weakening:"#f59e0b", lagging:"#ef4444", improving:"#60a5fa" };
-        const CW=500, CH=500, P=50; const R=12;
-        const px = v => P + ((v-96)/8)*(CW-P*2);
-        const py = v => (CH-P) - ((v-96)/8)*(CH-P*2);
 
-        function init() {
-            renderBanner();
-            renderSVG();
-            renderSignals();
+        function setTab(t) {
+            activeTab = t;
+            const btns = document.querySelectorAll('.tab-btn');
+            btns.forEach(b => b.classList.toggle('active', b.innerText.toLowerCase().includes(t)));
+            render();
         }
 
-        function renderBanner() {
-            const banner = document.getElementById('banner');
-            const items = [...SECTORS, ...SECTORS].map(s => `
-                <span style="padding-right: 30px; font-size: 11px; font-weight: 700; color: ${Q_FILL[s.q]}">
-                    ${s.name} <span style="color: #475569; font-family: var(--mono);">${s.x.toFixed(1)}</span>
-                </span>
-            `).join('');
-            banner.innerHTML = items;
+        function render() {
+            const container = document.getElementById('content');
+            if (activeTab === 'rrg') renderRRG(container);
+            if (activeTab === 'rank') renderRankSignals(container);
+            if (activeTab === 'flow') renderFlows(container);
         }
 
-        function renderSVG() {
-            const container = document.getElementById('rrg-container');
+        function renderRRG(container) {
+            const CW=500, CH=500, P=50; const R=12;
+            const px = v => P + ((v-96)/8)*(CW-P*2);
+            const py = v => (CH-P) - ((v-96)/8)*(CH-P*2);
             const MX=px(100), MY=py(100);
-
-            let markers = SECTORS.map(s => `
-                <marker id="m-${s.name}" markerWidth="10" markerHeight="6" refX="9" refY="3" orient="auto">
-                    <polygon points="0 0, 10 3, 0 6" fill="${Q_FILL[s.q]}" />
-                </marker>
-            `).join('');
 
             let sectorG = SECTORS.map(s => {
                 const cx=px(s.x), cy=py(s.y);
@@ -118,11 +97,9 @@
                 const prev = fullPath[fullPath.length-2] || fullPath[0];
                 const vX = cx - px(prev.x), vY = cy - py(prev.y);
                 const lineEnd = { x: cx + vX*1.5, y: cy + vY*1.5 };
-
                 return `
                     <g>
                         <polyline points="${polyStr}" fill="none" stroke="${Q_FILL[s.q]}" stroke-width="2.5" stroke-opacity="0.3" stroke-linecap="round" />
-                        ${fullPath.slice(0,-1).map((p,i)=>`<circle cx="${px(p.x)}" cy="${py(p.y)}" r="2" fill="${Q_FILL[s.q]}" opacity="${0.1+i*0.15}"/>`).join('')}
                         <line x1="${cx}" y1="${cy}" x2="${lineEnd.x}" y2="${lineEnd.y}" stroke="${Q_FILL[s.q]}" stroke-width="1.5" marker-end="url(#m-${s.name})" />
                         <circle cx="${cx}" cy="${cy}" r="${R}" fill="${Q_FILL[s.q]}" stroke="#000" stroke-width="1" />
                         <text x="${cx}" y="${cy+0.5}" text-anchor="middle" dominant-baseline="middle" fill="#000" font-size="8" font-weight="900" font-family="var(--mono)">${s.name}</text>
@@ -131,36 +108,37 @@
             }).join('');
 
             container.innerHTML = `
-                <svg viewBox="0 0 ${CW} ${CH}">
-                    <defs>${markers}</defs>
-                    <rect x="${P}" y="${P}" width="${MX-P}" height="${MY-P}" fill="rgba(96,165,250,0.05)"/>
-                    <rect x="${MX}" y="${P}" width="${CW-P-MX}" height="${MY-P}" fill="rgba(34,197,94,0.05)"/>
-                    <rect x="${P}" y="${MY}" width="${MX-P}" height="${CH-P-MY}" fill="rgba(239,68,68,0.05)"/>
-                    <rect x="${MX}" y="${MY}" width="${CW-P-MX}" height="${CH-P-MY}" fill="rgba(245,158,11,0.05)"/>
-                    <line x1="${MX}" y1="${P}" x2="${MX}" y2="${CH-P}" stroke="#1e293b" stroke-width="1" stroke-dasharray="5,4"/>
-                    <line x1="${P}" y1="${MY}" x2="${CW-P}" y2="${MY}" stroke="#1e293b" stroke-width="1" stroke-dasharray="5,4"/>
-                    <text x="${P+10}" y="${P+20}" fill="#60a5fa" font-size="10" font-weight="800" opacity="0.6">IMPROVING</text>
-                    <text x="${CW-P-60}" y="${P+20}" fill="#22c55e" font-size="10" font-weight="800" opacity="0.6">LEADING</text>
-                    <text x="${P+10}" y="${CH-P-10}" fill="#ef4444" font-size="10" font-weight="800" opacity="0.6">LAGGING</text>
-                    <text x="${CW-P-70}" y="${CH-P-10}" fill="#f59e0b" font-size="10" font-weight="800" opacity="0.6">WEAKENING</text>
-                    ${sectorG}
-                </svg>
+                <div class="card">
+                     <div class="rrg-box">
+                        <svg viewBox="0 0 ${CW} ${CH}">
+                            <defs>${SECTORS.map(s => `<marker id="m-${s.name}" markerWidth="10" markerHeight="6" refX="9" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="${Q_FILL[s.q]}" /></marker>`).join('')}</defs>
+                            <rect x="${P}" y="${P}" width="${MX-P}" height="${MY-P}" fill="rgba(96,165,250,0.05)"/>
+                            <rect x="${MX}" y="${P}" width="${CW-P-MX}" height="${MY-P}" fill="rgba(34,197,94,0.05)"/>
+                            <rect x="${P}" y="${MY}" width="${MX-P}" height="${CH-P-MY}" fill="rgba(239,68,68,0.05)"/>
+                            <rect x="${MX}" y="${MY}" width="${CW-P-MX}" height="${CH-P-MY}" fill="rgba(245,158,11,0.05)"/>
+                            <line x1="${MX}" y1="${P}" x2="${MX}" y2="${CH-P}" stroke="#1e293b" stroke-width="1" stroke-dasharray="5,4"/>
+                            <line x1="${P}" y1="${MY}" x2="${CW-P}" y2="${MY}" stroke="#1e293b" stroke-width="1" stroke-dasharray="5,4"/>
+                            ${sectorG}
+                        </svg>
+                    </div>
+                </div>
             `;
         }
 
-        function renderSignals() {
-            const grid = document.getElementById('signal-grid');
-            grid.innerHTML = `
-                <div class="card" style="padding: 12px 15px;">
-                    <div style="font-size: 13px; font-weight: 700; color: #f1f5f9; margin-bottom: 12px;">Rotation Matrix</div>
-                    <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+        function renderRankSignals(container) {
+            container.innerHTML = `
+                <div class="card">
+                    <div style="font-size:13px; font-weight:700; color:#f1f5f9; margin-bottom:12px;">Rotation Status Matrix</div>
+                    <table style="width:100%; border-collapse:collapse; font-size:11px;">
+                        <thead style="border-bottom:1px solid #1e293b; color:#64748b;">
+                            <tr><th style="padding:8px 0; text-align:left;">Sector</th><th style="text-align:left;">Signal</th><th style="text-align:right;">Momentum</th></tr>
+                        </thead>
                         <tbody>
-                            ${SECTORS.map(s => `
-                                <tr style="border-bottom: 1px solid #1e293b;">
-                                    <td style="padding: 10px 0; font-weight: 700; color: ${Q_FILL[s.q]}">${s.name}</td>
-                                    <td style="color: ${Q_FILL[s.q]}; text-transform: uppercase;">${s.q}</td>
-                                    <td style="color: #64748b; text-align: right;">${s.streakWeeks}w STREAK</td>
-                                    <td style="color: ${s.x >= 100 ? '#22c55e' : '#ef4444'}; text-align: right; font-weight: 700;">${s.x >= 100 ? 'STRENGTH' : 'WEAKNESS'}</td>
+                            ${SECTORS.sort((a,b)=>b.x-a.x).map(s => `
+                                <tr style="border-bottom:1px solid #1e293b;">
+                                    <td style="padding:10px 0; font-weight:700; color:${Q_FILL[s.q]}">${s.name}</td>
+                                    <td style="color:${Q_FILL[s.q]}">${s.q.toUpperCase()}</td>
+                                    <td style="text-align:right; font-weight:700; color:${s.x>=100?'#22c55e':'#ef4444'}">${s.x.toFixed(1)}</td>
                                 </tr>
                             `).join('')}
                         </tbody>
@@ -169,7 +147,30 @@
             `;
         }
 
-        window.onload = init;
+        function renderFlows(container) {
+            const maxFlow = Math.max(...SECTORS.map(s=>Math.abs(s.flow)));
+            container.innerHTML = `
+                <div class="card">
+                    <div style="font-size:13px; font-weight:700; color:#f1f5f9; margin-bottom:12px;">Institutional Fund Flow ($M)</div>
+                    ${SECTORS.sort((a,b)=>b.flow-a.flow).map(s => {
+                        const pct = Math.abs(s.flow)/maxFlow * 100;
+                        return `
+                        <div style="margin-bottom:12px;">
+                            <div style="display:flex; justify-content:space-between; font-size:10px; margin-bottom:4px;">
+                                <span style="font-weight:700;">${s.name}</span>
+                                <span style="color:${s.flow>0?'#22c55e':'#ef4444'}; font-weight:800;">${s.flow>0?'+':''}${s.flow}M</span>
+                            </div>
+                            <div style="height:6px; background:#1e293b; border-radius:3px; overflow:hidden;">
+                                <div style="width:${pct}%; height:100%; background:${s.flow>0?'#22c55e':'#ef4444'}; opacity:0.8;"></div>
+                            </div>
+                        </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        window.onload = render;
     </script>
 </body>
 </html>
