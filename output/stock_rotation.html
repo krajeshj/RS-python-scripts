@@ -21,8 +21,10 @@
         .nav-links { display: flex; gap: 1rem; margin: 0.5rem 0; flex-wrap: wrap; justify-content: center; }
         .nav-link { color: var(--text2); text-decoration: none; font-weight: 600; font-size: 0.85rem; padding: 6px 16px; border-radius: 20px; transition: all 0.3s ease; border: 1px solid transparent; }
         .nav-link.active { color: var(--cyan); background: rgba(0, 229, 255, 0.1); border-color: rgba(0, 229, 255, 0.2); }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px 15px; }
+        .container { max-width: 600px; margin: 0 auto; padding: 15px 15px; }
         .card { background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+        .filter-btn { padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 700; border: 1px solid #1e293b; background: #0a1120; color: #64748b; }
+        .filter-btn.active { border-color: var(--cyan); color: var(--cyan); background: rgba(0, 229, 255, 0.05); }
         .rrg-box { background: #0a1120; border: 1px solid #1e293b; border-radius: 8px; position: relative; width: 100%; aspect-ratio: 1/1; }
         svg { width: 100%; height: 100%; display: block; }
         input[type="range"] { -webkit-appearance: none; background: #1e293b; height: 4px; border-radius: 2px; width: 100%; }
@@ -45,31 +47,31 @@
 
     <div class="container">
         <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <div style="font-size: 11px; font-weight: 700; color: var(--text2); letter-spacing: 0.1em;">FILTER: MIN RS <span id="rs-val" style="color: #fff;">80</span></div>
-                <div style="width: 150px;"><input type="range" id="rs-slider" min="0" max="99" value="80"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <div style="font-size: 11px; font-weight: 700; color: var(--text2); letter-spacing: 0.05em;">MIN RS: <span id="rs-val" style="color: #fff;">80</span></div>
+                <div style="width: 120px;"><input type="range" id="rs-slider" min="0" max="99" value="80"></div>
+            </div>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <button class="filter-btn" id="btn-minervini" onclick="toggleFilter('minervini')">VCP/MINERVINI</button>
+                <button class="filter-btn" id="btn-up" onclick="toggleFilter('is_up')">LEADERS ONLY</button>
             </div>
         </div>
 
         <div class="card">
             <div style="font-size: 14px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
                 <div style="width: 8px; height: 8px; background: var(--cyan); border-radius: 50%; box-shadow: 0 0 10px var(--cyan);"></div>
-                Neural Momentum Radar
+                Predictive Momentum Radar
             </div>
-            <div class="rrg-box" id="rrg-container">
-                <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text2); font-size: 11px;">Syncing Neural Data...</div>
-            </div>
+            <div class="rrg-box" id="rrg-container"></div>
         </div>
 
-        <div class="card" id="leaderboard" style="padding: 15px;">
-            <div style="font-size: 12px; font-weight: 700; margin-bottom: 12px; color: #f1f5f9;">Weighted Velocity Leaders</div>
-            <div id="leaders-list"></div>
-        </div>
+        <div id="signal-list"></div>
     </div>
 
     <script shadow>
         let allStocks = []; let stockHist = {}; let minRS = 80;
-        const CW=500, CH=500, P=45; const R=14;
+        let activeFilters = { minervini: false, is_up: false };
+        const CW=520, CH=520, P=48; const R=14;
         const Q_FILL = { leading:"#22c55e", weakening:"#f59e0b", lagging:"#ef4444", improving:"#60a5fa" };
 
         async function init() {
@@ -82,26 +84,38 @@
                 allStocks = webRes.all_stocks || webRes.stocks || [];
                 stockHist = histRes || {};
                 
-                document.getElementById('rs-slider').oninput = (e) => {
+                const slider = document.getElementById('rs-slider');
+                slider.oninput = (e) => {
                     minRS = parseInt(e.target.value);
                     document.getElementById('rs-val').innerText = minRS;
                     render();
                 };
-                
                 render();
             } catch (e) {
-                console.error(e);
-                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px; text-align:center; color:red;">JSON Load Failed. Check console.</div>';
+                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px; text-align:center; color:red;">Sync error.</div>';
             }
         }
 
+        function toggleFilter(f) {
+            activeFilters[f] = !activeFilters[f];
+            document.getElementById(`btn-${f}`).classList.toggle('active', activeFilters[f]);
+            render();
+        }
+
         function render() {
-            const filtered = allStocks.filter(s => s.rs >= minRS).slice(0, 35);
+            const filtered = allStocks.filter(s => {
+                if(s.rs < minRS) return false;
+                if(activeFilters.minervini && !s.is_minervini) return false;
+                if(activeFilters.is_up && !s.is_up) return false;
+                return true;
+            }).slice(0, 40);
+
             const processed = filtered.map(s => {
-                const h = (stockHist[s.ticker] || []).slice(0, 15);
+                const h = (stockHist[s.ticker] || []).slice(0, 16);
                 const path = [];
-                const weights = [0.45, 0.3, 0.15, 0.1];
-                let wMom = 0;
+                // WEGTHTED LOOKBACK: 60% on last 3 days, 30% on next 4, 10% on tails.
+                const weights = [0.6, 0.3, 0.1, 0];
+                let wMom = 0; let acc = 0;
                 for(let i=0; i<8; i++) {
                     const r = h[i], r_prev = h[i+7];
                     if (r !== undefined && r_prev !== undefined) {
@@ -110,52 +124,53 @@
                       if (i < 4) wMom += m * weights[i];
                     }
                 }
-                const xVal = s.rs_raw ? Math.log2(s.rs + 1) * 15 : s.rs;
+                const curM = path[0] ? path[0].y : 0;
+                const prevM = path[1] ? path[1].y : 0;
+                acc = (curM - prevM); // Second derivative (acceleration)
+
+                const xVal = s.rs_raw ? Math.log2(s.rs+1)*15 : s.rs;
                 const mom = wMom * 4;
                 const q = s.rs >= 85 ? (mom >= 0 ? "leading" : "weakening") : (mom >= 0 ? "improving" : "lagging");
-                return { ...s, xVal, mom, path, q, color: Q_FILL[q] };
+                return { ...s, xVal, mom, acc, path, q, color: Q_FILL[q] };
             });
 
-            if(!processed.length) {
-                 document.getElementById('rrg-container').innerHTML = '<div style="padding:40px; text-align:center;">No stocks above RS ' + minRS + '</div>';
-                 return;
-            }
+            const rrg = document.getElementById('rrg-container');
+            if(!processed.length) { rrg.innerHTML = '<div style="padding:40px;text-align:center;">No hits.</div>'; return; }
 
             const x = processed.map(s => s.xVal), y = processed.map(s => s.mom);
             const medX = x.slice().sort((a,b)=>a-b)[Math.floor(x.length/2)];
             const medY = y.slice().sort((a,b)=>a-b)[Math.floor(y.length/2)];
             const minX = Math.min(...x, medX-18), maxX = Math.max(...x, medX+18);
-            const minY = Math.min(...y, medY-8), maxY = Math.max(...y, medY+8);
+            const minY = Math.min(...y, medY-10), maxY = Math.max(...y, medY+10);
 
             const tX = v => P + ((v - minX) / (maxX - minX || 1)) * (CW - P*2);
             const tY = v => (CH - P) - ((v - minY) / (maxY - minY || 1)) * (CH - P*2);
             const MX=tX(medX), MY=tY(medY);
 
-            // Render SVG
-            let svgContent = `
+            rrg.innerHTML = `
                 <svg viewBox="0 0 ${CW} ${CH}">
-                    <defs>
-                        ${processed.map(s => `<marker id="m-${s.ticker}" markerWidth="10" markerHeight="6" refX="9" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="${s.color}" /></marker>`).join('')}
-                    </defs>
-                    <rect x="${P}" y="${P}" width="${MX-P}" height="${MY-P}" fill="rgba(96,165,250,0.06)"/>
-                    <rect x="${MX}" y="${P}" width="${CW-P-MX}" height="${MY-P}" fill="rgba(34,197,94,0.06)"/>
-                    <rect x="${P}" y="${MY}" width="${MX-P}" height="${CH-P-MY}" fill="rgba(239,68,68,0.06)"/>
-                    <rect x="${MX}" y="${MY}" width="${CW-P-MX}" height="${CH-P-MY}" fill="rgba(245,158,11,0.06)"/>
-                    <line x1="${MX}" y1="${P}" x2="${MX}" y2="${CH-P}" stroke="#1e293b" stroke-width="1.2" stroke-dasharray="5,4"/>
-                    <line x1="${P}" y1="${MY}" x2="${CW-P}" y2="${MY}" stroke="#1e293b" stroke-width="1.2" stroke-dasharray="5,4"/>
+                    <defs>${processed.map(s => `<marker id="m-${s.ticker}" markerWidth="10" markerHeight="6" refX="9" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="${s.color}" /></marker>`).join('')}</defs>
+                    <rect x="${P}" y="${P}" width="${MX-P}" height="${MY-P}" fill="rgba(96,165,250,0.06)"/><rect x="${MX}" y="${P}" width="${CW-P-MX}" height="${MY-P}" fill="rgba(34,197,94,0.06)"/><rect x="${P}" y="${MY}" width="${MX-P}" height="${CH-P-MY}" fill="rgba(239,68,68,0.06)"/><rect x="${MX}" y="${MY}" width="${CW-P-MX}" height="${CH-P-MY}" fill="rgba(245,158,11,0.06)"/>
+                    <line x1="${MX}" y1="${P}" x2="${MX}" y2="${CH-P}" stroke="#1e293b" stroke-width="1.2" stroke-dasharray="5,4"/><line x1="${P}" y1="${MY}" x2="${CW-P}" y2="${MY}" stroke="#1e293b" stroke-width="1.2" stroke-dasharray="5,4"/>
                     ${processed.map(s => {
                         const cx=tX(s.xVal), cy=tY(s.mom);
-                        const pathLines = s.path.map(p => tX(p.x) + ',' + tY(p.y)).join(' ');
-                        const prev = s.path[1] ? {x:tX(s.path[1].x), y:tY(s.path[1].y)} : {x:cx, y:cy};
+                        const points = (s.path || []).map(p => tX(p.x) + ',' + tY(p.y)).join(' ');
+                        const prev = s.path[0] ? {x:tX(s.path[0].x), y:tY(s.path[0].y)} : {x:cx,y:cy};
                         const vX = cx - prev.x, vY = cy - prev.y;
                         
-                        let pred = `${cx},${cy} `;
-                        for(let i=1; i<=4; i++) pred += `${cx + vX*i*0.7},${cy + vY*i*0.7} `;
+                        // DASHED CURL (Predictive): quadratic curve based on acceleration
+                        let curve = `M ${cx} ${cy} `;
+                        let lx = cx, ly = cy;
+                        for(let i=1; i<=4; i++) {
+                            const stepX = vX * i + (s.acc * i * i * 0.2); // Accel-based curl
+                            const stepY = vY * i + (s.acc * i * i * 0.5);
+                            curve += `L ${cx + stepX} ${cy + stepY} `;
+                        }
 
                         return `
                         <g>
-                            <polyline points="${pathLines}" fill="none" stroke="${s.color}" stroke-width="3" stroke-opacity="0.3" stroke-linecap="round" />
-                            <polyline points="${pred}" fill="none" stroke="${s.color}" stroke-width="2.5" stroke-dasharray="4,4" opacity="0.4" />
+                            <polyline points="${points}" fill="none" stroke="${s.color}" stroke-width="3" stroke-opacity="0.3" stroke-linecap="round" />
+                            <path d="${curve}" fill="none" stroke="${s.color}" stroke-width="2.2" stroke-dasharray="5,4" opacity="0.6" />
                             <line x1="${cx}" y1="${cy}" x2="${cx+vX*1.5}" y2="${cy+vY*1.5}" stroke="${s.color}" stroke-width="1.5" marker-end="url(#m-${s.ticker})" />
                             <circle cx="${cx}" cy="${cy}" r="${R}" fill="${s.color}" stroke="#000" stroke-width="1.5" />
                             <text x="${cx}" y="${cy+0.5}" text-anchor="middle" dominant-baseline="middle" fill="#000" font-size="9" font-weight="950" font-family="var(--mono)">${s.ticker}</text>
@@ -163,19 +178,20 @@
                     }).join('')}
                 </svg>
             `;
-            document.getElementById('rrg-container').innerHTML = svgContent;
 
-            // Render Leaders
-            const leaders = processed.sort((a,b) => b.mom - a.mom).slice(0, 6);
-            document.getElementById('leaders-list').innerHTML = leaders.map(s => `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 11px;">
-                    <span style="color: ${s.color}; font-weight: 800;">${s.ticker}</span>
-                    <span style="color: var(--text2);">${s.rs} RS</span>
-                    <span style="color: #22c55e; font-weight: 700;">+${s.mom.toFixed(2)}v</span>
+            document.getElementById('signal-list').innerHTML = `
+                <div class="card" style="padding:12px 15px;">
+                    <div style="font-size:11px;font-weight:700;color:#64748b;margin-bottom:10px;">PROJECTION ALPHA (PREDICTIVE VELOCITY)</div>
+                    ${processed.sort((a,b)=>b.mom-a.mom).slice(0,5).map(s => `
+                        <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:6px;">
+                            <span style="color:${s.color}; font-weight:800;">${s.ticker}</span>
+                            <span style="color:${s.acc<0?'#ef4444':'#22c55e'}; font-weight:700;">${s.acc < 0 ? '⤹ CURL' : '➚ RALLY'}</span>
+                            <span style="color:#64748b;">v:${s.mom.toFixed(2)}</span>
+                        </div>
+                    `).join('')}
                 </div>
-            `).join('');
+            `;
         }
-
         init();
     </script>
 </body>
