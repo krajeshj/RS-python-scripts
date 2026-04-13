@@ -156,16 +156,22 @@
 
             let stockG = processed.map(s => {
                 const cx=tX(s.xVal), cy=tY(s.mom);
+
+                // Anti-clustering Jitter (Deterministic based on Ticker)
+                const jitter = s.ticker.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+                const dx = ((jitter % 11) - 5) * 1.5; 
+                const dy = (((jitter * 7) % 11) - 5) * 1.5;
+                const jcx = cx + dx, jcy = cy + dy;
+
                 const points = (s.path || []).map(p => tX(p.x) + ',' + tY(p.y)).join(' ');
-                const lastP = s.path[0] ? {x:tX(s.path[0].x), y:tY(s.path[0].y)} : {x:cx,y:cy};
                 const vX = cx - tX( (s.path[1]||s.path[0]||{x:s.xVal}).x ), vY = cy - tY( (s.path[1]||s.path[0]||{y:s.mom}).y );
                 
                 // PREDICTIVE CURVE with ARROW
-                let curve = `M ${cx} ${cy} `;
-                let lx = cx, ly = cy, ex = cx, ey = cy;
+                let curve = `M ${jcx} ${jcy} `;
+                let ex = jcx, ey = jcy;
                 for(let i=1; i<=3; i++) {
-                    ex = cx + vX*i*1.1 + (s.acc * i * i * 0.3);
-                    ey = cy + vY*i*1.1 + (s.acc * i * i * 0.6);
+                    ex = jcx + vX*i*1.1 + (s.acc * i * i * 0.3);
+                    ey = jcy + vY*i*1.1 + (s.acc * i * i * 0.6);
                     curve += `L ${ex} ${ey} `;
                 }
 
@@ -173,8 +179,8 @@
                 <g>
                     <polyline points="${points}" fill="none" stroke="${s.color}" stroke-width="3" stroke-opacity="0.25" stroke-linecap="round" />
                     <path d="${curve}" fill="none" stroke="${s.color}" stroke-width="2.5" stroke-dasharray="6,4" opacity="0.7" marker-end="url(#arrow-${s.ticker})" />
-                    <circle cx="${cx}" cy="${cy}" r="${R}" fill="${s.color}" stroke="#000" stroke-width="2" />
-                    <text x="${cx}" y="${cy+0.5}" text-anchor="middle" dominant-baseline="middle" fill="#000" font-size="9" font-weight="950" font-family="var(--mono)">${s.ticker}</text>
+                    <circle cx="${jcx}" cy="${jcy}" r="${R}" fill="${s.color}" stroke="#000" stroke-width="2" />
+                    <text x="${jcx}" y="${jcy+0.5}" text-anchor="middle" dominant-baseline="middle" fill="#000" font-size="9" font-weight="950" font-family="var(--mono)">${s.ticker}</text>
                 </g>`;
             }).join('');
 
