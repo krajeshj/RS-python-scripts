@@ -29,7 +29,7 @@ jobs:
       - name: fetch data and run quick ranking
         run: |
           python -m pip install -r requirements.txt
-          python relative-strength.py true false true
+          python relative-strength.py true false false
           python rs_ranking.py --quick
           python seed_history.py
 
