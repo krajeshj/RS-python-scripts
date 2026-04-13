@@ -15,7 +15,6 @@
             --glass: rgba(18,18,40,.72); --glass-b: 12px; --radius: 16px; --radius-sm: 10px;
             --font: 'Outfit', system-ui, sans-serif; --mono: 'JetBrains Mono', monospace;
             --shadow: 0 8px 32px rgba(0,0,0,.45);
-            --q-leading: #22c55e; --q-weakening: #f59e0b; --q-lagging: #ef4444; --q-improving: #60a5fa;
         }
         html, body { width: 100%; margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font); overflow-x: hidden;
             background-image: radial-gradient(ellipse 80% 60% at 50% -20%, rgba(108,92,231,.12), transparent), radial-gradient(ellipse 60% 50% at 80% 110%, rgba(0,229,255,.06), transparent);
@@ -28,8 +27,6 @@
         .nav-link { color: var(--text2); text-decoration: none; font-weight: 600; font-size: 0.85rem; padding: 6px 16px; border-radius: 20px; transition: all 0.3s ease; border: 1px solid transparent; }
         .nav-link.active { color: var(--cyan); background: rgba(0,229,255,0.1); border-color: rgba(0,229,255,0.2); }
         .container { max-width: 900px; margin: 0 auto; padding: 20px 15px; }
-
-        /* Slider controls - matching dashboard */
         .dashboard-tools { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; gap: 1rem; }
         .slider-group { display: flex; flex-direction: column; gap: 4px; min-width: 180px; }
         .slider-group label { font-size: 0.82rem; font-weight: 600; color: var(--text2); }
@@ -40,27 +37,20 @@
         .dual-range { position: absolute; width: 100%; pointer-events: none; appearance: none; -webkit-appearance: none; background: none; top: 0; left: 0; margin: 0; touch-action: none; }
         .dual-range::-webkit-slider-runnable-track { background: none; }
         .dual-range::-webkit-slider-thumb { pointer-events: auto; appearance: none; -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--cyan); cursor: pointer; box-shadow: 0 0 8px rgba(0,229,255,0.4); border: 2px solid var(--surface); position: relative; z-index: 2; }
-
-        /* Toggle buttons matching dashboard */
         .toggle-btn { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 7px 14px; border-radius: var(--radius-sm); background: var(--surface); border: 1px solid var(--border); color: var(--text); font-size: 0.8rem; font-weight: 600; transition: all 0.2s; user-select: none; }
         .toggle-btn:hover { border-color: var(--accent); }
         .toggle-btn.active { background: rgba(0,230,118,0.1); border-color: var(--green); color: var(--green); }
         .toggle-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--text2); transition: all 0.2s; }
         .toggle-btn.active .toggle-dot { background: var(--green); box-shadow: 0 0 8px rgba(0,230,118,0.5); }
-
-        /* Quadrant filter buttons */
         .q-btn { padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 800; border: 1px solid; background: transparent; transition: all 0.2s; letter-spacing: 0.04em; }
         .q-btn.active { color: #000 !important; }
         .q-btn[data-q="leading"] { border-color: #22c55e44; color: #22c55e; } .q-btn[data-q="leading"].active { background: #22c55e; }
         .q-btn[data-q="improving"] { border-color: #60a5fa44; color: #60a5fa; } .q-btn[data-q="improving"].active { background: #60a5fa; }
         .q-btn[data-q="weakening"] { border-color: #f59e0b44; color: #f59e0b; } .q-btn[data-q="weakening"].active { background: #f59e0b; }
         .q-btn[data-q="lagging"] { border-color: #ef444444; color: #ef4444; } .q-btn[data-q="lagging"].active { background: #ef4444; }
-
         .rrg-box { background: #0a1120; border: 1px solid #1e293b; border-radius: 12px; position: relative; width: 100%; aspect-ratio: 1/1; box-shadow: 0 10px 40px rgba(0,0,0,0.4); }
         svg { width: 100%; height: 100%; display: block; border-radius: 12px; }
         .meta-info { font-size: 0.78rem; color: var(--text2); font-weight: 500; }
-
-        /* Stock card grid */
         .stock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-top: 15px; }
         .stock-card { background: var(--glass); backdrop-filter: blur(var(--glass-b)); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px; transition: all 0.3s; }
         .stock-card:hover { border-color: var(--accent); transform: translateY(-3px); }
@@ -69,7 +59,6 @@
         .outlook-rallying { background: rgba(0,230,118,0.1); color: #00e676; border-color: rgba(0,230,118,0.25); }
         .outlook-curling { background: rgba(255,145,0,0.1); color: #ff9100; border-color: rgba(255,145,0,0.25); }
         .outlook-declining { background: rgba(255,82,82,0.1); color: #ff5252; border-color: rgba(255,82,82,0.25); }
-
         @media (max-width: 768px) { .dashboard-tools { flex-direction: column; align-items: stretch; } .slider-group { width: 100%; } .stock-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -88,7 +77,6 @@
     </header>
 
     <div class="container">
-        <!-- FILTER TOOLBAR (matching dashboard) -->
         <div class="dashboard-tools">
             <div class="slider-group">
                 <label>RS Range: <span id="rs-min-val" class="slider-val">75</span> - <span id="rs-max-val" class="slider-val">100</span></label>
@@ -113,8 +101,6 @@
             <div id="top5-btn" class="toggle-btn" onclick="toggle('top5')"><div class="toggle-dot"></div>🏆 Top 5 Sectors</div>
             <div id="copy-btn" class="toggle-btn" onclick="copyTickers()"><div class="toggle-dot"></div>📋 Copy Tickers</div>
         </div>
-
-        <!-- QUADRANT FILTERS -->
         <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; align-items: center;">
             <span style="font-size: 10px; color: var(--text2); font-weight: 700; letter-spacing: 0.1em;">QUADRANT:</span>
             <button class="q-btn active" data-q="leading" onclick="toggleQ(this)">● LEADING</button>
@@ -123,11 +109,7 @@
             <button class="q-btn active" data-q="lagging" onclick="toggleQ(this)">● LAGGING</button>
             <div class="meta-info" id="filter-count" style="margin-left: auto;"></div>
         </div>
-
-        <!-- RRG CHART -->
         <div class="rrg-box" id="rrg-container"></div>
-
-        <!-- STOCK CARDS -->
         <div class="stock-grid" id="stock-grid"></div>
     </div>
 
@@ -136,15 +118,16 @@
         let minRS = 75, maxRS = 100, minRMV = 10, maxRMV = 45;
         let filters = { quality: true, minervini: false, top5: false };
         let activeQuadrants = { leading: true, improving: true, weakening: true, lagging: true };
-        const CW=600, CH=600, P=60, R=16;
-        const Q_FILL = { leading:"#22c55e", weakening:"#f59e0b", lagging:"#ef4444", improving:"#60a5fa" };
+        const CW = 600, CH = 600, P = 60, R = 15;
+        const Q_FILL = { leading: "#22c55e", weakening: "#f59e0b", lagging: "#ef4444", improving: "#60a5fa" };
+        const TRAIL_DAYS = 10;
 
         async function init() {
             const ts = Date.now();
             try {
                 const [webRes, histRes] = await Promise.all([
-                    fetch(`web_data.json?v=${ts}`).then(r => r.json()),
-                    fetch(`stock_history.json?v=${ts}`).then(r => r.json())
+                    fetch('web_data.json?v=' + ts).then(r => r.json()),
+                    fetch('stock_history.json?v=' + ts).then(r => r.json())
                 ]);
                 webData = webRes;
                 allStocks = webRes.all_stocks || webRes.stocks || [];
@@ -152,207 +135,268 @@
                 wireSliders();
                 render();
             } catch (e) {
-                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:red;">Data sync error.</div>';
+                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:red;">Data sync error: ' + e.message + '</div>';
             }
         }
 
         function wireSliders() {
-            const rsMin = document.getElementById('rs-min-slider');
-            const rsMax = document.getElementById('rs-max-slider');
-            rsMin.addEventListener('input', e => { minRS = Math.min(+e.target.value, maxRS-1); e.target.value = minRS; document.getElementById('rs-min-val').textContent = minRS; updateFill('rs'); render(); });
-            rsMax.addEventListener('input', e => { maxRS = Math.max(+e.target.value, minRS+1); e.target.value = maxRS; document.getElementById('rs-max-val').textContent = maxRS; updateFill('rs'); render(); });
-            const rmvMin = document.getElementById('rmv-min-slider');
-            const rmvMax = document.getElementById('rmv-max-slider');
-            rmvMin.addEventListener('input', e => { minRMV = Math.min(+e.target.value, maxRMV-1); e.target.value = minRMV; document.getElementById('rmv-min-val').textContent = minRMV; updateFill('rmv'); render(); });
-            rmvMax.addEventListener('input', e => { maxRMV = Math.max(+e.target.value, minRMV+1); e.target.value = maxRMV; document.getElementById('rmv-max-val').textContent = maxRMV; updateFill('rmv'); render(); });
+            document.getElementById('rs-min-slider').addEventListener('input', function(e) { minRS = Math.min(+e.target.value, maxRS - 1); e.target.value = minRS; document.getElementById('rs-min-val').textContent = minRS; updateFill('rs'); render(); });
+            document.getElementById('rs-max-slider').addEventListener('input', function(e) { maxRS = Math.max(+e.target.value, minRS + 1); e.target.value = maxRS; document.getElementById('rs-max-val').textContent = maxRS; updateFill('rs'); render(); });
+            document.getElementById('rmv-min-slider').addEventListener('input', function(e) { minRMV = Math.min(+e.target.value, maxRMV - 1); e.target.value = minRMV; document.getElementById('rmv-min-val').textContent = minRMV; updateFill('rmv'); render(); });
+            document.getElementById('rmv-max-slider').addEventListener('input', function(e) { maxRMV = Math.max(+e.target.value, minRMV + 1); e.target.value = maxRMV; document.getElementById('rmv-max-val').textContent = maxRMV; updateFill('rmv'); render(); });
         }
 
         function updateFill(type) {
-            if (type === 'rs') { const f = document.getElementById('rs-fill'); f.style.left = ((minRS-50)*2)+'%'; f.style.right = (100-(maxRS-50)*2)+'%'; }
-            if (type === 'rmv') { const f = document.getElementById('rmv-fill'); f.style.left = minRMV+'%'; f.style.right = (100-maxRMV)+'%'; }
+            if (type === 'rs') { var f = document.getElementById('rs-fill'); f.style.left = ((minRS - 50) * 2) + '%'; f.style.right = (100 - (maxRS - 50) * 2) + '%'; }
+            if (type === 'rmv') { var f = document.getElementById('rmv-fill'); f.style.left = minRMV + '%'; f.style.right = (100 - maxRMV) + '%'; }
         }
 
         function toggle(key) {
             filters[key] = !filters[key];
-            document.getElementById(key+'-btn').classList.toggle('active', filters[key]);
+            document.getElementById(key + '-btn').classList.toggle('active', filters[key]);
             render();
         }
 
         function toggleQ(btn) {
-            const q = btn.dataset.q;
+            var q = btn.getAttribute('data-q');
             activeQuadrants[q] = !activeQuadrants[q];
             btn.classList.toggle('active', activeQuadrants[q]);
             render();
         }
 
         function copyTickers() {
-            const cards = document.querySelectorAll('[data-ticker]');
-            const tickers = Array.from(cards).map(c => c.dataset.ticker).join(', ');
-            navigator.clipboard.writeText(tickers).then(() => {
-                const btn = document.getElementById('copy-btn');
+            var cards = document.querySelectorAll('[data-ticker]');
+            var tickers = [];
+            cards.forEach(function(c) { tickers.push(c.getAttribute('data-ticker')); });
+            navigator.clipboard.writeText(tickers.join(', ')).then(function() {
+                var btn = document.getElementById('copy-btn');
                 btn.classList.add('active');
                 btn.innerHTML = '<div class="toggle-dot"></div> ✅ Copied!';
-                setTimeout(() => { btn.classList.remove('active'); btn.innerHTML = '<div class="toggle-dot"></div> 📋 Copy Tickers'; }, 2000);
+                setTimeout(function() { btn.classList.remove('active'); btn.innerHTML = '<div class="toggle-dot"></div> 📋 Copy Tickers'; }, 2000);
             });
         }
 
         function render() {
-            // 1. Apply dashboard filters first
-            let top5Names = [];
+            // 1. FILTER (matching dashboard logic exactly)
+            var top5Names = [];
             if (filters.top5 && webData && webData.stages && webData.stages.length >= 5) {
-                top5Names = webData.stages.slice(0, 5).map(s => s.sector);
+                top5Names = webData.stages.slice(0, 5).map(function(s) { return s.sector; });
             }
 
-            let filtered = allStocks.filter(s => {
-                const rs = s.rs || 0;
+            var filtered = allStocks.filter(function(s) {
+                var rs = s.rs || 0;
+                var rmv = (s.rmv !== undefined && s.rmv !== null) ? s.rmv : -1;
                 if (rs < minRS || rs > maxRS) return false;
-                if (s.rmv < minRMV || s.rmv > maxRMV) return false;
+                if (rmv < minRMV || rmv > maxRMV) return false;
                 if (filters.quality && s.is_speculative) return false;
                 if (filters.minervini && !s.is_minervini) return false;
-                if (filters.top5 && top5Names.length > 0 && !top5Names.includes(s.sector)) return false;
+                if (filters.top5 && top5Names.length > 0 && top5Names.indexOf(s.sector) === -1) return false;
                 return true;
             });
-            filtered = filtered.sort((a,b) => b.rs - a.rs).slice(0, 40);
+            filtered.sort(function(a, b) { return b.rs - a.rs; });
+            filtered = filtered.slice(0, 40);
 
             if (!filtered.length) {
-                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text2);">No stocks match filters.</div>';
+                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text2);">No stocks match filters. Adjust sliders or toggle Quality off.</div>';
                 document.getElementById('stock-grid').innerHTML = '';
                 document.getElementById('filter-count').textContent = '0 stocks';
                 return;
             }
 
-            // 2. RELATIVE NORMALIZATION (percentile-based X spread)
-            const rsValues = filtered.map(s => s.rs).sort((a,b) => a-b);
-            const medianRS = rsValues[Math.floor(rsValues.length / 2)];
+            // 2. BUILD TRAIL DATA from stock_history.json (10-day lookback)
+            var rsArr = filtered.map(function(s) { return s.rs; }).sort(function(a, b) { return a - b; });
+            var medRS = rsArr[Math.floor(rsArr.length / 2)];
+            if (medRS === 0) medRS = 1;
 
-            const processed = filtered.map(s => {
-                const h = (stockHist[s.ticker] || []).slice(0, 20);
-                const path = [];
-                const weights = [0.65, 0.25, 0.1, 0];
-                let wMom = 0;
+            var processed = filtered.map(function(s) {
+                var h = (stockHist[s.ticker] || []).slice(0, TRAIL_DAYS + 7);
+                var trail = []; // Each entry: {x, y} in normalized coords
+                var weights = [0.65, 0.25, 0.1, 0];
+                var wMom = 0;
 
-                for (let i = 0; i < 10; i++) {
-                    const r = h[i], r_prev = h[i + 7];
+                // Build trail points from history (index 0 = today, 1 = yesterday, etc.)
+                for (var i = 0; i < TRAIL_DAYS; i++) {
+                    var r = h[i], r_prev = h[i + 7];
                     if (r !== undefined && r_prev !== undefined) {
-                        const m = r - r_prev;
-                        const normX = (r / medianRS) * 100;
-                        path.push({ x: normX, y: m });
-                        if (i < 4) wMom += m * weights[i];
+                        var mom_i = (r - r_prev);
+                        var normX_i = (r / medRS) * 100;
+                        trail.push({ x: normX_i, y: mom_i });
+                        if (i < 4) wMom += mom_i * weights[i];
                     }
                 }
-                const curM = path[0] ? path[0].y : 0;
-                const prevM = path[1] ? path[1].y : 0;
-                const acc = curM - prevM;
 
-                // X = percentile rank within the group (0-200 scale centered at 100)
-                const rank = rsValues.indexOf(s.rs);
-                const pctRank = (rank / (rsValues.length - 1 || 1));
-                const xVal = 80 + pctRank * 40; // spread 80-120
+                var curM = trail[0] ? trail[0].y : 0;
+                var prevM = trail[1] ? trail[1].y : 0;
+                var acc = curM - prevM;
 
-                const mom = wMom * 6;
-                const q = xVal >= 100 ? (mom >= 0 ? "leading" : "weakening") : (mom >= 0 ? "improving" : "lagging");
+                // X = percentile rank for spread
+                var rank = rsArr.indexOf(s.rs);
+                var pctRank = rsArr.length > 1 ? (rank / (rsArr.length - 1)) : 0.5;
+                var xVal = 80 + pctRank * 40;
 
-                // OUTLOOK
-                let outlook = 'neutral';
+                var mom = wMom * 6;
+                var q = xVal >= 100 ? (mom >= 0 ? "leading" : "weakening") : (mom >= 0 ? "improving" : "lagging");
+
+                var outlook = 'neutral';
                 if (mom > 1 && acc >= 0) outlook = 'rallying';
                 else if (mom > 0 && acc < -0.3) outlook = 'curling';
                 else if (mom <= 0 && acc < 0) outlook = 'declining';
                 else if (mom <= 0 && acc >= 0) outlook = 'recovering';
 
-                return { ...s, xVal, mom, acc, path, q, color: Q_FILL[q], outlook };
+                return {
+                    ticker: s.ticker, name: s.name, rs: s.rs, rmv: s.rmv, rank: s.rank,
+                    industry: s.industry, sector: s.sector, is_minervini: s.is_minervini,
+                    tradingview_url: s.tradingview_url,
+                    xVal: xVal, mom: mom, acc: acc, trail: trail, q: q, color: Q_FILL[q], outlook: outlook
+                };
             });
 
-            // 3. Apply quadrant filter
-            const visible = processed.filter(s => activeQuadrants[s.q]);
-            document.getElementById('filter-count').textContent = `${visible.length} of ${filtered.length} stocks`;
+            // 3. Quadrant filter
+            var visible = processed.filter(function(s) { return activeQuadrants[s.q]; });
+            var totalFiltered = filtered.length;
+            document.getElementById('filter-count').textContent = visible.length + ' of ' + totalFiltered + ' stocks';
 
-            // 4. Render SVG
-            const x = visible.map(s => s.xVal), y = visible.map(s => s.mom);
-            const gMinX = Math.min(...x, 78), gMaxX = Math.max(...x, 122);
-            const gMinY = Math.min(...y, -10), gMaxY = Math.max(...y, 10);
-            const tX = v => P + ((v - gMinX) / (gMaxX - gMinX || 1)) * (CW - P*2);
-            const tY = v => (CH - P) - ((v - gMinY) / (gMaxY - gMinY || 1)) * (CH - P*2);
-            const MX = tX(100), MY = tY(0);
+            if (!visible.length) {
+                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text2);">No stocks in selected quadrants.</div>';
+                document.getElementById('stock-grid').innerHTML = '';
+                return;
+            }
 
-            let stockG = visible.map(s => {
-                const cx = tX(s.xVal), cy = tY(s.mom);
-                // Jitter
-                const jh = s.ticker.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
-                const dx = ((jh % 13) - 6) * 2, dy = (((jh * 7) % 13) - 6) * 2;
-                const jcx = cx + dx, jcy = cy + dy;
+            // 4. SVG RENDERING
+            var xs = visible.map(function(s) { return s.xVal; });
+            var ys = visible.map(function(s) { return s.mom; });
+            var gMinX = Math.min.apply(null, xs.concat([78])), gMaxX = Math.max.apply(null, xs.concat([122]));
+            var gMinY = Math.min.apply(null, ys.concat([-10])), gMaxY = Math.max.apply(null, ys.concat([10]));
 
-                const pts = (s.path || []).map(p => tX(p.x) + ',' + tY(p.y)).join(' ');
-                const prev = s.path[1] || s.path[0] || { x: s.xVal, y: s.mom };
-                const vX = cx - tX(prev.x), vY = cy - tY(prev.y);
+            function tX(v) { return P + ((v - gMinX) / (gMaxX - gMinX || 1)) * (CW - P * 2); }
+            function tY(v) { return (CH - P) - ((v - gMinY) / (gMaxY - gMinY || 1)) * (CH - P * 2); }
+            var MX = tX(100), MY = tY(0);
 
-                // Curved predictive arrow (3 steps)
-                let curve = `M ${jcx} ${jcy} `;
-                for (let i = 1; i <= 4; i++) {
-                    curve += `L ${jcx + vX*i*1.1 + s.acc*i*i*0.4} ${jcy + vY*i*1.1 + s.acc*i*i*0.7} `;
+            var defs = '';
+            var stockG = '';
+
+            visible.forEach(function(s) {
+                var cx = tX(s.xVal), cy = tY(s.mom);
+                // Deterministic jitter
+                var jh = 0;
+                for (var ci = 0; ci < s.ticker.length; ci++) jh += s.ticker.charCodeAt(ci);
+                var dx = ((jh % 17) - 8) * 1.8, dy = (((jh * 7) % 17) - 8) * 1.8;
+                var jcx = cx + dx, jcy = cy + dy;
+
+                // --- BREADCRUMB TRAIL (10-day lookback) ---
+                var trailSvg = '';
+                var trailPts = [];
+                for (var ti = s.trail.length - 1; ti >= 0; ti--) {
+                    var tp = s.trail[ti];
+                    // Use percentile-rank-based X for trail too, but approximate via RS ratio
+                    var tx_v = tX(tp.x), ty_v = tY(tp.y);
+                    trailPts.push(tx_v + ',' + ty_v);
+                    var opacity = 0.12 + (1 - ti / s.trail.length) * 0.35;
+                    var radius = 2 + (1 - ti / s.trail.length) * 2;
+                    trailSvg += '<circle cx="' + tx_v + '" cy="' + ty_v + '" r="' + radius.toFixed(1) + '" fill="' + s.color + '" opacity="' + opacity.toFixed(2) + '"/>';
+                }
+                // Trail polyline (ghostrail)
+                if (trailPts.length > 1) {
+                    trailSvg += '<polyline points="' + trailPts.join(' ') + '" fill="none" stroke="' + s.color + '" stroke-width="2" stroke-opacity="0.15" stroke-linecap="round"/>';
                 }
 
-                return `<g>
-                    <polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="2.5" stroke-opacity="0.2" stroke-linecap="round"/>
-                    <path d="${curve}" fill="none" stroke="${s.color}" stroke-width="2.5" stroke-dasharray="6,4" opacity="0.7" marker-end="url(#a-${s.ticker})"/>
-                    <circle cx="${jcx}" cy="${jcy}" r="${R}" fill="${s.color}" stroke="#000" stroke-width="2"/>
-                    <text x="${jcx}" y="${jcy+0.5}" text-anchor="middle" dominant-baseline="middle" fill="#000" font-size="8.5" font-weight="950" font-family="var(--mono)">${s.ticker}</text>
-                </g>`;
-            }).join('');
+                // --- PREDICTIVE CURL ARROW (engineering style) ---
+                // Velocity from last two trail points
+                var vX = 0, vY = 0;
+                if (s.trail.length >= 2) {
+                    vX = tX(s.trail[0].x) - tX(s.trail[1].x);
+                    vY = tY(s.trail[0].y) - tY(s.trail[1].y);
+                }
 
-            document.getElementById('rrg-container').innerHTML = `
-                <svg viewBox="0 0 ${CW} ${CH}">
-                    <defs>${visible.map(s => `<marker id="a-${s.ticker}" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><path d="M0,0 L10,3.5 L0,7 Z" fill="${s.color}"/></marker>`).join('')}</defs>
-                    <rect x="${P}" y="${P}" width="${MX-P}" height="${MY-P}" fill="rgba(96,165,250,0.08)"/>
-                    <rect x="${MX}" y="${P}" width="${CW-P-MX}" height="${MY-P}" fill="rgba(34,197,94,0.08)"/>
-                    <rect x="${P}" y="${MY}" width="${MX-P}" height="${CH-P-MY}" fill="rgba(239,68,68,0.08)"/>
-                    <rect x="${MX}" y="${MY}" width="${CW-P-MX}" height="${CH-P-MY}" fill="rgba(245,158,11,0.08)"/>
-                    <line x1="${MX}" y1="${P}" x2="${MX}" y2="${CH-P}" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="5,4"/>
-                    <line x1="${P}" y1="${MY}" x2="${CW-P}" y2="${MY}" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="5,4"/>
-                    <text x="${P+12}" y="${P+22}" fill="#60a5fa" font-size="11" font-weight="900" opacity="0.5">IMPROVING</text>
-                    <text x="${CW-P-70}" y="${P+22}" fill="#22c55e" font-size="11" font-weight="900" opacity="0.5">LEADING</text>
-                    <text x="${P+12}" y="${CH-P-12}" fill="#ef4444" font-size="11" font-weight="900" opacity="0.5">LAGGING</text>
-                    <text x="${CW-P-85}" y="${CH-P-12}" fill="#f59e0b" font-size="11" font-weight="900" opacity="0.5">WEAKENING</text>
-                    ${stockG}
-                </svg>`;
+                // Build quadratic Bezier curve for predictive path
+                // acc determines curvature: positive = curving up, negative = curving down
+                var predPts = [];
+                predPts.push({ x: jcx, y: jcy });
+                for (var pi = 1; pi <= 5; pi++) {
+                    var px = jcx + vX * pi * 1.2 + s.acc * pi * pi * 0.5;
+                    var py = jcy + vY * pi * 1.2 + s.acc * pi * pi * 1.0;
+                    predPts.push({ x: px, y: py });
+                }
 
-            // 5. Render stock cards with predictive outlook
-            document.getElementById('stock-grid').innerHTML = visible.map(s => {
-                const outlookLabel = s.outlook === 'rallying' ? '➚ Momentum Rallying' :
-                                     s.outlook === 'curling' ? '⤹ Momentum Curling Down' :
-                                     s.outlook === 'declining' ? '↘ Momentum Declining' :
-                                     s.outlook === 'recovering' ? '↗ Momentum Recovering' : '→ Neutral';
-                const outlookClass = s.outlook === 'rallying' ? 'outlook-rallying' :
-                                     s.outlook === 'curling' || s.outlook === 'declining' ? 'outlook-declining' :
-                                     s.outlook === 'recovering' ? 'outlook-rallying' : 'outlook-curling';
-                const qBadgeColor = Q_FILL[s.q];
-                const hiTag = s.is_minervini ? '<span class="highlight-tag">Strong Trend Alignment</span>' : '';
-                const ctrlTag = s.rmv <= 45 ? '<span class="highlight-tag">Controlled Volatility</span>' : '';
+                // SVG path with smooth curve (C for cubic bezier)
+                var curvePath = 'M ' + predPts[0].x + ' ' + predPts[0].y;
+                if (predPts.length >= 4) {
+                    curvePath += ' C ' + predPts[1].x + ' ' + predPts[1].y + ', ' +
+                                        predPts[2].x + ' ' + predPts[2].y + ', ' +
+                                        predPts[3].x + ' ' + predPts[3].y;
+                    if (predPts.length >= 6) {
+                        curvePath += ' S ' + predPts[4].x + ' ' + predPts[4].y + ', ' +
+                                            predPts[5].x + ' ' + predPts[5].y;
+                    }
+                }
 
-                return `<div class="stock-card" data-ticker="${s.ticker}">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                        <div>
-                            <a href="https://www.tradingview.com/chart/?symbol=${s.ticker}" target="_blank" style="font-size:1.3rem; font-weight:800; color:var(--cyan); font-family:var(--mono); text-decoration:none;">${s.ticker}</a>
-                            <div style="font-size:0.75rem; color:var(--text2); margin-top:2px;">${s.name || s.ticker}</div>
-                            <div style="font-size:0.7rem; color:var(--text2); margin-top:2px;">${s.industry || ''} • ${s.sector || ''}</div>
-                        </div>
-                        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
-                            <span style="font-size:0.65rem; padding:2px 8px; border-radius:4px; background:${qBadgeColor}22; color:${qBadgeColor}; border:1px solid ${qBadgeColor}44; font-weight:800;">${s.q.toUpperCase()}</span>
-                            <span style="font-size:0.6rem; color:var(--text2);">#${s.rank || ''}</span>
-                        </div>
-                    </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; background:var(--surface); padding:10px; border-radius:8px;">
-                        <div><div style="font-size:0.6rem; color:var(--text2); text-transform:uppercase; letter-spacing:0.1em;">RS Rank</div><div style="font-size:1.1rem; font-weight:700; color:var(--cyan); font-family:var(--mono);">${s.rs}</div></div>
-                        <div><div style="font-size:0.6rem; color:var(--text2); text-transform:uppercase; letter-spacing:0.1em;">RMV</div><div style="font-size:1.1rem; font-weight:700; font-family:var(--mono);">${s.rmv}</div></div>
-                    </div>
-                    <div style="display:flex; flex-wrap:wrap; gap:6px;">
-                        ${hiTag}${ctrlTag}
-                    </div>
-                    <div style="display:flex; flex-wrap:wrap; gap:6px; border-top:1px solid var(--border); padding-top:8px;">
-                        <span class="outlook-tag ${outlookClass}">${outlookLabel}</span>
-                    </div>
-                </div>`;
-            }).join('');
+                // Engineering arrowhead marker (larger, hollow-looking)
+                var markerId = 'eng-' + s.ticker;
+                defs += '<marker id="' + markerId + '" markerWidth="14" markerHeight="10" refX="13" refY="5" orient="auto" markerUnits="userSpaceOnUse">' +
+                    '<path d="M0,1 L13,5 L0,9 L3,5 Z" fill="' + s.color + '" stroke="#000" stroke-width="0.5"/>' +
+                    '</marker>';
+
+                stockG += '<g>' +
+                    trailSvg +
+                    '<path d="' + curvePath + '" fill="none" stroke="' + s.color + '" stroke-width="2.8" stroke-dasharray="7,5" opacity="0.75" marker-end="url(#' + markerId + ')"/>' +
+                    '<circle cx="' + jcx + '" cy="' + jcy + '" r="' + R + '" fill="' + s.color + '" stroke="#000" stroke-width="2"/>' +
+                    '<text x="' + jcx + '" y="' + (jcy + 0.5) + '" text-anchor="middle" dominant-baseline="middle" fill="#000" font-size="8.5" font-weight="950" font-family="var(--mono)">' + s.ticker + '</text>' +
+                    '</g>';
+            });
+
+            document.getElementById('rrg-container').innerHTML =
+                '<svg viewBox="0 0 ' + CW + ' ' + CH + '">' +
+                '<defs>' + defs + '</defs>' +
+                '<rect x="' + P + '" y="' + P + '" width="' + (MX - P) + '" height="' + (MY - P) + '" fill="rgba(96,165,250,0.08)"/>' +
+                '<rect x="' + MX + '" y="' + P + '" width="' + (CW - P - MX) + '" height="' + (MY - P) + '" fill="rgba(34,197,94,0.08)"/>' +
+                '<rect x="' + P + '" y="' + MY + '" width="' + (MX - P) + '" height="' + (CH - P - MY) + '" fill="rgba(239,68,68,0.08)"/>' +
+                '<rect x="' + MX + '" y="' + MY + '" width="' + (CW - P - MX) + '" height="' + (CH - P - MY) + '" fill="rgba(245,158,11,0.08)"/>' +
+                '<line x1="' + MX + '" y1="' + P + '" x2="' + MX + '" y2="' + (CH - P) + '" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="5,4"/>' +
+                '<line x1="' + P + '" y1="' + MY + '" x2="' + (CW - P) + '" y2="' + MY + '" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="5,4"/>' +
+                '<text x="' + (P + 12) + '" y="' + (P + 22) + '" fill="#60a5fa" font-size="11" font-weight="900" opacity="0.5">IMPROVING</text>' +
+                '<text x="' + (CW - P - 70) + '" y="' + (P + 22) + '" fill="#22c55e" font-size="11" font-weight="900" opacity="0.5">LEADING</text>' +
+                '<text x="' + (P + 12) + '" y="' + (CH - P - 12) + '" fill="#ef4444" font-size="11" font-weight="900" opacity="0.5">LAGGING</text>' +
+                '<text x="' + (CW - P - 85) + '" y="' + (CH - P - 12) + '" fill="#f59e0b" font-size="11" font-weight="900" opacity="0.5">WEAKENING</text>' +
+                stockG +
+                '</svg>';
+
+            // 5. STOCK CARDS with predictive outlook
+            var cardsHtml = '';
+            visible.forEach(function(s) {
+                var outlookLabel = s.outlook === 'rallying' ? '➚ Momentum Rallying' :
+                    s.outlook === 'curling' ? '⤹ Momentum Curling Down' :
+                    s.outlook === 'declining' ? '↘ Momentum Declining' :
+                    s.outlook === 'recovering' ? '↗ Momentum Recovering' : '→ Neutral';
+                var outlookClass = s.outlook === 'rallying' || s.outlook === 'recovering' ? 'outlook-rallying' :
+                    s.outlook === 'curling' ? 'outlook-curling' : 'outlook-declining';
+                var hiTag = s.is_minervini ? '<span class="highlight-tag">Strong Trend Alignment</span>' : '';
+                var ctrlTag = (s.rmv !== undefined && s.rmv <= 45) ? '<span class="highlight-tag">Controlled Volatility</span>' : '';
+
+                cardsHtml += '<div class="stock-card" data-ticker="' + s.ticker + '">' +
+                    '<div style="display:flex; justify-content:space-between; align-items:flex-start;">' +
+                        '<div>' +
+                            '<a href="' + (s.tradingview_url || '#') + '" target="_blank" style="font-size:1.3rem; font-weight:800; color:var(--cyan); font-family:var(--mono); text-decoration:none;">' + s.ticker + '</a>' +
+                            '<div style="font-size:0.75rem; color:var(--text2); margin-top:2px;">' + (s.name || s.ticker) + '</div>' +
+                            '<div style="font-size:0.7rem; color:var(--text2); margin-top:2px;">' + (s.industry || '') + ' &bull; ' + (s.sector || '') + '</div>' +
+                        '</div>' +
+                        '<div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">' +
+                            '<span style="font-size:0.65rem; padding:2px 8px; border-radius:4px; background:' + s.color + '22; color:' + s.color + '; border:1px solid ' + s.color + '44; font-weight:800;">' + s.q.toUpperCase() + '</span>' +
+                            '<span style="font-size:0.6rem; color:var(--text2);">#' + (s.rank || '') + '</span>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; background:var(--surface); padding:10px; border-radius:8px;">' +
+                        '<div><div style="font-size:0.6rem; color:var(--text2); text-transform:uppercase; letter-spacing:0.1em;">RS Rank</div><div style="font-size:1.1rem; font-weight:700; color:var(--cyan); font-family:var(--mono);">' + s.rs + '</div></div>' +
+                        '<div><div style="font-size:0.6rem; color:var(--text2); text-transform:uppercase; letter-spacing:0.1em;">RMV</div><div style="font-size:1.1rem; font-weight:700; font-family:var(--mono);">' + (s.rmv !== undefined ? s.rmv : 'N/A') + '</div></div>' +
+                    '</div>' +
+                    '<div style="display:flex; flex-wrap:wrap; gap:6px;">' + hiTag + ctrlTag + '</div>' +
+                    '<div style="display:flex; flex-wrap:wrap; gap:6px; border-top:1px solid var(--border); padding-top:8px;">' +
+                        '<span class="outlook-tag ' + outlookClass + '">' + outlookLabel + '</span>' +
+                    '</div>' +
+                '</div>';
+            });
+            document.getElementById('stock-grid').innerHTML = cardsHtml;
         }
+
         init();
     </script>
 </body>

@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-04-13T14:58:12Z",
+    "last_updated": "2026-04-13T15:40:06Z",
     "stocks": [
         {
             "rank": 1,
@@ -2124,7 +2124,7 @@
             "days_to_earnings": -1,
             "is_speculative": false,
             "low_signal": false,
-            "marketCap": 36630351872.0,
+            "marketCap": 36308246528.0,
             "volume": 4275500.0,
             "avg_volume": 4835670.0,
             "is_up": false,
@@ -2827,7 +2827,7 @@
             "days_to_earnings": -1,
             "is_speculative": false,
             "low_signal": false,
-            "marketCap": 25709219840.0,
+            "marketCap": 25622231040.0,
             "volume": 3286400.0,
             "avg_volume": 3148500.0,
             "is_up": false,
@@ -2975,7 +2975,7 @@
             "days_to_earnings": -1,
             "is_speculative": true,
             "low_signal": false,
-            "marketCap": 6865573376.0,
+            "marketCap": 6810552832.0,
             "volume": 9935100.0,
             "avg_volume": 15540670.0,
             "is_up": false,
@@ -3297,6 +3297,24 @@
         },
         {
             "rank": 10,
+            "industry": "Drug Manufacturers - General",
+            "sector": "Healthcare",
+            "rs": 56,
+            "rs_1w_pct": 67,
+            "rs_1m_pct": 61,
+            "tickers": [
+                {
+                    "t": "GILD",
+                    "n": "Gilead Sciences, Inc."
+                },
+                {
+                    "t": "AMGN",
+                    "n": "Amgen Inc."
+                }
+            ]
+        },
+        {
+            "rank": 11,
             "industry": "Utilities - Regulated Electric",
             "sector": "Utilities",
             "rs": 56,
@@ -3318,24 +3336,6 @@
                 {
                     "t": "EXC",
                     "n": "Exelon Corporation"
-                }
-            ]
-        },
-        {
-            "rank": 11,
-            "industry": "Drug Manufacturers - General",
-            "sector": "Healthcare",
-            "rs": 56,
-            "rs_1w_pct": 67,
-            "rs_1m_pct": 61,
-            "tickers": [
-                {
-                    "t": "GILD",
-                    "n": "Gilead Sciences, Inc."
-                },
-                {
-                    "t": "AMGN",
-                    "n": "Amgen Inc."
                 }
             ]
         },
