@@ -18,8 +18,11 @@ To provide a high-fidelity, institutional-grade workspace for tracking Relative 
 
 ### B. Stock Rotation Dashboard (`stock_rotation.html`)
 *   **Neural Momentum Radar:** Dynamic RRG tracking for individual stocks.
-*   **Front-Weighted Lookback:** Momentum calculations carry a **60% weight on the most recent 3 days** of action. This is critical for catching trend-exits quickly.
-*   **Predictive Alpha Curls:** Dashed projection lines using **Quadratic Acceleration** logic. If a stock’s velocity is decelerating, the projection "curls" towards the Lagging quadrant.
+*   **Relative Normalization (Median Centering):** The X-axis (RS) is normalized around the **Group Median**. Half the selected stocks populate the left quadrants (Lagging/Improving) and half the right (Leading/Weakening), providing a true relative-performance view among leaders.
+*   **Anti-Clustering Jitter:** Ticker-based deterministic offsets (dx, dy) are applied to labels to ensure 100% readability in dense performance clusters.
+*   **Front-Weighted Lookback:** Momentum calculations carry a **65% weight on the most recent 3 days** of action to catch trend-exits quickly.
+*   **Predictive Alpha Curls (Arrow Markers):** Bolder **SVG Arrow Markers** at the end of curved dashed projection lines.
+*   **Quadratic Pathing:** Curve curvature is calculated using **Second-Derivative Acceleration**. Decelerating stocks display a physical "curl" towards Lagging quadrants.
 *   **Filtering Controls:**
     *   **RS Slider:** Real-time filtering by Relative Strength score (0-99).
     *   **VCP/Minervini:** Boolean filter for stocks meeting Stage 2 / Mark Minervini criteria.
@@ -58,9 +61,10 @@ To provide a high-fidelity, institutional-grade workspace for tracking Relative 
 
 | Feature | Logic / Math |
 | :--- | :--- |
-| **RS Score** | Mansfield-style RS vs SPY, converted to a 0-99 percentile. |
-| **Momentum** | `WeightedVelocity = (T0*0.6 + T-1*0.3 + T-2*0.1)`. |
-| **Curl Logic** | `2nd Derivative (Acceleration)` determines the bend of the dashed projection. |
+| **RS Score** | Mansfield-style RS vs SPY, optionally normalized to **Group Median** for Stock RRG. |
+| **Momentum** | `WeightedVelocity = (T0*0.65 + T-1*0.25 + T-2*0.1)`. |
+| **Curl Logic** | `2nd Derivative (Acceleration)` + `SVG Markers` determine the bend and direction of prediction. |
+| **Anti-Cluster** | Deterministic `Ticker-based Jitter` for overlapping labels. |
 | **Design Style** | Deep Dark Mode (`#06060f`), Outfit/JetBrains fonts, Glassmorphism. |
 
 ---
