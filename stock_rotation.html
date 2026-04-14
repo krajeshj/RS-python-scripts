@@ -203,6 +203,7 @@
                 return true;
             });
             filtered.sort(function(a, b) { return b.rs - a.rs; });
+            filtered = filtered.slice(0, 40);
             var totalAvailable = filtered.length;
             var rawData = filtered.map(function(s) {
                 var h = (stockHist[s.ticker] || []).slice(0, 17);
@@ -220,8 +221,8 @@
                 var trail = [];
                 for (var t = 0; t < Math.min(10, h.length - 7); t++) {
                     var trailRS = h[t] || 0;
-                    var ratio = trailRS / Math.max(s.rs || 1, 20); 
-                    var trailXRaw = xRaw * Math.min(Math.max(ratio, 0.5), 2.0);
+                    // Approximate raw RS for trail point using ratio to current
+                    var trailXRaw = xRaw * (trailRS / (s.rs || 1));
                     var trailYMom = (h[t] || 0) - (h[t + 7] || 0);
                     trail.push({ x: trailXRaw, y: trailYMom });
                 }
@@ -300,32 +301,19 @@
                 s.trail.forEach(function(tp) { trailPath += ' L ' + tX(tp.x).toFixed(1) + ' ' + tY(tp.y).toFixed(1); });
                 var trailSvg = '<path d="' + trailPath + '" fill="none" stroke="' + s.color + '" stroke-width="1.2" stroke-opacity="0.25" stroke-linecap="round"/>';
 
-                // PREDICTIVE CURL (8921c31 logic with Clockwise Fallback)
+                // PREDICTIVE CURL (cubic Bezier with engineering arrowhead)
                 var vX = 0, vY = 0;
                 if (s.trail.length >= 2) {
                     vX = tX(s.trail[0].x) - tX(s.trail[1].x);
                     vY = tY(s.trail[0].y) - tY(s.trail[1].y);
                 }
 
-                // Clockwise Rotation Safety: If data is flat, orient arrow towards the next quadrant
-                if (Math.abs(vX) < 0.2 && Math.abs(vY) < 0.2) {
-                    // Lead (TR) -> Weak (BR): Pixel Y increases (Down)
-                    if (s.xVal >= 0 && s.yVal >= 0) { vX = 2; vY = 6; }
-                    // Weak (BR) -> Lag (BL): Pixel X decreases (Left)
-                    else if (s.xVal >= 0 && s.yVal < 0) { vX = -6; vY = 2; }
-                    // Lag (BL) -> Imp (TL): Pixel Y decreases (Up)
-                    else if (s.xVal < 0 && s.yVal < 0) { vX = -2; vY = -6; }
-                    // Imp (TL) -> Lead (TR): Pixel X increases (Right)
-                    else { vX = 6; vY = -2; }
-                }
-
-                var accScale = maxAbsY > 0 ? (20 / maxAbsY) : 1;
+                var accScale = maxAbsY > 0 ? (1 / maxAbsY) * 20 : 1;
                 var predPts = [{ x: jcx, y: jcy }];
                 for (var pi = 1; pi <= 5; pi++) {
                     predPts.push({
                         x: jcx + vX * pi * 1.0,
-                        // Fix sign: dropping momentum (acc<0) should increase Pixel Y to move DOWN into Weak/Lag
-                        y: jcy + vY * pi * 1.0 - (s.acc || 0) * accScale * pi * pi * 0.4
+                        y: jcy + vY * pi * 1.0 + s.acc * accScale * pi * pi * 0.5
                     });
                 }
 
