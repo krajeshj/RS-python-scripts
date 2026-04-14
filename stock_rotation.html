@@ -300,12 +300,17 @@
                 s.trail.forEach(function(tp) { trailPath += ' L ' + tX(tp.x).toFixed(1) + ' ' + tY(tp.y).toFixed(1); });
                 var trailSvg = '<path d="' + trailPath + '" fill="none" stroke="' + s.color + '" stroke-width="1.2" stroke-opacity="0.25" stroke-linecap="round"/>';
 
-                // PREDICTIVE CURL (8921c31 logic)
+                // PREDICTIVE CURL (8921c31 logic with flat-data safety)
                 var vX = 0, vY = 0;
                 if (s.trail.length >= 2) {
                     vX = tX(s.trail[0].x) - tX(s.trail[1].x);
                     vY = tY(s.trail[0].y) - tY(s.trail[1].y);
                 }
+                // Zero-Velocity Fallback: If momentum is flat, provide a tiny forward vector to render the arrow
+                if (Math.abs(vX) < 0.1 && Math.abs(vY) < 0.1) {
+                    vX = 6; 
+                }
+
                 var accScale = maxAbsY > 0 ? (20 / maxAbsY) : 1;
                 var predPts = [{ x: jcx, y: jcy }];
                 for (var pi = 1; pi <= 5; pi++) {
