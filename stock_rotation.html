@@ -204,26 +204,12 @@
             });
             filtered.sort(function(a, b) { return b.rs - a.rs; });
             var totalAvailable = filtered.length;
-            filtered = filtered.slice(0, 40);
-
-            var processedGroup = filtered.map(function(s) {
+            var rawData = filtered.map(function(s) {
+                var h = (stockHist[s.ticker] || []).slice(0, 17);
                 var xRaw = s.rs_raw || 0;
                 var mom1w = s.rs_1w_pct || s.rs;
                 var mom1m = s.rs_1m_pct || s.rs;
                 var yComposite = (mom1w - mom1m) * 0.7 + (s.rs - mom1w) * 0.3;
-                return { s: s, x: xRaw, y: yComposite, mom1w: mom1w, mom1m: mom1m };
-            });
-
-            var medX = median(processedGroup.map(function(d) { return d.x; }));
-            var medY = median(processedGroup.map(function(d) { return d.y; }));
-
-            var processed = processedGroup.map(function(d) {
-                var s = d.s;
-                var h = (stockHist[s.ticker] || []).slice(0, 17);
-                var xRaw = d.x;
-                var yComposite = d.y;
-                var mom1w = d.mom1w;
-                var mom1m = d.mom1m;
 
                 var acc = 0;
                 if (h.length >= 9) {
@@ -231,36 +217,51 @@
                     var mom_yesterday = (h[1] || 0) - (h[8] || 0);
                     acc = mom_today - mom_yesterday;
                 }
-
-                var xVal = xRaw - medX;
-                var yVal = yComposite - medY;
-                var q = xVal >= 0 ? (yVal >= 0 ? "leading" : "weakening") : (yVal >= 0 ? "improving" : "lagging");
-
                 var trail = [];
                 for (var t = 0; t < Math.min(10, h.length - 7); t++) {
                     var trailRS = h[t] || 0;
                     var ratio = trailRS / Math.max(s.rs || 1, 20); 
-                    var trailXRaw = xRaw * Math.min(Math.max(ratio, 0.5), 2.0) - medX;
-                    var trailYMom = ((h[t] || 0) - (h[t + 7] || 0)) - medY;
+                    var trailXRaw = xRaw * Math.min(Math.max(ratio, 0.5), 2.0);
+                    var trailYMom = (h[t] || 0) - (h[t + 7] || 0);
                     trail.push({ x: trailXRaw, y: trailYMom });
                 }
+                return {
+                    s: s, xRaw: xRaw, yComposite: yComposite, acc: acc, trail: trail,
+                    rs_1w_pct: mom1w, rs_1m_pct: mom1m
+                };
+            });
+
+            // Center on group medians
+            var medX = median(rawData.map(function(d) { return d.xRaw; }));
+            var medY = median(rawData.map(function(d) { return d.yComposite; }));
+
+            var processed = rawData.map(function(d) {
+                var s = d.s;
+                var xVal = d.xRaw - medX;
+                var yVal = d.yComposite - medY;
+                var q = xVal >= 0 ? (yVal >= 0 ? "leading" : "weakening") : (yVal >= 0 ? "improving" : "lagging");
+
+                // Normalize trail relative to medians
+                var trailNorm = d.trail.map(function(tp) {
+                    return { x: tp.x - medX, y: tp.y - medY };
+                });
 
                 var outlook = 'neutral';
-                if (yVal > 0 && acc >= 0) outlook = 'rallying';
-                else if (yVal > 0 && acc < 0) outlook = 'curling';
-                else if (yVal <= 0 && acc < 0) outlook = 'declining';
-                else if (yVal <= 0 && acc >= 0) outlook = 'recovering';
+                if (yVal > 0 && d.acc >= 0) outlook = 'rallying';
+                else if (yVal > 0 && d.acc < 0) outlook = 'curling';
+                else if (yVal <= 0 && d.acc < 0) outlook = 'declining';
+                else if (yVal <= 0 && d.acc >= 0) outlook = 'recovering';
 
                 return {
-                    ticker: s.ticker, name: s.name, rs: s.rs, rs_raw: xRaw, rmv: s.rmv,
+                    ticker: s.ticker, name: s.name, rs: s.rs, rs_raw: d.xRaw, rmv: s.rmv,
                     rank: s.rank, industry: s.industry, sector: s.sector,
                     finviz_chart_url: s.finviz_chart_url, canslim: s.canslim,
                     price: s.price, volume: s.volume, avg_volume: s.avg_volume,
                     is_up: s.is_up, flip: s.flip, source: s.source,
                     highlights: s.highlights, days_to_earnings: s.days_to_earnings, 
                     tradingview_url: s.tradingview_url,
-                    rs_1w_pct: mom1w, rs_1m_pct: mom1m,
-                    xVal: xVal, yVal: yVal, acc: acc, trail: trail,
+                    rs_1w_pct: d.rs_1w_pct, rs_1m_pct: d.rs_1m_pct,
+                    xVal: xVal, yVal: yVal, acc: d.acc, trail: trailNorm,
                     q: q, color: Q_FILL[q], outlook: outlook
                 };
             });
@@ -283,64 +284,45 @@
                 allX.push(s.xVal); allY.push(s.yVal);
                 s.trail.forEach(function(tp) { allX.push(tp.x); allY.push(tp.y); });
             });
-            var maxAbsX = Math.max(Math.abs(Math.min.apply(null, allX)), Math.abs(Math.max.apply(null, allX)), 0.1);
-            var maxAbsY = Math.max(Math.abs(Math.min.apply(null, allY)), Math.abs(Math.max.apply(null, allY)), 1);
-            maxAbsX *= 1.3; maxAbsY *= 1.3;
 
-            function tX(v) { return P + ((v + maxAbsX) / (2 * maxAbsX)) * (CW - P * 2); }
-            function tY(v) { return (CH - P) - ((v + maxAbsY) / (2 * maxAbsY)) * (CH - P * 2); }
+            var maxAbsX = Math.max.apply(null, allX.map(Math.abs)) || 1;
+            var maxAbsY = Math.max.apply(null, allY.map(Math.abs)) || 1;
+
+            var tX = function(v) { return P + ((v + maxAbsX) / (maxAbsX * 2)) * (CW - P * 2); };
+            var tY = function(v) { return (CH - P) - ((v + maxAbsY) / (maxAbsY * 2)) * (CH - P * 2); };
+
             var MX = tX(0), MY = tY(0);
+            var stockG = '', defs = '';
 
-            var defs = '';
-            var stockG = '';
+            visible.forEach(function(s) {
+                var jcx = tX(s.xVal), jcy = tY(s.yVal);
+                var trailPath = 'M ' + jcx.toFixed(1) + ' ' + jcy.toFixed(1);
+                s.trail.forEach(function(tp) { trailPath += ' L ' + tX(tp.x).toFixed(1) + ' ' + tY(tp.y).toFixed(1); });
+                var trailSvg = '<path d="' + trailPath + '" fill="none" stroke="' + s.color + '" stroke-width="1.2" stroke-opacity="0.25" stroke-linecap="round"/>';
 
-            visible.forEach(function(s, idx) {
-                var cx = tX(s.xVal), cy = tY(s.yVal);
-                var jh = 0;
-                for (var ci = 0; ci < s.ticker.length; ci++) jh += s.ticker.charCodeAt(ci);
-                var dx = ((jh % 17) - 8) * 1.5, dy = (((jh * 7) % 17) - 8) * 1.5;
-                var jcx = cx + dx, jcy = cy + dy;
-
-                // BREADCRUMB TRAIL
-                var trailSvg = '';
-                var trailPts = [];
-                for (var ti = s.trail.length - 1; ti >= 0; ti--) {
-                    var tp = s.trail[ti];
-                    var tx_v = tX(tp.x), ty_v = tY(tp.y);
-                    trailPts.push(tx_v + ',' + ty_v);
-                    var age = ti / Math.max(s.trail.length - 1, 1);
-                    var opacity = 0.15 + (1 - age) * 0.5;
-                    var radius = 2 + (1 - age) * 3.5;
-                    trailSvg += '<circle cx="' + tx_v.toFixed(1) + '" cy="' + ty_v.toFixed(1) + '" r="' + radius.toFixed(1) + '" fill="' + s.color + '" opacity="' + opacity.toFixed(2) + '" stroke="#000" stroke-width="0.5"/>';
-                }
-                if (trailPts.length > 1) {
-                    trailSvg += '<polyline points="' + trailPts.join(' ') + '" fill="none" stroke="' + s.color + '" stroke-width="1.5" stroke-opacity="0.2" stroke-linecap="round" stroke-dasharray="3,3"/>';
-                }
-
-                // PREDICTIVE CURL (8921c31 logic with NaN guards)
+                // PREDICTIVE CURL (8921c31 logic)
                 var vX = 0, vY = 0;
-                if (s.trail && s.trail.length >= 2) {
+                if (s.trail.length >= 2) {
                     vX = tX(s.trail[0].x) - tX(s.trail[1].x);
                     vY = tY(s.trail[0].y) - tY(s.trail[1].y);
                 }
-                // Default forward momentum if historical delta is too small (NaN protection)
-                if (isNaN(vX)) vX = 0; if (isNaN(vY)) vY = 0;
-
                 var accScale = maxAbsY > 0 ? (20 / maxAbsY) : 1;
                 var predPts = [{ x: jcx, y: jcy }];
                 for (var pi = 1; pi <= 5; pi++) {
                     predPts.push({
-                        x: jcx + vX * pi * 1.2,
-                        // Flip acc sign to ensure clockwise rotation: declining mom (acc<0) curves DOWN
-                        y: jcy + vY * pi * 1.2 - (s.acc || 0) * accScale * pi * pi * 0.5
+                        x: jcx + vX * pi * 1.0,
+                        y: jcy + vY * pi * 1.0 + (s.acc || 0) * accScale * pi * pi * 0.5
                     });
                 }
                 var curvePath = 'M ' + predPts[0].x.toFixed(1) + ' ' + predPts[0].y.toFixed(1);
                 if (predPts.length >= 4) {
-                    // Use a slightly smoother curve than simple segments
                     curvePath += ' C ' + predPts[1].x.toFixed(1) + ' ' + predPts[1].y.toFixed(1) + ',' +
                         predPts[2].x.toFixed(1) + ' ' + predPts[2].y.toFixed(1) + ',' +
                         predPts[3].x.toFixed(1) + ' ' + predPts[3].y.toFixed(1);
+                    if (predPts.length >= 6) {
+                        curvePath += ' S ' + predPts[4].x.toFixed(1) + ' ' + predPts[4].y.toFixed(1) + ',' +
+                            predPts[5].x.toFixed(1) + ' ' + predPts[5].y.toFixed(1);
+                    }
                 }
 
                 var markerId = 'a-' + s.ticker;
