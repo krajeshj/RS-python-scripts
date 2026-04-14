@@ -191,6 +191,7 @@
             if (filters.top5 && webData && webData.stages && webData.stages.length >= 5) {
                 top5Names = webData.stages.slice(0, 5).map(function(s) { return s.sector; });
             }
+
             var filtered = allStocks.filter(function(s) {
                 var rs = s.rs || 0; var rmv = (s.rmv != null) ? s.rmv : -1;
                 if (rs < minRS || rs > maxRS) return false;
@@ -202,38 +203,26 @@
                 return true;
             });
             filtered.sort(function(a, b) { return b.rs - a.rs; });
+            var totalAvailable = filtered.length;
             filtered = filtered.slice(0, 40);
 
-            if (!filtered.length) {
-                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text2);">No stocks match filters.</div>';
-                document.getElementById('stock-grid').innerHTML = '';
-                document.getElementById('filter-count').textContent = '0 stocks';
-                return;
-            }
-
-            // =====================================================================
-            // AXIS MATH — Using HIGH-GRANULARITY data for real spread
-            // X-axis: rs_raw (actual relative strength ratio, e.g. 1.7 to 2.66)
-            // Y-axis: rs_1w_pct - rs_1m_pct (short-term vs medium-term momentum)
-            //   Positive = recent week is stronger than month → IMPROVING/ACCELERATING
-            //   Negative = recent week is weaker than month → WEAKENING/DECELERATING
-            // =====================================================================
-            var rawData = filtered.map(function(s) {
-                var h = (stockHist[s.ticker] || []).slice(0, 17);
+            var processedGroup = filtered.map(function(s) {
                 var xRaw = s.rs_raw || 0;
-
-                // Y = Multi-timeframe momentum signal
-                // Primary: (1W percentile - 1M percentile) → captures recent rotation
                 var mom1w = s.rs_1w_pct || s.rs;
                 var mom1m = s.rs_1m_pct || s.rs;
-                var yMom = mom1w - mom1m;
+                var yComposite = (mom1w - mom1m) * 0.7 + (s.rs - mom1w) * 0.3;
+                return { s: s, x: xRaw, y: yComposite };
+            });
 
-                // Add a secondary signal: (current RS pct - 1W RS pct) for recent velocity
-                var recentVelocity = s.rs - mom1w;
-                // Composite Y: weight primary 70%, secondary 30%
-                var yComposite = yMom * 0.7 + recentVelocity * 0.3;
+            var medX = median(processedGroup.map(function(d) { return d.x; }));
+            var medY = median(processedGroup.map(function(d) { return d.y; }));
 
-                // Acceleration: change in momentum over last few days from history
+            var processed = processedGroup.map(function(d) {
+                var s = d.s;
+                var h = (stockHist[s.ticker] || []).slice(0, 17);
+                var xRaw = d.x;
+                var yComposite = d.y;
+
                 var acc = 0;
                 if (h.length >= 9) {
                     var mom_today = (h[0] || 0) - (h[7] || 0);
@@ -241,69 +230,42 @@
                     acc = mom_today - mom_yesterday;
                 }
 
-                // Build trail from history — simulate historical (x, y) positions
-                // For each day t: x = percentile at time t, y = rolling 1w-1m proxy
+                var xVal = xRaw - medX;
+                var yVal = yComposite - medY;
+                var q = xVal >= 0 ? (yVal >= 0 ? "leading" : "weakening") : (yVal >= 0 ? "improving" : "lagging");
+
                 var trail = [];
                 for (var t = 0; t < Math.min(10, h.length - 7); t++) {
                     var trailRS = h[t] || 0;
-                    // Approximate raw RS for trail point using ratio to current
-                    var trailXRaw = xRaw * (trailRS / (s.rs || 1));
-                    // Approximate momentum at this point: h[t]-h[t+7] is 7-day change in percentile
-                    var trailYMom = (h[t] || 0) - (h[t + 7] || 0);
+                    var ratio = trailRS / Math.max(s.rs || 1, 20); 
+                    var trailXRaw = xRaw * Math.min(Math.max(ratio, 0.5), 2.0) - medX;
+                    var trailYMom = ((h[t] || 0) - (h[t + 7] || 0)) - medY;
                     trail.push({ x: trailXRaw, y: trailYMom });
                 }
+
+                var outlook = 'neutral';
+                if (yVal > 0 && acc >= 0) outlook = 'rallying';
+                else if (yVal > 0 && acc < 0) outlook = 'curling';
+                else if (yVal <= 0 && acc < 0) outlook = 'declining';
+                else if (yVal <= 0 && acc >= 0) outlook = 'recovering';
 
                 return {
                     ticker: s.ticker, name: s.name, rs: s.rs, rs_raw: xRaw, rmv: s.rmv,
                     rank: s.rank, industry: s.industry, sector: s.sector,
-                    is_minervini: s.is_minervini, tradingview_url: s.tradingview_url,
                     finviz_chart_url: s.finviz_chart_url, canslim: s.canslim,
                     price: s.price, volume: s.volume, avg_volume: s.avg_volume,
                     is_up: s.is_up, flip: s.flip, source: s.source,
-                    highlights: s.highlights, days_to_earnings: s.days_to_earnings,
-                    xRaw: xRaw, yComposite: yComposite, acc: acc, trail: trail,
-                    rs_1w_pct: mom1w, rs_1m_pct: mom1m
-                };
-            });
-
-            // Center on group medians
-            var medX = median(rawData.map(function(d) { return d.xRaw; }));
-            var medY = median(rawData.map(function(d) { return d.yComposite; }));
-
-            var processed = rawData.map(function(d) {
-                var xVal = d.xRaw - medX;
-                var yVal = d.yComposite - medY;
-                var q = xVal >= 0 ? (yVal >= 0 ? "leading" : "weakening") : (yVal >= 0 ? "improving" : "lagging");
-
-                // Normalize trail relative to medians
-                // For trail Y: center on median of the trail Y values for THAT stock vs group
-                var trailNorm = d.trail.map(function(tp) {
-                    return { x: tp.x - medX, y: tp.y - medY };
-                });
-
-                var outlook = 'neutral';
-                if (yVal > 0 && d.acc >= 0) outlook = 'rallying';
-                else if (yVal > 0 && d.acc < 0) outlook = 'curling';
-                else if (yVal <= 0 && d.acc < 0) outlook = 'declining';
-                else if (yVal <= 0 && d.acc >= 0) outlook = 'recovering';
-
-                return {
-                    ticker: d.ticker, name: d.name, rs: d.rs, rs_raw: d.rs_raw, rmv: d.rmv,
-                    rank: d.rank, industry: d.industry, sector: d.sector,
-                    is_minervini: d.is_minervini, tradingview_url: d.tradingview_url,
-                    finviz_chart_url: d.finviz_chart_url, canslim: d.canslim,
-                    price: d.price, volume: d.volume, avg_volume: d.avg_volume,
-                    is_up: d.is_up, flip: d.flip, source: d.source,
-                    highlights: d.highlights, days_to_earnings: d.days_to_earnings,
-                    rs_1w_pct: d.rs_1w_pct, rs_1m_pct: d.rs_1m_pct,
-                    xVal: xVal, yVal: yVal, acc: d.acc, trail: trailNorm,
+                    highlights: s.highlights, days_to_earnings: s.days_to_earnings, 
+                    tradingview_url: s.tradingview_url,
+                    rs_1w_pct: mom1w, rs_1m_pct: mom1m,
+                    xVal: xVal, yVal: yVal, acc: acc, trail: trail,
                     q: q, color: Q_FILL[q], outlook: outlook
                 };
             });
 
             // Quadrant filter
             var visible = processed.filter(function(s) { return activeQuadrants[s.q]; });
-            document.getElementById('filter-count').textContent = visible.length + ' of ' + filtered.length + ' stocks';
+            document.getElementById('filter-count').textContent = visible.length + ' of ' + totalAvailable + ' stocks';
 
             if (!visible.length) {
                 document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text2);">No stocks in selected quadrants.</div>';
@@ -312,7 +274,7 @@
             }
 
             // =====================================================================
-            // SVG RENDERING — Symmetrical axis scaling
+            // SVG RENDERING
             // =====================================================================
             var allX = [], allY = [];
             visible.forEach(function(s) {
@@ -330,14 +292,14 @@
             var defs = '';
             var stockG = '';
 
-            visible.forEach(function(s) {
+            visible.forEach(function(s, idx) {
                 var cx = tX(s.xVal), cy = tY(s.yVal);
                 var jh = 0;
                 for (var ci = 0; ci < s.ticker.length; ci++) jh += s.ticker.charCodeAt(ci);
                 var dx = ((jh % 17) - 8) * 1.5, dy = (((jh * 7) % 17) - 8) * 1.5;
                 var jcx = cx + dx, jcy = cy + dy;
 
-                // BREADCRUMB TRAIL (oldest to newest = increasing size/opacity)
+                // BREADCRUMB TRAIL
                 var trailSvg = '';
                 var trailPts = [];
                 for (var ti = s.trail.length - 1; ti >= 0; ti--) {
@@ -353,59 +315,30 @@
                     trailSvg += '<polyline points="' + trailPts.join(' ') + '" fill="none" stroke="' + s.color + '" stroke-width="1.5" stroke-opacity="0.2" stroke-linecap="round" stroke-dasharray="3,3"/>';
                 }
 
-                // PREDICTIVE CURL — direction from rotation signals, not trail pixels
-                // X direction: is RS strengthening or weakening?
-                var rsChange = s.rs - (s.rs_1w_pct || s.rs);   // +ve = RS gaining this week
-                var momSignal = s.yVal;                          // +ve = above median momentum
-                var momAcc = s.acc;                               // +ve = momentum accelerating
-
-                // Project where the stock is heading in chart coordinates
-                var projX = s.xVal + rsChange * 0.3;
-                var projY = s.yVal + momAcc * 0.5;
-
-                // Convert to screen-space velocity
-                var vX = tX(projX) - tX(s.xVal);
-                var vY = tY(projY) - tY(s.yVal);
-
-                // Enforce minimum arrow length of 30px
-                var vLen = Math.sqrt(vX * vX + vY * vY);
-                if (vLen < 30) {
-                    if (vLen > 0) {
-                        vX = vX / vLen * 30;
-                        vY = vY / vLen * 30;
-                    } else {
-                        // No signal at all: use quadrant-based default direction
-                        // Clockwise rotation: Leading→Weakening→Lagging→Improving→Leading
-                        if (s.q === 'leading')    { vX =  20; vY =  15; }  // → curving down (toward weakening)
-                        else if (s.q === 'weakening')  { vX = -15; vY =  20; }  // ← curving down (toward lagging)
-                        else if (s.q === 'lagging')    { vX = -20; vY = -15; }  // ← curving up (toward improving)
-                        else                           { vX =  15; vY = -20; }  // → curving up (toward leading)
-                    }
+                // PREDICTIVE CURL (8921c31 logic with NaN guards)
+                var vX = 0, vY = 0;
+                if (s.trail && s.trail.length >= 2) {
+                    vX = tX(s.trail[0].x) - tX(s.trail[1].x);
+                    vY = tY(s.trail[0].y) - tY(s.trail[1].y);
                 }
+                // Default forward momentum if historical delta is too small (NaN protection)
+                if (isNaN(vX)) vX = 0; if (isNaN(vY)) vY = 0;
 
-                // Build Bezier control points with curl from acceleration
-                var curlAmt = momAcc * 8;  // perpendicular curl based on acceleration
+                var accScale = maxAbsY > 0 ? (20 / maxAbsY) : 1;
                 var predPts = [{ x: jcx, y: jcy }];
                 for (var pi = 1; pi <= 5; pi++) {
-                    var t = pi / 5;
-                    // Base trajectory + perpendicular curl for Bezier curvature
-                    var perpX = -vY, perpY = vX;  // perpendicular to velocity
-                    var pLen = Math.sqrt(perpX * perpX + perpY * perpY) || 1;
-                    perpX = perpX / pLen; perpY = perpY / pLen;
                     predPts.push({
-                        x: jcx + vX * t * 3 + perpX * curlAmt * t * t,
-                        y: jcy + vY * t * 3 + perpY * curlAmt * t * t
+                        x: jcx + vX * pi * 1.2,
+                        // Flip acc sign to ensure clockwise rotation: declining mom (acc<0) curves DOWN
+                        y: jcy + vY * pi * 1.2 - (s.acc || 0) * accScale * pi * pi * 0.5
                     });
                 }
                 var curvePath = 'M ' + predPts[0].x.toFixed(1) + ' ' + predPts[0].y.toFixed(1);
                 if (predPts.length >= 4) {
+                    // Use a slightly smoother curve than simple segments
                     curvePath += ' C ' + predPts[1].x.toFixed(1) + ' ' + predPts[1].y.toFixed(1) + ',' +
                         predPts[2].x.toFixed(1) + ' ' + predPts[2].y.toFixed(1) + ',' +
                         predPts[3].x.toFixed(1) + ' ' + predPts[3].y.toFixed(1);
-                    if (predPts.length >= 6) {
-                        curvePath += ' S ' + predPts[4].x.toFixed(1) + ' ' + predPts[4].y.toFixed(1) + ',' +
-                            predPts[5].x.toFixed(1) + ' ' + predPts[5].y.toFixed(1);
-                    }
                 }
 
                 var markerId = 'a-' + s.ticker;
@@ -433,7 +366,7 @@
                 '<text x="12" y="' + (CH / 2) + '" text-anchor="middle" fill="#334155" font-size="9" font-weight="600" transform="rotate(-90,12,' + (CH / 2) + ')">← 1W Weaker than 1M — 1W Stronger than 1M →</text>' +
                 stockG + '</svg>';
 
-            // STOCK CARDS — Unified with Dashboard
+            // CARDS
             var cardsHtml = '';
             visible.forEach(function(s, idx) {
                 var outlookLabel = s.outlook === 'rallying' ? '➚ Momentum Rallying' :
@@ -442,9 +375,6 @@
                     s.outlook === 'recovering' ? '↗ Momentum Recovering' : '→ Neutral';
                 var outlookClass = (s.outlook === 'rallying' || s.outlook === 'recovering') ? 'outlook-rallying' :
                     s.outlook === 'curling' ? 'outlook-curling' : 'outlook-declining';
-
-                var earningsBadge = (s.days_to_earnings >= 0 && s.days_to_earnings <= 14)
-                    ? '<div class="earnings-alert">📅 EARNINGS IN ' + s.days_to_earnings + 'D</div>' : '';
 
                 function fmtVol(v) { if (!v) return 'N/A'; if (v >= 1e6) return (v/1e6).toFixed(1)+'M'; if (v >= 1e3) return (v/1e3).toFixed(0)+'K'; return ''+v; }
                 var volStyle = 'font-size:0.65rem;color:var(--text2);padding:2px 6px;border-radius:4px;border:1px solid var(--border);background:var(--surface);display:inline-block;';
@@ -462,7 +392,6 @@
                         return '<div class="canslim-letter ' + (active ? 'active' : '') + '" title="' + l + '">' + l + '</div>';
                     }).join('') + '</div>';
                 }
-
                 var hiTags = s.highlights ? s.highlights.split(', ').map(function(h) { return '<span class="highlight-tag">' + h + '</span>'; }).join('') : '';
 
                 cardsHtml += '<div class="stock-card" data-ticker="' + s.ticker + '" style="animation-delay:' + (idx*0.05) + 's">' +
@@ -481,20 +410,20 @@
                             '<div style="font-size:0.7rem;color:var(--text2);opacity:0.8;">#' + (s.rank || '') + '</div>' +
                             '<span style="font-size:0.65rem;padding:2px 8px;border-radius:4px;background:' + s.color + '22;color:' + s.color + ';border:1px solid ' + s.color + '44;font-weight:800;">' + s.q.toUpperCase() + '</span>' +
                             (s.flip ? '<div class="flip-badge">⚡ PRIME FLIP</div>' : '') +
-                            '<div class="source-badge">' + (s.source || '') + '</div>' +
+                            '<div class="source-badge" style="margin-bottom:4px;">' + (s.source || '') + '</div>' +
                             '<div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;">' +
                                 (s.price ? '<div style="' + volStyle + '">$' + s.price.toFixed(2) + '</div>' : '') +
                                 '<div style="' + volStyle + '" title="Avg Vol: ' + fmtVol(s.avg_volume) + '">Vol: ' + fmtVol(s.volume) + '</div>' +
                             '</div>' +
                         '</div>' +
                     '</div>' +
-                    earningsBadge +
+                    (s.days_to_earnings >= 0 && s.days_to_earnings <= 14 ? '<div class="earnings-alert">📅 EARNINGS IN ' + s.days_to_earnings + 'D</div>' : '') +
                     (s.finviz_chart_url ? '<a href="' + (s.tradingview_url || '#') + '" target="_blank" class="chart-link"><img src="' + s.finviz_chart_url + '&t=' + Date.now() + '" class="chart-img" loading="lazy" alt="' + s.ticker + '"><div class="chart-overlay"><span>Open Live Chart</span><span>↗️</span></div></a>' : '') +
                     '<div class="metrics">' +
                         '<div class="metric"><span class="metric-label">RS Rank</span><span class="metric-value" style="color:var(--cyan);">' + s.rs + '</span></div>' +
-                        '<div class="metric"><span class="metric-label">RMV</span><span class="metric-value">' + (s.rmv != null ? s.rmv : 'N/A') + '</span></div>' +
-                        '<div class="metric"><span class="metric-label">1W Pct</span><span class="metric-value">' + s.rs_1w_pct + '</span></div>' +
-                        '<div class="metric"><span class="metric-label">1M Pct</span><span class="metric-value">' + s.rs_1m_pct + '</span></div>' +
+                        '<div class="metric"><span class="metric-label">RMV</span><span class="metric-value">' + (s.rmv != null ? s.rmv.toFixed(1) : 'N/A') + '</span></div>' +
+                        '<div class="metric"><span class="metric-label">1W Pct</span><span class="metric-value">' + (s.rs_1w_pct || 'N/A') + '</span></div>' +
+                        '<div class="metric"><span class="metric-label">1M Pct</span><span class="metric-value">' + (s.rs_1m_pct || 'N/A') + '</span></div>' +
                     '</div>' +
                     '<div class="highlights">' + hiTags + '</div>' +
                     '<div style="display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--border);padding-top:8px;">' +
