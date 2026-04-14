@@ -51,15 +51,41 @@
         .rrg-box { background: #0a1120; border: 1px solid #1e293b; border-radius: 12px; position: relative; width: 100%; aspect-ratio: 1/1; box-shadow: 0 10px 40px rgba(0,0,0,0.4); }
         svg { width: 100%; height: 100%; display: block; border-radius: 12px; }
         .meta-info { font-size: 0.78rem; color: var(--text2); font-weight: 500; }
-        .stock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-top: 15px; }
-        .stock-card { background: var(--glass); backdrop-filter: blur(var(--glass-b)); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px; transition: all 0.3s; }
-        .stock-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+        .stock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem; margin-top: 15px; }
+        .stock-card { background: var(--glass); backdrop-filter: blur(var(--glass-b)); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 1rem; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); animation: fadeUp 0.5s ease backwards; position: relative; min-width: 0; }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(15px); } to { opacity:1; transform:translateY(0); } }
+        .stock-card:hover { border-color: var(--accent); transform: translateY(-4px); background: rgba(18,18,40,.85); box-shadow: 0 12px 40px rgba(0,0,0,.5); }
+        .card-delete { position: absolute; top: 10px; right: 10px; background: rgba(255,82,82,0.15); border: 1px solid rgba(255,82,82,0.3); color: var(--red); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.75rem; transition: all 0.2s; z-index: 2; }
+        .card-delete:hover { background: rgba(255,82,82,0.3); transform: scale(1.1); border-color: var(--red); }
+        .ticker { font-size: 1.5rem; font-weight: 800; color: var(--cyan); letter-spacing: -0.02em; font-family: var(--mono); text-decoration: none; transition: color 0.2s; }
+        .ticker:hover { color: var(--accent2); }
+        .rs-pct-badge { font-size: 0.65rem; background: rgba(0,229,255,0.1); color: var(--cyan); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(0,229,255,0.2); font-weight: 700; display: inline-block; }
+        .company-name { font-size: 0.8rem; color: var(--text2); margin-top: 2px; }
+        .source-badge { font-size: 0.6rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; opacity: 0.7; }
+        .flip-badge { background: rgba(255,215,0,0.15); color: #FFD700; padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; border: 1px solid rgba(255,215,0,0.3); text-transform: uppercase; letter-spacing: 0.05em; animation: glow 2s infinite; }
+        @keyframes glow { 0% { box-shadow: 0 0 5px rgba(255,215,0,0.2); } 50% { box-shadow: 0 0 15px rgba(255,215,0,0.5); } 100% { box-shadow: 0 0 5px rgba(255,215,0,0.2); } }
+        .canslim-tray { display: flex; gap: 4px; margin-top: 4px; }
+        .canslim-letter { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--text2); border: 1px solid var(--border); }
+        .canslim-letter.active { background: var(--green); color: var(--bg); border-color: var(--green); box-shadow: 0 0 10px rgba(0,230,118,0.3); }
+        .chart-link { display: block; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border); position: relative; background: var(--surface); height: 140px; }
+        .chart-overlay { position: absolute; inset: 0; background: rgba(108,92,231,0.2); opacity: 0; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: white; gap: 8px; backdrop-filter: blur(2px); }
+        .chart-link:hover .chart-overlay { opacity: 1; }
+        .chart-img { width: 100%; height: 100%; object-fit: contain; filter: brightness(0.9) contrast(1.1); transition: transform 0.3s; }
+        .chart-link:hover .chart-img { transform: scale(1.05); }
+        .earnings-alert { background: rgba(255,145,0,0.1); color: var(--orange); border: 1px solid rgba(255,145,0,0.2); padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; display: flex; align-items: center; gap: 6px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; transform: scale(1.02); } 100% { opacity: 0.8; } }
+        .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; background: var(--surface); padding: 12px; border-radius: var(--radius-sm); }
+        .metric { display: flex; flex-direction: column; gap: 2px; }
+        .metric-label { font-size: 0.6rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+        .metric-value { font-size: 1.1rem; font-weight: 700; color: var(--text); font-family: var(--mono); }
+        .highlights { display: flex; flex-wrap: wrap; gap: 6px; }
         .highlight-tag { background: rgba(0,229,255,0.05); color: var(--cyan); padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 600; border: 1px solid rgba(0,229,255,0.15); }
         .outlook-tag { padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; border: 1px solid; }
         .outlook-rallying { background: rgba(0,230,118,0.1); color: #00e676; border-color: rgba(0,230,118,0.25); }
         .outlook-curling { background: rgba(255,145,0,0.1); color: #ff9100; border-color: rgba(255,145,0,0.25); }
         .outlook-declining { background: rgba(255,82,82,0.1); color: #ff5252; border-color: rgba(255,82,82,0.25); }
-        @media (max-width: 768px) { .dashboard-tools { flex-direction: column; align-items: stretch; } .slider-group { width: 100%; } .stock-grid { grid-template-columns: 1fr; } }
+        .hidden { display: none !important; }
+        @media (max-width: 768px) { .dashboard-tools { flex-direction: column; align-items: stretch; } .slider-group { width: 100%; } .stock-grid { grid-template-columns: 1fr; } .metrics { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
@@ -121,6 +147,9 @@
         var CW = 600, CH = 600, P = 65, R = 15;
         var Q_FILL = { leading: "#22c55e", weakening: "#f59e0b", lagging: "#ef4444", improving: "#60a5fa" };
 
+        function getHiddenTickers() { try { return JSON.parse(localStorage.getItem('hidden_tickers') || '[]'); } catch(e) { return []; } }
+        function hideTicker(ticker) { var list = getHiddenTickers(); if (list.indexOf(ticker) === -1) { list.push(ticker); localStorage.setItem('hidden_tickers', JSON.stringify(list)); } render(); }
+
         function init() {
             var ts = Date.now();
             Promise.all([
@@ -169,6 +198,7 @@
                 if (filters.quality && s.is_speculative) return false;
                 if (filters.minervini && !s.is_minervini) return false;
                 if (filters.top5 && top5Names.length > 0 && top5Names.indexOf(s.sector) === -1) return false;
+                if (getHiddenTickers().indexOf(s.ticker) !== -1) return false;
                 return true;
             });
             filtered.sort(function(a, b) { return b.rs - a.rs; });
@@ -227,6 +257,10 @@
                     ticker: s.ticker, name: s.name, rs: s.rs, rs_raw: xRaw, rmv: s.rmv,
                     rank: s.rank, industry: s.industry, sector: s.sector,
                     is_minervini: s.is_minervini, tradingview_url: s.tradingview_url,
+                    finviz_chart_url: s.finviz_chart_url, canslim: s.canslim,
+                    price: s.price, volume: s.volume, avg_volume: s.avg_volume,
+                    is_up: s.is_up, flip: s.flip, source: s.source,
+                    highlights: s.highlights, days_to_earnings: s.days_to_earnings,
                     xRaw: xRaw, yComposite: yComposite, acc: acc, trail: trail,
                     rs_1w_pct: mom1w, rs_1m_pct: mom1m
                 };
@@ -366,36 +400,70 @@
                 '<text x="12" y="' + (CH / 2) + '" text-anchor="middle" fill="#334155" font-size="9" font-weight="600" transform="rotate(-90,12,' + (CH / 2) + ')">← 1W Weaker than 1M — 1W Stronger than 1M →</text>' +
                 stockG + '</svg>';
 
-            // STOCK CARDS
+            // STOCK CARDS — Unified with Dashboard
             var cardsHtml = '';
-            visible.forEach(function(s) {
+            visible.forEach(function(s, idx) {
                 var outlookLabel = s.outlook === 'rallying' ? '➚ Momentum Rallying' :
                     s.outlook === 'curling' ? '⤹ Momentum Curling' :
                     s.outlook === 'declining' ? '↘ Momentum Declining' :
                     s.outlook === 'recovering' ? '↗ Momentum Recovering' : '→ Neutral';
                 var outlookClass = (s.outlook === 'rallying' || s.outlook === 'recovering') ? 'outlook-rallying' :
                     s.outlook === 'curling' ? 'outlook-curling' : 'outlook-declining';
-                var hiTag = s.is_minervini ? '<span class="highlight-tag">Strong Trend Alignment</span>' : '';
-                var ctrlTag = (s.rmv != null && s.rmv <= 45) ? '<span class="highlight-tag">Controlled Volatility</span>' : '';
 
-                cardsHtml += '<div class="stock-card" data-ticker="' + s.ticker + '">' +
+                var earningsBadge = (s.days_to_earnings >= 0 && s.days_to_earnings <= 14)
+                    ? '<div class="earnings-alert">📅 EARNINGS IN ' + s.days_to_earnings + 'D</div>' : '';
+
+                function fmtVol(v) { if (!v) return 'N/A'; if (v >= 1e6) return (v/1e6).toFixed(1)+'M'; if (v >= 1e3) return (v/1e3).toFixed(0)+'K'; return ''+v; }
+                var volStyle = 'font-size:0.65rem;color:var(--text2);padding:2px 6px;border-radius:4px;border:1px solid var(--border);background:var(--surface);display:inline-block;';
+                if (s.volume > s.avg_volume) {
+                    volStyle = s.is_up ?
+                        'font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:4px;border:1px solid rgba(0,230,118,0.3);background:rgba(0,230,118,0.1);color:var(--green);display:inline-block;' :
+                        'font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:4px;border:1px solid rgba(255,145,0,0.3);background:rgba(255,145,0,0.1);color:var(--orange);display:inline-block;';
+                }
+
+                var canslimHtml = '';
+                if (s.canslim) {
+                    var letters = ['C','A','N','S','L','I','M'];
+                    canslimHtml = '<div class="canslim-tray">' + letters.map(function(l) {
+                        var active = s.canslim[l.toLowerCase()];
+                        return '<div class="canslim-letter ' + (active ? 'active' : '') + '" title="' + l + '">' + l + '</div>';
+                    }).join('') + '</div>';
+                }
+
+                var hiTags = s.highlights ? s.highlights.split(', ').map(function(h) { return '<span class="highlight-tag">' + h + '</span>'; }).join('') : '';
+
+                cardsHtml += '<div class="stock-card" data-ticker="' + s.ticker + '" style="animation-delay:' + (idx*0.05) + 's">' +
+                    '<div class="card-delete" onclick="hideTicker(\'' + s.ticker + '\')" title="Hide ' + s.ticker + '">✕</div>' +
                     '<div style="display:flex;justify-content:space-between;align-items:flex-start;">' +
                         '<div>' +
-                            '<a href="' + (s.tradingview_url || '#') + '" target="_blank" style="font-size:1.3rem;font-weight:800;color:var(--cyan);font-family:var(--mono);text-decoration:none;">' + s.ticker + '</a>' +
-                            '<div style="font-size:0.75rem;color:var(--text2);margin-top:2px;">' + (s.name || '') + '</div>' +
-                            '<div style="font-size:0.7rem;color:var(--text2);margin-top:2px;">' + (s.industry || '') + ' &bull; ' + (s.sector || '') + '</div>' +
+                            '<div style="display:flex;align-items:center;gap:8px;">' +
+                                '<a href="' + (s.tradingview_url || '#') + '" target="_blank" class="ticker">' + s.ticker + '</a>' +
+                                '<div class="rs-pct-badge">1W: ' + (s.rs_1w_pct || 'N/A') + '%</div>' +
+                            '</div>' +
+                            '<div class="company-name">' + (s.name || '') + '</div>' +
+                            '<div class="meta-info" style="margin-top:4px;font-size:0.75rem;">' + (s.industry || '') + ' &bull; ' + (s.sector || '') + '</div>' +
+                            canslimHtml +
                         '</div>' +
-                        '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">' +
+                        '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;padding-right:28px;">' +
+                            '<div style="font-size:0.7rem;color:var(--text2);opacity:0.8;">#' + (s.rank || '') + '</div>' +
                             '<span style="font-size:0.65rem;padding:2px 8px;border-radius:4px;background:' + s.color + '22;color:' + s.color + ';border:1px solid ' + s.color + '44;font-weight:800;">' + s.q.toUpperCase() + '</span>' +
-                            '<span style="font-size:0.6rem;color:var(--text2);">#' + (s.rank || '') + '</span>' +
+                            (s.flip ? '<div class="flip-badge">⚡ PRIME FLIP</div>' : '') +
+                            '<div class="source-badge">' + (s.source || '') + '</div>' +
+                            '<div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;">' +
+                                (s.price ? '<div style="' + volStyle + '">$' + s.price.toFixed(2) + '</div>' : '') +
+                                '<div style="' + volStyle + '" title="Avg Vol: ' + fmtVol(s.avg_volume) + '">Vol: ' + fmtVol(s.volume) + '</div>' +
+                            '</div>' +
                         '</div>' +
                     '</div>' +
-                    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;background:var(--surface);padding:10px;border-radius:8px;">' +
-                        '<div><div style="font-size:0.55rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;">RS</div><div style="font-size:1rem;font-weight:700;color:var(--cyan);font-family:var(--mono);">' + s.rs + '</div></div>' +
-                        '<div><div style="font-size:0.55rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;">1W Pct</div><div style="font-size:1rem;font-weight:700;font-family:var(--mono);">' + s.rs_1w_pct + '</div></div>' +
-                        '<div><div style="font-size:0.55rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;">1M Pct</div><div style="font-size:1rem;font-weight:700;font-family:var(--mono);">' + s.rs_1m_pct + '</div></div>' +
+                    earningsBadge +
+                    (s.finviz_chart_url ? '<a href="' + (s.tradingview_url || '#') + '" target="_blank" class="chart-link"><img src="' + s.finviz_chart_url + '&t=' + Date.now() + '" class="chart-img" loading="lazy" alt="' + s.ticker + '"><div class="chart-overlay"><span>Open Live Chart</span><span>↗️</span></div></a>' : '') +
+                    '<div class="metrics">' +
+                        '<div class="metric"><span class="metric-label">RS Rank</span><span class="metric-value" style="color:var(--cyan);">' + s.rs + '</span></div>' +
+                        '<div class="metric"><span class="metric-label">RMV</span><span class="metric-value">' + (s.rmv != null ? s.rmv : 'N/A') + '</span></div>' +
+                        '<div class="metric"><span class="metric-label">1W Pct</span><span class="metric-value">' + s.rs_1w_pct + '</span></div>' +
+                        '<div class="metric"><span class="metric-label">1M Pct</span><span class="metric-value">' + s.rs_1m_pct + '</span></div>' +
                     '</div>' +
-                    '<div style="display:flex;flex-wrap:wrap;gap:6px;">' + hiTag + ctrlTag + '</div>' +
+                    '<div class="highlights">' + hiTags + '</div>' +
                     '<div style="display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--border);padding-top:8px;">' +
                         '<span class="outlook-tag ' + outlookClass + '">' + outlookLabel + '</span>' +
                     '</div>' +
