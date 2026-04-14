@@ -353,29 +353,48 @@
                     trailSvg += '<polyline points="' + trailPts.join(' ') + '" fill="none" stroke="' + s.color + '" stroke-width="1.5" stroke-opacity="0.2" stroke-linecap="round" stroke-dasharray="3,3"/>';
                 }
 
-                // PREDICTIVE CURL (cubic Bezier with engineering arrowhead)
-                var vX = 0, vY = 0;
-                if (s.trail.length >= 2) {
-                    vX = tX(s.trail[0].x) - tX(s.trail[1].x);
-                    vY = tY(s.trail[0].y) - tY(s.trail[1].y);
-                }
-                // Amplify velocity for visibility
-                vX *= 3; vY *= 3;
-                // Enforce minimum arrow length
-                var vLen = Math.sqrt(vX * vX + vY * vY);
-                if (vLen < 25) {
-                    var scale = vLen > 0 ? 25 / vLen : 1;
-                    // If no velocity at all, default to rightward
-                    if (vLen === 0) { vX = 25; vY = 0; }
-                    else { vX *= scale; vY *= scale; }
-                }
-                var accScale = maxAbsY > 0 ? (1 / maxAbsY) * 40 : 1;
+                // PREDICTIVE CURL — direction from rotation signals, not trail pixels
+                // X direction: is RS strengthening or weakening?
+                var rsChange = s.rs - (s.rs_1w_pct || s.rs);   // +ve = RS gaining this week
+                var momSignal = s.yVal;                          // +ve = above median momentum
+                var momAcc = s.acc;                               // +ve = momentum accelerating
 
+                // Project where the stock is heading in chart coordinates
+                var projX = s.xVal + rsChange * 0.3;
+                var projY = s.yVal + momAcc * 0.5;
+
+                // Convert to screen-space velocity
+                var vX = tX(projX) - tX(s.xVal);
+                var vY = tY(projY) - tY(s.yVal);
+
+                // Enforce minimum arrow length of 30px
+                var vLen = Math.sqrt(vX * vX + vY * vY);
+                if (vLen < 30) {
+                    if (vLen > 0) {
+                        vX = vX / vLen * 30;
+                        vY = vY / vLen * 30;
+                    } else {
+                        // No signal at all: use quadrant-based default direction
+                        // Clockwise rotation: Leading→Weakening→Lagging→Improving→Leading
+                        if (s.q === 'leading')    { vX =  20; vY =  15; }  // → curving down (toward weakening)
+                        else if (s.q === 'weakening')  { vX = -15; vY =  20; }  // ← curving down (toward lagging)
+                        else if (s.q === 'lagging')    { vX = -20; vY = -15; }  // ← curving up (toward improving)
+                        else                           { vX =  15; vY = -20; }  // → curving up (toward leading)
+                    }
+                }
+
+                // Build Bezier control points with curl from acceleration
+                var curlAmt = momAcc * 8;  // perpendicular curl based on acceleration
                 var predPts = [{ x: jcx, y: jcy }];
                 for (var pi = 1; pi <= 5; pi++) {
+                    var t = pi / 5;
+                    // Base trajectory + perpendicular curl for Bezier curvature
+                    var perpX = -vY, perpY = vX;  // perpendicular to velocity
+                    var pLen = Math.sqrt(perpX * perpX + perpY * perpY) || 1;
+                    perpX = perpX / pLen; perpY = perpY / pLen;
                     predPts.push({
-                        x: jcx + vX * pi * 0.6,
-                        y: jcy + vY * pi * 0.6 + s.acc * accScale * pi * pi * 0.5
+                        x: jcx + vX * t * 3 + perpX * curlAmt * t * t,
+                        y: jcy + vY * t * 3 + perpY * curlAmt * t * t
                     });
                 }
                 var curvePath = 'M ' + predPts[0].x.toFixed(1) + ' ' + predPts[0].y.toFixed(1);
