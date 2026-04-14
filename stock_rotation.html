@@ -211,7 +211,7 @@
                 var mom1w = s.rs_1w_pct || s.rs;
                 var mom1m = s.rs_1m_pct || s.rs;
                 var yComposite = (mom1w - mom1m) * 0.7 + (s.rs - mom1w) * 0.3;
-                return { s: s, x: xRaw, y: yComposite };
+                return { s: s, x: xRaw, y: yComposite, mom1w: mom1w, mom1m: mom1m };
             });
 
             var medX = median(processedGroup.map(function(d) { return d.x; }));
@@ -222,6 +222,8 @@
                 var h = (stockHist[s.ticker] || []).slice(0, 17);
                 var xRaw = d.x;
                 var yComposite = d.y;
+                var mom1w = d.mom1w;
+                var mom1m = d.mom1m;
 
                 var acc = 0;
                 if (h.length >= 9) {
