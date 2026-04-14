@@ -47,8 +47,30 @@
         .chart-img { width: 100%; height: 110px; object-fit: contain; background: #000; display: block; }
         .chart-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(0,0,0,0.6); opacity: 0; transition: opacity 0.2s; color: var(--cyan); font-size: 0.75rem; font-weight: 600; }
         .chart-link:hover .chart-overlay { opacity: 1; }
+        .chart-img:hover { transform: scale(1.05); }
+        .ticker { font-size: 1.5rem; font-weight: 800; color: var(--cyan); letter-spacing: -0.02em; font-family: var(--mono); text-decoration: none; transition: color 0.2s; }
+        .ticker:hover { color: var(--accent2); }
+        .rs-pct-badge { font-size: 0.65rem; background: rgba(0,229,255,0.1); color: var(--cyan); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(0,229,255,0.2); font-weight: 700; display: inline-block; }
+        .company-name { font-size: 0.8rem; color: var(--text2); margin-top: 2px; }
+        .source-badge { font-size: 0.6rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; opacity: 0.7; }
+        .flip-badge { background: rgba(255,215,0,0.15); color: #FFD700; padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; border: 1px solid rgba(255,215,0,0.3); text-transform: uppercase; letter-spacing: 0.05em; animation: glow 2s infinite; }
+        @keyframes glow { 0% { box-shadow: 0 0 5px rgba(255,215,0,0.2); } 50% { box-shadow: 0 0 15px rgba(255,215,0,0.5); } 100% { box-shadow: 0 0 5px rgba(255,215,0,0.2); } }
+        .canslim-tray { display: flex; gap: 4px; margin-top: 4px; }
+        .canslim-letter { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--text2); border: 1px solid var(--border); }
+        .canslim-letter.active { background: var(--green); color: var(--bg); border-color: var(--green); box-shadow: 0 0 10px rgba(0,230,118,0.3); }
+        .earnings-alert { background: rgba(255,145,0,0.1); color: var(--orange); border: 1px solid rgba(255,145,0,0.2); padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; display: flex; align-items: center; gap: 6px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; transform: scale(1.02); } 100% { opacity: 0.8; } }
+        .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; background: var(--surface); padding: 12px; border-radius: var(--radius-sm); }
+        .metric { display: flex; flex-direction: column; gap: 2px; }
+        .metric-label { font-size: 0.6rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+        .metric-value { font-size: 1.1rem; font-weight: 700; color: var(--text); font-family: var(--mono); }
+        .highlights { display: flex; flex-wrap: wrap; gap: 6px; }
+        .outlook-tag { padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; border: 1px solid; }
+        .outlook-rallying { background: rgba(0,230,118,0.1); color: #00e676; border-color: rgba(0,230,118,0.25); }
+        .outlook-curling { background: rgba(255,145,0,0.1); color: #ff9100; border-color: rgba(255,145,0,0.25); }
+        .outlook-declining { background: rgba(255,82,82,0.1); color: #ff5252; border-color: rgba(255,82,82,0.25); }
 
-        @media (max-width: 480px) { .stock-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 480px) { .stock-grid { grid-template-columns: 1fr; } .metrics { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
@@ -228,41 +250,73 @@
             window.copyImproving = function() { copyCSV(impStocks, 'copy-improving'); };
             window.copyAll = function() { copyCSV(allPicked, 'copy-all'); };
 
-            function renderStockCard(s) {
-                var volStyle = 'font-size:0.6rem;color:var(--text2);padding:2px 6px;border-radius:4px;border:1px solid var(--border);background:var(--surface);display:inline-block;';
+            function computeRotation(s) {
+                var mom1w = s.rs_1w_pct || s.rs;
+                var mom1m = s.rs_1m_pct || s.rs;
+                var yMom = mom1w - mom1m;
+                var vel = s.rs - mom1w;
+                return yMom * 0.7 + vel * 0.3;
+            }
+
+            function renderStockCard(s, idx) {
+                var volStyle = 'font-size:0.65rem;color:var(--text2);padding:2px 6px;border-radius:4px;border:1px solid var(--border);background:var(--surface);display:inline-block;';
                 if (s.volume > s.avg_volume) {
                     volStyle = s.is_up ?
-                        'font-size:0.6rem;font-weight:800;padding:2px 6px;border-radius:4px;border:1px solid rgba(0,230,118,0.3);background:rgba(0,230,118,0.1);color:var(--green);display:inline-block;' :
-                        'font-size:0.6rem;font-weight:800;padding:2px 6px;border-radius:4px;border:1px solid rgba(255,145,0,0.3);background:rgba(255,145,0,0.1);color:var(--orange);display:inline-block;';
+                        'font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:4px;border:1px solid rgba(0,230,118,0.3);background:rgba(0,230,118,0.1);color:var(--green);display:inline-block;' :
+                        'font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:4px;border:1px solid rgba(255,145,0,0.3);background:rgba(255,145,0,0.1);color:var(--orange);display:inline-block;';
                 }
                 var chartUrl = s.finviz_chart_url ? s.finviz_chart_url + '&t=' + Date.now() : '';
                 var hiTags = s.highlights ? s.highlights.split(', ').map(function(h) { return '<span class="highlight-tag">' + h + '</span>'; }).join('') : '';
+                var canslimHtml = '';
+                if (s.canslim) {
+                    var letters = ['C','A','N','S','L','I','M'];
+                    canslimHtml = '<div class="canslim-tray">' + letters.map(function(l) {
+                        var active = s.canslim[l.toLowerCase()];
+                        return '<div class="canslim-letter ' + (active ? 'active' : '') + '">' + l + '</div>';
+                    }).join('') + '</div>';
+                }
+                var earningsBadge = (s.days_to_earnings >= 0 && s.days_to_earnings <= 14)
+                    ? '<div class="earnings-alert">\ud83d\udcc5 EARNINGS IN ' + s.days_to_earnings + 'D</div>' : '';
+                var yComp = computeRotation(s);
+                var outlook = yComp > 0 ? (s.rs >= 90 ? 'rallying' : 'recovering') : (s.rs >= 90 ? 'curling' : 'declining');
+                var outlookLabel = outlook === 'rallying' ? '\u279a Momentum Rallying' :
+                    outlook === 'curling' ? '\u2939 Momentum Curling' :
+                    outlook === 'declining' ? '\u2198 Momentum Declining' : '\u2197 Momentum Recovering';
+                var outlookClass = (outlook === 'rallying' || outlook === 'recovering') ? 'outlook-rallying' :
+                    outlook === 'curling' ? 'outlook-curling' : 'outlook-declining';
 
-                return '<div class="stock-card" data-ticker="' + s.ticker + '">' +
+                return '<div class="stock-card" data-ticker="' + s.ticker + '" style="animation-delay:' + ((idx||0)*0.05) + 's">' +
                     '<div style="display:flex;justify-content:space-between;align-items:flex-start;">' +
                         '<div>' +
                             '<div style="display:flex;align-items:center;gap:8px;">' +
-                                '<a href="' + (s.tradingview_url || '#') + '" target="_blank" style="font-size:1.2rem;font-weight:800;color:var(--cyan);font-family:var(--mono);text-decoration:none;">' + s.ticker + '</a>' +
-                                '<span style="font-size:0.65rem;color:var(--cyan);">1W: ' + (s.rs_1w_pct || 'N/A') + '%</span>' +
+                                '<a href="' + (s.tradingview_url || '#') + '" target="_blank" class="ticker" style="font-size:1.3rem;">' + s.ticker + '</a>' +
+                                '<span class="rs-pct-badge">1W: ' + (s.rs_1w_pct || 'N/A') + '%</span>' +
                             '</div>' +
-                            '<div style="font-size:0.7rem;color:var(--text2);margin-top:2px;">' + (s.name || '') + '</div>' +
-                            '<div style="font-size:0.65rem;color:var(--text2);margin-top:2px;">' + (s.industry || '') + ' &bull; ' + (s.sector || '') + '</div>' +
+                            '<div class="company-name">' + (s.name || '') + '</div>' +
+                            '<div style="font-size:0.7rem;color:var(--text2);margin-top:2px;">' + (s.industry || '') + ' &bull; ' + (s.sector || '') + '</div>' +
+                            canslimHtml +
                         '</div>' +
                         '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;">' +
                             '<span style="font-size:0.6rem;color:var(--text2);">#' + (s.rank || '') + '</span>' +
                             '<span style="font-size:0.6rem;padding:2px 6px;border-radius:4px;background:var(--surface);border:1px solid var(--border);color:var(--text2);">' + (s._etf || '') + '</span>' +
+                            (s.flip ? '<div class="flip-badge">\u26a1 PRIME FLIP</div>' : '') +
+                            '<div class="source-badge">' + (s.source || '') + '</div>' +
                             '<span style="' + volStyle + '">$' + (s.price ? s.price.toFixed(2) : 'N/A') + '</span>' +
                             '<span style="' + volStyle + '" title="Avg: ' + fmtVol(s.avg_volume) + '">Vol: ' + fmtVol(s.volume) + '</span>' +
                         '</div>' +
                     '</div>' +
-                    (chartUrl ? '<a href="' + (s.tradingview_url || '#') + '" target="_blank" class="chart-link"><img src="' + chartUrl + '" class="chart-img" loading="lazy" alt="' + s.ticker + '"><div class="chart-overlay"><span>Open Chart</span><span>↗️</span></div></a>' : '') +
-                    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;background:var(--surface);padding:8px;border-radius:8px;">' +
-                        '<div><div style="font-size:0.5rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;">RS</div><div style="font-size:0.95rem;font-weight:700;color:var(--cyan);font-family:var(--mono);">' + s.rs + '</div></div>' +
-                        '<div><div style="font-size:0.5rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;">RMV</div><div style="font-size:0.95rem;font-weight:700;font-family:var(--mono);">' + (s.rmv != null ? s.rmv.toFixed(1) : 'N/A') + '</div></div>' +
-                        '<div><div style="font-size:0.5rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;">1W</div><div style="font-size:0.95rem;font-weight:700;font-family:var(--mono);">' + (s.rs_1w_pct || 'N/A') + '</div></div>' +
-                        '<div><div style="font-size:0.5rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;">1M</div><div style="font-size:0.95rem;font-weight:700;font-family:var(--mono);">' + (s.rs_1m_pct || 'N/A') + '</div></div>' +
+                    earningsBadge +
+                    (chartUrl ? '<a href="' + (s.tradingview_url || '#') + '" target="_blank" class="chart-link"><img src="' + chartUrl + '" class="chart-img" loading="lazy" alt="' + s.ticker + '"><div class="chart-overlay"><span>Open Chart</span><span>\u2197\ufe0f</span></div></a>' : '') +
+                    '<div class="metrics">' +
+                        '<div class="metric"><span class="metric-label">RS Rank</span><span class="metric-value" style="color:var(--cyan);">' + s.rs + '</span></div>' +
+                        '<div class="metric"><span class="metric-label">RMV</span><span class="metric-value">' + (s.rmv != null ? s.rmv.toFixed(1) : 'N/A') + '</span></div>' +
+                        '<div class="metric"><span class="metric-label">1W Pct</span><span class="metric-value">' + (s.rs_1w_pct || 'N/A') + '</span></div>' +
+                        '<div class="metric"><span class="metric-label">1M Pct</span><span class="metric-value">' + (s.rs_1m_pct || 'N/A') + '</span></div>' +
                     '</div>' +
-                    (hiTags ? '<div style="display:flex;flex-wrap:wrap;gap:4px;">' + hiTags + '</div>' : '') +
+                    (hiTags ? '<div class="highlights">' + hiTags + '</div>' : '') +
+                    '<div style="display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--border);padding-top:8px;">' +
+                        '<span class="outlook-tag ' + outlookClass + '">' + outlookLabel + '</span>' +
+                    '</div>' +
                 '</div>';
             }
 
