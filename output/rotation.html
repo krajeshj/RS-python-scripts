@@ -112,35 +112,38 @@
             var ts = Date.now();
             Promise.all([
                 fetch('web_data.json?v=' + ts).then(function(r) { return r.json(); }),
-                fetch('stock_history.json?v=' + ts).then(function(r) { return r.json(); })
+                fetch('rrg.json?v=' + ts).then(function(r) { return r.json(); })
             ]).then(function(res) {
                 webData = res[0]; 
-                stockHist = res[1] || {};
+                stockHist = res[1].data || res[1] || {};
                 
                 var allStocks = (webData.all_stocks || []).concat(webData.stocks || []).concat(webData.pulse || []);
                 var rawData = [];
                 ETFS.forEach(function(t) {
                     var s = allStocks.find(function(item) { return item.ticker === t; });
                     if (!s) return;
-                    var h = (stockHist[t] || []).slice(0, 15);
-                    var xRaw = s.rs_raw || 0;
-                    var mom1w = s.rs_1w_pct || s.rs;
-                    var mom1m = s.rs_1m_pct || s.rs;
-                    var yComposite = (mom1w - mom1m) * 0.7 + (s.rs - mom1w) * 0.3;
+                    var h = stockHist[t] || [];
+                    if (!h || !h.length) return;
                     
-                    var trail = [];
-                    for (var i = 0; i < Math.min(10, h.length - 7); i++) {
-                        var trailRS = h[i] || 0;
-                        var trailXRaw = xRaw * (trailRS / (s.rs || 1));
-                        var trailYMom = (h[i] || 0) - (h[i + 7] || 0);
-                        trail.unshift({ x: trailXRaw, y: trailYMom });
-                    }
+                    // True JdK RRG coordinates generated via backend python mapping relative to SPY
+                    var trail = h.slice(0, 15);
+                    // The leading point is the last day generated (index 0 implies earliest for spline tail, length-1 is current day tip)
+                    // Currently h has trailing indices -> [0] is oldest, [14] is youngest
+                    // Wait, rrg.py pushes it such that index 0 is oldest and index 14 is the most recent (today)!
+                    // Let's reverse it so [0] is youngest (now), because in trailNorm we use unshift or assume [0] is now.
+                    // Wait, in rrg.py we do tail(15) -> oldest to youngest.
+                    // Let's reverse it in JS so trail[0] is the current tip
+                    trail = trail.slice().reverse();
+
+                    var xRaw = trail[0].x;
+                    var yComposite = trail[0].y;
+                    
                     rawData.push({ s: s, xRaw: xRaw, yComposite: yComposite, trail: trail });
                 });
                 
                 function median(arr) { if(!arr.length) return 0; var s = arr.slice().sort(function(a,b){return a-b;}); var m = Math.floor(s.length/2); return s.length%2 ? s[m] : (s[m-1]+s[m])/2; }
-                var medX = median(rawData.map(function(d) { return d.xRaw; }));
-                var medY = median(rawData.map(function(d) { return d.yComposite; }));
+                var medX = 0; // True RRG is explicitly centered around 100 via logic (which is relative to SPY natively)
+                var medY = 0; 
 
                 SECTORS = rawData.map(function(d) {
                     var xVal = d.xRaw - medX;
