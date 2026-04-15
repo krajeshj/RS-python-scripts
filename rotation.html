@@ -142,16 +142,9 @@
                     
                     // True JdK RRG coordinates generated via backend python mapping relative to SPY
                     var trail = h.slice(0, 15);
-                    // The leading point is the last day generated (index 0 implies earliest for spline tail, length-1 is current day tip)
-                    // Currently h has trailing indices -> [0] is oldest, [14] is youngest
-                    // Wait, rrg.py pushes it such that index 0 is oldest and index 14 is the most recent (today)!
-                    // Let's reverse it so [0] is youngest (now), because in trailNorm we use unshift or assume [0] is now.
-                    // Wait, in rrg.py we do tail(15) -> oldest to youngest.
-                    // Let's reverse it in JS so trail[0] is the current tip
-                    trail = trail.slice().reverse();
-
-                    var xRaw = trail[0].x;
-                    var yComposite = trail[0].y;
+                    
+                    var xRaw = trail[trail.length - 1].x;
+                    var yComposite = trail[trail.length - 1].y;
                     
                     rawData.push({ s: s, xRaw: xRaw, yComposite: yComposite, trail: trail });
                 });
@@ -245,15 +238,15 @@
             }
 
             var sectorG = vizSectors.map(function(s) {
-                var jcx = tX(s.x), jcy = tY(s.y);
                 var trailPts = s.trail.map(function(tp) { return { x: tX(tp.x), y: tY(tp.y) }; });
-                trailPts.push({x: jcx, y: jcy});
+                var jcx = trailPts[trailPts.length - 1].x;
+                var jcy = trailPts[trailPts.length - 1].y;
                 
                 var dPath = catmullRom2bezier(trailPts);
                 
                 var dots = trailPts.map(function(p, i) {
                     if (i === trailPts.length - 1) return '';
-                    var op = 0.2 + 0.6 * (i / trailPts.length);
+                    var op = 0.1 + 0.9 * (i / trailPts.length);
                     return '<circle cx="'+p.x+'" cy="'+p.y+'" r="2.5" fill="'+s.color+'" opacity="'+op+'"/>';
                 }).join('');
 
