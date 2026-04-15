@@ -101,22 +101,62 @@
     </div>
 
     <script>
-        var SECTORS = [
-          { name:"XLK",  q:"leading",   color:"#22d3ee", x:102,  y:101,  streakWeeks:3, trail:[{x:98,y:97},{x:99,y:98},{x:100,y:99},{x:101,y:100}], flow:185, sector:"Technology" },
-          { name:"XLE",  q:"leading",   color:"#4ade80", x:104,  y:103,  streakWeeks:5, trail:[{x:101,y:100},{x:102,y:101},{x:103,y:101.5},{x:103.5,y:102}], flow:212, sector:"Energy" },
-          { name:"XLI",  q:"leading",   color:"#a3e635", x:101,  y:102,  streakWeeks:4, trail:[{x:99,y:99},{x:99.5,y:100},{x:100,y:101},{x:100.5,y:101.5}], flow:145, sector:"Industrials" },
-          { name:"XLF",  q:"weakening", color:"#fb923c", x:103,  y:99,   streakWeeks:2, trail:[{x:102,y:102},{x:102.5,y:101.5},{x:103,y:101},{x:103,y:100}], flow:92, sector:"Financial Services" },
-          { name:"XLV",  q:"lagging",   color:"#f87171", x:99,   y:98,   streakWeeks:3, trail:[{x:101,y:101},{x:100.5,y:100},{x:100,y:99},{x:99.5,y:98.5}], flow:-45, sector:"Healthcare" },
-          { name:"XLY",  q:"lagging",   color:"#e879f9", x:98,   y:97,   streakWeeks:6, trail:[{x:100,y:99},{x:99.5,y:98.5},{x:99,y:98},{x:98.5,y:97.5}], flow:-112, sector:"Consumer Cyclical" },
-          { name:"XLC",  q:"lagging",   color:"#f43f5e", x:97,   y:99,   streakWeeks:4, trail:[{x:99,y:101},{x:98.5,y:100.5},{x:98,y:100},{x:97.5,y:99.5}], flow:-28, sector:"Communication Services" },
-          { name:"XLP",  q:"improving", color:"#60a5fa", x:99,   y:101,  streakWeeks:2, trail:[{x:97,y:98},{x:97.5,y:98.5},{x:98,y:99},{x:98.5,y:100}], flow:54, sector:"Consumer Defensive" },
-          { name:"XLU",  q:"improving", color:"#818cf8", x:98,   y:100,  streakWeeks:1, trail:[{x:96,y:97},{x:96.5,y:97.5},{x:97,y:98.5},{x:97.5,y:99}], flow:31, sector:"Utilities" },
-          { name:"XLRE", q:"improving", color:"#38bdf8", x:97,   y:101,  streakWeeks:3, trail:[{x:95.5,y:98},{x:96,y:99},{x:96.5,y:99.5},{x:97,y:100.5}], flow:18, sector:"Real Estate" },
-        ];
-
+        var ETFS = ["XLK", "XLE", "XLF", "XLV", "XLY", "XLC", "XLP", "XLU", "XLI", "XLRE", "XLB", "SMH", "XBI", "XHB", "XRT", "XME"];
+        var SECTORS = [];
         var activeTab = 'rrg';
-        var Q_FILL = { leading:"#22c55e", weakening:"#f59e0b", lagging:"#ef4444", improving:"#60a5fa" };
+        var Q_FILL = { leading:"#10b981", weakening:"#f59e0b", lagging:"#ef4444", improving:"#3b82f6" };
         var webData = null;
+        var stockHist = null;
+
+        function init() {
+            var ts = Date.now();
+            Promise.all([
+                fetch('web_data.json?v=' + ts).then(function(r) { return r.json(); }),
+                fetch('stock_history.json?v=' + ts).then(function(r) { return r.json(); })
+            ]).then(function(res) {
+                webData = res[0]; 
+                stockHist = res[1] || {};
+                
+                var allStocks = webData.all_stocks || webData.stocks || [];
+                var rawData = [];
+                ETFS.forEach(function(t) {
+                    var s = allStocks.find(function(item) { return item.ticker === t; });
+                    if (!s) return;
+                    var h = (stockHist[t] || []).slice(0, 15);
+                    var xRaw = s.rs_raw || 0;
+                    var mom1w = s.rs_1w_pct || s.rs;
+                    var mom1m = s.rs_1m_pct || s.rs;
+                    var yComposite = (mom1w - mom1m) * 0.7 + (s.rs - mom1w) * 0.3;
+                    
+                    var trail = [];
+                    for (var i = 0; i < Math.min(10, h.length - 7); i++) {
+                        var trailRS = h[i] || 0;
+                        var trailXRaw = xRaw * (trailRS / (s.rs || 1));
+                        var trailYMom = (h[i] || 0) - (h[i + 7] || 0);
+                        trail.unshift({ x: trailXRaw, y: trailYMom });
+                    }
+                    rawData.push({ s: s, xRaw: xRaw, yComposite: yComposite, trail: trail });
+                });
+                
+                function median(arr) { if(!arr.length) return 0; var s = arr.slice().sort(function(a,b){return a-b;}); var m = Math.floor(s.length/2); return s.length%2 ? s[m] : (s[m-1]+s[m])/2; }
+                var medX = median(rawData.map(function(d) { return d.xRaw; }));
+                var medY = median(rawData.map(function(d) { return d.yComposite; }));
+
+                SECTORS = rawData.map(function(d) {
+                    var xVal = d.xRaw - medX;
+                    var yVal = d.yComposite - medY;
+                    var q = xVal >= 0 ? (yVal >= 0 ? "leading" : "weakening") : (yVal >= 0 ? "improving" : "lagging");
+                    var trailNorm = d.trail.map(function(tp) { return { x: tp.x - medX, y: tp.y - medY }; });
+                    return { name: d.s.ticker, q: q, x: xVal, y: yVal, color: Q_FILL[q], trail: trailNorm, flow: d.s.volume || 0, sector: d.s.industry || d.s.sector };
+                });
+                
+                render();
+                renderSectorStocks();
+            }).catch(function(e) {
+                console.error(e);
+                document.getElementById('content').innerHTML = '<div style="padding:20px;text-align:center;color:red;">Error loading dynamic index data. Please run python pipeline first.</div>';
+            });
+        }
 
         function setTab(t) {
             activeTab = t;
@@ -132,41 +172,78 @@
             if (activeTab === 'flow') renderFlows(container);
         }
 
+        function catmullRom2bezier(pts) {
+          var d = "";
+          if (pts.length === 0) return d;
+          d += "M " + pts[0].x.toFixed(1) + "," + pts[0].y.toFixed(1) + " ";
+          if (pts.length === 1) return d;
+          for (var i = 0; i < pts.length - 1; i++) {
+            var p0 = i === 0 ? pts[0] : pts[i - 1];
+            var p1 = pts[i];
+            var p2 = pts[i + 1];
+            var p3 = i + 2 < pts.length ? pts[i + 2] : p2;
+            var cp1x = p1.x + (p2.x - p0.x) / 6;
+            var cp1y = p1.y + (p2.y - p0.y) / 6;
+            var cp2x = p2.x - (p3.x - p1.x) / 6;
+            var cp2y = p2.y - (p3.y - p1.y) / 6;
+            d += "C " + cp1x.toFixed(1) + "," + cp1y.toFixed(1) + " " + cp2x.toFixed(1) + "," + cp2y.toFixed(1) + " " + p2.x.toFixed(1) + "," + p2.y.toFixed(1) + " ";
+          }
+          return d;
+        }
+
         function renderRRG(container) {
-            var CW=500, CH=500, P=50, R=12;
-            var px = function(v) { return P + ((v-96)/8)*(CW-P*2); };
-            var py = function(v) { return (CH-P) - ((v-96)/8)*(CH-P*2); };
-            var MX=px(100), MY=py(100);
+            if (!SECTORS.length) { container.innerHTML = '<div class="card" style="text-align:center;padding:30px;">Loading historical ETF charts...</div>'; return; }
+            var CW=700, CH=550, P=40, R=5;
+            var allX = [], allY = [];
+            SECTORS.forEach(function(s) { allX.push(s.x); allY.push(s.y); s.trail.forEach(function(tp) { allX.push(tp.x); allY.push(tp.y); }); });
+            var maxAbsX = Math.max.apply(null, allX.map(Math.abs)) || 1;
+            var maxAbsY = Math.max.apply(null, allY.map(Math.abs)) || 1;
+            var tX = function(v) { return P + ((v + maxAbsX) / (maxAbsX * 2)) * (CW - P * 2); };
+            var tY = function(v) { return (CH - P) - ((v + maxAbsY) / (maxAbsY * 2)) * (CH - P * 2); };
+            var MX = tX(0), MY = tY(0);
+
+            var gridLines = '';
+            for(var step = 1; step < 10; step++) {
+                var gX = P + (step/10)*(CW - P*2);
+                var gY = P + (step/10)*(CH - P*2);
+                gridLines += '<line x1="'+gX+'" y1="'+P+'" x2="'+gX+'" y2="'+(CH-P)+'" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>';
+                gridLines += '<line x1="'+P+'" y1="'+gY+'" x2="'+(CW-P)+'" y2="'+gY+'" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>';
+            }
 
             var sectorG = SECTORS.map(function(s) {
-                var cx=px(s.x), cy=py(s.y);
-                var fullPath = s.trail.concat([{x:s.x, y:s.y}]);
-                var polyStr = fullPath.map(function(p) { return px(p.x)+','+py(p.y); }).join(' ');
-                var prev = fullPath[fullPath.length-2] || fullPath[0];
-                var vX = cx - px(prev.x), vY = cy - py(prev.y);
-                var lineEnd = { x: cx + vX*1.5, y: cy + vY*1.5 };
+                var jcx = tX(s.x), jcy = tY(s.y);
+                var trailPts = s.trail.map(function(tp) { return { x: tX(tp.x), y: tY(tp.y) }; });
+                trailPts.push({x: jcx, y: jcy});
+                
+                var dPath = catmullRom2bezier(trailPts);
+                
+                var dots = trailPts.map(function(p, i) {
+                    if (i === trailPts.length - 1) return '';
+                    return '<circle cx="'+p.x+'" cy="'+p.y+'" r="2.5" fill="'+s.color+'" opacity="0.6"/>';
+                }).join('');
+
                 return '<g>' +
-                    '<polyline points="' + polyStr + '" fill="none" stroke="' + Q_FILL[s.q] + '" stroke-width="2.5" stroke-opacity="0.3" stroke-linecap="round"/>' +
-                    '<line x1="' + cx + '" y1="' + cy + '" x2="' + lineEnd.x + '" y2="' + lineEnd.y + '" stroke="' + Q_FILL[s.q] + '" stroke-width="1.5" marker-end="url(#m-' + s.name + ')"/>' +
-                    '<circle cx="' + cx + '" cy="' + cy + '" r="' + R + '" fill="' + Q_FILL[s.q] + '" stroke="#000" stroke-width="1"/>' +
-                    '<text x="' + cx + '" y="' + (cy+0.5) + '" text-anchor="middle" dominant-baseline="middle" fill="#000" font-size="8" font-weight="900" font-family="var(--mono)">' + s.name + '</text>' +
+                    '<path d="' + dPath + '" fill="none" stroke="' + s.color + '" stroke-width="2.5" stroke-linecap="round"/>' +
+                    dots +
+                    '<circle cx="' + jcx + '" cy="' + jcy + '" r="' + R + '" fill="' + s.color + '"/>' +
+                    '<text x="' + jcx + '" y="' + (jcy-10) + '" text-anchor="middle" fill="#fff" font-size="9" font-weight="800" font-family="var(--mono)">' + s.name + '</text>' +
                     '</g>';
             }).join('');
 
             container.innerHTML =
-                '<div class="card"><div class="rrg-box">' +
+                '<div class="card" style="padding:0; overflow:hidden;"><div class="rrg-box" style="background:#0b0e14; box-shadow:inset 0 0 30px rgba(0,0,0,0.5); aspect-ratio:7/5.5;">' +
                 '<svg viewBox="0 0 ' + CW + ' ' + CH + '">' +
-                '<defs>' + SECTORS.map(function(s) { return '<marker id="m-' + s.name + '" markerWidth="10" markerHeight="6" refX="9" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="' + Q_FILL[s.q] + '"/></marker>'; }).join('') + '</defs>' +
-                '<rect x="' + P + '" y="' + P + '" width="' + (MX-P) + '" height="' + (MY-P) + '" fill="rgba(96,165,250,0.05)"/>' +
-                '<rect x="' + MX + '" y="' + P + '" width="' + (CW-P-MX) + '" height="' + (MY-P) + '" fill="rgba(34,197,94,0.05)"/>' +
-                '<rect x="' + P + '" y="' + MY + '" width="' + (MX-P) + '" height="' + (CH-P-MY) + '" fill="rgba(239,68,68,0.05)"/>' +
-                '<rect x="' + MX + '" y="' + MY + '" width="' + (CW-P-MX) + '" height="' + (CH-P-MY) + '" fill="rgba(245,158,11,0.05)"/>' +
-                '<line x1="' + MX + '" y1="' + P + '" x2="' + MX + '" y2="' + (CH-P) + '" stroke="#1e293b" stroke-width="1" stroke-dasharray="5,4"/>' +
-                '<line x1="' + P + '" y1="' + MY + '" x2="' + (CW-P) + '" y2="' + MY + '" stroke="#1e293b" stroke-width="1" stroke-dasharray="5,4"/>' +
-                '<text x="' + (P+8) + '" y="' + (P+16) + '" fill="#60a5fa" font-size="11" font-weight="900" opacity="0.5">IMPROVING</text>' +
-                '<text x="' + (CW-P-65) + '" y="' + (P+16) + '" fill="#22c55e" font-size="11" font-weight="900" opacity="0.5">LEADING</text>' +
-                '<text x="' + (P+8) + '" y="' + (CH-P-8) + '" fill="#ef4444" font-size="11" font-weight="900" opacity="0.5">LAGGING</text>' +
-                '<text x="' + (CW-P-80) + '" y="' + (CH-P-8) + '" fill="#f59e0b" font-size="11" font-weight="900" opacity="0.5">WEAKENING</text>' +
+                '<rect x="' + P + '" y="' + P + '" width="' + (MX-P) + '" height="' + (MY-P) + '" fill="#16222b"/>' +
+                '<rect x="' + MX + '" y="' + P + '" width="' + (CW-P-MX) + '" height="' + (MY-P) + '" fill="#122a28"/>' +
+                '<rect x="' + P + '" y="' + MY + '" width="' + (MX-P) + '" height="' + (CH-P-MY) + '" fill="#2d1a22"/>' +
+                '<rect x="' + MX + '" y="' + MY + '" width="' + (CW-P-MX) + '" height="' + (CH-P-MY) + '" fill="#2c2214"/>' +
+                gridLines +
+                '<line x1="' + MX + '" y1="' + P + '" x2="' + MX + '" y2="' + (CH-P) + '" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>' +
+                '<line x1="' + P + '" y1="' + MY + '" x2="' + (CW-P) + '" y2="' + MY + '" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>' +
+                '<text x="' + (P+10) + '" y="' + (P+20) + '" fill="#60a5fa" font-size="11" font-weight="900" opacity="0.6">IMPROVING</text>' +
+                '<text x="' + (CW-P-60) + '" y="' + (P+20) + '" fill="#10b981" font-size="11" font-weight="900" opacity="0.6">LEADING</text>' +
+                '<text x="' + (P+10) + '" y="' + (CH-P-15) + '" fill="#ef4444" font-size="11" font-weight="900" opacity="0.6">LAGGING</text>' +
+                '<text x="' + (CW-P-75) + '" y="' + (CH-P-15) + '" fill="#f59e0b" font-size="11" font-weight="900" opacity="0.6">WEAKENING</text>' +
                 sectorG +
                 '</svg></div></div>';
         }
@@ -337,13 +414,7 @@
         }
 
         window.onload = function() {
-            render();
-            fetch('web_data.json?v=' + Date.now()).then(function(r) { return r.json(); }).then(function(d) {
-                webData = d;
-                renderSectorStocks();
-            }).catch(function(e) {
-                document.getElementById('sector-stocks').innerHTML = '<div style="padding:20px;text-align:center;color:var(--text2);">Could not load stock data.</div>';
-            });
+            init();
         };
     </script>
 </body>
