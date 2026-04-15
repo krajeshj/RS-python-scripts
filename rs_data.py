@@ -97,9 +97,11 @@ UNKNOWN = "unknown"
 PULSE_TICKERS = [
     # Markets
     "DIA", "SPY", "RSP", "QQQ", "QQQE", "MDY", "IWM",
-    # Key Sectors
-    "XLF", "SMH", "IYT", "XTN", "ITB", "XHB", "MAGS", "IBIT", "ETHA",
-    "SLV", "GDX", "TAN", "GPN", "IBUY", "XLK", "XLU", "FDN", "USO", "XLE", "IGV"
+    # Core Sectors (11 SPDRs)
+    "XLK", "XLE", "XLF", "XLV", "XLY", "XLC", "XLP", "XLU", "XLI", "XLRE", "XLB",
+    # Key Sub-Sectors & Themes
+    "SMH", "XBI", "XHB", "XRT", "XME", "IYT", "XTN", "ITB", "MAGS", "IBIT", "ETHA",
+    "SLV", "GDX", "TAN", "GPN", "IBUY", "FDN", "USO", "IGV"
 ]
 
 def get_securities(url, ticker_pos = 1, table_pos = 1, sector_offset = 1, industry_offset = 1, universe = "N/A"):
