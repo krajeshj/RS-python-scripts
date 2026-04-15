@@ -518,10 +518,17 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None, 
             "ticker": s[TITLE_TICKER],
             "name": s.get(TITLE_NAME, s[TITLE_TICKER]),
             "rs_rank": int(s[TITLE_PERCENTILE]),
+            "rs": int(s[TITLE_PERCENTILE]),
+            "rs_raw": round(s[TITLE_RS], 2) if pd.notna(s.get(TITLE_RS)) else 0,
+            "rs_1w_pct": int(s.get("rs_1w_pct", 50)) if "rs_1w_pct" in s else 50,
+            "rs_1m_pct": int(s.get("rs_1m_pct", 50)) if "rs_1m_pct" in s else 50,
             "trend": s.get(TITLE_COMMENTARY, "Sideways"),
             "commentary": s.get("Commentary_Text", "Analyzing trend..."),
             "low_signal": bool(s.get("low_signal", False)),
             "marketCap": s.get("marketCap", 0),
+            "volume": s.get("volume", 0),
+            "industry": s.get(TITLE_INDUSTRY, ""),
+            "sector": s.get(TITLE_SECTOR, ""),
             "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}"
         })
 

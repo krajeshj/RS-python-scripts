@@ -117,7 +117,7 @@
                 webData = res[0]; 
                 stockHist = res[1] || {};
                 
-                var allStocks = webData.all_stocks || webData.stocks || [];
+                var allStocks = (webData.all_stocks || []).concat(webData.stocks || []).concat(webData.pulse || []);
                 var rawData = [];
                 ETFS.forEach(function(t) {
                     var s = allStocks.find(function(item) { return item.ticker === t; });
