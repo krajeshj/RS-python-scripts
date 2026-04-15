@@ -88,10 +88,25 @@
     </header>
 
     <div class="container">
-        <div style="display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap;" id="tabs">
+        <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;" id="tabs">
             <button class="tab-btn active" onclick="setTab('rrg')">Rotation Map</button>
             <button class="tab-btn" onclick="setTab('rank')">Rank Signals</button>
             <button class="tab-btn" onclick="setTab('flow')">Fund Flows</button>
+        </div>
+
+        <div style="display: flex; gap: 15px; margin-bottom: 18px; justify-content: center; flex-wrap: wrap; background: var(--surface); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border);" id="q-toggles">
+            <label style="color: var(--q-leading); font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                <input type="checkbox" id="toggle-leading" checked onchange="render()"> Leading
+            </label>
+            <label style="color: var(--q-improving); font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                <input type="checkbox" id="toggle-improving" checked onchange="render()"> Improving
+            </label>
+            <label style="color: var(--q-weakening); font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                <input type="checkbox" id="toggle-weakening" checked onchange="render()"> Weakening
+            </label>
+            <label style="color: var(--q-lagging); font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                <input type="checkbox" id="toggle-lagging" checked onchange="render()"> Lagging
+            </label>
         </div>
 
         <div id="content"></div>
@@ -197,8 +212,24 @@
         function renderRRG(container) {
             if (!SECTORS.length) { container.innerHTML = '<div class="card" style="text-align:center;padding:30px;">Loading historical ETF charts...</div>'; return; }
             var CW=700, CH=550, P=40, R=5;
+            
+            var tLead = document.getElementById('toggle-leading');
+            var tImp = document.getElementById('toggle-improving');
+            var tWeak = document.getElementById('toggle-weakening');
+            var tLag = document.getElementById('toggle-lagging');
+
+            var filterQ = {
+                leading: tLead ? tLead.checked : true,
+                improving: tImp ? tImp.checked : true,
+                weakening: tWeak ? tWeak.checked : true,
+                lagging: tLag ? tLag.checked : true
+            };
+
+            var vizSectors = SECTORS.filter(function(s) { return filterQ[s.q]; });
+
             var allX = [], allY = [];
-            SECTORS.forEach(function(s) { allX.push(s.x); allY.push(s.y); s.trail.forEach(function(tp) { allX.push(tp.x); allY.push(tp.y); }); });
+            vizSectors.forEach(function(s) { allX.push(s.x); allY.push(s.y); s.trail.forEach(function(tp) { allX.push(tp.x); allY.push(tp.y); }); });
+            
             var maxAbsX = Math.max.apply(null, allX.map(Math.abs)) || 1;
             var maxAbsY = Math.max.apply(null, allY.map(Math.abs)) || 1;
             var tX = function(v) { return P + ((v + maxAbsX) / (maxAbsX * 2)) * (CW - P * 2); };
@@ -213,7 +244,7 @@
                 gridLines += '<line x1="'+P+'" y1="'+gY+'" x2="'+(CW-P)+'" y2="'+gY+'" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>';
             }
 
-            var sectorG = SECTORS.map(function(s) {
+            var sectorG = vizSectors.map(function(s) {
                 var jcx = tX(s.x), jcy = tY(s.y);
                 var trailPts = s.trail.map(function(tp) { return { x: tX(tp.x), y: tY(tp.y) }; });
                 trailPts.push({x: jcx, y: jcy});
@@ -222,13 +253,19 @@
                 
                 var dots = trailPts.map(function(p, i) {
                     if (i === trailPts.length - 1) return '';
-                    return '<circle cx="'+p.x+'" cy="'+p.y+'" r="2.5" fill="'+s.color+'" opacity="0.6"/>';
+                    var op = 0.2 + 0.6 * (i / trailPts.length);
+                    return '<circle cx="'+p.x+'" cy="'+p.y+'" r="2.5" fill="'+s.color+'" opacity="'+op+'"/>';
                 }).join('');
 
+                var tailX = trailPts.length > 1 ? trailPts[trailPts.length - 2].x : jcx;
+                var tailY = trailPts.length > 1 ? trailPts[trailPts.length - 2].y : jcy;
+                var angle = Math.atan2(jcy - tailY, jcx - tailX) * 180 / Math.PI;
+                var arrow = '<polygon points="-6,-5 8,0 -6,5" fill="' + s.color + '" transform="translate(' + jcx + ',' + jcy + ') rotate(' + angle + ')" />';
+
                 return '<g>' +
-                    '<path d="' + dPath + '" fill="none" stroke="' + s.color + '" stroke-width="2.5" stroke-linecap="round"/>' +
+                    '<path d="' + dPath + '" fill="none" stroke="' + s.color + '" stroke-width="2.5" stroke-linecap="round" opacity="0.3"/>' +
                     dots +
-                    '<circle cx="' + jcx + '" cy="' + jcy + '" r="' + R + '" fill="' + s.color + '"/>' +
+                    arrow +
                     '<text x="' + jcx + '" y="' + (jcy-10) + '" text-anchor="middle" fill="#fff" font-size="9" font-weight="800" font-family="var(--mono)">' + s.name + '</text>' +
                     '</g>';
             }).join('');
