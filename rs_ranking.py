@@ -536,16 +536,29 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None, 
 
     # Add Stage Analysis if available
     formatted_stages = []
+    ts1 = ts2 = ts3 = ts4 = tcount = 0
+
     if sector_stages:
         for s, counts in sector_stages.items():
             if not s or s == "unknown" or s == "--- Reference ---": continue
             total = counts["total"]
             if total == 0: continue
             
-            s1_p = round((counts["s1"] / total) * 100)
-            s2_p = round((counts["s2"] / total) * 100)
-            s3_p = round((counts["s3"] / total) * 100)
-            s4_p = round((counts["s4"] / total) * 100)
+            s1_c = counts["s1"]
+            s2_c = counts["s2"]
+            s3_c = counts["s3"]
+            s4_c = counts["s4"]
+            
+            ts1 += s1_c
+            ts2 += s2_c
+            ts3 += s3_c
+            ts4 += s4_c
+            tcount += total
+
+            s1_p = round((s1_c / total) * 100)
+            s2_p = round((s2_c / total) * 100)
+            s3_p = round((s3_c / total) * 100)
+            s4_p = round((s4_c / total) * 100)
             
             health = "Neutral"
             if s2_p > 50: health = "Strong"
@@ -570,6 +583,39 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None, 
         
         # Sort by Stage 2 Percentage
         formatted_stages = sorted(formatted_stages, key=lambda x: x["s2"], reverse=True)
+
+        # Update History Logic (90 Days)
+        if tcount > 0 and not quick:
+            hist_path = os.path.join(DIR, "output", "stages_history.json")
+            stages_hist = []
+            if os.path.exists(hist_path):
+                try:
+                    with open(hist_path, 'r') as fh:
+                        stages_hist = json.load(fh)
+                except ValueError:
+                    pass
+            
+            # Use UTC date to avoid timezone shift inconsistencies
+            today_str = datetime.utcnow().strftime("%Y-%m-%d")
+            
+            # Filter out today if replacing, else append (prevents dupes on same-day reruns)
+            if stages_hist and stages_hist[-1].get("date") == today_str:
+                stages_hist.pop()
+
+            stages_hist.append({
+                "date": today_str,
+                "s1": round((ts1 / tcount) * 100),
+                "s2": round((ts2 / tcount) * 100),
+                "s3": round((ts3 / tcount) * 100),
+                "s4": round((ts4 / tcount) * 100)
+            })
+
+            # Roll to max 90 days limit
+            if len(stages_hist) > 90:
+                stages_hist = stages_hist[-90:]
+            
+            with open(hist_path, 'w') as fh:
+                json.dump(stages_hist, fh, indent=4)
 
     web_data["stages"] = formatted_stages
 

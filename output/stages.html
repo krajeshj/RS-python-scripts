@@ -639,6 +639,25 @@
                     <div id="m-s4" class="legend-value">0%</div>
                 </div>
             </div>
+
+            <!-- History Line Chart -->
+            <div id="history-chart-container" style="margin-top: 2rem; position: relative;">
+                <div style="display: flex; gap: 15px; margin-bottom: 10px; justify-content: center; flex-wrap: wrap;">
+                    <label style="color: var(--text); font-size: 0.85rem; display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="checkbox" id="toggle-s1" onchange="renderHistoryChart()"> <span class="dot f1"></span> Stage 1
+                    </label>
+                    <label style="color: var(--text); font-size: 0.85rem; display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="checkbox" id="toggle-s2" checked onchange="renderHistoryChart()"> <span class="dot f2"></span> Stage 2
+                    </label>
+                    <label style="color: var(--text); font-size: 0.85rem; display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="checkbox" id="toggle-s3" onchange="renderHistoryChart()"> <span class="dot f3"></span> Stage 3
+                    </label>
+                    <label style="color: var(--text); font-size: 0.85rem; display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="checkbox" id="toggle-s4" checked onchange="renderHistoryChart()"> <span class="dot f4"></span> Stage 4
+                    </label>
+                </div>
+                <div id="market-history-chart" style="width: 100%; height: 220px; background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid var(--border);"></div>
+            </div>
         </section>
 
         <div id="sector-grid" class="sector-grid">
@@ -647,11 +666,25 @@
     </div>
 
     <script>
+        var stagesHistory = [];
+        var myStages = [];
+
         async function init() {
             try {
-                const response = await fetch(`web_data.json?t=${Date.now()}`);
+                const ts = Date.now();
+                const response = await fetch(`web_data.json?t=${ts}`);
                 const data = await response.json();
-                render(data.stages);
+                
+                try {
+                    const histResponse = await fetch(`stages_history.json?t=${ts}`);
+                    stagesHistory = await histResponse.json();
+                } catch(e) {
+                    console.log('No specific stage history found yet.');
+                }
+
+                myStages = data.stages;
+                render(myStages);
+                setTimeout(renderHistoryChart, 100);
 
                 // Local date
                 if (data.last_updated) {
@@ -662,6 +695,62 @@
                 console.error(err);
                 document.getElementById('sector-grid').innerHTML = '<div class="loading">Data not found. Run rs_ranking.py.</div>';
             }
+        }
+
+        window.addEventListener('resize', renderHistoryChart);
+
+        function renderHistoryChart() {
+            const container = document.getElementById('market-history-chart');
+            if (!container) return;
+            if (!stagesHistory || stagesHistory.length < 2) {
+                container.innerHTML = '<div style="color:var(--text2);text-align:center;padding:90px;font-size:0.85rem;">Not enough history built yet (Check back tomorrow).</div>';
+                return;
+            }
+
+            const cW = container.clientWidth || 800;
+            const cH = 220;
+            const pX = 20, pY = 20;
+            
+            const s1On = document.getElementById('toggle-s1').checked;
+            const s2On = document.getElementById('toggle-s2').checked;
+            const s3On = document.getElementById('toggle-s3').checked;
+            const s4On = document.getElementById('toggle-s4').checked;
+
+            const n = stagesHistory.length;
+            const getX = (i) => pX + (i / (n - 1)) * (cW - 2 * pX);
+            const getY = (v) => (cH - pY) - (v / 100) * (cH - 2 * pY);
+
+            let lines = '';
+            
+            // Draw 50% line
+            lines += `<line x1="${pX}" y1="${getY(50)}" x2="${cW-pX}" y2="${getY(50)}" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4,4"/>`;
+            lines += `<text x="${pX}" y="${getY(50)-4}" fill="rgba(255,255,255,0.3)" font-size="10">50%</text>`;
+
+            const colors = { s1: '#9ca3af', s2: '#00e5ff', s3: '#ffde59', s4: '#ff5252' };
+            const strokes = [
+                { id: 's1', on: s1On }, { id: 's2', on: s2On },
+                { id: 's3', on: s3On }, { id: 's4', on: s4On }
+            ];
+
+            // Draw line algorithm
+            strokes.forEach(s => {
+                if (!s.on) return;
+                
+                // Draw curve using bezier or polyline
+                let pathD = `M ${getX(0)},${getY(stagesHistory[0][s.id])} `;
+                for(let i=1; i<n; i++) {
+                   pathD += `L ${getX(i)},${getY(stagesHistory[i][s.id])} `;
+                }
+
+                const last = stagesHistory[n-1];
+                lines += `
+                    <path d="${pathD}" fill="none" stroke="${colors[s.id]}" stroke-width="2.5" stroke-linejoin="round"/>
+                    <circle cx="${getX(n-1)}" cy="${getY(last[s.id])}" r="4" fill="${colors[s.id]}"/>
+                    <text x="${getX(n-1) - 15}" y="${getY(last[s.id]) - 8}" fill="${colors[s.id]}" font-weight="bold" font-size="10">${last[s.id]}%</text>
+                `;
+            });
+
+            container.innerHTML = `<svg width="100%" height="100%" viewBox="0 0 ${cW} ${cH}">${lines}</svg>`;
         }
 
         function render(stages) {
