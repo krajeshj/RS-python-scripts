@@ -21,8 +21,8 @@ To provide a high-fidelity, institutional-grade workspace for tracking Relative 
 *   **Relative Normalization (Median Centering):** The X-axis (RS) is normalized around the **Group Median**. Half the selected stocks populate the left quadrants (Lagging/Improving) and half the right (Leading/Weakening), providing a true relative-performance view among leaders.
 *   **Anti-Clustering Jitter:** Ticker-based deterministic offsets (dx, dy) are applied to labels to ensure 100% readability in dense performance clusters.
 *   **Front-Weighted Lookback:** Momentum calculations carry a **65% weight on the most recent 3 days** of action to catch trend-exits quickly.
-*   **Predictive Alpha Curls (Arrow Markers):** Bolder **SVG Arrow Markers** at the end of curved dashed projection lines.
-*   **Quadratic Pathing:** Curve curvature is calculated using **Second-Derivative Acceleration**. Decelerating stocks display a physical "curl" towards Lagging quadrants.
+*   **Historical Catmull-Rom Trajectories:** Render true historical trailing points over smoothed percentiles (SMA-3 period) instead of predictive curl projections.
+*   **Fade Breadcrumbs & Vectors:** Line opacity drops to 10% on the oldest node and scales linearly to 100% at the tip. Terminal nodes possess a directional trigonometric svg arrowhead mapping actual historical entrance vectors.
 *   **Filtering Controls:**
     *   **RS Slider:** Real-time filtering by Relative Strength score (0-99).
     *   **VCP/Minervini:** Boolean filter for stocks meeting Stage 2 / Mark Minervini criteria.
@@ -63,13 +63,12 @@ To provide a high-fidelity, institutional-grade workspace for tracking Relative 
 
 ## 4. Key Algorithms & UI Logic
 
-| Feature | Logic / Math |
+| **Feature** | **Logic / Math** |
 | :--- | :--- |
-| **RS Score** | Mansfield-style RS vs SPY, optionally normalized to **Group Median** for Stock RRG. |
-| **Momentum** | `WeightedVelocity = (T0*0.65 + T-1*0.25 + T-2*0.1)`. |
-| **Curl Logic** | `2nd Derivative (Acceleration)` + `SVG Markers` determine the bend and direction of prediction. |
-| **Anti-Cluster** | Deterministic `Ticker-based Jitter` for overlapping labels. |
-| **Design Style** | Deep Dark Mode (`#06060f`), Outfit/JetBrains fonts, Glassmorphism. |
+| **RRG Base (Sectors)** | True **JdK** computation: RS-Ratio via 14-period strictly mapped against *SPY benchmark closes*, normalized via standard deviations against a rolling Z-score. Center crosshair represents exactly `100` relative SPY parity. |
+| **RRG Base (Stocks)**| Baseline Mansfield RS% (1-99), 3-Period SMA overlay applied spatially to force chronological fluidity (Anti-Jitter). Center crosshair relies on dynamic group median centering (`[0, 0]` mapped dynamically). |
+| **Pathing Engine**| `Catmull-Rom` splines traversing `[t-14]` continuously to `[t0]`. |
+| **Design Style** | Deep Dark Mode (`#06060f`), Outfit/JetBrains fonts, Glassmorphism, Fading Breadcrumbs (`opacity: 0.1 -> 1.0`). |
 
 ---
 
