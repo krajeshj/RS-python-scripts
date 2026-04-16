@@ -157,20 +157,22 @@
                 fetch('stock_history.json?v=' + ts).then(function(r) { if (!r.ok) throw new Error('stock_history.json not found'); return r.json(); })
             ]).then(function(res) {
                 webData = res[0]; 
-                // Universe Expansion: Combine main list, pulse, and all_stocks to ensure we have candidates
                 var rawList = (res[0].stocks || []).concat(res[0].pulse || []).concat(res[0].all_stocks || []);
                 var unq = {};
                 rawList.forEach(function(s) { 
                     if (!s.ticker) return;
                     if (!unq[s.ticker] || (s.rs || 0) > (unq[s.ticker].rs || 0)) unq[s.ticker] = s; 
                 });
-                allStocks = Object.values(unq);
+                
+                allStocks = [];
+                for (var key in unq) { if (unq.hasOwnProperty(key)) allStocks.push(unq[key]); }
+                
                 history = res[1] || {};
                 wireSliders();
                 render();
             }).catch(function(err) {
-                console.error('RRG Data Load Error:', err);
-                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--red);">Data feed error. Please check if web_data.json is deployed.</div>';
+                console.error('RRG v2.2 Load Error:', err);
+                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--red);">Data feed error. Ensure web_data.json and stock_history.json sit in the same directory as this file.</div>';
             });
         }
 
