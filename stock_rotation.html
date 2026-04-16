@@ -157,10 +157,12 @@
                 fetch('stock_history.json?v=' + ts).then(function(r) { return r.json(); })
             ]).then(function(res) {
                 webData = res[0]; 
-                // Restore Morning Selection: Curated Leaders (stocks) + Market Pulse
-                allStocks = (res[0].stocks || []).concat(res[0].pulse || []);
+                // Universe Expansion: Look at internal leader lists + pulse to ensure we have enough candidates
+                allStocks = (res[0].stocks || []).concat(res[0].pulse || []).concat(res[0].all_stocks || []);
                 var unq = {};
-                allStocks.forEach(function(s) { if (!unq[s.ticker] || s.rs > (unq[s.ticker].rs || 0)) unq[s.ticker] = s; });
+                allStocks.forEach(function(s) { 
+                    if (!unq[s.ticker] || s.rs_raw > (unq[s.ticker].rs_raw || 0)) unq[s.ticker] = s; 
+                });
                 allStocks = Object.keys(unq).map(function(k) { return unq[k]; });
                 stockHist = res[1].data || res[1] || {};
                 
@@ -222,66 +224,56 @@
             
             var totalAvailable = filtered.length;
             
-            // 1. CALCULATE RAW COORDINATES (Using Morning Logic)
-            var rawData = filtered.map(function(s) {
+            // 1. Process math for ALL filtered candidates
+            var candidates = filtered.map(function(s) {
                 var h = (stockHist[s.ticker] || []).slice(0, 20);
-                var xRaw = s.rs_raw || 0;
-                var todayRS = s.rs || 0; // Floating point RS now from seeder
-                var rs1w = s.rs_1w_pct || todayRS;
-                var rs1m = s.rs_1m_pct || todayRS;
+                var todayRS = +(s.rs || 0);
+                var rs1w = +(s.rs_1w_pct || s.rs || 0);
+                var rs1m = +(s.rs_1m_pct || s.rs || 0);
                 
-                // RESTORE MORNING FORMULA: Weighted Momentum
-                var yValRaw = (rs1w - rs1m) * 0.7 + (todayRS - rs1w) * 0.3;
+                // RESTORE MORNING FORMULA: Weighted Momentum (Percentile Based)
+                var yRaw = (rs1w - rs1m) * 0.7 + (todayRS - rs1w) * 0.3;
 
-                var trail = [];
+                var rawTrail = [];
                 for (var t = 0; t < 10; t++) {
-                    var trRS = h[t] || todayRS;
-                    var tr1w = h[t+5] || h[t] || todayRS;
-                    var tr1m = h[t+20] || h[t] || todayRS;
-                    
-                    // Approximate relative X (Percentile scale)
+                    var trRS = +(h[t] || todayRS);
+                    var tr1w = +(h[t+5] || trRS);
+                    var tr1m = +(h[t+15] || trRS);
                     var trX = trRS; 
                     var trY = (tr1w - tr1m) * 0.7 + (trRS - tr1w) * 0.3;
-                    trail.push({ x: trX, y: trY });
+                    rawTrail.push({ x: trX, y: trY });
                 }
                 
                 return {
-                    s: s, x: todayRS, y: yValRaw, trail: trail
+                    s: s, x: todayRS, y: yRaw, trail: rawTrail
                 };
             });
 
-            // CENTER ON GROUP MEDIANS (Correct Morning Behavior)
-            var medX = median(rawData.map(function(d) { return d.x; })) || 90;
-            var medY = median(rawData.map(function(d) { return d.y; })) || 0;
+            // 2. Center Crosshair on Group Median
+            var internalMedianX = median(candidates.map(function(d) { return d.x; })) || 90;
+            var internalMedianY = median(candidates.map(function(d) { return d.y; })) || 0;
 
-            var processedAll = rawData.map(function(d) {
-                var s = d.s;
-                var xRel = d.x - medX;
-                var yRel = d.y - medY;
-                
-                // Determine Quadrant
+            // 3. Determine Quadrants and Slices
+            var quads = { leading: [], weakening: [], lagging: [], improving: [] };
+            candidates.forEach(function(d) {
+                var xRel = d.x - internalMedianX;
+                var yRel = d.y - internalMedianY;
                 var q = xRel >= 0 ? (yRel >= 0 ? "leading" : "weakening") : (yRel >= 0 ? "improving" : "lagging");
-                
-                var trailRel = d.trail.map(function(t) {
-                    return { x: t.x - medX, y: t.y - medY };
-                });
-
-                return {
-                    ticker: s.ticker, name: s.name, rs: s.rs, rs_raw: s.rs_raw, rmv: s.rmv,
-                    rank: s.rank, industry: s.industry, sector: s.sector,
-                    finviz_chart_url: s.finviz_chart_url, canslim: s.canslim,
-                    price: s.price, volume: s.volume, avg_volume: s.avg_volume,
-                    is_up: s.is_up, flip: s.flip, source: s.source,
-                    highlights: s.highlights, days_to_earnings: s.days_to_earnings, 
-                    tradingview_url: s.tradingview_url,
-                    xVal: xRel, yVal: yRel, trail: trailRel,
-                    q: q, color: Q_FILL[q]
-                };
+                d.q = q; d.xRel = xRel; d.yRel = yRel;
+                quads[q].push(d);
+            });
+            
+            // 4. BALANCED SLICING: Pick Top 10 strongest by RS_Raw from each quadrant (40 total)
+            var finalSelection = [];
+            ['leading','improving','weakening','lagging'].forEach(function(qName) {
+                var sorted = quads[qName].sort(function(a,b) { return (b.s.rs_raw || 0) - (a.s.rs_raw || 0); });
+                finalSelection = finalSelection.concat(sorted.slice(0, 10));
             });
 
-            // Filter by active quadrants toggle (Showing Elite set)
-            var visible = processedAll.filter(function(s) { return activeQuadrants[s.q]; });
-            document.getElementById('filter-count').textContent = visible.length + ' shown (' + webData.stocks.length + ' Elite leaders analyzed)';
+            // Filter by active quadrants toggle (User UI)
+            var visible = finalSelection.filter(function(d) { return activeQuadrants[d.q]; });
+            var totalUniverseCount = (webData && webData.stocks) ? webData.stocks.length : 0;
+            document.getElementById('filter-count').textContent = visible.length + ' shown (' + totalUniverseCount + ' Elite leaders monitored)';
 
             if (!visible.length) {
                 document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text2);">No stocks in selected quadrants.</div>';
@@ -289,89 +281,78 @@
                 return;
             }
 
-            // =====================================================================
-            // SVG RENDERING
-            // =====================================================================
-            // MATCHING SECTOR ROTATION LOGIC: Calculate bounds from only visible stocks
-            // to allow the chart to auto-zoom and adjust as filters change.
+            // 5. VIEWPORT SCALING
             var allX = [], allY = [];
-            visible.forEach(function(s) {
-                allX.push(s.xVal); allY.push(s.yVal);
-                s.trail.forEach(function(tp) { allX.push(tp.x || 0); allY.push(tp.y || 0); });
+            visible.forEach(function(d) {
+                allX.push(d.xRel); allY.push(d.yRel);
+                d.trail.forEach(function(tp) { allX.push(tp.x - internalMedianX); allY.push(tp.y - internalMedianY); });
             });
 
-            var maxAbsX = Math.max.apply(null, allX.map(function(v) { return Math.abs(v - medianX); })) || 0.5;
-            var maxAbsY = Math.max.apply(null, allY.map(Math.abs)) || 5;
-
-            // Ensure a minimum playable viewport
-            if (maxAbsX < 0.2) maxAbsX = 0.2;
+            var maxAbsX = Math.max.apply(null, allX.map(Math.abs)) || 1;
+            var maxAbsY = Math.max.apply(null, allY.map(Math.abs)) || 1;
+            if (maxAbsX < 0.5) maxAbsX = 0.5;
             if (maxAbsY < 5.0) maxAbsY = 5.0;
 
-            var tX = function(v) { 
-                var val = +v || 0;
-                return P + ((val - (medianX - maxAbsX)) / (maxAbsX * 2)) * (CW - P * 2); 
-            };
-            var tY = function(v) { 
-                var val = +v || 0;
-                return (CH - P) - ((val + maxAbsY) / (maxAbsY * 2)) * (CH - P * 2); 
-            };
+            var tX = function(v) { return P + ((v + maxAbsX) / (maxAbsX * 2)) * (CW - P * 2); };
+            var tY = function(v) { return (CH - P) - ((v + maxAbsY) / (maxAbsY * 2)) * (CH - P * 2); };
 
-            var MX = tX(medianX), MY = tY(0);
+            var MX = tX(0), MY = tY(0);
             var stockG = '', defs = '';
 
-            visible.forEach(function(s) {
-                    var trailPts = s.trail.map(function(tp) { return { x: tX(tp.x), y: tY(tp.y) }; });
-                    var jcx = tX(s.xVal), jcy = tY(s.yVal);
-                    
-                    var dPaths = '';
-                    if (trailPts.length >= 2) {
-                        for (var i = 0; i < trailPts.length - 1; i++) {
-                            var p0 = i === 0 ? trailPts[0] : trailPts[i - 1];
-                            var p1 = trailPts[i];
-                            var p2 = trailPts[i + 1];
-                            var p3 = i + 2 < trailPts.length ? trailPts[i + 2] : p2;
-                            var cp1x = p1.x + (p2.x - p0.x) / 6;
-                            var cp1y = p1.y + (p2.y - p0.y) / 6;
-                            var cp2x = p2.x - (p3.x - p1.x) / 6;
-                            var cp2y = p2.y - (p3.y - p1.y) / 6;
-                            var segD = "M " + p1.x.toFixed(1) + "," + p1.y.toFixed(1) + " C " + cp1x.toFixed(1) + "," + cp1y.toFixed(1) + " " + cp2x.toFixed(1) + "," + cp2y.toFixed(1) + " " + p2.x.toFixed(1) + "," + p2.y.toFixed(1);
-                            var segOp = 0.1 + 0.6 * ((i + 1) / trailPts.length);
-                            dPaths += '<path d="' + segD + '" fill="none" stroke="' + s.color + '" stroke-width="2.5" stroke-linecap="round" opacity="' + segOp + '"/>';
-                        }
-                    }
-                    
-                    var dots = trailPts.map(function(p, i) {
-                        if (i === trailPts.length - 1) return '';
-                        var op = 0.1 + 0.9 * (i / trailPts.length);
-                        return '<circle cx="'+p.x+'" cy="'+p.y+'" r="2.5" fill="'+s.color+'" opacity="'+op+'"/>';
-                    }).join('');
+            visible.forEach(function(d) {
+                var s = d.s;
+                var cx = tX(d.xRel), cy = tY(d.yRel);
+                var trailRel = d.trail.map(function(tp) { 
+                    return { x: tX(tp.x - internalMedianX), y: tY(tp.y - internalMedianY) }; 
+                }).reverse();
+                
+                // Fluid Catmull-Rom Path for Trails
+                var pathD = catmullRom2bezier(trailRel);
+                
+                // Temporal Opacity Fading: Older points are fainter
+                var gradId = "grad-" + s.ticker;
+                defs += '<linearGradient id="' + gradId + '" gradientUnits="userSpaceOnUse" x1="' + trailRel[0].x + '" y1="' + trailRel[0].y + '" x2="' + cx + '" y2="' + cy + '">' +
+                       '<stop offset="0%" stop-color="' + Q_FILL[d.q] + '" stop-opacity="0.05"/>' +
+                       '<stop offset="100%" stop-color="' + Q_FILL[d.q] + '" stop-opacity="0.8"/>' +
+                       '</linearGradient>';
 
-                    var tailX = trailPts.length > 1 ? trailPts[trailPts.length - 2].x : jcx - 1;
-                    var tailY = trailPts.length > 1 ? trailPts[trailPts.length - 2].y : jcy - 1;
-                    var angle = Math.atan2(jcy - tailY, jcx - tailX) * 180 / Math.PI;
-                    var arrow = '<polygon points="-5,-4 7,0 -5,4" fill="' + s.color + '" transform="translate(' + jcx + ',' + jcy + ') rotate(' + angle + ')" />';
-
-                    stockG += '<g>' +
-                        dPaths +
-                        dots +
-                        arrow +
-                        '<text x="' + jcx + '" y="' + (jcy - 10) + '" text-anchor="middle" fill="#fff" font-size="8" font-weight="950" font-family="var(--mono)">' + s.ticker + '</text></g>';
+                stockG += '<g class="stock-node" data-ticker="' + s.ticker + '">' +
+                          '<path d="' + pathD + '" fill="none" stroke="url(#' + gradId + ')" stroke-width="2.5" />' +
+                          '<circle cx="' + cx + '" cy="' + cy + '" r="5" fill="' + Q_FILL[d.q] + '" stroke="#fff" stroke-width="1.5" />' +
+                          '<text x="' + (cx + 8) + '" y="' + (cy + 4) + '" fill="#cbd5e1" font-size="11" font-weight="950" style="paint-order:stroke;stroke:#0f172a;stroke-width:3px;">' + s.ticker + '</text>';
+                
+                // Predictive Arrow Head
+                if (trailRel.length >= 2) {
+                    var last = trailRel[trailRel.length-1];
+                    var prev = trailRel[trailRel.length-2];
+                    var angle = Math.atan2(last.y - prev.y, last.x - prev.x);
+                    var ax = cx + 6 * Math.cos(angle);
+                    var ay = cy + 6 * Math.sin(angle);
+                    stockG += '<path d="M' + cx + ',' + cy + ' L' + ax + ',' + ay + '" stroke="' + Q_FILL[d.q] + '" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow-' + d.q + ')" />';
+                }
+                stockG += '</g>';
             });
 
-            document.getElementById('rrg-container').innerHTML =
+            // Build markers for arrows
+            var markers = '';
+            ['leading','weakening','lagging','improving'].forEach(function(q) {
+                markers += '<marker id="arrow-' + q + '" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">' +
+                           '<path d="M0,0 L10,5 L0,10 Z" fill="' + Q_FILL[q] + '" /></marker>';
+            });
+            defs += markers;
+
+            document.getElementById('rrg-container').innerHTML = 
                 '<svg viewBox="0 0 ' + CW + ' ' + CH + '"><defs>' + defs + '</defs>' +
-                '<rect x="' + P + '" y="' + P + '" width="' + (MX - P) + '" height="' + (MY - P) + '" fill="rgba(96,165,250,0.08)"/>' +
-                '<rect x="' + MX + '" y="' + P + '" width="' + (CW - P - MX) + '" height="' + (MY - P) + '" fill="rgba(34,197,94,0.08)"/>' +
-                '<rect x="' + P + '" y="' + MY + '" width="' + (MX - P) + '" height="' + (CH - P - MY) + '" fill="rgba(239,68,68,0.08)"/>' +
-                '<rect x="' + MX + '" y="' + MY + '" width="' + (CW - P - MX) + '" height="' + (CH - P - MY) + '" fill="rgba(245,158,11,0.08)"/>' +
+                '<rect x="' + P + '" y="' + P + '" width="' + (MX - P) + '" height="' + (MY - P) + '" fill="rgba(96,165,250,0.06)"/>' +
+                '<rect x="' + MX + '" y="' + P + '" width="' + (CW - P - MX) + '" height="' + (MY - P) + '" fill="rgba(34,197,94,0.06)"/>' +
+                '<rect x="' + P + '" y="' + MY + '" width="' + (MX - P) + '" height="' + (CH - P - MY) + '" fill="rgba(239,68,68,0.06)"/>' +
+                '<rect x="' + MX + '" y="' + MY + '" width="' + (CW - P - MX) + '" height="' + (CH - P - MY) + '" fill="rgba(245,158,11,0.06)"/>' +
                 '<line x1="' + MX + '" y1="' + P + '" x2="' + MX + '" y2="' + (CH - P) + '" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="5,4"/>' +
                 '<line x1="' + P + '" y1="' + MY + '" x2="' + (CW - P) + '" y2="' + MY + '" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="5,4"/>' +
                 '<text x="' + (P + 10) + '" y="' + (P + 20) + '" fill="#60a5fa" font-size="12" font-weight="900" opacity="0.5">IMPROVING</text>' +
                 '<text x="' + (CW - P - 75) + '" y="' + (P + 20) + '" fill="#22c55e" font-size="12" font-weight="900" opacity="0.5">LEADING</text>' +
                 '<text x="' + (P + 10) + '" y="' + (CH - P - 10) + '" fill="#ef4444" font-size="12" font-weight="900" opacity="0.5">LAGGING</text>' +
                 '<text x="' + (CW - P - 90) + '" y="' + (CH - P - 10) + '" fill="#f59e0b" font-size="12" font-weight="900" opacity="0.5">WEAKENING</text>' +
-                '<text x="' + (CW / 2) + '" y="' + (CH - 8) + '" text-anchor="middle" fill="#334155" font-size="9" font-weight="600">← Lower RS Raw — Higher RS Raw →</text>' +
-                '<text x="12" y="' + (CH / 2) + '" text-anchor="middle" fill="#334155" font-size="9" font-weight="600" transform="rotate(-90,12,' + (CH / 2) + ')">← 1W Weaker than 1M — 1W Stronger than 1M →</text>' +
                 stockG + '</svg>';
 
             // CARDS
@@ -408,30 +389,28 @@
                         '<div>' +
                             '<div style="display:flex;align-items:center;gap:8px;">' +
                                 '<a href="' + (s.tradingview_url || '#') + '" target="_blank" class="ticker">' + s.ticker + '</a>' +
-                                '<div class="rs-pct-badge">1W: ' + (s.rs_1w_pct || 'N/A') + '%</div>' +
+                                '<div class="rs-pct-badge">RS: ' + Math.round(s.rs) + '</div>' +
                             '</div>' +
                             '<div class="company-name">' + (s.name || '') + '</div>' +
                             '<div class="meta-info" style="margin-top:4px;font-size:0.75rem;">' + (s.industry || '') + ' &bull; ' + (s.sector || '') + '</div>' +
                             canslimHtml +
                         '</div>' +
                         '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;padding-right:28px;">' +
-                            '<div style="font-size:0.7rem;color:var(--text2);opacity:0.8;">#' + (s.rank || '') + '</div>' +
-                            '<span style="font-size:0.65rem;padding:2px 8px;border-radius:4px;background:' + s.color + '22;color:' + s.color + ';border:1px solid ' + s.color + '44;font-weight:800;">' + s.q.toUpperCase() + '</span>' +
+                            '<span style="font-size:0.65rem;padding:2px 8px;border-radius:4px;background:' + Q_FILL[d.q] + '22;color:' + Q_FILL[d.q] + ';border:1px solid ' + Q_FILL[d.q] + '44;font-weight:800;">#' + (s.rank || '') + ' ' + d.q.toUpperCase() + '</span>' +
                             (s.flip ? '<div class="flip-badge">⚡ PRIME FLIP</div>' : '') +
-                            '<div class="source-badge" style="margin-bottom:4px;">' + (s.source || '') + '</div>' +
-                            '<div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;">' +
+                            '<div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;margin-top:4px;">' +
                                 (s.price ? '<div style="' + volStyle + '">$' + s.price.toFixed(2) + '</div>' : '') +
                                 '<div style="' + volStyle + '" title="Avg Vol: ' + fmtVol(s.avg_volume) + '">Vol: ' + fmtVol(s.volume) + '</div>' +
                             '</div>' +
                         '</div>' +
                     '</div>' +
                     (s.days_to_earnings >= 0 && s.days_to_earnings <= 14 ? '<div class="earnings-alert">📅 EARNINGS IN ' + s.days_to_earnings + 'D</div>' : '') +
-                    (s.finviz_chart_url ? '<a href="' + (s.tradingview_url || '#') + '" target="_blank" class="chart-link"><img src="' + s.finviz_chart_url + '&t=' + Date.now() + '" class="chart-img" loading="lazy" alt="' + s.ticker + '"><div class="chart-overlay"><span>Open Live Chart</span><span>↗️</span></div></a>' : '') +
+                    (s.finviz_chart_url ? '<a href="' + (s.tradingview_url || '#') + '" target="_blank" class="chart-link"><img src="' + s.finviz_chart_url + '" class="chart-img" loading="lazy"></a>' : '') +
                     '<div class="metrics">' +
-                        '<div class="metric"><span class="metric-label">RS Rank</span><span class="metric-value" style="color:var(--cyan);">' + s.rs + '</span></div>' +
+                        '<div class="metric"><span class="metric-label">RS Rank</span><span class="metric-value" style="color:var(--cyan);">' + Math.round(s.rs) + '</span></div>' +
                         '<div class="metric"><span class="metric-label">RMV</span><span class="metric-value">' + (s.rmv != null ? s.rmv.toFixed(1) : 'N/A') + '</span></div>' +
-                        '<div class="metric"><span class="metric-label">1W Pct</span><span class="metric-value">' + (s.rs_1w_pct || 'N/A') + '</span></div>' +
-                        '<div class="metric"><span class="metric-label">1M Pct</span><span class="metric-value">' + (s.rs_1m_pct || 'N/A') + '</span></div>' +
+                        '<div class="metric"><span class="metric-label">1W Pct</span><span class="metric-value">' + Math.round(s.rs_1w_pct || 50) + '</span></div>' +
+                        '<div class="metric"><span class="metric-label">1M Pct</span><span class="metric-value">' + Math.round(s.rs_1m_pct || 50) + '</span></div>' +
                     '</div>' +
                     '<div class="highlights">' + hiTags + '</div>' +
                     '<div style="display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--border);padding-top:8px;">' +
