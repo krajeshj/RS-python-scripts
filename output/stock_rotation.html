@@ -189,15 +189,14 @@
 
             const getBestRS = (s) => (stockHist[s.ticker] && stockHist[s.ticker].length) ? stockHist[s.ticker][0] : (s.rs || 50);
 
-            // 2. DYNAMIC CENTERING (Unified Percentile Scale 0-100)
+            // Universe Statistics for Dynamic Centering
             var universeRS = pool.map(s => getBestRS(s));
             var medRS = median(universeRS) || 50;
             
             var universeMom = pool.map(s => {
-                var h = (stockHist[s.ticker] || []).slice(0, 10);
-                if(h.length < 2) return 0;
-                var avgH = h.reduce((a,b)=>a+b,0)/h.length;
-                return (h[0] - avgH) * 10;
+                var h = stockHist[s.ticker];
+                if(!h || h.length < 5) return 0;
+                return (h[0] - h[4]) * 5; // 5-day delta scaled
             });
             var medMom = median(universeMom) || 0;
 
@@ -205,26 +204,25 @@
             var top40 = pool.slice(0, 40);
 
             var candidates = top40.map(s => {
-                var h = (stockHist[s.ticker] || []).slice(0, 15);
-                var curRS = getBestRS(s);
-                var x = curRS - medRS; 
+                var hRaw = (stockHist[s.ticker] || []).slice(0, 15);
+                if(!hRaw.length) hRaw = [s.rs];
+                // Reverse so index [last] is LATEST for the SVG trail drawing logic
+                var h = [...hRaw].reverse(); 
                 
-                var avgH = h.length ? (h.reduce((a,b)=>a+b,0)/h.length) : curRS;
-                var y = ((curRS - avgH) * 10) - medMom;
-
-                // Outlier Clamping: Prevent 'Black Hole' scaling from massive outliers
-                x = Math.max(-50, Math.min(50, x));
-                y = Math.max(-50, Math.min(50, y));
+                var curRS = h[h.length - 1];
+                var prevRS = h[Math.max(0, h.length - 5)];
+                
+                var x = curRS - medRS; 
+                var y = ((curRS - prevRS) * 5) - medMom;
 
                 var q = x >= 0 ? (y >= 0 ? 'leading' : 'weakening') : (y >= 0 ? 'improving' : 'lagging');
                 var trail = [];
                 for(var i=0; i<h.length; i++) {
                     var trVal = h[i];
-                    var window = h.slice(i, Math.min(h.length, i+5));
-                    var trAvg = window.reduce((a,b)=>a+b,0)/window.length;
+                    var trPrev = h[Math.max(0, i-4)];
                     trail.push({ 
-                        x: Math.max(-55, Math.min(55, trVal - medRS)), 
-                        y: Math.max(-55, Math.min(55, ((trVal - trAvg) * 10) - medMom)) 
+                        x: trVal - medRS, 
+                        y: ((trVal - trPrev) * 5) - medMom 
                     });
                 }
                 return { s, x, y, q, trail };
@@ -250,23 +248,29 @@
             var CW=900, CH=600, P=60;
             var allX = [], allY = [];
             data.forEach(d => {
-                if(!isNaN(d.x)) allX.push(d.x); if(!isNaN(d.y)) allY.push(d.y);
-                d.trail.forEach(t => { if(!isNaN(t.x)) allX.push(t.x); if(!isNaN(t.y)) allY.push(t.y); });
+                d.trail.forEach(t => { 
+                    if(!isNaN(t.x)) allX.push(t.x); 
+                    if(!isNaN(t.y)) allY.push(t.y); 
+                });
             });
             
-            // Intelligent Scaling: Min spread of 2.0 ensures we don't zoom in to sub-pixel clusters
-            var maxAbsX = Math.max(...allX.map(Math.abs), 2.0) * 1.1;
-            var maxAbsY = Math.max(...allY.map(Math.abs), 2.0) * 1.1;
+            // Forced Spread: Ensures we always have at least +/- 5.0 units of 'breathing room'
+            var maxAbsX = Math.max(...allX.map(Math.abs), 5.0) * 1.15;
+            var maxAbsY = Math.max(...allY.map(Math.abs), 5.0) * 1.15;
+            
+            // Limit scale to prevent infinite zoom on identical data
+            if(maxAbsX > 100) maxAbsX = 100;
+            if(maxAbsY > 100) maxAbsY = 100;
 
             var tX = v => (CW/2) + (v/maxAbsX)*(CW/2 - P);
             var tY = v => (CH/2) - (v/maxAbsY)*(CH/2 - P);
             var MX = tX(0), MY = tY(0);
 
             var svgContent = '<rect width="100%" height="100%" fill="#0b0e14"/>';
-            svgContent += '<rect x="'+P+'" y="'+P+'" width="'+(MX-P)+'" height="'+(MY-P)+'" fill="#1a2530"/>' + // Improving
-                          '<rect x="'+MX+'" y="'+P+'" width="'+(CW-P-MX)+'" height="'+(MY-P)+'" fill="#152b28"/>' + // Leading
-                          '<rect x="'+P+'" y="'+MY+'" width="'+(MX-P)+'" height="'+(CH-P-MY)+'" fill="#2d1a20"/>' + // Lagging
-                          '<rect x="'+MX+'" y="'+MY+'" width="'+(CW-P-MX)+'" height="'+(CH-P-MY)+'" fill="#2c2214"/>'; // Weakening
+            svgContent += '<rect x="'+P+'" y="'+P+'" width="'+(MX-P)+'" height="'+(MY-P)+'" fill="#1a2530" opacity="0.6"/>' + // Improving
+                          '<rect x="'+MX+'" y="'+P+'" width="'+(CW-P-MX)+'" height="'+(MY-P)+'" fill="#152b28" opacity="0.6"/>' + // Leading
+                          '<rect x="'+P+'" y="'+MY+'" width="'+(MX-P)+'" height="'+(CH-P-MY)+'" fill="#2d1a20" opacity="0.6"/>' + // Lagging
+                          '<rect x="'+MX+'" y="'+MY+'" width="'+(CW-P-MX)+'" height="'+(CH-P-MY)+'" fill="#2c2214" opacity="0.6"/>'; // Weakening
             
             for(var i=1;i<10;i++) {
                 var gX = P + (i/10)*(CW-P*2); var gY = P + (i/10)*(CH-P*2);
