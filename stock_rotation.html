@@ -275,7 +275,8 @@
 
             // Quadrant filter
             var visible = processed.filter(function(s) { return activeQuadrants[s.q]; });
-            document.getElementById('filter-count').textContent = visible.length + ' of ' + totalAvailable + ' stocks';
+            var histCount = visible.filter(function(s){return stockHist[s.ticker] && stockHist[s.ticker].length > 0;}).length;
+            document.getElementById('filter-count').textContent = visible.length + ' shown. Hist for: ' + histCount + '. Top: ' + visible.slice(0,3).map(function(s){return s.ticker+(stockHist[s.ticker]?'[Y]':'[N]');}).join(', ');
 
             if (!visible.length) {
                 document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text2);">No stocks in selected quadrants.</div>';
