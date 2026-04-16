@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
-    <title>Stock Rotation - Rajesh's Stock Screener</title>
+    <title>Stock Rotation v2.2 - Rajesh's Stock Screener</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -26,77 +26,70 @@
         .nav-links { display: flex; gap: 1rem; margin: 0.5rem 0; flex-wrap: wrap; justify-content: center; }
         .nav-link { color: var(--text2); text-decoration: none; font-weight: 600; font-size: 0.85rem; padding: 6px 16px; border-radius: 20px; transition: all 0.3s ease; border: 1px solid transparent; }
         .nav-link.active { color: var(--cyan); background: rgba(0,229,255,0.1); border-color: rgba(0,229,255,0.2); }
-        .container { max-width: 900px; margin: 0 auto; padding: 20px 15px; }
-        .dashboard-tools { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; gap: 1rem; }
-        .slider-group { display: flex; flex-direction: column; gap: 4px; min-width: 180px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
+
+        .dashboard-tools { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1.5rem; background: var(--surface); padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border); }
+        .slider-group { display: flex; flex-direction: column; gap: 4px; min-width: 200px; }
         .slider-group label { font-size: 0.82rem; font-weight: 600; color: var(--text2); }
         .slider-val { color: var(--cyan); font-family: var(--mono); font-weight: 700; }
         .dual-range-container { position: relative; height: 20px; width: calc(100% - 18px); margin: 0 9px; touch-action: none; }
         .dual-range-bg { position: absolute; height: 6px; width: 100%; background: var(--border); border-radius: 3px; top: 6px; }
         .dual-range-fill { position: absolute; height: 6px; background: linear-gradient(90deg, var(--accent), var(--cyan)); border-radius: 3px; top: 6px; }
         .dual-range { position: absolute; width: 100%; pointer-events: none; appearance: none; -webkit-appearance: none; background: none; top: 0; left: 0; margin: 0; touch-action: none; }
-        .dual-range::-webkit-slider-runnable-track { background: none; }
         .dual-range::-webkit-slider-thumb { pointer-events: auto; appearance: none; -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--cyan); cursor: pointer; box-shadow: 0 0 8px rgba(0,229,255,0.4); border: 2px solid var(--surface); position: relative; z-index: 2; }
         .toggle-btn { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 7px 14px; border-radius: var(--radius-sm); background: var(--surface); border: 1px solid var(--border); color: var(--text); font-size: 0.8rem; font-weight: 600; transition: all 0.2s; user-select: none; }
         .toggle-btn:hover { border-color: var(--accent); }
         .toggle-btn.active { background: rgba(0,230,118,0.1); border-color: var(--green); color: var(--green); }
         .toggle-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--text2); transition: all 0.2s; }
         .toggle-btn.active .toggle-dot { background: var(--green); box-shadow: 0 0 8px rgba(0,230,118,0.5); }
-        .q-btn { padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 800; border: 1px solid; background: transparent; transition: all 0.2s; letter-spacing: 0.04em; }
+        
+        .q-btn { padding: 6px 14px; border-radius: var(--radius-sm); cursor: pointer; font-size: 11px; font-weight: 800; border: 1px solid; background: var(--surface); transition: all 0.2s; letter-spacing: 0.04em; }
         .q-btn.active { color: #000 !important; }
         .q-btn[data-q="leading"] { border-color: #22c55e44; color: #22c55e; } .q-btn[data-q="leading"].active { background: #22c55e; }
         .q-btn[data-q="improving"] { border-color: #60a5fa44; color: #60a5fa; } .q-btn[data-q="improving"].active { background: #60a5fa; }
         .q-btn[data-q="weakening"] { border-color: #f59e0b44; color: #f59e0b; } .q-btn[data-q="weakening"].active { background: #f59e0b; }
         .q-btn[data-q="lagging"] { border-color: #ef444444; color: #ef4444; } .q-btn[data-q="lagging"].active { background: #ef4444; }
-        .rrg-box { background: #0a1120; border: 1px solid #1e293b; border-radius: 12px; position: relative; width: 100%; aspect-ratio: 1/1; box-shadow: 0 10px 40px rgba(0,0,0,0.4); }
-        svg { width: 100%; height: 100%; display: block; border-radius: 12px; }
-        .meta-info { font-size: 0.78rem; color: var(--text2); font-weight: 500; }
-        .stock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem; margin-top: 15px; }
-        .stock-card { background: var(--glass); backdrop-filter: blur(var(--glass-b)); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 1rem; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); animation: fadeUp 0.5s ease backwards; position: relative; min-width: 0; }
-        @keyframes fadeUp { from { opacity:0; transform:translateY(15px); } to { opacity:1; transform:translateY(0); } }
-        .stock-card:hover { border-color: var(--accent); transform: translateY(-4px); background: rgba(18,18,40,.85); box-shadow: 0 12px 40px rgba(0,0,0,.5); }
+
+        .rrg-box { background: var(--glass); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); position: relative; overflow: hidden; width: 100%; aspect-ratio: 1.5/1; }
+        svg { width: 100%; height: 100%; display: block; }
+        .stock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem; margin-top: 30px; }
+        .stock-card { background: var(--glass); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; transition: all 0.3s; position: relative; }
+        .stock-card:hover { border-color: var(--accent); transform: translateY(-4px); }
         .card-delete { position: absolute; top: 10px; right: 10px; background: rgba(255,82,82,0.15); border: 1px solid rgba(255,82,82,0.3); color: var(--red); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.75rem; transition: all 0.2s; z-index: 2; }
-        .card-delete:hover { background: rgba(255,82,82,0.3); transform: scale(1.1); border-color: var(--red); }
-        .ticker { font-size: 1.5rem; font-weight: 800; color: var(--cyan); letter-spacing: -0.02em; font-family: var(--mono); text-decoration: none; transition: color 0.2s; }
-        .ticker:hover { color: var(--accent2); }
+        .ticker { font-size: 1.5rem; font-weight: 800; color: var(--cyan); letter-spacing: -0.02em; font-family: var(--mono); text-decoration: none; }
         .rs-pct-badge { font-size: 0.65rem; background: rgba(0,229,255,0.1); color: var(--cyan); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(0,229,255,0.2); font-weight: 700; display: inline-block; }
         .company-name { font-size: 0.8rem; color: var(--text2); margin-top: 2px; }
-        .source-badge { font-size: 0.6rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; opacity: 0.7; }
-        .flip-badge { background: rgba(255,215,0,0.15); color: #FFD700; padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; border: 1px solid rgba(255,215,0,0.3); text-transform: uppercase; letter-spacing: 0.05em; animation: glow 2s infinite; }
-        @keyframes glow { 0% { box-shadow: 0 0 5px rgba(255,215,0,0.2); } 50% { box-shadow: 0 0 15px rgba(255,215,0,0.5); } 100% { box-shadow: 0 0 5px rgba(255,215,0,0.2); } }
-        .canslim-tray { display: flex; gap: 4px; margin-top: 4px; }
-        .canslim-letter { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--text2); border: 1px solid var(--border); }
-        .canslim-letter.active { background: var(--green); color: var(--bg); border-color: var(--green); box-shadow: 0 0 10px rgba(0,230,118,0.3); }
-        .chart-link { display: block; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border); position: relative; background: var(--surface); height: 140px; }
-        .chart-overlay { position: absolute; inset: 0; background: rgba(108,92,231,0.2); opacity: 0; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: white; gap: 8px; backdrop-filter: blur(2px); }
-        .chart-link:hover .chart-overlay { opacity: 1; }
-        .chart-img { width: 100%; height: 100%; object-fit: contain; filter: brightness(0.9) contrast(1.1); transition: transform 0.3s; }
-        .chart-link:hover .chart-img { transform: scale(1.05); }
-        .earnings-alert { background: rgba(255,145,0,0.1); color: var(--orange); border: 1px solid rgba(255,145,0,0.2); padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; display: flex; align-items: center; gap: 6px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; transform: scale(1.02); } 100% { opacity: 0.8; } }
-        .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; background: var(--surface); padding: 12px; border-radius: var(--radius-sm); }
+        .meta-info { font-size: 0.75rem; color: var(--text2); }
+        .chart-link { display: block; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border); background: #000; height: 140px; margin: 5px 0; }
+        .chart-img { width: 100%; height: 100%; object-fit: contain; }
+        .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; background: var(--surface); padding: 10px; border-radius: var(--radius-sm); }
         .metric { display: flex; flex-direction: column; gap: 2px; }
-        .metric-label { font-size: 0.6rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
-        .metric-value { font-size: 1.1rem; font-weight: 700; color: var(--text); font-family: var(--mono); }
+        .metric-label { font-size: 0.55rem; color: var(--text2); text-transform: uppercase; font-weight: 600; }
+        .metric-value { font-size: 0.95rem; font-weight: 700; color: var(--text); font-family: var(--mono); }
         .highlights { display: flex; flex-wrap: wrap; gap: 6px; }
-        .highlight-tag { background: rgba(0,229,255,0.05); color: var(--cyan); padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 600; border: 1px solid rgba(0,229,255,0.15); }
+        .highlight-tag { background: rgba(0,229,255,0.05); color: var(--cyan); padding: 2px 8px; border-radius: 6px; font-size: 0.65rem; border: 1px solid rgba(0,229,255,0.15); }
         .outlook-tag { padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; border: 1px solid; }
         .outlook-rallying { background: rgba(0,230,118,0.1); color: #00e676; border-color: rgba(0,230,118,0.25); }
         .outlook-curling { background: rgba(255,145,0,0.1); color: #ff9100; border-color: rgba(255,145,0,0.25); }
         .outlook-declining { background: rgba(255,82,82,0.1); color: #ff5252; border-color: rgba(255,82,82,0.25); }
-        .hidden { display: none !important; }
-        @media (max-width: 768px) { .dashboard-tools { flex-direction: column; align-items: stretch; } .slider-group { width: 100%; } .stock-grid { grid-template-columns: 1fr; } .metrics { grid-template-columns: repeat(2, 1fr); } }
+        .canslim-tray { display: flex; gap: 4px; margin-top: 4px; }
+        .canslim-letter { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--text2); border: 1px solid var(--border); }
+        .canslim-letter.active { background: var(--green); color: var(--bg); border-color: var(--green); }
+        .flip-badge { background: rgba(255,215,0,0.15); color: #FFD700; padding: 2px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; border: 1px solid rgba(255,215,0,0.3); }
+        .earnings-alert { background: rgba(255,145,0,0.1); color: var(--orange); border: 1px solid rgba(255,145,0,0.2); padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; margin-bottom: 8px; }
     </style>
 </head>
 <body>
     <header>
-        <div class="logo-icon">📊</div>
-        <h1>Rajesh's Stock Screener</h1>
+        <div class="logo-icon">🚀</div>
+        <h1>Stock Rotation Leaderboard v2.2 (AUDITED)</h1>
         <div class="nav-links">
             <a href="index.html" class="nav-link">Dashboard 🚀</a>
             <a href="stages.html" class="nav-link">Sector Analysis 🏗️</a>
             <a href="industries.html" class="nav-link">Industry Momentum 📊</a>
             <a href="quick_scan.html" class="nav-link">Quick Scan ⚡</a>
+            <a href="pulse.html" class="nav-link">Market Pulse 📡</a>
+            <a href="tips.html" class="nav-link">Stock Tips 🎯</a>
             <a href="rotation.html" class="nav-link">Sector Rotation 🔄</a>
             <a href="stock_rotation.html" class="nav-link active">Stock Rotation 💹</a>
         </div>
@@ -122,291 +115,170 @@
                     <input type="range" id="rmv-max-slider" min="0" max="100" value="45" class="dual-range">
                 </div>
             </div>
-            <div id="quality-btn" class="toggle-btn active" onclick="toggle('quality')"><div class="toggle-dot"></div>🛡️ Quality</div>
-            <div id="minervini-btn" class="toggle-btn" onclick="toggle('minervini')"><div class="toggle-dot"></div>🌟 Minervini</div>
-            <div id="top5-btn" class="toggle-btn" onclick="toggle('top5')"><div class="toggle-dot"></div>🏆 Top 5 Sectors</div>
-            <div id="copy-btn" class="toggle-btn" onclick="copyTickers()"><div class="toggle-dot"></div>📋 Copy Tickers</div>
+            <div id="quality-btn" class="toggle-btn active" onclick="toggleQuality()">
+                <div class="toggle-dot"></div>🛡️ Quality
+            </div>
+            <div id="minervini-btn" class="toggle-btn" onclick="toggleMinervini()">
+                <div class="toggle-dot"></div>🌟 Minervini
+            </div>
+            <div id="top5-btn" class="toggle-btn" onclick="toggleTop5()">
+                <div class="toggle-dot"></div>🏆 Top 5 Sectors
+            </div>
+            
+            <div style="display:flex; gap:8px; padding-left:15px; border-left:1px solid var(--border);">
+                <div class="q-btn active" data-q="leading" onclick="toggleQ('leading')">LEADING</div>
+                <div class="q-btn active" data-q="improving" onclick="toggleQ('improving')">IMPROVING</div>
+                <div class="q-btn active" data-q="weakening" onclick="toggleQ('weakening')">WEAKENING</div>
+                <div class="q-btn active" data-q="lagging" onclick="toggleQ('lagging')">LAGGING</div>
+            </div>
+            <div class="meta-info" id="filter-count">Updating...</div>
         </div>
-        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; align-items: center;">
-            <span style="font-size: 10px; color: var(--text2); font-weight: 700; letter-spacing: 0.1em;">QUADRANT:</span>
-            <button class="q-btn active" data-q="leading" onclick="toggleQ(this)">● LEADING</button>
-            <button class="q-btn active" data-q="improving" onclick="toggleQ(this)">● IMPROVING</button>
-            <button class="q-btn active" data-q="weakening" onclick="toggleQ(this)">● WEAKENING</button>
-            <button class="q-btn active" data-q="lagging" onclick="toggleQ(this)">● LAGGING</button>
-            <div class="meta-info" id="filter-count" style="margin-left: auto;"></div>
+
+        <div class="rrg-box" id="rrg-container">
+            <div style="padding:100px; text-align:center; color:var(--text2);">Loading Engine...</div>
         </div>
-        <div class="rrg-box" id="rrg-container"></div>
+
         <div class="stock-grid" id="stock-grid"></div>
     </div>
 
     <script>
-        var allStocks = [], webData = null, stockHist = {};
+        var webData = null, history = null, allStocks = [];
         var minRS = 75, maxRS = 100, minRMV = 10, maxRMV = 45;
-        var filters = { quality: true, minervini: false, top5: false };
+        var qualityOn = true, minerviniOn = false, top5On = false;
         var activeQuadrants = { leading: true, improving: true, weakening: true, lagging: true };
-        var CW = 600, CH = 600, P = 65, R = 15;
-        var Q_FILL = { leading: "#22c55e", weakening: "#f59e0b", lagging: "#ef4444", improving: "#60a5fa" };
+        var Q_FILL = { leading: '#22c55e', weakening: '#f59e0b', lagging: '#ef4444', improving: '#60a5fa' };
 
         function getHiddenTickers() { try { return JSON.parse(localStorage.getItem('hidden_tickers') || '[]'); } catch(e) { return []; } }
-        function hideTicker(ticker) { var list = getHiddenTickers(); if (list.indexOf(ticker) === -1) { list.push(ticker); localStorage.setItem('hidden_tickers', JSON.stringify(list)); } render(); }
+        function hideTicker(t) { var l = getHiddenTickers(); if(l.indexOf(t) === -1) { l.push(t); localStorage.setItem('hidden_tickers', JSON.stringify(l)); } render(); }
+
+        function toggleQuality() { qualityOn = !qualityOn; document.getElementById('quality-btn').classList.toggle('active', qualityOn); render(); }
+        function toggleMinervini() { minerviniOn = !minerviniOn; document.getElementById('minervini-btn').classList.toggle('active', minerviniOn); render(); }
+        function toggleTop5() { top5On = !top5On; document.getElementById('top5-btn').classList.toggle('active', top5On); render(); }
+        function toggleQ(q) { activeQuadrants[q] = !activeQuadrants[q]; document.querySelectorAll('.q-btn').forEach(b => { if(b.getAttribute('data-q') === q) b.classList.toggle('active', activeQuadrants[q]); }); render(); }
+
+        function updateRSFill() { var f = document.getElementById('rs-fill'); f.style.left = ((minRS - 50) * 2) + '%'; f.style.right = (100 - (maxRS - 50) * 2) + '%'; }
+        function updateRangeFill() { var f = document.getElementById('rmv-fill'); f.style.left = minRMV + '%'; f.style.right = (100 - maxRMV) + '%'; }
 
         function init() {
             var ts = Date.now();
             Promise.all([
-                fetch('web_data.json?v=' + ts).then(function(r) { if (!r.ok) throw new Error('web_data.json not found'); return r.json(); }),
-                fetch('stock_history.json?v=' + ts).then(function(r) { if (!r.ok) throw new Error('stock_history.json not found'); return r.json(); })
-            ]).then(function(res) {
-                webData = res[0]; 
-                var rawList = (res[0].stocks || []).concat(res[0].pulse || []).concat(res[0].all_stocks || []);
+                fetch('web_data.json?v='+ts).then(r => r.json()),
+                fetch('stock_history.json?v='+ts).then(r => r.json())
+            ]).then(res => {
+                webData = res[0]; history = res[1] || {};
+                var raw = (res[0].stocks||[]).concat(res[0].pulse||[]).concat(res[0].all_stocks||[]);
                 var unq = {};
-                rawList.forEach(function(s) { 
-                    if (!s.ticker) return;
-                    if (!unq[s.ticker] || (s.rs || 0) > (unq[s.ticker].rs || 0)) unq[s.ticker] = s; 
-                });
+                raw.forEach(s => { if(s.ticker && (!unq[s.ticker] || (s.rs||0) > (unq[s.ticker].rs||0))) unq[s.ticker] = s; });
+                allStocks = []; for(var k in unq) { if(unq.hasOwnProperty(k)) allStocks.push(unq[k]); }
                 
-                allStocks = [];
-                for (var key in unq) { if (unq.hasOwnProperty(key)) allStocks.push(unq[key]); }
+                document.getElementById('rs-min-slider').addEventListener('input', e => { minRS = Math.min(+e.target.value, maxRS-1); e.target.value = minRS; document.getElementById('rs-min-val').textContent = minRS; updateRSFill(); render(); });
+                document.getElementById('rs-max-slider').addEventListener('input', e => { maxRS = Math.max(+e.target.value, minRS+1); e.target.value = maxRS; document.getElementById('rs-max-val').textContent = maxRS; updateRSFill(); render(); });
+                document.getElementById('rmv-min-slider').addEventListener('input', e => { minRMV = Math.min(+e.target.value, maxRMV-1); e.target.value = minRMV; document.getElementById('rmv-min-val').textContent = minRMV; updateRangeFill(); render(); });
+                document.getElementById('rmv-max-slider').addEventListener('input', e => { maxRMV = Math.max(+e.target.value, minRMV+1); e.target.value = maxRMV; document.getElementById('rmv-max-val').textContent = maxRMV; updateRangeFill(); render(); });
                 
-                history = res[1] || {};
-                wireSliders();
                 render();
-            }).catch(function(err) {
-                console.error('RRG v2.2 Load Error:', err);
-                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--red);">Data feed error. Ensure web_data.json and stock_history.json sit in the same directory as this file.</div>';
-            });
+            }).catch(e => { document.getElementById('rrg-container').innerHTML = '<div style="padding:100px;text-align:center;">Data Load Error.</div>'; });
         }
-
-        function wireSliders() {
-            document.getElementById('rs-min-slider').addEventListener('input', function(e) { minRS = Math.min(+e.target.value, maxRS - 1); e.target.value = minRS; document.getElementById('rs-min-val').textContent = minRS; updateFill('rs'); render(); });
-            document.getElementById('rs-max-slider').addEventListener('input', function(e) { maxRS = Math.max(+e.target.value, minRS + 1); e.target.value = maxRS; document.getElementById('rs-max-val').textContent = maxRS; updateFill('rs'); render(); });
-            document.getElementById('rmv-min-slider').addEventListener('input', function(e) { minRMV = Math.min(+e.target.value, maxRMV - 1); e.target.value = minRMV; document.getElementById('rmv-min-val').textContent = minRMV; updateFill('rmv'); render(); });
-            document.getElementById('rmv-max-slider').addEventListener('input', function(e) { maxRMV = Math.max(+e.target.value, minRMV + 1); e.target.value = maxRMV; document.getElementById('rmv-max-val').textContent = maxRMV; updateFill('rmv'); render(); });
-        }
-        function updateFill(type) {
-            if (type === 'rs') { var f = document.getElementById('rs-fill'); f.style.left = ((minRS - 50) * 2) + '%'; f.style.right = (100 - (maxRS - 50) * 2) + '%'; }
-            if (type === 'rmv') { var f = document.getElementById('rmv-fill'); f.style.left = minRMV + '%'; f.style.right = (100 - maxRMV) + '%'; }
-        }
-        function toggle(key) { filters[key] = !filters[key]; document.getElementById(key + '-btn').classList.toggle('active', filters[key]); render(); }
-        function toggleQ(btn) { var q = btn.getAttribute('data-q'); activeQuadrants[q] = !activeQuadrants[q]; btn.classList.toggle('active', activeQuadrants[q]); render(); }
-        function copyTickers() {
-            var cards = document.querySelectorAll('[data-ticker]'); var tickers = [];
-            cards.forEach(function(c) { tickers.push(c.getAttribute('data-ticker')); });
-            navigator.clipboard.writeText(tickers.join(', ')).then(function() {
-                var btn = document.getElementById('copy-btn'); btn.classList.add('active');
-                btn.innerHTML = '<div class="toggle-dot"></div> ✅ Copied!';
-                setTimeout(function() { btn.classList.remove('active'); btn.innerHTML = '<div class="toggle-dot"></div> 📋 Copy Tickers'; }, 2000);
-            });
-        }
-        function median(arr) { 
-            var clean = arr.filter(function(v) { return typeof v === 'number' && !isNaN(v); });
-            if (!clean.length) return 0; 
-            var s = clean.slice().sort(function(a, b) { return a - b; }); 
-            var m = Math.floor(s.length / 2); 
-            return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; 
-        }
-        function catmullRom2bezier(pts) { var d = ""; if (pts.length === 0) return d; d += "M " + pts[0].x.toFixed(1) + "," + pts[0].y.toFixed(1) + " "; if (pts.length === 1) return d; for (var i = 0; i < pts.length - 1; i++) { var p0 = i === 0 ? pts[0] : pts[i - 1]; var p1 = pts[i]; var p2 = pts[i + 1]; var p3 = i + 2 < pts.length ? pts[i + 2] : p2; var cp1x = p1.x + (p2.x - p0.x) / 6; var cp1y = p1.y + (p2.y - p0.y) / 6; var cp2x = p2.x - (p3.x - p1.x) / 6; var cp2y = p2.y - (p3.y - p1.y) / 6; d += "C " + cp1x.toFixed(1) + "," + cp1y.toFixed(1) + " " + cp2x.toFixed(1) + "," + cp2y.toFixed(1) + " " + p2.x.toFixed(1) + "," + p2.y.toFixed(1) + " "; } return d; }
 
         function render() {
-            var top5Names = [];
-            if (filters.top5 && webData && webData.stages && webData.stages.length >= 5) {
-                top5Names = webData.stages.slice(0, 5).map(function(s) { return s.sector; });
-            }
+            if(!webData || !allStocks.length) return;
+            var hidden = getHiddenTickers();
+            var top5Sectors = (top5On && webData.stages) ? webData.stages.slice(0, 5).map(s => s.sector) : [];
 
-            var filtered = allStocks.filter(function(s) {
-                var rs = s.rs || 0; var rmv = (s.rmv != null) ? s.rmv : -1;
-                if (rs < minRS || rs > maxRS) return false;
-                if (rmv < minRMV || rmv > maxRMV) return false;
-                if (filters.quality && s.is_speculative) return false;
-                if (filters.minervini && !s.is_minervini) return false;
-                if (filters.top5 && top5Names.length > 0 && top5Names.indexOf(s.sector) === -1) return false;
-                if (getHiddenTickers().indexOf(s.ticker) !== -1) return false;
+            var filteredPool = allStocks.filter(s => {
+                var rs = s.rs || 0;
+                if(rs < minRS || rs > maxRS) return false;
+                if(s.rmv < minRMV || s.rmv > maxRMV) return false;
+                if(qualityOn && s.is_speculative) return false;
+                if(minerviniOn && !s.is_minervini) return false;
+                if(top5On && top5Sectors.length && !top5Sectors.includes(s.sector)) return false;
+                if(hidden.includes(s.ticker)) return false;
                 return true;
             });
-            filtered.sort(function(a, b) { return b.rs - a.rs; });
-            filtered = filtered.slice(0, 40); // Elite Top 40
-            
-            // 1. Process math (Synchronized 0-100 Percentile Scale)
-            var candidates = filtered.map(function(s) {
-                var h = (stockHist[s.ticker] || []).slice(0, 20);
-                var todayRS = +(s.rs || 0);
-                
-                // Momentum = Alpha weighted ROC of percentiles (Symmetric 0-100)
-                var rawTrail = [];
-                for (var t = 0; t < 10; t++) {
-                    var trRS = +(h[t] || todayRS);
-                    var tr1w = +(h[t+5] || trRS);
-                    var tr1m = +(h[t+15] || trRS);
-                    var trY = (tr1w - tr1m) * 0.7 + (trRS - tr1w) * 0.3;
-                    rawTrail.push({ x: trRS, y: trY });
+
+            var processed = filteredPool.map(s => {
+                var h = (history[s.ticker] || []).slice(0, 20);
+                var rs = s.rs || 0;
+                var x = rs - 50; 
+                var prevRS = h.length > 5 ? h[h.length - 5] : rs;
+                var y = (rs - prevRS) * 10;
+                var q = x >= 0 ? (y >= 0 ? 'leading' : 'weakening') : (y >= 0 ? 'improving' : 'lagging');
+                var trail = [];
+                for(var i=Math.max(0, h.length-15); i<h.length; i++) {
+                    var trRS = h[i];
+                    var trPrev = h[i-5] || trRS;
+                    trail.push({ x: trRS - 50, y: (trRS - trPrev) * 10 });
                 }
-                
-                return { s: s, x: todayRS, y: rawTrail[0].y, trail: rawTrail };
-            });
+                return { s, x, y, q, trail };
+            }).sort((a,b) => b.s.rs - a.s.rs).slice(0, 40);
 
-            // 2. Absolute Centering (Sector Rotation Style)
-            var medX = 100, medY = 0; // Centered on perfect relative strength and neutral momentum
+            var visible = processed.filter(d => activeQuadrants[d.q]);
+            document.getElementById('filter-count').textContent = visible.length + ' shown of ' + filteredPool.length + ' quality candidates';
 
-            var processed = candidates.map(function(d) {
-                var xVal = d.x - medX;
-                var yVal = d.y - medY;
-                var q = xVal >= 0 ? (yVal >= 0 ? "leading" : "weakening") : (yVal >= 0 ? "improving" : "lagging");
-                var trailRel = d.trail.map(function(tp) { return { x: tp.x - medX, y: tp.y - medY }; }).reverse();
-                return { s: d.s, x: xVal, y: yVal, q: q, trail: trailRel };
-            });
-
-            // 3. SELECTION: Pick the absolute Top 40 strongest leaders across the entire universe
-            var finalSelection = processed.sort(function(a, b) { 
-                return (b.s.rs_raw || 0) - (a.s.rs_raw || 0); 
-            }).slice(0, 40);
-
-            var visible = finalSelection.filter(function(d) { return activeQuadrants[d.q]; });
-            var countMsg = visible.length + ' shown (' + (webData.stocks ? webData.stocks.length : 0) + ' analyzed)';
-            document.getElementById('filter-count').textContent = countMsg;
-
-            if (!visible.length) {
-                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text2);">No stocks in selected quadrants.</div>';
+            if(!visible.length) {
+                document.getElementById('rrg-container').innerHTML = '<div style="padding:100px;text-align:center;">No results match Dashboard + Quadrant filters.</div>';
                 document.getElementById('stock-grid').innerHTML = '';
                 return;
             }
 
-            // 4. VIEWPORT SCALING (Robust Guard against NaN/Zero)
             var allX = [], allY = [];
-            visible.forEach(function(d) {
-                if (!isNaN(d.x)) allX.push(d.x);
-                if (!isNaN(d.y)) allY.push(d.y);
-                d.trail.forEach(function(p) {
-                    if (!isNaN(p.x)) allX.push(p.x);
-                    if (!isNaN(p.y)) allY.push(p.y);
-                });
+            visible.forEach(d => { allX.push(d.x); allY.push(d.y); d.trail.forEach(p => { allX.push(p.x); allY.push(p.y); }); });
+            var maxAbsX = Math.max(...allX.map(Math.abs), 5) * 1.15;
+            var maxAbsY = Math.max(...allY.map(Math.abs), 2) * 1.15;
+            var CW = 900, CH = 600, P = 60;
+            var tX = v => (CW/2) + (v/maxAbsX) * (CW/2 - P);
+            var tY = v => (CH/2) - (v/maxAbsY) * (CH/2 - P);
+
+            var svg = '<rect width="100%" height="100%" fill="var(--bg2)"/>';
+            svg += '<line x1="0" y1="'+(CH/2)+'" x2="'+CW+'" y2="'+(CH/2)+'" stroke="var(--border)"/>';
+            svg += '<line x1="'+(CW/2)+'" y1="0" x2="'+(CW/2)+'" y2="'+CH+'" stroke="var(--border)"/>';
+            
+            visible.forEach(d => {
+                var c = Q_FILL[d.q];
+                if(d.trail.length > 1) {
+                    var pts = d.trail.map(p => tX(p.x)+','+tY(p.y)).join(' ');
+                    svg += '<polyline points="'+pts+'" fill="none" stroke="'+c+'" stroke-width="2.5" opacity="0.4" stroke-linecap="round"/>';
+                }
+                var curX = tX(d.x), curY = tY(d.y);
+                svg += '<circle cx="'+curX+'" cy="'+curY+'" r="10" fill="'+c+'" stroke="#fff" stroke-width="2"/>';
+                svg += '<text x="'+(curX+12)+'" y="'+(curY+4)+'" fill="#fff" font-weight="800" font-size="13" style="text-shadow:0 0 4px #000">'+d.s.ticker+'</text>';
             });
 
-            var rawX = allX.map(Math.abs);
-            var rawY = allY.map(Math.abs);
-            var maxAbsX = rawX.length ? Math.max.apply(null, rawX) * 1.15 : 5;
-            var maxAbsY = rawY.length ? Math.max.apply(null, rawY) * 1.15 : 2;
-            
-            // Safety Floors to prevent division-by-zero or giant zoomed icons
-            if (maxAbsX < 5) maxAbsX = 5;
-            if (maxAbsY < 2) maxAbsY = 2;
-            
-            var tX = function(v) { return P + ((v + maxAbsX) / (maxAbsX * 2)) * (CW - P * 2); };
-            var tY = function(v) { return (CH - P) - ((v + maxAbsY) / (maxAbsY * 2)) * (CH - P * 2); };
-            var MX = tX(0), MY = tY(0);
-
-            // Grid Lines (Sector Mirror)
-            var gridLines = '';
-            for(var step = 1; step < 10; step++) {
-                var gX = P + (step/10)*(CW - P*2);
-                var gY = P + (step/10)*(CH - P*2);
-                gridLines += '<line x1="'+gX+'" y1="'+P+'" x2="'+gX+'" y2="'+(CH-P)+'" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>';
-                gridLines += '<line x1="' + P + '" y1="' + gY + '" x2="' + (CW - P) + '" y2="' + gY + '" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>';
-            }
-
-            var stockG = '', defs = '';
-            visible.forEach(function(d) {
-                var s = d.s, pts = d.trail.map(function(p) { return { x: tX(p.x), y: tY(p.y) }; });
-                var cx = tX(d.x), cy = tY(d.y);
+            document.getElementById('rrg-container').innerHTML = '<svg viewBox="0 0 '+CW+' '+CH+'">'+svg+'</svg>';
+            document.getElementById('stock-grid').innerHTML = visible.map((d, i) => {
+                var s = d.s, qC = Q_FILL[d.q];
+                var outlook = d.y > 0 ? (d.x > 0 ? 'rallying' : 'recovering') : 'declining';
+                var outlookClass = outlook==='declining' ? 'outlook-declining' : 'outlook-rallying';
+                var letters = ['c','a','n','s','l','i','m'];
+                var canslim = '<div class="canslim-tray">'+letters.map(l => '<div class="canslim-letter '+(s.canslim && s.canslim[l] ? 'active':'')+'">'+l.toUpperCase()+'</div>').join('')+'</div>';
                 
-                var trailPath = catmullRom2bezier(pts);
-                var gradId = "grad-" + s.ticker.replace(/[^a-zA-Z]/g, '');
-                defs += '<linearGradient id="' + gradId + '" x1="' + pts[0].x + '" y1="' + pts[0].y + '" x2="' + cx + '" y2="' + cy + '" gradientUnits="userSpaceOnUse">' +
-                        '<stop offset="0%" stop-color="' + Q_FILL[d.q] + '" stop-opacity="0"/>' +
-                        '<stop offset="100%" stop-color="' + Q_FILL[d.q] + '" stop-opacity="0.6"/></linearGradient>';
-
-                var angle = pts.length > 1 ? Math.atan2(cy - pts[pts.length-2].y, cx - pts[pts.length-2].x) * 180 / Math.PI : 0;
-                var arrow = '<polygon points="-6,-5 8,0 -6,5" fill="' + Q_FILL[d.q] + '" transform="translate(' + cx + ',' + cy + ') rotate(' + angle + ')" />';
-
-                stockG += '<g>' +
-                    '<path d="' + trailPath + '" fill="none" stroke="url(#' + gradId + ')" stroke-width="2.5" stroke-linecap="round"/>' +
-                    arrow +
-                    '<text x="' + cx + '" y="' + (cy - 12) + '" text-anchor="middle" fill="#fff" font-size="10" font-weight="800" font-family="var(--mono)" style="paint-order:stroke;stroke:#0a1120;stroke-width:3px;">' + s.ticker + '</text></g>';
-            });
-
-            document.getElementById('rrg-container').innerHTML = 
-                '<svg viewBox="0 0 ' + CW + ' ' + CH + '"><defs>' + defs + '</defs>' +
-                '<rect x="' + P + '" y="' + P + '" width="' + (MX - P) + '" height="' + (MY - P) + '" fill="#16222b"/>' +
-                '<rect x="' + MX + '" y="' + P + '" width="' + (CW - P - MX) + '" height="' + (MY - P) + '" fill="#122a28"/>' +
-                '<rect x="' + P + '" y="' + MY + '" width="' + (MX - P) + '" height="' + (CH - P - MY) + '" fill="#2d1a22"/>' +
-                '<rect x="' + MX + '" y="' + MY + '" width="' + (CW - P - MX) + '" height="' + (CH - P - MY) + '" fill="#2c2214"/>' +
-                gridLines +
-                '<line x1="' + MX + '" y1="' + P + '" x2="' + MX + '" y2="' + (CH - P) + '" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>' +
-                '<line x1="' + P + '" y1="' + MY + '" x2="' + (CW - P) + '" y2="' + MY + '" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>' +
-                '<text x="' + (P + 10) + '" y="' + (P + 22) + '" fill="#60a5fa" font-size="11" font-weight="900" opacity="0.6">IMPROVING</text>' +
-                '<text x="' + (CW - P - 60) + '" y="' + (P + 22) + '" fill="#10b981" font-size="11" font-weight="900" opacity="0.6">LEADING</text>' +
-                '<text x="' + (P + 10) + '" y="' + (CH - P - 12) + '" fill="#ef4444" font-size="11" font-weight="900" opacity="0.6">LAGGING</text>' +
-                '<text x="' + (CW - P - 75) + '" y="' + (CH - P - 12) + '" fill="#f59e0b" font-size="11" font-weight="900" opacity="0.6">WEAKENING</text>' +
-                stockG + '</svg>';
-
-            // CARDS (Restore 'Morning' Details)
-            var cardsHtml = '';
-            visible.forEach(function(d, idx) {
-                var s = d.s;
-                var outlookLabel = s.outlook === 'rallying' ? '➚ Momentum Rallying' :
-                    s.outlook === 'curling' ? '⤹ Momentum Curling' :
-                    s.outlook === 'declining' ? '↘ Momentum Declining' :
-                    s.outlook === 'recovering' ? '↗ Momentum Recovering' : '→ Neutral';
-                var outlookClass = (s.outlook === 'rallying' || s.outlook === 'recovering') ? 'outlook-rallying' :
-                    s.outlook === 'curling' ? 'outlook-curling' : 'outlook-declining';
-
-                function fmtVol(v) { if (!v) return 'N/A'; if (v >= 1e6) return (v/1e6).toFixed(1)+'M'; if (v >= 1e3) return (v/1e3).toFixed(0)+'K'; return ''+v; }
-                var volStyle = 'font-size:0.65rem;color:var(--text2);padding:2px 6px;border-radius:4px;border:1px solid var(--border);background:var(--surface);display:inline-block;';
-                if (s.volume > s.avg_volume) {
-                    volStyle = s.is_up ?
-                        'font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:4px;border:1px solid rgba(0,230,118,0.3);background:rgba(0,230,118,0.1);color:var(--green);display:inline-block;' :
-                        'font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:4px;border:1px solid rgba(255,145,0,0.3);background:rgba(255,145,0,0.1);color:var(--orange);display:inline-block;';
-                }
-
-                var canslimHtml = '';
-                if (s.canslim) {
-                    var letters = ['C','A','N','S','L','I','M'];
-                    canslimHtml = '<div class="canslim-tray">' + letters.map(function(l) {
-                        var active = s.canslim[l.toLowerCase()];
-                        return '<div class="canslim-letter ' + (active ? 'active' : '') + '" title="' + l + '">' + l + '</div>';
-                    }).join('') + '</div>';
-                }
-
-                cardsHtml += '<div class="stock-card" data-ticker="' + s.ticker + '" style="animation-delay:' + (idx*0.05) + 's">' +
-                    '<div class="card-delete" onclick="hideTicker(\'' + s.ticker + '\')" title="Hide ' + s.ticker + '">✕</div>' +
-                    '<div style="display:flex;justify-content:space-between;align-items:flex-start;">' +
+                return '<div class="stock-card" style="animation-delay:'+(i*0.05)+'s">' +
+                    '<div class="card-delete" onclick="hideTicker(\''+s.ticker+'\')">✕</div>' +
+                    '<div style="display:flex;justify-content:space-between;">' +
                         '<div>' +
-                            '<div style="display:flex;align-items:center;gap:8px;">' +
-                                '<a href="' + (s.tradingview_url || '#') + '" target="_blank" class="ticker">' + s.ticker + '</a>' +
-                                '<div class="rs-pct-badge">Rank: ' + Math.round(s.rs) + '</div>' +
-                            '</div>' +
-                            '<div class="company-name">' + (s.name || '') + '</div>' +
-                            '<div class="meta-info" style="margin-top:4px;font-size:0.75rem;">' + (s.industry || '') + ' &bull; ' + (s.sector || '') + '</div>' +
-                            canslimHtml +
+                            '<div style="display:flex;align-items:center;gap:8px;"><a href="'+s.tradingview_url+'" target="_blank" class="ticker">'+s.ticker+'</a><span class="rs-pct-badge">Rank: '+s.rs+'</span></div>' +
+                            '<div class="company-name">'+s.name+'</div>' +
+                            '<div class="meta-info">'+s.industry+' &bull; '+s.sector+'</div>' +
+                            canslim +
                         '</div>' +
-                        '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;padding-right:28px;">' +
-                            '<span style="font-size:0.65rem;padding:2px 8px;border-radius:4px;background:' + Q_FILL[d.q] + '22;color:' + Q_FILL[d.q] + ';border:1px solid ' + Q_FILL[d.q] + '44;font-weight:800;">#' + (s.rank || '') + ' ' + d.q.toUpperCase() + '</span>' +
+                        '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;padding-right:25px;">' +
+                            '<span style="font-size:0.65rem;padding:2px 8px;border-radius:4px;background:'+qC+'22;color:'+qC+';border:1px solid '+qC+'44;font-weight:800;">#'+s.rank+' '+d.q.toUpperCase()+'</span>' +
                             (s.flip ? '<div class="flip-badge">⚡ PRIME FLIP</div>' : '') +
-                            '<div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;margin-top:4px;">' +
-                                (s.price ? '<div style="' + volStyle + '">$' + s.price.toFixed(2) + '</div>' : '') +
-                                '<div style="' + volStyle + '" title="Avg Vol: ' + fmtVol(s.avg_volume) + '">Vol: ' + fmtVol(s.volume) + '</div>' +
-                            '</div>' +
+                            '<div style="font-size:0.7rem;color:var(--cyan);font-weight:700;">$'+(s.price?s.price.toFixed(2):'N/A')+'</div>' +
                         '</div>' +
                     '</div>' +
-                    (s.days_to_earnings >= 0 && s.days_to_earnings <= 14 ? '<div class="earnings-alert">📅 EARNINGS IN ' + s.days_to_earnings + 'D</div>' : '') +
-                    (s.finviz_chart_url ? '<a href="' + (s.tradingview_url || '#') + '" target="_blank" class="chart-link"><img src="' + s.finviz_chart_url + '" class="chart-img" loading="lazy"></a>' : '') +
+                    (s.days_to_earnings>=0 && s.days_to_earnings<=14 ? '<div class="earnings-alert">📅 EARNINGS IN '+s.days_to_earnings+'D</div>' : '') +
+                    '<a href="'+s.tradingview_url+'" target="_blank" class="chart-link"><img src="'+s.finviz_chart_url+'" class="chart-img"></a>' +
                     '<div class="metrics">' +
-                        '<div class="metric"><span class="metric-label">RS Pct</span><span class="metric-value" style="color:var(--cyan);">' + Math.round(s.rs) + '</span></div>' +
-                        '<div class="metric"><span class="metric-label">RMV</span><span class="metric-value">' + (s.rmv != null ? s.rmv.toFixed(1) : 'N/A') + '</span></div>' +
-                        '<div class="metric"><span class="metric-label">1W RS</span><span class="metric-value">' + (s.rs_1w_pct ? Math.round(s.rs_1w_pct) : 'N/A') + '</span></div>' +
-                        '<div class="metric"><span class="metric-label">1M RS</span><span class="metric-value">' + (s.rs_1m_pct ? Math.round(s.rs_1m_pct) : 'N/A') + '</span></div>' +
+                        '<div class="metric"><span class="metric-label">RS Pct</span><span class="metric-value" style="color:var(--cyan)">'+s.rs+'</span></div>' +
+                        '<div class="metric"><span class="metric-label">RMV</span><span class="metric-value">'+(s.rmv?s.rmv.toFixed(1):'N/A')+'</span></div>' +
+                        '<div class="metric"><span class="metric-label">1W RS</span><span class="metric-value">'+(s.rs_1w_pct||'N/A')+'</span></div>' +
+                        '<div class="metric"><span class="metric-label">1M RS</span><span class="metric-value">'+(s.rs_1m_pct||'N/A')+'</span></div>' +
                     '</div>' +
-                    '<div class="highlights">' + (s.highlights ? s.highlights.split(', ').map(function(h) { return '<span class="highlight-tag">' + h + '</span>'; }).join('') : '') + '</div>' +
-                    '<div style="display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--border);padding-top:8px;">' +
-                        '<span class="outlook-tag ' + outlookClass + '">' + outlookLabel + '</span>' +
-                    '</div>' +
+                    '<div class="highlights">'+(s.highlights?s.highlights.split(', ').map(h => '<span class="highlight-tag">'+h+'</span>').join(''):'')+'</div>' +
+                    '<div style="margin-top:5px;"><span class="outlook-tag '+outlookClass+'">'+outlook.toUpperCase()+'</span></div>' +
                 '</div>';
-            });
-            document.getElementById('stock-grid').innerHTML = cardsHtml;
-        }
-        init();
-    </script>
-</body>
-</html>
-            document.getElementById('stock-grid').innerHTML = cardsHtml;
+            }).join('');
         }
         init();
     </script>
