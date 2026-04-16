@@ -275,8 +275,8 @@
 
             // Quadrant filter
             var visible = processed.filter(function(s) { return activeQuadrants[s.q]; });
-            var histCount = visible.filter(function(s){return stockHist[s.ticker] && stockHist[s.ticker].length > 0;}).length;
-            document.getElementById('filter-count').textContent = visible.length + ' shown. Hist for: ' + histCount + '. Top: ' + visible.slice(0,3).map(function(s){return s.ticker+(stockHist[s.ticker]?'[Y]':'[N]');}).join(', ');
+            var visible = processed.filter(function(s) { return activeQuadrants[s.q]; });
+            document.getElementById('filter-count').textContent = visible.length + ' shown (' + totalAvailable + ' matching filters / ' + allStocks.length + ' total)';
 
             if (!visible.length) {
                 document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text2);">No stocks in selected quadrants.</div>';
@@ -313,29 +313,44 @@
             var stockG = '', defs = '';
 
             visible.forEach(function(s) {
-                var trailPts = s.trail.map(function(tp) { return { x: tX(tp.x), y: tY(tp.y) }; });
-                if (trailPts.length < 2) return;
-                var jcx = trailPts[trailPts.length - 1].x;
-                var jcy = trailPts[trailPts.length - 1].y;
-                
-                var dPath = catmullRom2bezier(trailPts);
-                
-                var dots = trailPts.map(function(p, i) {
-                    if (i === trailPts.length - 1) return '';
-                    var op = 0.1 + 0.9 * (i / trailPts.length);
-                    return '<circle cx="'+p.x+'" cy="'+p.y+'" r="1.5" fill="'+s.color+'" opacity="'+op+'"/>';
-                }).join('');
+                    var trailPts = s.trail.map(function(tp) { return { x: tX(tp.x), y: tY(tp.y) }; });
+                    if (trailPts.length < 2) return;
+                    var jcx = trailPts[trailPts.length - 1].x;
+                    var jcy = trailPts[trailPts.length - 1].y;
+                    
+                    var dPaths = '';
+                    for (var i = 0; i < trailPts.length - 1; i++) {
+                        var p0 = i === 0 ? trailPts[0] : trailPts[i - 1];
+                        var p1 = trailPts[i];
+                        var p2 = trailPts[i + 1];
+                        var p3 = i + 2 < trailPts.length ? trailPts[i + 2] : p2;
+                        
+                        var cp1x = p1.x + (p2.x - p0.x) / 6;
+                        var cp1y = p1.y + (p2.y - p0.y) / 6;
+                        var cp2x = p2.x - (p3.x - p1.x) / 6;
+                        var cp2y = p2.y - (p3.y - p1.y) / 6;
+                        
+                        var segD = "M " + p1.x.toFixed(1) + "," + p1.y.toFixed(1) + " C " + cp1x.toFixed(1) + "," + cp1y.toFixed(1) + " " + cp2x.toFixed(1) + "," + cp2y.toFixed(1) + " " + p2.x.toFixed(1) + "," + p2.y.toFixed(1);
+                        var segOp = 0.1 + 0.6 * ((i + 1) / trailPts.length);
+                        dPaths += '<path d="' + segD + '" fill="none" stroke="' + s.color + '" stroke-width="2.5" stroke-linecap="round" opacity="' + segOp + '"/>';
+                    }
+                    
+                    var dots = trailPts.map(function(p, i) {
+                        if (i === trailPts.length - 1) return '';
+                        var op = 0.1 + 0.9 * (i / trailPts.length);
+                        return '<circle cx="'+p.x+'" cy="'+p.y+'" r="2.5" fill="'+s.color+'" opacity="'+op+'"/>';
+                    }).join('');
 
-                var tailX = trailPts.length > 1 ? trailPts[trailPts.length - 2].x : jcx;
-                var tailY = trailPts.length > 1 ? trailPts[trailPts.length - 2].y : jcy;
-                var angle = Math.atan2(jcy - tailY, jcx - tailX) * 180 / Math.PI;
-                var arrow = '<polygon points="-5,-4 7,0 -5,4" fill="' + s.color + '" transform="translate(' + jcx + ',' + jcy + ') rotate(' + angle + ')" />';
+                    var tailX = trailPts.length > 1 ? trailPts[trailPts.length - 2].x : jcx;
+                    var tailY = trailPts.length > 1 ? trailPts[trailPts.length - 2].y : jcy;
+                    var angle = Math.atan2(jcy - tailY, jcx - tailX) * 180 / Math.PI;
+                    var arrow = '<polygon points="-5,-4 7,0 -5,4" fill="' + s.color + '" transform="translate(' + jcx + ',' + jcy + ') rotate(' + angle + ')" />';
 
-                stockG += '<g>' +
-                    '<path d="' + dPath + '" fill="none" stroke="' + s.color + '" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>' +
-                    dots +
-                    arrow +
-                    '<text x="' + jcx + '" y="' + (jcy - 8) + '" text-anchor="middle" fill="#fff" font-size="8" font-weight="950" font-family="var(--mono)">' + s.ticker + '</text></g>';
+                    stockG += '<g>' +
+                        dPaths +
+                        dots +
+                        arrow +
+                        '<text x="' + jcx + '" y="' + (jcy - 10) + '" text-anchor="middle" fill="#fff" font-size="8" font-weight="950" font-family="var(--mono)">' + s.ticker + '</text></g>';
             });
 
             document.getElementById('rrg-container').innerHTML =
@@ -420,12 +435,6 @@
                 '</div>';
             });
             document.getElementById('stock-grid').innerHTML = cardsHtml;
-            var debugTable = '<table style=\"width:100%;font-size:10px;color:var(--text2);margin-top:20px;border-collapse:collapse;border:1px solid var(--border);\"><tr><th>Ticker</th><th>xVal</th><th>yVal</th><th>q</th></tr>';
-            visible.forEach(function(s) { 
-                debugTable += '<tr><td>'+s.ticker+'</td><td>'+s.xVal.toFixed(2)+'</td><td>'+s.yVal.toFixed(2)+'</td><td>'+s.q+'</td></tr>';
-            });
-            debugTable += '</table>';
-            document.getElementById('stock-grid').insertAdjacentHTML('afterend', debugTable);
         }
         init();
     </script>
