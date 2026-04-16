@@ -157,7 +157,7 @@
                 fetch('stock_history.json?v=' + ts).then(function(r) { return r.json(); })
             ]).then(function(res) {
                 webData = res[0]; 
-                var rawStocks = res[0].all_stocks || res[0].stocks || [];
+                var rawStocks = (res[0].all_stocks || []).concat(res[0].stocks || []).concat(res[0].pulse || []);
                 var unq = {};
                 rawStocks.forEach(function(s) { if (!unq[s.ticker] || s.rs > unq[s.ticker].rs) unq[s.ticker] = s; });
                 allStocks = Object.keys(unq).map(function(k) { return unq[k]; });
@@ -280,7 +280,8 @@
 
             // Quadrant filter
             var visible = processed.filter(function(s) { return activeQuadrants[s.q]; });
-            document.getElementById('filter-count').textContent = visible.length + ' of ' + totalAvailable + ' stocks';
+            var debugInfo = visible.length + ' shown (' + totalAvailable + ' matching filters / ' + allStocks.length + ' total)';
+            document.getElementById('filter-count').textContent = debugInfo;
 
             if (!visible.length) {
                 document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text2);">No stocks in selected quadrants.</div>';
