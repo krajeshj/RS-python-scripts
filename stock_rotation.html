@@ -409,6 +409,12 @@
                 '</div>';
             });
             document.getElementById('stock-grid').innerHTML = cardsHtml;
+            var debugTable = '<table style=\"width:100%;font-size:10px;color:var(--text2);margin-top:20px;border-collapse:collapse;border:1px solid var(--border);\"><tr><th>Ticker</th><th>xVal</th><th>yVal</th><th>q</th></tr>';
+            visible.forEach(function(s) { 
+                debugTable += '<tr><td>'+s.ticker+'</td><td>'+s.xVal.toFixed(2)+'</td><td>'+s.yVal.toFixed(2)+'</td><td>'+s.q+'</td></tr>';
+            });
+            debugTable += '</table>';
+            document.getElementById('stock-grid').insertAdjacentHTML('afterend', debugTable);
         }
         init();
     </script>
