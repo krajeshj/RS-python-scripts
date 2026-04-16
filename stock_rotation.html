@@ -162,8 +162,13 @@
                 allStocks.forEach(function(s) { if (!unq[s.ticker] || s.rs > (unq[s.ticker].rs || 0)) unq[s.ticker] = s; });
                 allStocks = Object.keys(unq).map(function(k) { return unq[k]; });
                 stockHist = res[1].data || res[1] || {};
+                
+                // Set the horizontal median for RRG (usually 1.0 in RS Ratio models)
+                medianX = median(allStocks.map(function(s) { return +(s.rs_raw || 0); })) || 1.0;
+                
                 wireSliders(); render();
             }).catch(function(e) {
+                console.error(e);
                 document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:red;">Data sync error.</div>';
             });
         }
@@ -214,82 +219,60 @@
                 if (getHiddenTickers().indexOf(s.ticker) !== -1) return false;
                 return true;
             });
-            filtered.sort(function(a, b) { return b.rs - a.rs; });
-            filtered = filtered.slice(0, 40);
             var totalAvailable = filtered.length;
-            var rawData = filtered.map(function(s) {
-                var h = (stockHist[s.ticker] || []).slice(0, 17);
+            var universeSize = allStocks.length || 1500;
+            
+            // 1. PROCESS ALL FILTERED STOCKS
+            var processedAll = filtered.map(function(s) {
+                var h = (stockHist[s.ticker] || []).slice(0, 20);
                 var xRaw = +(s.rs_raw || 0);
-                var rsVal = +(s.rs || 0);
-                var mom1w = +(s.rs_1w_pct || rsVal);
-                var mom1m = +(s.rs_1m_pct || rsVal);
-                var yComposite = (mom1w - mom1m) * 0.7 + (rsVal - mom1w) * 0.3;
+                var todayRank = +(s.rank || 0);
+                var prevRank = +(h[7] || todayRank);
+                
+                // Y = CHANGE IN ABSOLUTE RANK 
+                // Using 1.5 multiplier to match visual scale of Sector Rotation
+                var yVelocity = (prevRank - todayRank) * 1.5;
 
-                var acc = 0;
-                if (h.length >= 9) {
-                    var mom_today = (h[0] || 0) - (h[7] || 0);
-                    var mom_yesterday = (h[1] || 0) - (h[8] || 0);
-                    acc = mom_today - mom_yesterday;
-                }
                 var rawTrail = [];
-                for (var t = 0; t < Math.min(10, h.length - 7); t++) {
-                    var trailRS = h[t] || 0;
-                    var trailXRaw = xRaw * (trailRS / (s.rs || 1));
-                    var trailYMom = (h[t] || 0) - (h[t + 7] || 0);
-                    rawTrail.push({ x: trailXRaw, y: trailYMom });
+                for (var t = 0; t < 10; t++) {
+                    var trRank = +(h[t] || todayRank);
+                    // Synthesize RS Raw for the trail using rank-ratio projection
+                    var trX = xRaw * ((universeSize + 1 - trRank) / (universeSize + 1 - todayRank));
+                    var trPrevRank = +(h[t+1] || trRank);
+                    var trY = (trPrevRank - trRank) * 1.5;
+                    rawTrail.push({ x: trX, y: trY });
                 }
-                rawTrail = rawTrail.reverse(); // oldest to youngest
-                var trail = [];
-                for (var i = 0; i < rawTrail.length; i++) {
-                    if (i < 2) trail.push(rawTrail[i]);
-                    else trail.push({ x: (rawTrail[i].x+rawTrail[i-1].x+rawTrail[i-2].x)/3, y: (rawTrail[i].y+rawTrail[i-1].y+rawTrail[i-2].y)/3 });
-                }
+                var trail = rawTrail.reverse(); // oldest to youngest
+                
+                // Determine Quadrant
+                var q = xRaw >= medianX ? (yVelocity >= 0 ? "leading" : "weakening") : (yVelocity >= 0 ? "improving" : "lagging");
+                
                 return {
-                    s: s, xRaw: xRaw, yComposite: yComposite, acc: acc, trail: trail,
-                    rs_1w_pct: mom1w, rs_1m_pct: mom1m
-                };
-            });
-
-            // Center on group medians
-            // MATCHING SECTOR ROTATION: Absolute centering at 0,0 instead of median centering
-            var medX = 0;
-            var medY = 0;
-
-            var processed = rawData.map(function(d) {
-                var s = d.s;
-                var xVal = (+d.xRaw) - medX;
-                var yVal = (+d.yComposite) - medY;
-                var q = xVal >= 0 ? (yVal >= 0 ? "leading" : "weakening") : (yVal >= 0 ? "improving" : "lagging");
-
-                // Normalize trail relative to medians
-                var trailNorm = d.trail.map(function(tp) {
-                    return { x: tp.x - medX, y: tp.y - medY };
-                });
-
-                var outlook = 'neutral';
-                if (yVal > 0 && d.acc >= 0) outlook = 'rallying';
-                else if (yVal > 0 && d.acc < 0) outlook = 'curling';
-                else if (yVal <= 0 && d.acc < 0) outlook = 'declining';
-                else if (yVal <= 0 && d.acc >= 0) outlook = 'recovering';
-
-                return {
-                    ticker: s.ticker, name: s.name, rs: s.rs, rs_raw: d.xRaw, rmv: s.rmv,
+                    ticker: s.ticker, name: s.name, rs: s.rs, rs_raw: xRaw, rmv: s.rmv,
                     rank: s.rank, industry: s.industry, sector: s.sector,
                     finviz_chart_url: s.finviz_chart_url, canslim: s.canslim,
                     price: s.price, volume: s.volume, avg_volume: s.avg_volume,
                     is_up: s.is_up, flip: s.flip, source: s.source,
                     highlights: s.highlights, days_to_earnings: s.days_to_earnings, 
                     tradingview_url: s.tradingview_url,
-                    rs_1w_pct: d.rs_1w_pct, rs_1m_pct: d.rs_1m_pct,
-                    xVal: xVal, yVal: yVal, acc: d.acc, trail: trailNorm,
-                    q: q, color: Q_FILL[q], outlook: outlook
+                    xVal: xRaw, yVal: yVelocity, trail: trail,
+                    q: q, color: Q_FILL[q]
                 };
             });
 
-            // Quadrant filter
-            var visible = processed.filter(function(s) { return activeQuadrants[s.q]; });
-            var visible = processed.filter(function(s) { return activeQuadrants[s.q]; });
-            document.getElementById('filter-count').textContent = visible.length + ' shown (' + totalAvailable + ' matching filters / ' + allStocks.length + ' total)';
+            // 2. QUADRANT BALANCING: PICK TOP 10 FROM EACH
+            var quads = { leading: [], weakening: [], lagging: [], improving: [] };
+            processedAll.forEach(function(p) { quads[p.q].push(p); });
+            
+            var balancedVisible = [];
+            ['leading','improving','weakening','lagging'].forEach(function(qName) {
+                var sorted = quads[qName].sort(function(a,b) { return b.rs_raw - a.rs_raw; });
+                balancedVisible = balancedVisible.concat(sorted.slice(0, 10));
+            });
+
+            // Filter by active quadrants toggle
+            var visible = balancedVisible.filter(function(s) { return activeQuadrants[s.q]; });
+            document.getElementById('filter-count').textContent = visible.length + ' shown (Top 10 per quad / ' + allStocks.length + ' total)';
 
             if (!visible.length) {
                 document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text2);">No stocks in selected quadrants.</div>';
@@ -297,9 +280,6 @@
                 return;
             }
 
-            // =====================================================================
-            // SVG RENDERING
-            // =====================================================================
             // =====================================================================
             // SVG RENDERING
             // =====================================================================
@@ -311,23 +291,23 @@
                 s.trail.forEach(function(tp) { allX.push(tp.x || 0); allY.push(tp.y || 0); });
             });
 
-            var maxAbsX = Math.max.apply(null, allX.map(Math.abs)) || 1;
-            var maxAbsY = Math.max.apply(null, allY.map(Math.abs)) || 1;
+            var maxAbsX = Math.max.apply(null, allX.map(function(v) { return Math.abs(v - medianX); })) || 0.5;
+            var maxAbsY = Math.max.apply(null, allY.map(Math.abs)) || 5;
 
-            // Ensure a minimum playable viewport (clue from RRG structure)
-            if (maxAbsX < 0.5) maxAbsX = 0.5;
+            // Ensure a minimum playable viewport
+            if (maxAbsX < 0.2) maxAbsX = 0.2;
             if (maxAbsY < 5.0) maxAbsY = 5.0;
 
             var tX = function(v) { 
                 var val = +v || 0;
-                return P + ((val + maxAbsX) / (maxAbsX * 2)) * (CW - P * 2); 
+                return P + ((val - (medianX - maxAbsX)) / (maxAbsX * 2)) * (CW - P * 2); 
             };
             var tY = function(v) { 
                 var val = +v || 0;
                 return (CH - P) - ((val + maxAbsY) / (maxAbsY * 2)) * (CH - P * 2); 
             };
 
-            var MX = tX(0), MY = tY(0);
+            var MX = tX(medianX), MY = tY(0);
             var stockG = '', defs = '';
 
             visible.forEach(function(s) {
