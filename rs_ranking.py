@@ -529,7 +529,8 @@ def _export_web_data(df_stocks, df_industries, quick=False, sector_stages=None, 
             "volume": s.get("volume", 0),
             "industry": s.get(TITLE_INDUSTRY, ""),
             "sector": s.get(TITLE_SECTOR, ""),
-            "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}"
+            "tradingview_url": f"https://www.tradingview.com/chart/?symbol={s.get(TITLE_TICKER, 'SPY')}",
+            "finviz_chart_url": f"https://charts2.finviz.com/chart.ashx?t={s.get(TITLE_TICKER, 'SPY')}&ty=c&ta=0&p=d&s=l"
         })
 
     web_data = {
