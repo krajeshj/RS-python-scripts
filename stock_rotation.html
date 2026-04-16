@@ -297,8 +297,10 @@
             // =====================================================================
             // SVG RENDERING
             // =====================================================================
+            // STABLE VIEWPORT: Calculate bounds from ALL processed stocks (top 40)
+            // so the zoom level doesn't jump as you flip quadrants or sliders.
             var allX = [], allY = [];
-            visible.forEach(function(s) {
+            processed.forEach(function(s) {
                 allX.push(s.xVal); allY.push(s.yVal);
                 s.trail.forEach(function(tp) { allX.push(tp.x); allY.push(tp.y); });
             });
