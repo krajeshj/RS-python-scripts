@@ -332,12 +332,35 @@
             var leading = SECTORS.filter(function(s) { return s.q === 'leading'; });
             var improving = SECTORS.filter(function(s) { return s.q === 'improving'; });
 
+            var ETF_MAPPING = {
+                "XLK": { s: "Technology", i: null },
+                "XLE": { s: "Energy", i: null },
+                "XLF": { s: "Financial Services", i: null },
+                "XLV": { s: "Healthcare", i: null },
+                "XLY": { s: "Consumer Cyclical", i: null },
+                "XLP": { s: "Consumer Defensive", i: null },
+                "XLI": { s: "Industrials", i: null },
+                "XLU": { s: "Utilities", i: null },
+                "XLRE": { s: "Real Estate", i: null },
+                "XLB": { s: "Basic Materials", i: null },
+                "XLC": { s: "Communication Services", i: null },
+                "SMH": { s: null, i: ["Semiconductors", "Semiconductor Equipment & Materials"] },
+                "XBI": { s: null, i: ["Biotechnology"] },
+                "XHB": { s: null, i: ["Residential Construction", "Home Improvement Retail", "Building Products & Equipment"] },
+                "XRT": { s: null, i: ["Specialty Retail", "Apparel Retail", "Department Stores", "Internet Retail", "Luxury Goods"] },
+                "XME": { s: null, i: ["Other Industrial Metals & Mining", "Gold", "Steel", "Aluminum", "Copper", "Other Precious Metals & Mining"] }
+            };
+
             var seenTickers = {};
             function getTopStocks(sectorList, max) {
                 var pool = [];
                 sectorList.forEach(function(sec) {
+                    var mapping = ETF_MAPPING[sec.ticker];
+                    if (!mapping) return;
                     var matches = allStocks.filter(function(s) {
-                        return s.sector === sec.sector && !s.is_speculative && !seenTickers[s.ticker];
+                        if (s.is_speculative || seenTickers[s.ticker] || s.sector === 'unknown') return false;
+                        if (mapping.i) return mapping.i.indexOf(s.industry) !== -1;
+                        return s.sector === mapping.s;
                     });
                     matches.sort(function(a, b) { return b.rs - a.rs; });
                     matches.slice(0, 3).forEach(function(s) {
