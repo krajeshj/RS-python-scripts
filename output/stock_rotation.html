@@ -156,12 +156,7 @@
                 fetch('web_data.json?v=' + ts).then(function(r) { return r.json(); }),
                 fetch('stock_history.json?v=' + ts).then(function(r) { return r.json(); })
             ]).then(function(res) {
-                webData = res[0]; 
-                var rawStocks = (res[0].all_stocks || []).concat(res[0].stocks || []).concat(res[0].pulse || []);
-                var unq = {};
-                rawStocks.forEach(function(s) { if (!unq[s.ticker] || s.rs > unq[s.ticker].rs) unq[s.ticker] = s; });
-                allStocks = Object.keys(unq).map(function(k) { return unq[k]; });
-                stockHist = res[1] || {};
+                webData = res[0]; allStocks = res[0].all_stocks || res[0].stocks || []; stockHist = res[1] || {};
                 wireSliders(); render();
             }).catch(function(e) {
                 document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:red;">Data sync error.</div>';
@@ -189,13 +184,7 @@
                 setTimeout(function() { btn.classList.remove('active'); btn.innerHTML = '<div class="toggle-dot"></div> 📋 Copy Tickers'; }, 2000);
             });
         }
-        function median(arr) { 
-            var clean = arr.filter(function(v) { return typeof v === 'number' && !isNaN(v); });
-            if (!clean.length) return 0; 
-            var s = clean.slice().sort(function(a, b) { return a - b; }); 
-            var m = Math.floor(s.length / 2); 
-            return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; 
-        }
+        function median(arr) { if (!arr.length) return 0; var s = arr.slice().sort(function(a, b) { return a - b; }); var m = Math.floor(s.length / 2); return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; }
         function catmullRom2bezier(pts) { var d = ""; if (pts.length === 0) return d; d += "M " + pts[0].x.toFixed(1) + "," + pts[0].y.toFixed(1) + " "; if (pts.length === 1) return d; for (var i = 0; i < pts.length - 1; i++) { var p0 = i === 0 ? pts[0] : pts[i - 1]; var p1 = pts[i]; var p2 = pts[i + 1]; var p3 = i + 2 < pts.length ? pts[i + 2] : p2; var cp1x = p1.x + (p2.x - p0.x) / 6; var cp1y = p1.y + (p2.y - p0.y) / 6; var cp2x = p2.x - (p3.x - p1.x) / 6; var cp2y = p2.y - (p3.y - p1.y) / 6; d += "C " + cp1x.toFixed(1) + "," + cp1y.toFixed(1) + " " + cp2x.toFixed(1) + "," + cp2y.toFixed(1) + " " + p2.x.toFixed(1) + "," + p2.y.toFixed(1) + " "; } return d; }
 
         function render() {
@@ -219,11 +208,10 @@
             var totalAvailable = filtered.length;
             var rawData = filtered.map(function(s) {
                 var h = (stockHist[s.ticker] || []).slice(0, 17);
-                var xRaw = +(s.rs_raw || 0);
-                var rsVal = +(s.rs || 0);
-                var mom1w = +(s.rs_1w_pct || rsVal);
-                var mom1m = +(s.rs_1m_pct || rsVal);
-                var yComposite = (mom1w - mom1m) * 0.7 + (rsVal - mom1w) * 0.3;
+                var xRaw = s.rs_raw || 0;
+                var mom1w = s.rs_1w_pct || s.rs;
+                var mom1m = s.rs_1m_pct || s.rs;
+                var yComposite = (mom1w - mom1m) * 0.7 + (s.rs - mom1w) * 0.3;
 
                 var acc = 0;
                 if (h.length >= 9) {
@@ -256,8 +244,8 @@
 
             var processed = rawData.map(function(d) {
                 var s = d.s;
-                var xVal = (+d.xRaw) - medX;
-                var yVal = (+d.yComposite) - medY;
+                var xVal = d.xRaw - medX;
+                var yVal = d.yComposite - medY;
                 var q = xVal >= 0 ? (yVal >= 0 ? "leading" : "weakening") : (yVal >= 0 ? "improving" : "lagging");
 
                 // Normalize trail relative to medians
@@ -287,8 +275,7 @@
 
             // Quadrant filter
             var visible = processed.filter(function(s) { return activeQuadrants[s.q]; });
-            var debugInfo = visible.length + ' shown (' + totalAvailable + ' matching filters / ' + allStocks.length + ' total)';
-            document.getElementById('filter-count').textContent = debugInfo;
+            document.getElementById('filter-count').textContent = visible.length + ' of ' + totalAvailable + ' stocks';
 
             if (!visible.length) {
                 document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text2);">No stocks in selected quadrants.</div>';
@@ -305,8 +292,8 @@
                 s.trail.forEach(function(tp) { allX.push(tp.x); allY.push(tp.y); });
             });
 
-            var maxAbsX = allX.reduce(function(acc, v) { return (!isNaN(v) && Math.abs(v) > acc) ? Math.abs(v) : acc; }, 0.1);
-            var maxAbsY = allY.reduce(function(acc, v) { return (!isNaN(v) && Math.abs(v) > acc) ? Math.abs(v) : acc; }, 0.1);
+            var maxAbsX = Math.max.apply(null, allX.map(Math.abs)) || 1;
+            var maxAbsY = Math.max.apply(null, allY.map(Math.abs)) || 1;
 
             var tX = function(v) { return P + ((v + maxAbsX) / (maxAbsX * 2)) * (CW - P * 2); };
             var tY = function(v) { return (CH - P) - ((v + maxAbsY) / (maxAbsY * 2)) * (CH - P * 2); };
@@ -315,45 +302,29 @@
             var stockG = '', defs = '';
 
             visible.forEach(function(s) {
-                try {
-                    var trailPts = s.trail.map(function(tp) { return { x: tX(tp.x), y: tY(tp.y) }; });
-                    if (trailPts.length < 2) return;
-                    var jcx = trailPts[trailPts.length - 1].x;
-                    var jcy = trailPts[trailPts.length - 1].y;
-                    var dPaths = '';
-                    for (var i = 0; i < trailPts.length - 1; i++) {
-                        var p0 = i === 0 ? trailPts[0] : trailPts[i - 1];
-                        var p1 = trailPts[i];
-                        var p2 = trailPts[i + 1];
-                        var p3 = i + 2 < trailPts.length ? trailPts[i + 2] : p2;
-                        var cp1x = p1.x + (p2.x - p0.x) / 6;
-                        var cp1y = p1.y + (p2.y - p0.y) / 6;
-                        var cp2x = p2.x - (p3.x - p1.x) / 6;
-                        var cp2y = p2.y - (p3.y - p1.y) / 6;
-                        var segD = "M " + p1.x.toFixed(1) + "," + p1.y.toFixed(1) + " C " + cp1x.toFixed(1) + "," + cp1y.toFixed(1) + " " + cp2x.toFixed(1) + "," + cp2y.toFixed(1) + " " + p2.x.toFixed(1) + "," + p2.y.toFixed(1);
-                        var segOp = 0.1 + 0.6 * ((i + 1) / trailPts.length);
-                        dPaths += '<path d="' + segD + '" fill="none" stroke="' + s.color + '" stroke-width="2.5" stroke-linecap="round" opacity="' + segOp + '"/>';
-                    }
-                    
-                    var dots = trailPts.map(function(p, i) {
-                        if (i === trailPts.length - 1) return '';
-                        var op = 0.1 + 0.9 * (i / trailPts.length);
-                        return '<circle cx="'+p.x+'" cy="'+p.y+'" r="2.5" fill="'+s.color+'" opacity="'+op+'"/>';
-                    }).join('');
+                var trailPts = s.trail.map(function(tp) { return { x: tX(tp.x), y: tY(tp.y) }; });
+                if (trailPts.length < 2) return;
+                var jcx = trailPts[trailPts.length - 1].x;
+                var jcy = trailPts[trailPts.length - 1].y;
+                
+                var dPath = catmullRom2bezier(trailPts);
+                
+                var dots = trailPts.map(function(p, i) {
+                    if (i === trailPts.length - 1) return '';
+                    var op = 0.1 + 0.9 * (i / trailPts.length);
+                    return '<circle cx="'+p.x+'" cy="'+p.y+'" r="1.5" fill="'+s.color+'" opacity="'+op+'"/>';
+                }).join('');
 
-                    var tailX = trailPts.length > 1 ? trailPts[trailPts.length - 2].x : jcx;
-                    var tailY = trailPts.length > 1 ? trailPts[trailPts.length - 2].y : jcy;
-                    var angle = Math.atan2(jcy - tailY, jcx - tailX) * 180 / Math.PI;
-                    var arrow = '<polygon points="-5,-4 7,0 -5,4" fill="' + s.color + '" transform="translate(' + jcx + ',' + jcy + ') rotate(' + angle + ')" />';
+                var tailX = trailPts.length > 1 ? trailPts[trailPts.length - 2].x : jcx;
+                var tailY = trailPts.length > 1 ? trailPts[trailPts.length - 2].y : jcy;
+                var angle = Math.atan2(jcy - tailY, jcx - tailX) * 180 / Math.PI;
+                var arrow = '<polygon points="-5,-4 7,0 -5,4" fill="' + s.color + '" transform="translate(' + jcx + ',' + jcy + ') rotate(' + angle + ')" />';
 
-                    stockG += '<g>' +
-                        dPaths +
-                        dots +
-                        arrow +
-                        '<text x="' + jcx + '" y="' + (jcy - 8) + '" text-anchor="middle" fill="#fff" font-size="8" font-weight="950" font-family="var(--mono)">' + s.ticker + '</text></g>';
-                } catch(err) {
-                    console.error("Render fail for " + s.ticker, err);
-                }
+                stockG += '<g>' +
+                    '<path d="' + dPath + '" fill="none" stroke="' + s.color + '" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>' +
+                    dots +
+                    arrow +
+                    '<text x="' + jcx + '" y="' + (jcy - 8) + '" text-anchor="middle" fill="#fff" font-size="8" font-weight="950" font-family="var(--mono)">' + s.ticker + '</text></g>';
             });
 
             document.getElementById('rrg-container').innerHTML =
