@@ -153,23 +153,24 @@
         function init() {
             var ts = Date.now();
             Promise.all([
-                fetch('web_data.json?v=' + ts).then(function(r) { return r.json(); }),
-                fetch('stock_history.json?v=' + ts).then(function(r) { return r.json(); })
+                fetch('web_data.json?v=' + ts).then(function(r) { if (!r.ok) throw new Error('web_data.json not found'); return r.json(); }),
+                fetch('stock_history.json?v=' + ts).then(function(r) { if (!r.ok) throw new Error('stock_history.json not found'); return r.json(); })
             ]).then(function(res) {
                 webData = res[0]; 
-                // Universe Expansion: Look at internal leader lists + pulse to ensure we have enough candidates
-                allStocks = (res[0].stocks || []).concat(res[0].pulse || []).concat(res[0].all_stocks || []);
+                // Universe Expansion: Combine main list, pulse, and all_stocks to ensure we have candidates
+                var rawList = (res[0].stocks || []).concat(res[0].pulse || []).concat(res[0].all_stocks || []);
                 var unq = {};
-                allStocks.forEach(function(s) { 
-                    if (!unq[s.ticker] || s.rs_raw > (unq[s.ticker].rs_raw || 0)) unq[s.ticker] = s; 
+                rawList.forEach(function(s) { 
+                    if (!s.ticker) return;
+                    if (!unq[s.ticker] || (s.rs || 0) > (unq[s.ticker].rs || 0)) unq[s.ticker] = s; 
                 });
-                allStocks = Object.keys(unq).map(function(k) { return unq[k]; });
-                stockHist = res[1].data || res[1] || {};
-                
-                wireSliders(); render();
-            }).catch(function(e) {
-                console.error(e);
-                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:red;">Data sync error.</div>';
+                allStocks = Object.values(unq);
+                history = res[1] || {};
+                wireSliders();
+                render();
+            }).catch(function(err) {
+                console.error('RRG Data Load Error:', err);
+                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--red);">Data feed error. Please check if web_data.json is deployed.</div>';
             });
         }
 
@@ -260,15 +261,31 @@
             var countMsg = visible.length + ' shown (' + (webData.stocks ? webData.stocks.length : 0) + ' analyzed)';
             document.getElementById('filter-count').textContent = countMsg;
 
-            // 4. VIEWPORT SCALING
+            if (!visible.length) {
+                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text2);">No stocks in selected quadrants.</div>';
+                document.getElementById('stock-grid').innerHTML = '';
+                return;
+            }
+
+            // 4. VIEWPORT SCALING (Robust Guard against NaN/Zero)
             var allX = [], allY = [];
             visible.forEach(function(d) {
-                allX.push(d.x); allY.push(d.y);
-                d.trail.forEach(function(p) { allX.push(p.x); allY.push(p.y); });
+                if (!isNaN(d.x)) allX.push(d.x);
+                if (!isNaN(d.y)) allY.push(d.y);
+                d.trail.forEach(function(p) {
+                    if (!isNaN(p.x)) allX.push(p.x);
+                    if (!isNaN(p.y)) allY.push(p.y);
+                });
             });
 
-            var maxAbsX = Math.max.apply(null, allX.map(Math.abs)) * 1.15 || 5;
-            var maxAbsY = Math.max.apply(null, allY.map(Math.abs)) * 1.15 || 2;
+            var rawX = allX.map(Math.abs);
+            var rawY = allY.map(Math.abs);
+            var maxAbsX = rawX.length ? Math.max.apply(null, rawX) * 1.15 : 5;
+            var maxAbsY = rawY.length ? Math.max.apply(null, rawY) * 1.15 : 2;
+            
+            // Safety Floors to prevent division-by-zero or giant zoomed icons
+            if (maxAbsX < 5) maxAbsX = 5;
+            if (maxAbsY < 2) maxAbsY = 2;
             
             var tX = function(v) { return P + ((v + maxAbsX) / (maxAbsX * 2)) * (CW - P * 2); };
             var tY = function(v) { return (CH - P) - ((v + maxAbsY) / (maxAbsY * 2)) * (CH - P * 2); };
