@@ -75,10 +75,9 @@ def process_day(day_offset, all_data, tickers):
         return {}
         
     df = pd.DataFrame({"symbol": symbols, "score": scores})
-    # Use rank(pct=True) for high-precision floating point percentiles (0-100)
-    df["rank"] = df["score"].rank(pct=True) * 100
     
-    return dict(zip(df["symbol"], df["rank"].round(4)))
+    # Return raw scores for high-fidelity history movement
+    return dict(zip(df["symbol"], df["score"].round(6)))
 
 def main():
     print(f"Loading {PRICE_DATA}...")
