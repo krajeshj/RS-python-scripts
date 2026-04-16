@@ -251,8 +251,9 @@
             });
 
             // Center on group medians
-            var medX = median(rawData.map(function(d) { return d.xRaw; }));
-            var medY = median(rawData.map(function(d) { return d.yComposite; }));
+            // MATCHING SECTOR ROTATION: Absolute centering at 0,0 instead of median centering
+            var medX = 0;
+            var medY = 0;
 
             var processed = rawData.map(function(d) {
                 var s = d.s;
@@ -312,6 +313,10 @@
 
             var maxAbsX = Math.max.apply(null, allX.map(Math.abs)) || 1;
             var maxAbsY = Math.max.apply(null, allY.map(Math.abs)) || 1;
+
+            // Ensure a minimum playable viewport (clue from RRG structure)
+            if (maxAbsX < 0.5) maxAbsX = 0.5;
+            if (maxAbsY < 5.0) maxAbsY = 5.0;
 
             var tX = function(v) { 
                 var val = +v || 0;
