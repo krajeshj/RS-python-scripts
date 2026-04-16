@@ -132,7 +132,10 @@
                 webData = res[0]; 
                 stockHist = res[1].data || res[1] || {};
                 
-                var allStocks = (webData.all_stocks || []).concat(webData.stocks || []).concat(webData.pulse || []);
+                var rawAll = (webData.all_stocks || []).concat(webData.stocks || []).concat(webData.pulse || []);
+                var unq = {};
+                rawAll.forEach(function(s) { if (!unq[s.ticker] || s.rs > unq[s.ticker].rs) unq[s.ticker] = s; });
+                var allStocks = Object.keys(unq).map(function(k) { return unq[k]; });
                 var rawData = [];
                 ETFS.forEach(function(t) {
                     var s = allStocks.find(function(item) { return item.ticker === t; });
@@ -322,20 +325,27 @@
 
         function renderSectorStocks() {
             if (!webData) return;
-            var allStocks = webData.all_stocks || webData.stocks || [];
+            var rawAll = (webData.all_stocks || []).concat(webData.stocks || []).concat(webData.pulse || []);
+            var unq = {};
+            rawAll.forEach(function(s) { if (!unq[s.ticker] || s.rs > unq[s.ticker].rs) unq[s.ticker] = s; });
+            var allStocks = Object.keys(unq).map(function(k) { return unq[k]; });
             var leading = SECTORS.filter(function(s) { return s.q === 'leading'; });
             var improving = SECTORS.filter(function(s) { return s.q === 'improving'; });
 
+            var seenTickers = {};
             function getTopStocks(sectorList, max) {
                 var pool = [];
                 sectorList.forEach(function(sec) {
                     var matches = allStocks.filter(function(s) {
-                        return s.sector === sec.sector && !s.is_speculative;
+                        return s.sector === sec.sector && !s.is_speculative && !seenTickers[s.ticker];
                     });
                     matches.sort(function(a, b) { return b.rs - a.rs; });
                     matches.slice(0, 3).forEach(function(s) {
-                        s._etf = sec.name;
-                        pool.push(s);
+                        if (!seenTickers[s.ticker]) {
+                            s._etf = sec.name;
+                            seenTickers[s.ticker] = true;
+                            pool.push(s);
+                        }
                     });
                 });
                 pool.sort(function(a, b) { return b.rs - a.rs; });
