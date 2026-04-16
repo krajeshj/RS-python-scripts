@@ -187,14 +187,17 @@
                 return true;
             });
 
-            // Using rs_raw for centering logic to get high-fidelity spread
-            var universeRS = pool.map(s => s.rs_raw || s.rs || 0);
+            const getBestRS = (s) => (stockHist[s.ticker] && stockHist[s.ticker].length) ? stockHist[s.ticker][0] : (s.rs || 50);
+
+            // 2. DYNAMIC CENTERING (Unified Percentile Scale 0-100)
+            var universeRS = pool.map(s => getBestRS(s));
             var medRS = median(universeRS) || 50;
             
             var universeMom = pool.map(s => {
-                var h = (stockHist[s.ticker] || []).slice(-5);
-                var avgH = h.length ? (h.reduce((a,b)=>a+b,0)/h.length) : (s.rs_raw||s.rs||0);
-                return ((s.rs_raw || s.rs || 0) - avgH) * 50;
+                var h = (stockHist[s.ticker] || []).slice(0, 10);
+                if(h.length < 2) return 0;
+                var avgH = h.reduce((a,b)=>a+b,0)/h.length;
+                return (h[0] - avgH) * 10;
             });
             var medMom = median(universeMom) || 0;
 
@@ -202,21 +205,27 @@
             var top40 = pool.slice(0, 40);
 
             var candidates = top40.map(s => {
-                var h = (stockHist[s.ticker] || []).slice(-15);
-                var curRS = s.rs_raw || s.rs || 0;
+                var h = (stockHist[s.ticker] || []).slice(0, 15);
+                var curRS = getBestRS(s);
                 var x = curRS - medRS; 
                 
-                var recentArr = h.slice(-5);
-                var avgRecent = recentArr.length ? (recentArr.reduce((a,b)=>a+b,0)/recentArr.length) : curRS;
-                var y = ((curRS - avgRecent) * 50) - medMom;
+                var avgH = h.length ? (h.reduce((a,b)=>a+b,0)/h.length) : curRS;
+                var y = ((curRS - avgH) * 10) - medMom;
+
+                // Outlier Clamping: Prevent 'Black Hole' scaling from massive outliers
+                x = Math.max(-50, Math.min(50, x));
+                y = Math.max(-50, Math.min(50, y));
 
                 var q = x >= 0 ? (y >= 0 ? 'leading' : 'weakening') : (y >= 0 ? 'improving' : 'lagging');
                 var trail = [];
                 for(var i=0; i<h.length; i++) {
                     var trVal = h[i];
-                    var window = h.slice(Math.max(0, i-4), i+1);
+                    var window = h.slice(i, Math.min(h.length, i+5));
                     var trAvg = window.reduce((a,b)=>a+b,0)/window.length;
-                    trail.push({ x: trVal - medRS, y: ((trVal - trAvg) * 50) - medMom });
+                    trail.push({ 
+                        x: Math.max(-55, Math.min(55, trVal - medRS)), 
+                        y: Math.max(-55, Math.min(55, ((trVal - trAvg) * 10) - medMom)) 
+                    });
                 }
                 return { s, x, y, q, trail };
             });
@@ -245,10 +254,9 @@
                 d.trail.forEach(t => { if(!isNaN(t.x)) allX.push(t.x); if(!isNaN(t.y)) allY.push(t.y); });
             });
             
-            var maxAbsX = Math.max(...allX.map(Math.abs), 1) * 1.2;
-            var maxAbsY = Math.max(...allY.map(Math.abs), 1) * 1.2;
-            if (maxAbsX < 0.5) maxAbsX = 2; // Prevent infinite zoom
-            if (maxAbsY < 0.5) maxAbsY = 2;
+            // Intelligent Scaling: Min spread of 2.0 ensures we don't zoom in to sub-pixel clusters
+            var maxAbsX = Math.max(...allX.map(Math.abs), 2.0) * 1.1;
+            var maxAbsY = Math.max(...allY.map(Math.abs), 2.0) * 1.1;
 
             var tX = v => (CW/2) + (v/maxAbsX)*(CW/2 - P);
             var tY = v => (CH/2) - (v/maxAbsY)*(CH/2 - P);
