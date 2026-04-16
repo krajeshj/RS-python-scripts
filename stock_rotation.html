@@ -187,40 +187,37 @@
                 return true;
             });
 
-            var rawUniverseRS = pool.map(s => s.rs || 0);
-            var medRS = median(rawUniverseRS) || 50;
+            // Using rs_raw for centering logic to get high-fidelity spread
+            var universeRS = pool.map(s => s.rs_raw || s.rs || 0);
+            var medRS = median(universeRS) || 50;
             
-            var rawUniverseMom = pool.map(s => {
+            var universeMom = pool.map(s => {
                 var h = (stockHist[s.ticker] || []).slice(-5);
-                var avgH = h.length ? (h.reduce((a,b)=>a+b,0)/h.length) : (s.rs||0);
-                return ((s.rs || 0) - avgH) * 20;
+                var avgH = h.length ? (h.reduce((a,b)=>a+b,0)/h.length) : (s.rs_raw||s.rs||0);
+                return ((s.rs_raw || s.rs || 0) - avgH) * 50;
             });
-            var medMom = median(rawUniverseMom) || 0;
+            var medMom = median(universeMom) || 0;
 
             pool.sort((a,b) => b.rs - a.rs);
             var top40 = pool.slice(0, 40);
 
             var candidates = top40.map(s => {
                 var h = (stockHist[s.ticker] || []).slice(-15);
-                var rs = s.rs || 0;
-                var x = rs - medRS; 
+                var curRS = s.rs_raw || s.rs || 0;
+                var x = curRS - medRS; 
                 
                 var recentArr = h.slice(-5);
-                var avgRecent = recentArr.length ? (recentArr.reduce((a,b)=>a+b,0)/recentArr.length) : rs;
-                var y = ((rs - avgRecent) * 20) - medMom;
+                var avgRecent = recentArr.length ? (recentArr.reduce((a,b)=>a+b,0)/recentArr.length) : curRS;
+                var y = ((curRS - avgRecent) * 50) - medMom;
 
                 var q = x >= 0 ? (y >= 0 ? 'leading' : 'weakening') : (y >= 0 ? 'improving' : 'lagging');
                 var trail = [];
                 for(var i=0; i<h.length; i++) {
-                    var trRS = h[i];
+                    var trVal = h[i];
                     var window = h.slice(Math.max(0, i-4), i+1);
                     var trAvg = window.reduce((a,b)=>a+b,0)/window.length;
-                    trail.push({ x: trRS - medRS, y: ((trRS - trAvg) * 20) - medMom });
+                    trail.push({ x: trVal - medRS, y: ((trVal - trAvg) * 50) - medMom });
                 }
-                // Add jitter to avoid perfect overlaps
-                x += (Math.random() - 0.5) * 0.05;
-                y += (Math.random() - 0.5) * 0.05;
-
                 return { s, x, y, q, trail };
             });
 
