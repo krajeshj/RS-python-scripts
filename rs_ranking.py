@@ -1004,11 +1004,11 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
     df_industries[TITLE_3M] = df_industries.apply(lambda row: getRsAverage(industries, row[TITLE_INDUSTRY], TITLE_3M), axis=1)
     df_industries[TITLE_6M] = df_industries.apply(lambda row: getRsAverage(industries, row[TITLE_INDUSTRY], TITLE_6M), axis=1)
 
-    df_industries[TITLE_PERCENTILE] = pd.qcut(df_industries[TITLE_RS], 100, labels=False, duplicates="drop") + 1
-    df_industries["rs_1w_pct"] = pd.qcut(df_industries["RS_1W"], 100, labels=False, duplicates="drop") + 1
-    df_industries[TITLE_1M] = pd.qcut(df_industries[TITLE_1M], 100, labels=False, duplicates="drop") + 1
-    df_industries[TITLE_3M] = pd.qcut(df_industries[TITLE_3M], 100, labels=False, duplicates="drop") + 1
-    df_industries[TITLE_6M] = pd.qcut(df_industries[TITLE_6M], 100, labels=False, duplicates="drop") + 1
+    df_industries[TITLE_PERCENTILE] = (df_industries[TITLE_RS].rank(pct=True) * 100).astype(int)
+    df_industries["rs_1w_pct"] = (df_industries["RS_1W"].rank(pct=True) * 100).astype(int)
+    df_industries[TITLE_1M] = (df_industries[TITLE_1M].rank(pct=True) * 100).astype(int)
+    df_industries[TITLE_3M] = (df_industries[TITLE_3M].rank(pct=True) * 100).astype(int)
+    df_industries[TITLE_6M] = (df_industries[TITLE_6M].rank(pct=True) * 100).astype(int)
     df_industries[TITLE_TICKERS] = df_industries.apply(lambda row: getTickers(industries, row[TITLE_INDUSTRY]), axis=1)
 
     df_industries = df_industries.sort_values(([TITLE_PERCENTILE]), ascending=False)
