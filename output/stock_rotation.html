@@ -138,27 +138,65 @@
 
         function init() {
             var ts = Date.now();
+            var container = document.getElementById('rrg-container');
             updateSliderUI();
+            
+            console.log("🚀 Starting Data Load...");
+            
             Promise.all([
-                fetch('web_data.json?v=' + ts).then(r => r.json()),
-                fetch('stock_history.json?v=' + ts).then(r => r.json())
+                fetch('web_data.json?v=' + ts).then(r => { 
+                    if(!r.ok) throw new Error("Could not load web_data.json");
+                    console.log("✅ web_data.json received");
+                    return r.json(); 
+                }),
+                fetch('stock_history.json?v=' + ts).then(r => { 
+                    if(!r.ok) throw new Error("Could not load stock_history.json");
+                    console.log("✅ stock_history.json received");
+                    return r.json(); 
+                })
             ]).then(res => {
-                webData = res[0]; stockHist = res[1] || {};
-                var raw = (webData.stocks||[]).concat(webData.pulse||[]).concat(webData.all_stocks||[]);
+                console.log("📦 Processing data points...");
+                webData = res[0]; 
+                stockHist = res[1] || {};
+                
+                // Consolidation Logic
+                var raw = [];
+                if(webData.stocks) raw = raw.concat(webData.stocks);
+                if(webData.pulse) raw = raw.concat(webData.pulse);
+                if(webData.all_stocks) raw = raw.concat(webData.all_stocks);
+                
                 var unq = {};
-                raw.forEach(s => { if(!unq[s.ticker] || s.rs > unq[s.ticker].rs) unq[s.ticker] = s; });
+                raw.forEach(s => { 
+                    if(!s.ticker) return;
+                    if(!unq[s.ticker] || (s.rs > unq[s.ticker].rs)) unq[s.ticker] = s; 
+                });
                 allStocks = Object.keys(unq).map(k => unq[k]);
                 
+                console.log("📊 Loaded " + allStocks.length + " unique stocks.");
+
                 // Slider Listeners
-                document.getElementById('rs-min-slider').addEventListener('input', e => { minRS = Math.min(+e.target.value, maxRS-1); e.target.value = minRS; updateSliderUI(); render(); });
-                document.getElementById('rs-max-slider').addEventListener('input', e => { maxRS = Math.max(+e.target.value, minRS+1); e.target.value = maxRS; updateSliderUI(); render(); });
-                document.getElementById('rmv-min-slider').addEventListener('input', e => { minRMV = Math.min(+e.target.value, maxRMV-1); e.target.value = minRMV; updateSliderUI(); render(); });
-                document.getElementById('rmv-max-slider').addEventListener('input', e => { maxRMV = Math.max(+e.target.value, minRMV+1); e.target.value = maxRMV; updateSliderUI(); render(); });
+                const rsMinS = document.getElementById('rs-min-slider');
+                const rsMaxS = document.getElementById('rs-max-slider');
+                const rmvMinS = document.getElementById('rmv-min-slider');
+                const rmvMaxS = document.getElementById('rmv-max-slider');
+
+                if(rsMinS) rsMinS.addEventListener('input', e => { minRS = Math.min(+e.target.value, maxRS-1); e.target.value = minRS; updateSliderUI(); render(); });
+                if(rsMaxS) rsMaxS.addEventListener('input', e => { maxRS = Math.max(+e.target.value, minRS+1); e.target.value = maxRS; updateSliderUI(); render(); });
+                if(rmvMinS) rmvMinS.addEventListener('input', e => { minRMV = Math.min(+e.target.value, maxRMV-1); e.target.value = minRMV; updateSliderUI(); render(); });
+                if(rmvMaxS) rmvMaxS.addEventListener('input', e => { maxRMV = Math.max(+e.target.value, minRMV+1); e.target.value = maxRMV; updateSliderUI(); render(); });
 
                 render();
             }).catch(e => { 
-                console.error(e);
-                document.getElementById('rrg-container').innerHTML = '<div style="padding:100px;text-align:center;color:red;">Data Load Error. Check Console.</div>'; 
+                console.error("❌ CRTICAL ERROR:", e);
+                var detail = e.message || "Unknown Error";
+                if(detail.includes("fetch")) detail = "CORS/Security Block. Please run via Local Server.";
+                container.innerHTML = `
+                    <div style="padding:50px; text-align:center;">
+                        <h2 style="color:#ef4444;">Data Load Error</h2>
+                        <p style="color:#94a3b8; font-family:monospace;">${detail}</p>
+                        <p style="font-size:0.8rem; margin-top:20px;">Ensure web_data.json and stock_history.json are in the same folder.</p>
+                    </div>
+                `;
             });
         }
 
