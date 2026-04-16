@@ -227,19 +227,28 @@
                 var h = (stockHist[s.ticker] || []).slice(0, 20);
                 var xRaw = +(s.rs_raw || 0);
                 var todayRank = +(s.rank || 0);
-                var prevRank = +(h[7] || todayRank);
                 
-                // Y = CHANGE IN ABSOLUTE RANK 
-                // Using 1.5 multiplier to match visual scale of Sector Rotation
-                var yVelocity = (prevRank - todayRank) * 1.5;
+                // UNITS SYNC: h[t] is Percentile (1-100), todayRank is Absolute (1-1447)
+                // We must project Percentile -> Rank to prevent math collision
+                var getProjectedRank = function(pct, fallback) {
+                    if (pct == null) return fallback;
+                    // Project 100% -> Rank 1, 0% -> Rank universeSize
+                    return universeSize - ((universeSize * pct) / 100) + 1;
+                };
+
+                var histRank7 = getProjectedRank(h[7], todayRank);
+                
+                // Y = CHANGE IN PROJECTED RANK 
+                var yVelocity = (histRank7 - todayRank) * 2.0;
 
                 var rawTrail = [];
                 for (var t = 0; t < 10; t++) {
-                    var trRank = +(h[t] || todayRank);
-                    // Synthesize RS Raw for the trail using rank-ratio projection
+                    var trRank = getProjectedRank(h[t], todayRank);
+                    // Synthesize RS Raw for the trail 
                     var trX = xRaw * ((universeSize + 1 - trRank) / (universeSize + 1 - todayRank));
-                    var trPrevRank = +(h[t+1] || trRank);
-                    var trY = (trPrevRank - trRank) * 1.5;
+                    
+                    var trPrevRank = getProjectedRank(h[t+1], trRank);
+                    var trY = (trPrevRank - trRank) * 2.0;
                     rawTrail.push({ x: trX, y: trY });
                 }
                 var trail = rawTrail.reverse(); // oldest to youngest
