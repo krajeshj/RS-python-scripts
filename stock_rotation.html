@@ -222,133 +222,108 @@
             filtered.sort(function(a, b) { return b.rs - a.rs; });
             filtered = filtered.slice(0, 40); // Elite Top 40
             
-            // 1. Process math for ALL filtered candidates
+            // 1. Process math (Synchronized 0-100 Percentile Scale)
             var candidates = filtered.map(function(s) {
                 var h = (stockHist[s.ticker] || []).slice(0, 20);
-                var todayRaw = +(s.rs_raw || 1);
                 var todayRS = +(s.rs || 0);
-
+                
+                // Momentum = Alpha weighted ROC of percentiles (Symmetric 0-100)
                 var rawTrail = [];
                 for (var t = 0; t < 10; t++) {
-                    var trRaw = +(h[t] || todayRaw);
-                    var trRaw_1w = +(h[t+5] || trRaw);
-                    var trRaw_1m = +(h[t+15] || trRaw);
-                    
-                    // X = Raw Score. Y = Momentum of Raw Score
-                    var trX = trRaw; 
-                    var trY = (trRaw_1w - trRaw_1m) * 0.7 + (trRaw - trRaw_1w) * 0.3;
-                    rawTrail.push({ x: trX, y: trY });
+                    var trRS = +(h[t] || todayRS);
+                    var tr1w = +(h[t+5] || trRS);
+                    var tr1m = +(h[t+15] || trRS);
+                    var trY = (tr1w - tr1m) * 0.7 + (trRS - tr1w) * 0.3;
+                    rawTrail.push({ x: trRS, y: trY });
                 }
                 
-                var currentX = todayRaw;
-                var currentY = rawTrail[0].y;
-
-                return {
-                    s: s, x: currentX, y: currentY, trail: rawTrail
-                };
+                return { s: s, x: todayRS, y: rawTrail[0].y, trail: rawTrail };
             });
 
-            // 2. Center Crosshair on Group Median
-            var internalMedianX = median(candidates.map(function(d) { return d.x; })) || 1;
-            var internalMedianY = median(candidates.map(function(d) { return d.y; })) || 0;
+            // 2. Absolute Centering (Sector Rotation Style)
+            var medX = 100, medY = 0; // Centered on perfect relative strength and neutral momentum
 
-            // 3. Determine Quadrants
             var processed = candidates.map(function(d) {
-                var xRel = d.x - internalMedianX;
-                var yRel = d.y - internalMedianY;
-                var q = xRel >= 0 ? (yRel >= 0 ? "leading" : "weakening") : (yRel >= 0 ? "improving" : "lagging");
-                
-                var trailRel = d.trail.map(function(tp) {
-                    return { x: tp.x - internalMedianX, y: tp.y - internalMedianY };
-                }).reverse();
-
-                return {
-                    s: d.s, xRel: xRel, yRel: yRel, q: q, trailRel: trailRel
-                };
+                var xVal = d.x - medX;
+                var yVal = d.y - medY;
+                var q = xVal >= 0 ? (yVal >= 0 ? "leading" : "weakening") : (yVal >= 0 ? "improving" : "lagging");
+                var trailRel = d.trail.map(function(tp) { return { x: tp.x - medX, y: tp.y - medY }; }).reverse();
+                return { s: d.s, x: xVal, y: yVal, q: q, trail: trailRel };
             });
 
-            // 4. BALANCED SLICING: Pick Top 10 strongest by rs_raw from each quadrant (40 total)
+            // 3. BALANCED SLICING (10 per Quadrant)
             var quads = { leading: [], weakening: [], lagging: [], improving: [] };
             processed.forEach(function(d) { quads[d.q].push(d); });
             
             var finalSelection = [];
-            ['leading','improving','weakening','lagging'].forEach(function(qName) {
-                var sorted = quads[qName].sort(function(a,b) { return (b.s.rs_raw || 0) - (a.s.rs_raw || 0); });
+            ['leading','improving','weakening','lagging'].forEach(function(q) {
+                var sorted = quads[q].sort(function(a,b) { return (b.s.rs_raw || 0) - (a.s.rs_raw || 0); });
                 finalSelection = finalSelection.concat(sorted.slice(0, 10));
             });
 
             var visible = finalSelection.filter(function(d) { return activeQuadrants[d.q]; });
-            var totalUniverseCount = (webData && webData.stocks) ? webData.stocks.length : 0;
-            document.getElementById('filter-count').textContent = visible.length + ' shown (' + totalUniverseCount + ' Elite leaders monitored)';
+            var countMsg = visible.length + ' shown (' + (webData.stocks ? webData.stocks.length : 0) + ' analyzed)';
+            document.getElementById('filter-count').textContent = countMsg;
 
-            if (!visible.length) {
-                document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text2);">No stocks in selected quadrants.</div>';
-                document.getElementById('stock-grid').innerHTML = '';
-                return;
-            }
-
-            // 5. VIEWPORT SCALING (Engineering Style)
+            // 4. VIEWPORT SCALING
             var allX = [], allY = [];
             visible.forEach(function(d) {
-                allX.push(d.xRel); allY.push(d.yRel);
-                d.trailRel.forEach(function(tp) { allX.push(tp.x); allY.push(tp.y); });
+                allX.push(d.x); allY.push(d.y);
+                d.trail.forEach(function(p) { allX.push(p.x); allY.push(p.y); });
             });
 
-            var maxAbsX = Math.max.apply(null, allX.map(Math.abs)) * 1.1 || 0.1;
-            var maxAbsY = Math.max.apply(null, allY.map(Math.abs)) * 1.1 || 1.0;
-
+            var maxAbsX = Math.max.apply(null, allX.map(Math.abs)) * 1.15 || 5;
+            var maxAbsY = Math.max.apply(null, allY.map(Math.abs)) * 1.15 || 2;
+            
             var tX = function(v) { return P + ((v + maxAbsX) / (maxAbsX * 2)) * (CW - P * 2); };
             var tY = function(v) { return (CH - P) - ((v + maxAbsY) / (maxAbsY * 2)) * (CH - P * 2); };
-
             var MX = tX(0), MY = tY(0);
+
+            // Grid Lines (Sector Mirror)
+            var gridLines = '';
+            for(var step = 1; step < 10; step++) {
+                var gX = P + (step/10)*(CW - P*2);
+                var gY = P + (step/10)*(CH - P*2);
+                gridLines += '<line x1="'+gX+'" y1="'+P+'" x2="'+gX+'" y2="'+(CH-P)+'" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>';
+                gridLines += '<line x1="' + P + '" y1="' + gY + '" x2="' + (CW - P) + '" y2="' + gY + '" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>';
+            }
+
             var stockG = '', defs = '';
-
             visible.forEach(function(d) {
-                var s = d.s;
-                var cx = tX(d.xRel), cy = tY(d.yRel);
-                var trailPts = d.trailRel.map(function(tp) { return { x: tX(tp.x), y: tY(tp.y) }; });
+                var s = d.s, pts = d.trail.map(function(p) { return { x: tX(p.x), y: tY(p.y) }; });
+                var cx = tX(d.x), cy = tY(d.y);
                 
-                // Fluid Catmull-Rom Path for Trails
-                var pathD = catmullRom2bezier(trailPts);
-                
-                // Temporal Opacity Fading
-                var gradId = "grad-" + s.ticker.replace(/[^a-zA-Z0-9]/g, '');
-                defs += '<linearGradient id="' + gradId + '" gradientUnits="userSpaceOnUse" x1="' + trailPts[0].x + '" y1="' + trailPts[0].y + '" x2="' + cx + '" y2="' + cy + '">' +
-                       '<stop offset="0%" stop-color="' + Q_FILL[d.q] + '" stop-opacity="0.05"/>' +
-                       '<stop offset="100%" stop-color="' + Q_FILL[d.q] + '" stop-opacity="0.8"/>' +
-                       '</linearGradient>';
+                var trailPath = catmullRom2bezier(pts);
+                var gradId = "grad-" + s.ticker.replace(/[^a-zA-Z]/g, '');
+                defs += '<linearGradient id="' + gradId + '" x1="' + pts[0].x + '" y1="' + pts[0].y + '" x2="' + cx + '" y2="' + cy + '" gradientUnits="userSpaceOnUse">' +
+                        '<stop offset="0%" stop-color="' + Q_FILL[d.q] + '" stop-opacity="0"/>' +
+                        '<stop offset="100%" stop-color="' + Q_FILL[d.q] + '" stop-opacity="0.6"/></linearGradient>';
 
-                var textX = cx + 8;
-                var textY = cy + 4;
-
-                // Engineering Style Arrowhead (Polygon)
-                var last = trailPts[trailPts.length-1];
-                var prev = trailPts[trailPts.length-2] || { x: cx-1, y: cy };
-                var angle = Math.atan2(cy - prev.y, cx - prev.x) * 180 / Math.PI;
+                var angle = pts.length > 1 ? Math.atan2(cy - pts[pts.length-2].y, cx - pts[pts.length-2].x) * 180 / Math.PI : 0;
                 var arrow = '<polygon points="-6,-5 8,0 -6,5" fill="' + Q_FILL[d.q] + '" transform="translate(' + cx + ',' + cy + ') rotate(' + angle + ')" />';
 
-                stockG += '<g class="stock-node" data-ticker="' + s.ticker + '">' +
-                          '<path d="' + pathD + '" fill="none" stroke="url(#' + gradId + ')" stroke-width="2.5" />' +
-                          '<circle cx="' + cx + '" cy="' + cy + '" r="2" fill="' + Q_FILL[d.q] + '" />' +
-                          arrow +
-                          '<text x="' + textX + '" y="' + textY + '" fill="#e2e8f0" font-size="11" font-weight="900" style="paint-order:stroke;stroke:#0f172a;stroke-width:3px;">' + s.ticker + '</text></g>';
+                stockG += '<g>' +
+                    '<path d="' + trailPath + '" fill="none" stroke="url(#' + gradId + ')" stroke-width="2.5" stroke-linecap="round"/>' +
+                    arrow +
+                    '<text x="' + cx + '" y="' + (cy - 12) + '" text-anchor="middle" fill="#fff" font-size="10" font-weight="800" font-family="var(--mono)" style="paint-order:stroke;stroke:#0a1120;stroke-width:3px;">' + s.ticker + '</text></g>';
             });
 
             document.getElementById('rrg-container').innerHTML = 
                 '<svg viewBox="0 0 ' + CW + ' ' + CH + '"><defs>' + defs + '</defs>' +
-                '<rect x="' + P + '" y="' + P + '" width="' + (MX - P) + '" height="' + (MY - P) + '" fill="rgba(96,165,250,0.04)"/>' +
-                '<rect x="' + MX + '" y="' + P + '" width="' + (CW - P - MX) + '" height="' + (MY - P) + '" fill="rgba(34,197,94,0.04)"/>' +
-                '<rect x="' + P + '" y="' + MY + '" width="' + (MX - P) + '" height="' + (CH - P - MY) + '" fill="rgba(239,68,68,0.04)"/>' +
-                '<rect x="' + MX + '" y="' + MY + '" width="' + (CW - P - MX) + '" height="' + (CH - P - MY) + '" fill="rgba(245,158,11,0.04)"/>' +
-                '<line x1="' + MX + '" y1="' + P + '" x2="' + MX + '" y2="' + (CH - P) + '" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" stroke-dasharray="5,4"/>' +
-                '<line x1="' + P + '" y1="' + MY + '" x2="' + (CW - P) + '" y2="' + MY + '" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" stroke-dasharray="5,4"/>' +
-                '<text x="' + (P + 10) + '" y="' + (P + 20) + '" fill="#60a5fa" font-size="12" font-weight="900" opacity="0.4">IMPROVING</text>' +
-                '<text x="' + (CW - P - 75) + '" y="' + (P + 20) + '" fill="#22c55e" font-size="12" font-weight="900" opacity="0.4">LEADING</text>' +
-                '<text x="' + (P + 10) + '" y="' + (CH - P - 10) + '" fill="#ef4444" font-size="12" font-weight="900" opacity="0.4">LAGGING</text>' +
-                '<text x="' + (CW - P - 90) + '" y="' + (CH - P - 10) + '" fill="#f59e0b" font-size="12" font-weight="900" opacity="0.4">WEAKENING</text>' +
+                '<rect x="' + P + '" y="' + P + '" width="' + (MX - P) + '" height="' + (MY - P) + '" fill="#16222b"/>' +
+                '<rect x="' + MX + '" y="' + P + '" width="' + (CW - P - MX) + '" height="' + (MY - P) + '" fill="#122a28"/>' +
+                '<rect x="' + P + '" y="' + MY + '" width="' + (MX - P) + '" height="' + (CH - P - MY) + '" fill="#2d1a22"/>' +
+                '<rect x="' + MX + '" y="' + MY + '" width="' + (CW - P - MX) + '" height="' + (CH - P - MY) + '" fill="#2c2214"/>' +
+                gridLines +
+                '<line x1="' + MX + '" y1="' + P + '" x2="' + MX + '" y2="' + (CH - P) + '" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>' +
+                '<line x1="' + P + '" y1="' + MY + '" x2="' + (CW - P) + '" y2="' + MY + '" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>' +
+                '<text x="' + (P + 10) + '" y="' + (P + 22) + '" fill="#60a5fa" font-size="11" font-weight="900" opacity="0.6">IMPROVING</text>' +
+                '<text x="' + (CW - P - 60) + '" y="' + (P + 22) + '" fill="#10b981" font-size="11" font-weight="900" opacity="0.6">LEADING</text>' +
+                '<text x="' + (P + 10) + '" y="' + (CH - P - 12) + '" fill="#ef4444" font-size="11" font-weight="900" opacity="0.6">LAGGING</text>' +
+                '<text x="' + (CW - P - 75) + '" y="' + (CH - P - 12) + '" fill="#f59e0b" font-size="11" font-weight="900" opacity="0.6">WEAKENING</text>' +
                 stockG + '</svg>';
 
-            // CARDS (Clean integer display)
+            // CARDS (Restore 'Morning' Details)
             var cardsHtml = '';
             visible.forEach(function(d, idx) {
                 var s = d.s;
@@ -360,40 +335,63 @@
                     s.outlook === 'curling' ? 'outlook-curling' : 'outlook-declining';
 
                 function fmtVol(v) { if (!v) return 'N/A'; if (v >= 1e6) return (v/1e6).toFixed(1)+'M'; if (v >= 1e3) return (v/1e3).toFixed(0)+'K'; return ''+v; }
-                var volStyle = 'font-size:0.65rem;color:var(--text2);padding:2px 6px;border-radius:4px;border:1px solid var(--border);';
-                var hiTags = s.highlights ? s.highlights.split(', ').map(function(h) { return '<span class="highlight-tag">' + h + '</span>'; }).join('') : '';
+                var volStyle = 'font-size:0.65rem;color:var(--text2);padding:2px 6px;border-radius:4px;border:1px solid var(--border);background:var(--surface);display:inline-block;';
+                if (s.volume > s.avg_volume) {
+                    volStyle = s.is_up ?
+                        'font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:4px;border:1px solid rgba(0,230,118,0.3);background:rgba(0,230,118,0.1);color:var(--green);display:inline-block;' :
+                        'font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:4px;border:1px solid rgba(255,145,0,0.3);background:rgba(255,145,0,0.1);color:var(--orange);display:inline-block;';
+                }
+
+                var canslimHtml = '';
+                if (s.canslim) {
+                    var letters = ['C','A','N','S','L','I','M'];
+                    canslimHtml = '<div class="canslim-tray">' + letters.map(function(l) {
+                        var active = s.canslim[l.toLowerCase()];
+                        return '<div class="canslim-letter ' + (active ? 'active' : '') + '" title="' + l + '">' + l + '</div>';
+                    }).join('') + '</div>';
+                }
 
                 cardsHtml += '<div class="stock-card" data-ticker="' + s.ticker + '" style="animation-delay:' + (idx*0.05) + 's">' +
-                    '<div class="card-delete" onclick="hideTicker(\'' + s.ticker + '\')">✕</div>' +
+                    '<div class="card-delete" onclick="hideTicker(\'' + s.ticker + '\')" title="Hide ' + s.ticker + '">✕</div>' +
                     '<div style="display:flex;justify-content:space-between;align-items:flex-start;">' +
                         '<div>' +
                             '<div style="display:flex;align-items:center;gap:8px;">' +
                                 '<a href="' + (s.tradingview_url || '#') + '" target="_blank" class="ticker">' + s.ticker + '</a>' +
-                                '<div class="rs-pct-badge">RS: ' + Math.round(s.rs) + '</div>' +
+                                '<div class="rs-pct-badge">Rank: ' + Math.round(s.rs) + '</div>' +
                             '</div>' +
                             '<div class="company-name">' + (s.name || '') + '</div>' +
+                            '<div class="meta-info" style="margin-top:4px;font-size:0.75rem;">' + (s.industry || '') + ' &bull; ' + (s.sector || '') + '</div>' +
+                            canslimHtml +
                         '</div>' +
                         '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;padding-right:28px;">' +
                             '<span style="font-size:0.65rem;padding:2px 8px;border-radius:4px;background:' + Q_FILL[d.q] + '22;color:' + Q_FILL[d.q] + ';border:1px solid ' + Q_FILL[d.q] + '44;font-weight:800;">#' + (s.rank || '') + ' ' + d.q.toUpperCase() + '</span>' +
+                            (s.flip ? '<div class="flip-badge">⚡ PRIME FLIP</div>' : '') +
                             '<div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;margin-top:4px;">' +
                                 (s.price ? '<div style="' + volStyle + '">$' + s.price.toFixed(2) + '</div>' : '') +
                                 '<div style="' + volStyle + '" title="Avg Vol: ' + fmtVol(s.avg_volume) + '">Vol: ' + fmtVol(s.volume) + '</div>' +
                             '</div>' +
                         '</div>' +
                     '</div>' +
+                    (s.days_to_earnings >= 0 && s.days_to_earnings <= 14 ? '<div class="earnings-alert">📅 EARNINGS IN ' + s.days_to_earnings + 'D</div>' : '') +
                     (s.finviz_chart_url ? '<a href="' + (s.tradingview_url || '#') + '" target="_blank" class="chart-link"><img src="' + s.finviz_chart_url + '" class="chart-img" loading="lazy"></a>' : '') +
                     '<div class="metrics">' +
-                        '<div class="metric"><span class="metric-label">RS Rank</span><span class="metric-value" style="color:var(--cyan);">' + Math.round(s.rs) + '</span></div>' +
+                        '<div class="metric"><span class="metric-label">RS Pct</span><span class="metric-value" style="color:var(--cyan);">' + Math.round(s.rs) + '</span></div>' +
                         '<div class="metric"><span class="metric-label">RMV</span><span class="metric-value">' + (s.rmv != null ? s.rmv.toFixed(1) : 'N/A') + '</span></div>' +
-                        '<div class="metric"><span class="metric-label">1W RS</span><span class="metric-value">' + Math.round(s.rs_1w_pct || 50) + '</span></div>' +
-                        '<div class="metric"><span class="metric-label">1M RS</span><span class="metric-value">' + Math.round(s.rs_1m_pct || 50) + '</span></div>' +
+                        '<div class="metric"><span class="metric-label">1W RS</span><span class="metric-value">' + (s.rs_1w_pct ? Math.round(s.rs_1w_pct) : 'N/A') + '</span></div>' +
+                        '<div class="metric"><span class="metric-label">1M RS</span><span class="metric-value">' + (s.rs_1m_pct ? Math.round(s.rs_1m_pct) : 'N/A') + '</span></div>' +
                     '</div>' +
-                    '<div class="highlights">' + hiTags + '</div>' +
+                    '<div class="highlights">' + (s.highlights ? s.highlights.split(', ').map(function(h) { return '<span class="highlight-tag">' + h + '</span>'; }).join('') : '') + '</div>' +
                     '<div style="display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--border);padding-top:8px;">' +
                         '<span class="outlook-tag ' + outlookClass + '">' + outlookLabel + '</span>' +
                     '</div>' +
                 '</div>';
             });
+            document.getElementById('stock-grid').innerHTML = cardsHtml;
+        }
+        init();
+    </script>
+</body>
+</html>
             document.getElementById('stock-grid').innerHTML = cardsHtml;
         }
         init();
