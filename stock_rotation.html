@@ -286,17 +286,27 @@
             // =====================================================================
             // SVG RENDERING
             // =====================================================================
+            // =====================================================================
+            // SVG RENDERING
+            // =====================================================================
             var allX = [], allY = [];
             visible.forEach(function(s) {
                 allX.push(s.xVal); allY.push(s.yVal);
                 s.trail.forEach(function(tp) { allX.push(tp.x); allY.push(tp.y); });
             });
 
-            var maxAbsX = Math.max.apply(null, allX.map(Math.abs)) || 1;
-            var maxAbsY = Math.max.apply(null, allY.map(Math.abs)) || 1;
+            var maxAbsX = 0.1, maxAbsY = 0.1;
+            allX.forEach(function(v) { var av = Math.abs(v); if (!isNaN(av) && av > maxAbsX) maxAbsX = av; });
+            allY.forEach(function(v) { var av = Math.abs(v); if (!isNaN(av) && av > maxAbsY) maxAbsY = av; });
 
-            var tX = function(v) { return P + ((v + maxAbsX) / (maxAbsX * 2)) * (CW - P * 2); };
-            var tY = function(v) { return (CH - P) - ((v + maxAbsY) / (maxAbsY * 2)) * (CH - P * 2); };
+            var tX = function(v) { 
+                var val = +v || 0;
+                return P + ((val + maxAbsX) / (maxAbsX * 2)) * (CW - P * 2); 
+            };
+            var tY = function(v) { 
+                var val = +v || 0;
+                return (CH - P) - ((val + maxAbsY) / (maxAbsY * 2)) * (CH - P * 2); 
+            };
 
             var MX = tX(0), MY = tY(0);
             var stockG = '', defs = '';
