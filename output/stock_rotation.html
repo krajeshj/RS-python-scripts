@@ -156,7 +156,12 @@
                 fetch('web_data.json?v=' + ts).then(function(r) { return r.json(); }),
                 fetch('stock_history.json?v=' + ts).then(function(r) { return r.json(); })
             ]).then(function(res) {
-                webData = res[0]; allStocks = res[0].all_stocks || res[0].stocks || []; stockHist = res[1] || {};
+                webData = res[0]; 
+                var rawStocks = res[0].all_stocks || res[0].stocks || [];
+                var unq = {};
+                rawStocks.forEach(function(s) { if (!unq[s.ticker] || s.rs > unq[s.ticker].rs) unq[s.ticker] = s; });
+                allStocks = Object.keys(unq).map(function(k) { return unq[k]; });
+                stockHist = res[1] || {};
                 wireSliders(); render();
             }).catch(function(e) {
                 document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:red;">Data sync error.</div>';
