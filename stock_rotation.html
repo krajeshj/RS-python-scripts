@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
-    <title>Stock Rotation - Rajesh's Stock Screener</title>
+    <title>Stock Rotation Map - Rajesh's Stock Screener</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -12,6 +12,7 @@
             --bg: #06060f; --bg2: #0d0d1a; --surface: rgba(255, 255, 255, .04); --border: rgba(255, 255, 255, .08);
             --text: #e4e4ef; --text2: #8888a8; --accent: #6c5ce7; --accent2: #a29bfe; --cyan: #00e5ff;
             --green: #00e676; --orange: #ff9100; --red: #ff5252;
+            --q-leading: #22c55e; --q-weakening: #f59e0b; --q-lagging: #ef4444; --q-improving: #60a5fa;
             --font: 'Outfit', system-ui, sans-serif; --mono: 'JetBrains Mono', monospace;
             --glass: rgba(18,18,40,.72); --glass-b: 12px; --radius: 16px; --radius-sm: 10px;
             --shadow: 0 8px 32px rgba(0,0,0,.45);
@@ -26,7 +27,7 @@
         .nav-links { display: flex; gap: 1rem; margin: 0.5rem 0; flex-wrap: wrap; justify-content: center; }
         .nav-link { color: var(--text2); text-decoration: none; font-weight: 600; font-size: 0.85rem; padding: 6px 16px; border-radius: 20px; transition: all 0.3s ease; border: 1px solid transparent; }
         .nav-link.active { color: var(--cyan); background: rgba(0, 229, 255, 0.1); border-color: rgba(0, 229, 255, 0.2); }
-        .container { max-width: 1100px; margin: 0 auto; padding: 20px 15px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 
         .dashboard-tools { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1.5rem; background: var(--surface); padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border); }
         .slider-group { display: flex; flex-direction: column; gap: 4px; min-width: 200px; }
@@ -75,6 +76,7 @@
     </header>
 
     <div class="container">
+        <!-- Dashboard Filter Suite -->
         <div class="dashboard-tools">
             <div class="slider-group">
                 <label>RS Range: <span id="rs-min-val" class="slider-val">75</span> - <span id="rs-max-val" class="slider-val">100</span></label>
@@ -105,11 +107,12 @@
             </div>
         </div>
 
+        <!-- Quadrant Filters (Styled like Sector Rotation) -->
         <div class="q-toggles">
-            <label class="q-label" style="color: #10b981;"><input type="checkbox" id="q-leading" checked onchange="render()"> Leading</label>
-            <label class="q-label" style="color: #3b82f6;"><input type="checkbox" id="q-improving" checked onchange="render()"> Improving</label>
-            <label class="q-label" style="color: #f59e0b;"><input type="checkbox" id="q-weakening" checked onchange="render()"> Weakening</label>
-            <label class="q-label" style="color: #ef4444;"><input type="checkbox" id="q-lagging" checked onchange="render()"> Lagging</label>
+            <label class="q-label" style="color: var(--q-leading);"><input type="checkbox" id="q-leading" checked onchange="render()"> Leading</label>
+            <label class="q-label" style="color: var(--q-improving);"><input type="checkbox" id="q-improving" checked onchange="render()"> Improving</label>
+            <label class="q-label" style="color: var(--q-weakening);"><input type="checkbox" id="q-weakening" checked onchange="render()"> Weakening</label>
+            <label class="q-label" style="color: var(--q-lagging);"><input type="checkbox" id="q-lagging" checked onchange="render()"> Lagging</label>
             <span id="filter-status" style="margin-left:auto; font-size:0.75rem; color:var(--text2); font-weight:700;">Loading...</span>
         </div>
 
@@ -124,7 +127,14 @@
         var webData = null, stockHist = null, allStocks = [];
         var minRS = 75, maxRS = 100, minRMV = 10, maxRMV = 45;
         var filters = { quality: true, minervini: false, top5: false };
-        var Q_FILL = { leading: '#10b981', weakening: '#f59e0b', lagging: '#ef4444', improving: '#3b82f6' };
+        var Q_FILL = { leading: '#22c55e', weakening: '#f59e0b', lagging: '#ef4444', improving: '#60a5fa' };
+
+        function median(arr) {
+            var s = arr.slice().sort((a,b) => a-b);
+            if(!s.length) return 0;
+            var m = Math.floor(s.length/2);
+            return s.length % 2 ? s[m] : (s[m-1] + s[m])/2;
+        }
 
         function init() {
             var ts = Date.now();
@@ -139,25 +149,28 @@
                 raw.forEach(s => { if(!unq[s.ticker] || s.rs > unq[s.ticker].rs) unq[s.ticker] = s; });
                 allStocks = Object.keys(unq).map(k => unq[k]);
                 
-                // Wire Listeners
+                // Slider Listeners
                 document.getElementById('rs-min-slider').addEventListener('input', e => { minRS = Math.min(+e.target.value, maxRS-1); e.target.value = minRS; updateSliderUI(); render(); });
                 document.getElementById('rs-max-slider').addEventListener('input', e => { maxRS = Math.max(+e.target.value, minRS+1); e.target.value = maxRS; updateSliderUI(); render(); });
                 document.getElementById('rmv-min-slider').addEventListener('input', e => { minRMV = Math.min(+e.target.value, maxRMV-1); e.target.value = minRMV; updateSliderUI(); render(); });
                 document.getElementById('rmv-max-slider').addEventListener('input', e => { maxRMV = Math.max(+e.target.value, minRMV+1); e.target.value = maxRMV; updateSliderUI(); render(); });
 
                 render();
-            }).catch(e => { document.getElementById('rrg-container').innerHTML = '<div style="padding:100px;text-align:center;color:red;">Data Load Error.</div>'; });
+            }).catch(e => { 
+                console.error(e);
+                document.getElementById('rrg-container').innerHTML = '<div style="padding:100px;text-align:center;color:red;">Data Load Error. Check Console.</div>'; 
+            });
         }
 
         function toggleFilter(k) { filters[k] = !filters[k]; document.getElementById(k+'-btn').classList.toggle('active', filters[k]); render(); }
         
         function updateSliderUI() {
             var rsF = document.getElementById('rs-fill');
-            rsF.style.left = ((minRS - 50) * 2) + '%'; rsF.style.right = (100 - (maxRS - 50) * 2) + '%';
+            if(rsF) { rsF.style.left = ((minRS - 50) * 2) + '%'; rsF.style.right = (100 - (maxRS - 50) * 2) + '%'; }
             document.getElementById('rs-min-val').textContent = minRS; document.getElementById('rs-max-val').textContent = maxRS;
 
             var rmvF = document.getElementById('rmv-fill');
-            rmvF.style.left = minRMV + '%'; rmvF.style.right = (100 - maxRMV) + '%';
+            if(rmvF) { rmvF.style.left = minRMV + '%'; rmvF.style.right = (100 - maxRMV) + '%'; }
             document.getElementById('rmv-min-val').textContent = minRMV; document.getElementById('rmv-max-val').textContent = maxRMV;
         }
 
@@ -165,36 +178,48 @@
             if(!webData || !allStocks.length) return;
             var topSectors = (filters.top5 && webData.stages) ? webData.stages.slice(0,5).map(s => s.sector) : [];
             
-            // STAGE 1: Dashboard Filter Suite
+            // 1. DASHBOARD POOL
             var pool = allStocks.filter(s => {
                 if(s.rs < minRS || s.rs > maxRS) return false;
                 if(s.rmv < minRMV || s.rmv > maxRMV) return false;
                 if(filters.quality && s.is_speculative) return false;
                 if(filters.minervini && !s.is_minervini) return false;
-                if(filters.top5 && topSectors.length && !topSectors.includes(s.sector)) return false;
+                if(filters.top5 && topSectors.length && !top5Sectors.includes(s.sector)) return false;
                 return true;
             });
 
-            // STAGE 2: Pick Exactly Top 40
+            // 2. DYNAMIC CENTERING MATH
+            var rawUniverseRS = pool.map(s => s.rs || 0);
+            var medRS = median(rawUniverseRS) || 50;
+            
+            var rawUniverseMom = pool.map(s => {
+                var h = (stockHist[s.ticker] || []).slice(0, 5);
+                return ( (s.rs || 0) - (h[0] || (s.rs||0)) ) * 10;
+            });
+            var medMom = median(rawUniverseMom) || 0;
+
+            // 3. SELECTION: TOP 40
             pool.sort((a,b) => b.rs - a.rs);
             var top40 = pool.slice(0, 40);
 
-            // STAGE 3: Map Momentum & Quadrants
+            // 4. MAP DATA points
             var candidates = top40.map(s => {
-                var h = (stockHist[s.ticker] || []).slice(0, 15);
+                var h = (stockHist[s.ticker] || []).slice(0, 10);
                 var rs = s.rs || 0;
-                var x = rs - 50; 
+                var x = rs - medRS; 
                 var prevRS = h.length > 5 ? h[h.length - 5] : rs;
-                var y = (rs - prevRS) * 10;
+                var y = ((rs - prevRS) * 10) - medMom;
                 var q = x >= 0 ? (y >= 0 ? 'leading' : 'weakening') : (y >= 0 ? 'improving' : 'lagging');
-                var trail = h.map((val, i) => {
-                    var pRS = h[i-5] || val;
-                    return { x: val - 50, y: (val - pRS) * 10 };
-                });
+                var trail = [];
+                for(var i=0; i<h.length; i++) {
+                    var trRS = h[i];
+                    var trPrev = h[i-5] || trRS;
+                    trail.push({ x: trRS - medRS, y: ((trRS - trPrev) * 10) - medMom });
+                }
                 return { s, x, y, q, trail };
             });
 
-            // STAGE 4: Final Visibility Filter
+            // 5. QUADRANT VISIBILITY
             var qVis = {
                 leading: document.getElementById('q-leading').checked,
                 improving: document.getElementById('q-improving').checked,
@@ -202,23 +227,28 @@
                 lagging: document.getElementById('q-lagging').checked
             };
             var visible = candidates.filter(c => qVis[c.q]);
-            document.getElementById('filter-status').textContent = visible.length + ' shown of ' + pool.length + ' candidates';
+            document.getElementById('filter-status').textContent = visible.length + ' shown of ' + pool.length + ' filtered';
 
-            // STAGE 5: RRG SVG Rendering (Matched to Sector Rotation visuals)
             renderSVG(visible);
             renderGrid(visible);
         }
 
         function renderSVG(data) {
             var container = document.getElementById('rrg-container');
-            if(!data.length) { container.innerHTML = '<div style="padding:100px;text-align:center;">No stocks matches quadrant selection.</div>'; return; }
+            if(!data.length) { container.innerHTML = '<div style="padding:100px;text-align:center;">No results match quadrant selection.</div>'; return; }
             
             var CW=900, CH=600, P=60;
             var allX = [], allY = [];
-            data.forEach(d => { allX.push(d.x); allY.push(d.y); d.trail.forEach(t => { allX.push(t.x); allY.push(t.y); }); });
-            var maxAbsX = Math.max(...allX.map(Math.abs), 5) * 1.15;
-            var maxAbsY = Math.max(...allY.map(Math.abs), 2) * 1.15;
+            data.forEach(d => {
+                if(!isNaN(d.x)) allX.push(d.x);
+                if(!isNaN(d.y)) allY.push(d.y);
+                d.trail.forEach(t => { if(!isNaN(t.x)) allX.push(t.x); if(!isNaN(t.y)) allY.push(t.y); });
+            });
             
+            var maxAbsX = Math.max(...allX.map(Math.abs), 2) * 1.15;
+            var maxAbsY = Math.max(...allY.map(Math.abs), 2) * 1.15;
+            if(isNaN(maxAbsX)) maxAbsX = 5; if(isNaN(maxAbsY)) maxAbsY = 2;
+
             var tX = v => (CW/2) + (v/maxAbsX)*(CW/2 - P);
             var tY = v => (CH/2) - (v/maxAbsY)*(CH/2 - P);
             var MX = tX(0), MY = tY(0);
@@ -229,7 +259,6 @@
                           '<rect x="'+P+'" y="'+MY+'" width="'+(MX-P)+'" height="'+(CH-P-MY)+'" fill="#2d1a22"/>' +
                           '<rect x="'+MX+'" y="'+MY+'" width="'+(CW-P-MX)+'" height="'+(CH-P-MY)+'" fill="#2c2214"/>';
             
-            // Grid
             for(var i=1;i<10;i++) {
                 var gX = P + (i/10)*(CW-P*2); var gY = P + (i/10)*(CH-P*2);
                 svgContent += '<line x1="'+gX+'" y1="'+P+'" x2="'+gX+'" y2="'+(CH-P)+'" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>';
@@ -238,11 +267,16 @@
             svgContent += '<line x1="'+MX+'" y1="'+P+'" x2="'+MX+'" y2="'+(CH-P)+'" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>';
             svgContent += '<line x1="'+P+'" y1="'+MY+'" x2="'+(CW-P)+'" y2="'+MY+'" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>';
 
+            svgContent += '<text x="'+(P+10)+'" y="'+(P+20)+'" fill="#60a5fa" font-size="11" font-weight="900" opacity="0.6">IMPROVING</text>' +
+                          '<text x="'+(CW-P-60)+'" y="'+(P+20)+'" fill="#10b981" font-size="11" font-weight="900" opacity="0.6">LEADING</text>' +
+                          '<text x="'+(P+10)+'" y="'+(CH-P-15)+'" fill="#ef4444" font-size="11" font-weight="900" opacity="0.6">LAGGING</text>' +
+                          '<text x="'+(CW-P-75)+'" y="'+(CH-P-15)+'" fill="#f59e0b" font-size="11" font-weight="900" opacity="0.6">WEAKENING</text>';
+
             data.forEach(d => {
                 var color = Q_FILL[d.q];
                 if(d.trail.length > 2) {
-                    var pts = d.trail.map(p => tX(p.x)+','+tY(p.y)).join(' ');
-                    svgContent += '<polyline points="'+pts+'" fill="none" stroke="'+color+'" stroke-width="2" opacity="0.3" stroke-linecap="round"/>';
+                    var pts = d.trail.map(p => tX(p.x).toFixed(1)+','+tY(p.y).toFixed(1)).join(' ');
+                    svgContent += '<polyline points="'+pts+'" fill="none" stroke="'+color+'" stroke-width="2.5" opacity="0.3" stroke-linecap="round"/>';
                 }
                 var cx = tX(d.x), cy = tY(d.y);
                 svgContent += '<circle cx="'+cx+'" cy="'+cy+'" r="8" fill="'+color+'" stroke="#fff" stroke-width="2"/>';
@@ -255,7 +289,8 @@
         function renderGrid(data) {
             document.getElementById('stock-grid').innerHTML = data.map(d => {
                 var s = d.s, qC = Q_FILL[d.q];
-                var outlook = d.y > 0 ? (d.x > 0 ? 'rallying' : 'recovering') : 'declining';
+                var outlook = d.y > 0 ? (d.x > 0 ? 'rallying' : 'recovering') : (d.x > 0 ? 'curling' : 'declining');
+                var outClass = (outlook==='rallying'||outlook==='recovering') ? 'outlook-rallying' : (outlook==='curling'?'outlook-curling':'outlook-declining');
                 return '<div class="stock-card">' +
                     '<div style="display:flex;justify-content:space-between;align-items:flex-start;">' +
                         '<div>' +
@@ -263,16 +298,16 @@
                             '<div class="company-name">'+s.name+'</div>' +
                             '<div class="meta-info">'+s.industry+' &bull; '+s.sector+'</div>' +
                         '</div>' +
-                        '<div style="text-align:right;"><div style="font-size:0.7rem;color:var(--cyan);font-weight:700;">$'+(s.price?s.price.toFixed(2):'N/A')+'</div><div style="font-size:0.6rem;color:var(--text2);">#'+s.rank+'</div></div>' +
+                        '<div style="text-align:right;"><div style="font-size:0.7rem;color:var(--cyan);font-weight:700;">$'+(s.price?s.price.toFixed(2):'N/A')+'</div><div style="font-size:0.6rem;color:var(--text2);">Rank #'+(s.rank||'N/A')+'</div></div>' +
                     '</div>' +
-                    '<a href="'+s.tradingview_url+'" target="_blank" class="chart-link"><img src="'+s.finviz_chart_url+'" class="chart-img"></a>' +
+                    '<a href="'+s.tradingview_url+'" target="_blank" class="chart-link"><img src="'+s.finviz_chart_url+'" class="chart-img" loading="lazy"></a>' +
                     '<div class="metrics">' +
-                        '<div class="metric"><span class="metric-label">RS Pct</span><span class="metric-value">'+s.rs+'</span></div>' +
+                        '<div class="metric"><span class="metric-label">RS Pct</span><span class="metric-value" style="color:var(--cyan)">'+s.rs+'</span></div>' +
                         '<div class="metric"><span class="metric-label">RMV</span><span class="metric-value">'+(s.rmv?s.rmv.toFixed(1):'N/A')+'</span></div>' +
                         '<div class="metric"><span class="metric-label">1W RS</span><span class="metric-value">'+(s.rs_1w_pct||'N/A')+'</span></div>' +
                         '<div class="metric"><span class="metric-label">1M RS</span><span class="metric-value">'+(s.rs_1m_pct||'N/A')+'</span></div>' +
                     '</div>' +
-                    '<div><span class="highlight-tag" style="background:'+qC+'22;color:'+qC+';border-color:'+qC+'44;">MOMENTUM '+outlook.toUpperCase()+'</span></div>' +
+                    '<div style="border-top:1px solid var(--border);padding-top:10px;"><span class="outlook-tag '+outClass+'">MOMENTUM '+outlook.toUpperCase()+'</span></div>' +
                 '</div>';
             }).join('');
         }
