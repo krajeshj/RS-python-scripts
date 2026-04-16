@@ -251,15 +251,10 @@
                 return { s: d.s, x: xVal, y: yVal, q: q, trail: trailRel };
             });
 
-            // 3. BALANCED SLICING (10 per Quadrant)
-            var quads = { leading: [], weakening: [], lagging: [], improving: [] };
-            processed.forEach(function(d) { quads[d.q].push(d); });
-            
-            var finalSelection = [];
-            ['leading','improving','weakening','lagging'].forEach(function(q) {
-                var sorted = quads[q].sort(function(a,b) { return (b.s.rs_raw || 0) - (a.s.rs_raw || 0); });
-                finalSelection = finalSelection.concat(sorted.slice(0, 10));
-            });
+            // 3. SELECTION: Pick the absolute Top 40 strongest leaders across the entire universe
+            var finalSelection = processed.sort(function(a, b) { 
+                return (b.s.rs_raw || 0) - (a.s.rs_raw || 0); 
+            }).slice(0, 40);
 
             var visible = finalSelection.filter(function(d) { return activeQuadrants[d.q]; });
             var countMsg = visible.length + ' shown (' + (webData.stocks ? webData.stocks.length : 0) + ' analyzed)';
