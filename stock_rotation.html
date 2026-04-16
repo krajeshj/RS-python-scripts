@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
+    <title>Stock Rotation v2.2 - Rajesh's Stock Screener</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #06060f; --bg2: #0d0d1a; --surface: rgba(255,255,255,.04); --border: rgba(255,255,255,.08);
+            --text: #e4e4ef; --text2: #8888a8; --accent: #6c5ce7; --accent2: #a29bfe;
+            --green: #00e676; --cyan: #00e5ff; --orange: #ff9100; --red: #ff5252;
+            --glass: rgba(18,18,40,.72); --glass-b: 12px; --radius: 16px; --radius-sm: 10px;
+            --font: 'Outfit', system-ui, sans-serif; --mono: 'JetBrains Mono', monospace;
+            --shadow: 0 8px 32px rgba(0,0,0,.45);
+        }
+        html, body { width: 100%; margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font); overflow-x: hidden;
+            background-image: radial-gradient(ellipse 80% 60% at 50% -20%, rgba(108,92,231,.12), transparent), radial-gradient(ellipse 60% 50% at 80% 110%, rgba(0,229,255,.06), transparent);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        header { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1000; width: 100%; background: rgba(6,6,15,0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 1rem 0; }
+        .logo-icon { font-size: 2.5rem; color: var(--cyan); margin-bottom: 4px; filter: drop-shadow(0 0 10px rgba(0,229,255,0.3)); }
+        h1 { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, var(--text) 30%, var(--accent2)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 1rem; margin: 0.5rem 0; flex-wrap: wrap; justify-content: center; }
+        .nav-link { color: var(--text2); text-decoration: none; font-weight: 600; font-size: 0.85rem; padding: 6px 16px; border-radius: 20px; transition: all 0.3s ease; border: 1px solid transparent; }
+        .nav-link.active { color: var(--cyan); background: rgba(0,229,255,0.1); border-color: rgba(0,229,255,0.2); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
+
+        .dashboard-tools { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1.5rem; background: var(--surface); padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border); }
+        .slider-group { display: flex; flex-direction: column; gap: 4px; min-width: 200px; }
+        .slider-group label { font-size: 0.82rem; font-weight: 600; color: var(--text2); }
+        .slider-val { color: var(--cyan); font-family: var(--mono); font-weight: 700; }
+        .dual-range-container { position: relative; height: 20px; width: calc(100% - 18px); margin: 0 9px; touch-action: none; }
+        .dual-range-bg { position: absolute; height: 6px; width: 100%; background: var(--border); border-radius: 3px; top: 6px; }
+        .dual-range-fill { position: absolute; height: 6px; background: linear-gradient(90deg, var(--accent), var(--cyan)); border-radius: 3px; top: 6px; }
+        .dual-range { position: absolute; width: 100%; pointer-events: none; appearance: none; -webkit-appearance: none; background: none; top: 0; left: 0; margin: 0; touch-action: none; }
+        .dual-range::-webkit-slider-thumb { pointer-events: auto; appearance: none; -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--cyan); cursor: pointer; box-shadow: 0 0 8px rgba(0,229,255,0.4); border: 2px solid var(--surface); position: relative; z-index: 2; }
+        .toggle-btn { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 7px 14px; border-radius: var(--radius-sm); background: var(--surface); border: 1px solid var(--border); color: var(--text); font-size: 0.8rem; font-weight: 600; transition: all 0.2s; user-select: none; }
+        .toggle-btn:hover { border-color: var(--accent); }
+        .toggle-btn.active { background: rgba(0,230,118,0.1); border-color: var(--green); color: var(--green); }
+        .toggle-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--text2); transition: all 0.2s; }
+        .toggle-btn.active .toggle-dot { background: var(--green); box-shadow: 0 0 8px rgba(0,230,118,0.5); }
+        
+        .q-btn { padding: 6px 14px; border-radius: var(--radius-sm); cursor: pointer; font-size: 11px; font-weight: 800; border: 1px solid; background: var(--surface); transition: all 0.2s; letter-spacing: 0.04em; }
+        .q-btn.active { color: #000 !important; }
+        .q-btn[data-q="leading"] { border-color: #22c55e44; color: #22c55e; } .q-btn[data-q="leading"].active { background: #22c55e; }
+        .q-btn[data-q="improving"] { border-color: #60a5fa44; color: #60a5fa; } .q-btn[data-q="improving"].active { background: #60a5fa; }
+        .q-btn[data-q="weakening"] { border-color: #f59e0b44; color: #f59e0b; } .q-btn[data-q="weakening"].active { background: #f59e0b; }
+        .q-btn[data-q="lagging"] { border-color: #ef444444; color: #ef4444; } .q-btn[data-q="lagging"].active { background: #ef4444; }
+
+        .rrg-box { background: var(--glass); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); position: relative; overflow: hidden; width: 100%; aspect-ratio: 1.5/1; }
+        svg { width: 100%; height: 100%; display: block; }
+        .stock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem; margin-top: 30px; }
+        .stock-card { background: var(--glass); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; transition: all 0.3s; position: relative; }
+        .stock-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+        .card-delete { position: absolute; top: 10px; right: 10px; background: rgba(255,82,82,0.15); border: 1px solid rgba(255,82,82,0.3); color: var(--red); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.75rem; transition: all 0.2s; z-index: 2; }
+        .ticker { font-size: 1.5rem; font-weight: 800; color: var(--cyan); letter-spacing: -0.02em; font-family: var(--mono); text-decoration: none; }
+        .rs-pct-badge { font-size: 0.65rem; background: rgba(0,229,255,0.1); color: var(--cyan); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(0,229,255,0.2); font-weight: 700; display: inline-block; }
+        .company-name { font-size: 0.8rem; color: var(--text2); margin-top: 2px; }
+        .meta-info { font-size: 0.75rem; color: var(--text2); }
+        .chart-link { display: block; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border); background: #000; height: 140px; margin: 5px 0; }
+        .chart-img { width: 100%; height: 100%; object-fit: contain; }
+        .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; background: var(--surface); padding: 10px; border-radius: var(--radius-sm); }
+        .metric { display: flex; flex-direction: column; gap: 2px; }
+        .metric-label { font-size: 0.55rem; color: var(--text2); text-transform: uppercase; font-weight: 600; }
+        .metric-value { font-size: 0.95rem; font-weight: 700; color: var(--text); font-family: var(--mono); }
+        .highlights { display: flex; flex-wrap: wrap; gap: 6px; }
+        .highlight-tag { background: rgba(0,229,255,0.05); color: var(--cyan); padding: 2px 8px; border-radius: 6px; font-size: 0.65rem; border: 1px solid rgba(0,229,255,0.15); }
+        .outlook-tag { padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; border: 1px solid; }
+        .outlook-rallying { background: rgba(0,230,118,0.1); color: #00e676; border-color: rgba(0,230,118,0.25); }
+        .outlook-curling { background: rgba(255,145,0,0.1); color: #ff9100; border-color: rgba(255,145,0,0.25); }
+        .outlook-declining { background: rgba(255,82,82,0.1); color: #ff5252; border-color: rgba(255,82,82,0.25); }
+        .canslim-tray { display: flex; gap: 4px; margin-top: 4px; }
+        .canslim-letter { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--text2); border: 1px solid var(--border); }
+        .canslim-letter.active { background: var(--green); color: var(--bg); border-color: var(--green); }
+        .flip-badge { background: rgba(255,215,0,0.15); color: #FFD700; padding: 2px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; border: 1px solid rgba(255,215,0,0.3); }
+        .earnings-alert { background: rgba(255,145,0,0.1); color: var(--orange); border: 1px solid rgba(255,145,0,0.2); padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-icon">🚀</div>
+        <h1>Stock Rotation Leaderboard v2.2 (AUDITED)</h1>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Dashboard 🚀</a>
+            <a href="stages.html" class="nav-link">Sector Analysis 🏗️</a>
+            <a href="industries.html" class="nav-link">Industry Momentum 📊</a>
+            <a href="quick_scan.html" class="nav-link">Quick Scan ⚡</a>
+            <a href="pulse.html" class="nav-link">Market Pulse 📡</a>
+            <a href="tips.html" class="nav-link">Stock Tips 🎯</a>
+            <a href="rotation.html" class="nav-link">Sector Rotation 🔄</a>
+            <a href="stock_rotation.html" class="nav-link active">Stock Rotation 💹</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="dashboard-tools">
+            <div class="slider-group">
+                <label>RS Range: <span id="rs-min-val" class="slider-val">75</span> - <span id="rs-max-val" class="slider-val">100</span></label>
+                <div class="dual-range-container">
+                    <div class="dual-range-bg"></div>
+                    <div id="rs-fill" class="dual-range-fill" style="left: 50%; right: 0%;"></div>
+                    <input type="range" id="rs-min-slider" min="50" max="100" value="75" class="dual-range">
+                    <input type="range" id="rs-max-slider" min="50" max="100" value="100" class="dual-range">
+                </div>
+            </div>
+            <div class="slider-group">
+                <label>RMV Range: <span id="rmv-min-val" class="slider-val">10</span> - <span id="rmv-max-val" class="slider-val">45</span></label>
+                <div class="dual-range-container">
+                    <div class="dual-range-bg"></div>
+                    <div id="rmv-fill" class="dual-range-fill" style="left: 10%; right: 55%;"></div>
+                    <input type="range" id="rmv-min-slider" min="0" max="100" value="10" class="dual-range">
+                    <input type="range" id="rmv-max-slider" min="0" max="100" value="45" class="dual-range">
+                </div>
+            </div>
+            <div id="quality-btn" class="toggle-btn active" onclick="toggleQuality()">
+                <div class="toggle-dot"></div>🛡️ Quality
+            </div>
+            <div id="minervini-btn" class="toggle-btn" onclick="toggleMinervini()">
+                <div class="toggle-dot"></div>🌟 Minervini
+            </div>
+            <div id="top5-btn" class="toggle-btn" onclick="toggleTop5()">
+                <div class="toggle-dot"></div>🏆 Top 5 Sectors
+            </div>
+            
+            <div style="display:flex; gap:8px; padding-left:15px; border-left:1px solid var(--border);">
+                <div class="q-btn active" data-q="leading" onclick="toggleQ('leading')">LEADING</div>
+                <div class="q-btn active" data-q="improving" onclick="toggleQ('improving')">IMPROVING</div>
+                <div class="q-btn active" data-q="weakening" onclick="toggleQ('weakening')">WEAKENING</div>
+                <div class="q-btn active" data-q="lagging" onclick="toggleQ('lagging')">LAGGING</div>
+            </div>
+            <div class="meta-info" id="filter-count">Updating...</div>
+        </div>
+
+        <div class="rrg-box" id="rrg-container">
+            <div style="padding:100px; text-align:center; color:var(--text2);">Loading Engine...</div>
+        </div>
+
+        <div class="stock-grid" id="stock-grid"></div>
+    </div>
+
+    <script>
+        var webData = null, history = null, allStocks = [];
+        var minRS = 75, maxRS = 100, minRMV = 10, maxRMV = 45;
+        var qualityOn = true, minerviniOn = false, top5On = false;
+        var activeQuadrants = { leading: true, improving: true, weakening: true, lagging: true };
+        var Q_FILL = { leading: '#22c55e', weakening: '#f59e0b', lagging: '#ef4444', improving: '#60a5fa' };
+
+        function getHiddenTickers() { try { return JSON.parse(localStorage.getItem('hidden_tickers') || '[]'); } catch(e) { return []; } }
+        function hideTicker(t) { var l = getHiddenTickers(); if(l.indexOf(t) === -1) { l.push(t); localStorage.setItem('hidden_tickers', JSON.stringify(l)); } render(); }
+
+        function toggleQuality() { qualityOn = !qualityOn; document.getElementById('quality-btn').classList.toggle('active', qualityOn); render(); }
+        function toggleMinervini() { minerviniOn = !minerviniOn; document.getElementById('minervini-btn').classList.toggle('active', minerviniOn); render(); }
+        function toggleTop5() { top5On = !top5On; document.getElementById('top5-btn').classList.toggle('active', top5On); render(); }
+        function toggleQ(q) { activeQuadrants[q] = !activeQuadrants[q]; document.querySelectorAll('.q-btn').forEach(b => { if(b.getAttribute('data-q') === q) b.classList.toggle('active', activeQuadrants[q]); }); render(); }
+
+        function updateRSFill() { var f = document.getElementById('rs-fill'); f.style.left = ((minRS - 50) * 2) + '%'; f.style.right = (100 - (maxRS - 50) * 2) + '%'; }
+        function updateRangeFill() { var f = document.getElementById('rmv-fill'); f.style.left = minRMV + '%'; f.style.right = (100 - maxRMV) + '%'; }
+
+        function init() {
+            var ts = Date.now();
+            Promise.all([
+                fetch('web_data.json?v='+ts).then(r => r.json()),
+                fetch('stock_history.json?v='+ts).then(r => r.json())
+            ]).then(res => {
+                webData = res[0]; history = res[1] || {};
+                var raw = (res[0].stocks||[]).concat(res[0].pulse||[]).concat(res[0].all_stocks||[]);
+                var unq = {};
+                raw.forEach(s => { if(s.ticker && (!unq[s.ticker] || (s.rs||0) > (unq[s.ticker].rs||0))) unq[s.ticker] = s; });
+                allStocks = []; for(var k in unq) { if(unq.hasOwnProperty(k)) allStocks.push(unq[k]); }
+                
+                document.getElementById('rs-min-slider').addEventListener('input', e => { minRS = Math.min(+e.target.value, maxRS-1); e.target.value = minRS; document.getElementById('rs-min-val').textContent = minRS; updateRSFill(); render(); });
+                document.getElementById('rs-max-slider').addEventListener('input', e => { maxRS = Math.max(+e.target.value, minRS+1); e.target.value = maxRS; document.getElementById('rs-max-val').textContent = maxRS; updateRSFill(); render(); });
+                document.getElementById('rmv-min-slider').addEventListener('input', e => { minRMV = Math.min(+e.target.value, maxRMV-1); e.target.value = minRMV; document.getElementById('rmv-min-val').textContent = minRMV; updateRangeFill(); render(); });
+                document.getElementById('rmv-max-slider').addEventListener('input', e => { maxRMV = Math.max(+e.target.value, minRMV+1); e.target.value = maxRMV; document.getElementById('rmv-max-val').textContent = maxRMV; updateRangeFill(); render(); });
+                
+                render();
+            }).catch(e => { document.getElementById('rrg-container').innerHTML = '<div style="padding:100px;text-align:center;">Data Load Error.</div>'; });
+        }
+
+        function render() {
+            if(!webData || !allStocks.length) return;
+            var hidden = getHiddenTickers();
+            var top5Sectors = (top5On && webData.stages) ? webData.stages.slice(0, 5).map(s => s.sector) : [];
+
+            var filteredPool = allStocks.filter(s => {
+                var rs = s.rs || 0;
+                if(rs < minRS || rs > maxRS) return false;
+                if(s.rmv < minRMV || s.rmv > maxRMV) return false;
+                if(qualityOn && s.is_speculative) return false;
+                if(minerviniOn && !s.is_minervini) return false;
+                if(top5On && top5Sectors.length && !top5Sectors.includes(s.sector)) return false;
+                if(hidden.includes(s.ticker)) return false;
+                return true;
+            });
+
+            var processed = filteredPool.map(s => {
+                var h = (history[s.ticker] || []).slice(0, 20);
+                var rs = s.rs || 0;
+                var x = rs - 50; 
+                var prevRS = h.length > 5 ? h[h.length - 5] : rs;
+                var y = (rs - prevRS) * 10;
+                var q = x >= 0 ? (y >= 0 ? 'leading' : 'weakening') : (y >= 0 ? 'improving' : 'lagging');
+                var trail = [];
+                for(var i=Math.max(0, h.length-15); i<h.length; i++) {
+                    var trRS = h[i];
+                    var trPrev = h[i-5] || trRS;
+                    trail.push({ x: trRS - 50, y: (trRS - trPrev) * 10 });
+                }
+                return { s, x, y, q, trail };
+            }).sort((a,b) => b.s.rs - a.s.rs).slice(0, 40);
+
+            var visible = processed.filter(d => activeQuadrants[d.q]);
+            document.getElementById('filter-count').textContent = visible.length + ' shown of ' + filteredPool.length + ' quality candidates';
+
+            if(!visible.length) {
+                document.getElementById('rrg-container').innerHTML = '<div style="padding:100px;text-align:center;">No results match Dashboard + Quadrant filters.</div>';
+                document.getElementById('stock-grid').innerHTML = '';
+                return;
+            }
+
+            var allX = [], allY = [];
+            visible.forEach(d => { allX.push(d.x); allY.push(d.y); d.trail.forEach(p => { allX.push(p.x); allY.push(p.y); }); });
+            var maxAbsX = Math.max(...allX.map(Math.abs), 5) * 1.15;
+            var maxAbsY = Math.max(...allY.map(Math.abs), 2) * 1.15;
+            var CW = 900, CH = 600, P = 60;
+            var tX = v => (CW/2) + (v/maxAbsX) * (CW/2 - P);
+            var tY = v => (CH/2) - (v/maxAbsY) * (CH/2 - P);
+
+            var svg = '<rect width="100%" height="100%" fill="var(--bg2)"/>';
+            svg += '<line x1="0" y1="'+(CH/2)+'" x2="'+CW+'" y2="'+(CH/2)+'" stroke="var(--border)"/>';
+            svg += '<line x1="'+(CW/2)+'" y1="0" x2="'+(CW/2)+'" y2="'+CH+'" stroke="var(--border)"/>';
+            
+            visible.forEach(d => {
+                var c = Q_FILL[d.q];
+                if(d.trail.length > 1) {
+                    var pts = d.trail.map(p => tX(p.x)+','+tY(p.y)).join(' ');
+                    svg += '<polyline points="'+pts+'" fill="none" stroke="'+c+'" stroke-width="2.5" opacity="0.4" stroke-linecap="round"/>';
+                }
+                var curX = tX(d.x), curY = tY(d.y);
+                svg += '<circle cx="'+curX+'" cy="'+curY+'" r="10" fill="'+c+'" stroke="#fff" stroke-width="2"/>';
+                svg += '<text x="'+(curX+12)+'" y="'+(curY+4)+'" fill="#fff" font-weight="800" font-size="13" style="text-shadow:0 0 4px #000">'+d.s.ticker+'</text>';
+            });
+
+            document.getElementById('rrg-container').innerHTML = '<svg viewBox="0 0 '+CW+' '+CH+'">'+svg+'</svg>';
+            document.getElementById('stock-grid').innerHTML = visible.map((d, i) => {
+                var s = d.s, qC = Q_FILL[d.q];
+                var outlook = d.y > 0 ? (d.x > 0 ? 'rallying' : 'recovering') : 'declining';
+                var outlookClass = outlook==='declining' ? 'outlook-declining' : 'outlook-rallying';
+                var letters = ['c','a','n','s','l','i','m'];
+                var canslim = '<div class="canslim-tray">'+letters.map(l => '<div class="canslim-letter '+(s.canslim && s.canslim[l] ? 'active':'')+'">'+l.toUpperCase()+'</div>').join('')+'</div>';
+                
+                return '<div class="stock-card" style="animation-delay:'+(i*0.05)+'s">' +
+                    '<div class="card-delete" onclick="hideTicker(\''+s.ticker+'\')">✕</div>' +
+                    '<div style="display:flex;justify-content:space-between;">' +
+                        '<div>' +
+                            '<div style="display:flex;align-items:center;gap:8px;"><a href="'+s.tradingview_url+'" target="_blank" class="ticker">'+s.ticker+'</a><span class="rs-pct-badge">Rank: '+s.rs+'</span></div>' +
+                            '<div class="company-name">'+s.name+'</div>' +
+                            '<div class="meta-info">'+s.industry+' &bull; '+s.sector+'</div>' +
+                            canslim +
+                        '</div>' +
+                        '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;padding-right:25px;">' +
+                            '<span style="font-size:0.65rem;padding:2px 8px;border-radius:4px;background:'+qC+'22;color:'+qC+';border:1px solid '+qC+'44;font-weight:800;">#'+s.rank+' '+d.q.toUpperCase()+'</span>' +
+                            (s.flip ? '<div class="flip-badge">⚡ PRIME FLIP</div>' : '') +
+                            '<div style="font-size:0.7rem;color:var(--cyan);font-weight:700;">$'+(s.price?s.price.toFixed(2):'N/A')+'</div>' +
+                        '</div>' +
+                    '</div>' +
+                    (s.days_to_earnings>=0 && s.days_to_earnings<=14 ? '<div class="earnings-alert">📅 EARNINGS IN '+s.days_to_earnings+'D</div>' : '') +
+                    '<a href="'+s.tradingview_url+'" target="_blank" class="chart-link"><img src="'+s.finviz_chart_url+'" class="chart-img"></a>' +
+                    '<div class="metrics">' +
+                        '<div class="metric"><span class="metric-label">RS Pct</span><span class="metric-value" style="color:var(--cyan)">'+s.rs+'</span></div>' +
+                        '<div class="metric"><span class="metric-label">RMV</span><span class="metric-value">'+(s.rmv?s.rmv.toFixed(1):'N/A')+'</span></div>' +
+                        '<div class="metric"><span class="metric-label">1W RS</span><span class="metric-value">'+(s.rs_1w_pct||'N/A')+'</span></div>' +
+                        '<div class="metric"><span class="metric-label">1M RS</span><span class="metric-value">'+(s.rs_1m_pct||'N/A')+'</span></div>' +
+                    '</div>' +
+                    '<div class="highlights">'+(s.highlights?s.highlights.split(', ').map(h => '<span class="highlight-tag">'+h+'</span>').join(''):'')+'</div>' +
+                    '<div style="margin-top:5px;"><span class="outlook-tag '+outlookClass+'">'+outlook.toUpperCase()+'</span></div>' +
+                '</div>';
+            }).join('');
+        }
+        init();
+    </script>
+</body>
+</html>

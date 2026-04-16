@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
+    <title>Sector Rotation - Rajesh's Stock Screener</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #06060f;--bg2: #0d0d1a;--surface: rgba(255, 255, 255, .04);--border: rgba(255, 255, 255, .08);
+            --text: #e4e4ef;--text2: #8888a8;--accent: #6c5ce7;--accent2: #a29bfe;--cyan: #00e5ff;
+            --green: #00e676; --orange: #ff9100; --red: #ff5252;
+            --font: 'Outfit', system-ui, sans-serif;--mono: 'JetBrains Mono', monospace;
+            --q-leading: #22c55e; --q-weakening: #f59e0b; --q-lagging: #ef4444; --q-improving: #60a5fa;
+            --glass: rgba(18,18,40,.72); --glass-b: 12px; --radius: 16px; --radius-sm: 10px;
+            --shadow: 0 8px 32px rgba(0,0,0,.45);
+        }
+        html, body { width: 100%; margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font); overflow-x: hidden;
+            background-image: radial-gradient(ellipse 80% 60% at 50% -20%, rgba(108,92,231,.12), transparent);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        header { margin-bottom: 0; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1000; width: 100%; background: rgba(6, 6, 15, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 1rem 0; }
+        .logo-icon { font-size: 2.5rem; color: var(--cyan); margin-bottom: 4px; filter: drop-shadow(0 0 10px rgba(0,229,255,0.3)); }
+        h1 { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, var(--text) 30%, var(--accent2)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        .nav-links { display: flex; gap: 1rem; margin: 0.5rem 0; flex-wrap: wrap; justify-content: center; }
+        .nav-link { color: var(--text2); text-decoration: none; font-weight: 600; font-size: 0.85rem; padding: 6px 16px; border-radius: 20px; transition: all 0.3s ease; border: 1px solid transparent; }
+        .nav-link.active { color: var(--cyan); background: rgba(0, 229, 255, 0.1); border-color: rgba(0, 229, 255, 0.2); }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px 15px; }
+        .tab-btn { padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: 600; border: 1px solid #1e293b; background: #0f172a; color: #64748b; transition: all 0.2s; }
+        .tab-btn.active { border-color: var(--cyan); background: rgba(0, 229, 255, 0.1); color: var(--cyan); }
+        .card { background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+        .rrg-box { background: #0a1120; border: 1px solid #1e293b; border-radius: 8px; position: relative; width: 100%; aspect-ratio: 1/1; }
+        svg { width: 100%; height: 100%; display: block; }
+
+        /* Stock cards */
+        .stock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 12px; margin-top: 12px; }
+        .stock-card { background: var(--glass); backdrop-filter: blur(var(--glass-b)); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px; transition: all 0.3s; }
+        .stock-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+        .highlight-tag { background: rgba(0,229,255,0.05); color: var(--cyan); padding: 3px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 600; border: 1px solid rgba(0,229,255,0.15); }
+        .copy-csv-btn { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; padding: 7px 14px; border-radius: var(--radius-sm); background: var(--surface); border: 1px solid var(--border); color: var(--text); font-size: 0.8rem; font-weight: 600; transition: all 0.2s; }
+        .copy-csv-btn:hover { border-color: var(--accent); }
+        .copy-csv-btn.copied { background: rgba(0,230,118,0.1); border-color: var(--green); color: var(--green); }
+        .section-label { font-size: 14px; font-weight: 800; margin-top: 20px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .chart-link { display: block; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); position: relative; }
+        .chart-img { width: 100%; height: 110px; object-fit: contain; background: #000; display: block; }
+        .chart-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(0,0,0,0.6); opacity: 0; transition: opacity 0.2s; color: var(--cyan); font-size: 0.75rem; font-weight: 600; }
+        .chart-link:hover .chart-overlay { opacity: 1; }
+        .chart-img:hover { transform: scale(1.05); }
+        .ticker { font-size: 1.5rem; font-weight: 800; color: var(--cyan); letter-spacing: -0.02em; font-family: var(--mono); text-decoration: none; transition: color 0.2s; }
+        .ticker:hover { color: var(--accent2); }
+        .rs-pct-badge { font-size: 0.65rem; background: rgba(0,229,255,0.1); color: var(--cyan); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(0,229,255,0.2); font-weight: 700; display: inline-block; }
+        .company-name { font-size: 0.8rem; color: var(--text2); margin-top: 2px; }
+        .source-badge { font-size: 0.6rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; opacity: 0.7; }
+        .flip-badge { background: rgba(255,215,0,0.15); color: #FFD700; padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; border: 1px solid rgba(255,215,0,0.3); text-transform: uppercase; letter-spacing: 0.05em; animation: glow 2s infinite; }
+        @keyframes glow { 0% { box-shadow: 0 0 5px rgba(255,215,0,0.2); } 50% { box-shadow: 0 0 15px rgba(255,215,0,0.5); } 100% { box-shadow: 0 0 5px rgba(255,215,0,0.2); } }
+        .canslim-tray { display: flex; gap: 4px; margin-top: 4px; }
+        .canslim-letter { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--text2); border: 1px solid var(--border); }
+        .canslim-letter.active { background: var(--green); color: var(--bg); border-color: var(--green); box-shadow: 0 0 10px rgba(0,230,118,0.3); }
+        .earnings-alert { background: rgba(255,145,0,0.1); color: var(--orange); border: 1px solid rgba(255,145,0,0.2); padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; display: flex; align-items: center; gap: 6px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; transform: scale(1.02); } 100% { opacity: 0.8; } }
+        .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; background: var(--surface); padding: 12px; border-radius: var(--radius-sm); }
+        .metric { display: flex; flex-direction: column; gap: 2px; }
+        .metric-label { font-size: 0.6rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+        .metric-value { font-size: 1.1rem; font-weight: 700; color: var(--text); font-family: var(--mono); }
+        .highlights { display: flex; flex-wrap: wrap; gap: 6px; }
+        .outlook-tag { padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; border: 1px solid; }
+        .outlook-rallying { background: rgba(0,230,118,0.1); color: #00e676; border-color: rgba(0,230,118,0.25); }
+        .outlook-curling { background: rgba(255,145,0,0.1); color: #ff9100; border-color: rgba(255,145,0,0.25); }
+        .outlook-declining { background: rgba(255,82,82,0.1); color: #ff5252; border-color: rgba(255,82,82,0.25); }
+
+        @media (max-width: 480px) { .stock-grid { grid-template-columns: 1fr; } .metrics { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-icon">🔄</div>
+        <h1>Rajesh's Stock Screener</h1>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Dashboard 🚀</a>
+            <a href="stages.html" class="nav-link">Sector Analysis 🏗️</a>
+            <a href="industries.html" class="nav-link">Industry Momentum 📊</a>
+            <a href="quick_scan.html" class="nav-link">Quick Scan ⚡</a>
+            <a href="rotation.html" class="nav-link active">Sector Rotation 🔄</a>
+            <a href="stock_rotation.html" class="nav-link">Stock Rotation 💹</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;" id="tabs">
+            <button class="tab-btn active" onclick="setTab('rrg')">Rotation Map</button>
+            <button class="tab-btn" onclick="setTab('rank')">Rank Signals</button>
+            <button class="tab-btn" onclick="setTab('flow')">Fund Flows</button>
+        </div>
+
+        <div style="display: flex; gap: 15px; margin-bottom: 18px; justify-content: center; flex-wrap: wrap; background: var(--surface); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border);" id="q-toggles">
+            <label style="color: var(--q-leading); font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                <input type="checkbox" id="toggle-leading" checked onchange="render()"> Leading
+            </label>
+            <label style="color: var(--q-improving); font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                <input type="checkbox" id="toggle-improving" checked onchange="render()"> Improving
+            </label>
+            <label style="color: var(--q-weakening); font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                <input type="checkbox" id="toggle-weakening" checked onchange="render()"> Weakening
+            </label>
+            <label style="color: var(--q-lagging); font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                <input type="checkbox" id="toggle-lagging" checked onchange="render()"> Lagging
+            </label>
+        </div>
+
+        <div id="content"></div>
+
+        <!-- Top Contributing Stocks for Leading & Improving Sectors -->
+        <div id="sector-stocks"></div>
+    </div>
+
+    <script>
+        var ETFS = ["XLK", "XLE", "XLF", "XLV", "XLY", "XLC", "XLP", "XLU", "XLI", "XLRE", "XLB", "SMH", "XBI", "XHB", "XRT", "XME"];
+        var SECTORS = [];
+        var activeTab = 'rrg';
+        var Q_FILL = { leading:"#10b981", weakening:"#f59e0b", lagging:"#ef4444", improving:"#3b82f6" };
+        var webData = null;
+        var stockHist = null;
+
+        function init() {
+            var ts = Date.now();
+            Promise.all([
+                fetch('web_data.json?v=' + ts).then(function(r) { return r.json(); }),
+                fetch('rrg.json?v=' + ts).then(function(r) { return r.json(); })
+            ]).then(function(res) {
+                webData = res[0]; 
+                stockHist = res[1].data || res[1] || {};
+                
+                var rawAll = (webData.all_stocks || []).concat(webData.stocks || []).concat(webData.pulse || []);
+                var unq = {};
+                rawAll.forEach(function(s) { if (!unq[s.ticker] || s.rs > unq[s.ticker].rs) unq[s.ticker] = s; });
+                var allStocks = Object.keys(unq).map(function(k) { return unq[k]; });
+                var rawData = [];
+                ETFS.forEach(function(t) {
+                    var s = allStocks.find(function(item) { return item.ticker === t; });
+                    if (!s) return;
+                    var h = stockHist[t] || [];
+                    if (!h || !h.length) return;
+                    
+                    // True JdK RRG coordinates generated via backend python mapping relative to SPY
+                    var trail = h.slice(0, 15);
+                    
+                    var xRaw = trail[trail.length - 1].x;
+                    var yComposite = trail[trail.length - 1].y;
+                    
+                    rawData.push({ s: s, xRaw: xRaw, yComposite: yComposite, trail: trail });
+                });
+                
+                function median(arr) { if(!arr.length) return 0; var s = arr.slice().sort(function(a,b){return a-b;}); var m = Math.floor(s.length/2); return s.length%2 ? s[m] : (s[m-1]+s[m])/2; }
+                var medX = 0; // True RRG is explicitly centered around 100 via logic (which is relative to SPY natively)
+                var medY = 0; 
+
+                SECTORS = rawData.map(function(d) {
+                    var xVal = d.xRaw - medX;
+                    var yVal = d.yComposite - medY;
+                    var q = xVal >= 0 ? (yVal >= 0 ? "leading" : "weakening") : (yVal >= 0 ? "improving" : "lagging");
+                    var trailNorm = d.trail.map(function(tp) { return { x: tp.x - medX, y: tp.y - medY }; });
+                    return { name: d.s.ticker, q: q, x: xVal, y: yVal, color: Q_FILL[q], trail: trailNorm, flow: d.s.volume || 0, sector: d.s.industry || d.s.sector };
+                });
+                
+                render();
+                renderSectorStocks();
+            }).catch(function(e) {
+                console.error(e);
+                document.getElementById('content').innerHTML = '<div style="padding:20px;text-align:center;color:red;">Error loading dynamic index data. Please run python pipeline first.</div>';
+            });
+        }
+
+        function setTab(t) {
+            activeTab = t;
+            var btns = document.querySelectorAll('.tab-btn');
+            btns.forEach(function(b) { b.classList.toggle('active', b.innerText.toLowerCase().indexOf(t) >= 0); });
+            render();
+        }
+
+        function render() {
+            var container = document.getElementById('content');
+            if (activeTab === 'rrg') renderRRG(container);
+            if (activeTab === 'rank') renderRankSignals(container);
+            if (activeTab === 'flow') renderFlows(container);
+        }
+
+        function catmullRom2bezier(pts) {
+          var d = "";
+          if (pts.length === 0) return d;
+          d += "M " + pts[0].x.toFixed(1) + "," + pts[0].y.toFixed(1) + " ";
+          if (pts.length === 1) return d;
+          for (var i = 0; i < pts.length - 1; i++) {
+            var p0 = i === 0 ? pts[0] : pts[i - 1];
+            var p1 = pts[i];
+            var p2 = pts[i + 1];
+            var p3 = i + 2 < pts.length ? pts[i + 2] : p2;
+            var cp1x = p1.x + (p2.x - p0.x) / 6;
+            var cp1y = p1.y + (p2.y - p0.y) / 6;
+            var cp2x = p2.x - (p3.x - p1.x) / 6;
+            var cp2y = p2.y - (p3.y - p1.y) / 6;
+            d += "C " + cp1x.toFixed(1) + "," + cp1y.toFixed(1) + " " + cp2x.toFixed(1) + "," + cp2y.toFixed(1) + " " + p2.x.toFixed(1) + "," + p2.y.toFixed(1) + " ";
+          }
+          return d;
+        }
+
+        function renderRRG(container) {
+            if (!SECTORS.length) { container.innerHTML = '<div class="card" style="text-align:center;padding:30px;">Loading historical ETF charts...</div>'; return; }
+            var CW=700, CH=550, P=40, R=5;
+            
+            var tLead = document.getElementById('toggle-leading');
+            var tImp = document.getElementById('toggle-improving');
+            var tWeak = document.getElementById('toggle-weakening');
+            var tLag = document.getElementById('toggle-lagging');
+
+            var filterQ = {
+                leading: tLead ? tLead.checked : true,
+                improving: tImp ? tImp.checked : true,
+                weakening: tWeak ? tWeak.checked : true,
+                lagging: tLag ? tLag.checked : true
+            };
+
+            var vizSectors = SECTORS.filter(function(s) { return filterQ[s.q]; });
+
+            var allX = [], allY = [];
+            vizSectors.forEach(function(s) { allX.push(s.x); allY.push(s.y); s.trail.forEach(function(tp) { allX.push(tp.x); allY.push(tp.y); }); });
+            
+            var maxAbsX = Math.max.apply(null, allX.map(Math.abs)) || 1;
+            var maxAbsY = Math.max.apply(null, allY.map(Math.abs)) || 1;
+            var tX = function(v) { return P + ((v + maxAbsX) / (maxAbsX * 2)) * (CW - P * 2); };
+            var tY = function(v) { return (CH - P) - ((v + maxAbsY) / (maxAbsY * 2)) * (CH - P * 2); };
+            var MX = tX(0), MY = tY(0);
+
+            var gridLines = '';
+            for(var step = 1; step < 10; step++) {
+                var gX = P + (step/10)*(CW - P*2);
+                var gY = P + (step/10)*(CH - P*2);
+                gridLines += '<line x1="'+gX+'" y1="'+P+'" x2="'+gX+'" y2="'+(CH-P)+'" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>';
+                gridLines += '<line x1="'+P+'" y1="'+gY+'" x2="'+(CW-P)+'" y2="'+gY+'" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>';
+            }
+
+            var sectorG = vizSectors.map(function(s) {
+                var trailPts = s.trail.map(function(tp) { return { x: tX(tp.x), y: tY(tp.y) }; });
+                var jcx = trailPts[trailPts.length - 1].x;
+                var jcy = trailPts[trailPts.length - 1].y;
+                
+                var dPaths = '';
+                for (var i = 0; i < trailPts.length - 1; i++) {
+                    var p0 = i === 0 ? trailPts[0] : trailPts[i - 1];
+                    var p1 = trailPts[i];
+                    var p2 = trailPts[i + 1];
+                    var p3 = i + 2 < trailPts.length ? trailPts[i + 2] : p2;
+                    var cp1x = p1.x + (p2.x - p0.x) / 6;
+                    var cp1y = p1.y + (p2.y - p0.y) / 6;
+                    var cp2x = p2.x - (p3.x - p1.x) / 6;
+                    var cp2y = p2.y - (p3.y - p1.y) / 6;
+                    var segD = "M " + p1.x.toFixed(1) + "," + p1.y.toFixed(1) + " C " + cp1x.toFixed(1) + "," + cp1y.toFixed(1) + " " + cp2x.toFixed(1) + "," + cp2y.toFixed(1) + " " + p2.x.toFixed(1) + "," + p2.y.toFixed(1);
+                    var segOp = 0.1 + 0.6 * ((i + 1) / trailPts.length);
+                    dPaths += '<path d="' + segD + '" fill="none" stroke="' + s.color + '" stroke-width="2.5" stroke-linecap="round" opacity="' + segOp + '"/>';
+                }
+                
+                var dots = trailPts.map(function(p, i) {
+                    if (i === trailPts.length - 1) return '';
+                    var op = 0.1 + 0.9 * (i / trailPts.length);
+                    return '<circle cx="'+p.x+'" cy="'+p.y+'" r="2.5" fill="'+s.color+'" opacity="'+op+'"/>';
+                }).join('');
+
+                var tailX = trailPts.length > 1 ? trailPts[trailPts.length - 2].x : jcx;
+                var tailY = trailPts.length > 1 ? trailPts[trailPts.length - 2].y : jcy;
+                var angle = Math.atan2(jcy - tailY, jcx - tailX) * 180 / Math.PI;
+                var arrow = '<polygon points="-6,-5 8,0 -6,5" fill="' + s.color + '" transform="translate(' + jcx + ',' + jcy + ') rotate(' + angle + ')" />';
+
+                return '<g>' +
+                    dPaths +
+                    dots +
+                    arrow +
+                    '<text x="' + jcx + '" y="' + (jcy-10) + '" text-anchor="middle" fill="#fff" font-size="9" font-weight="800" font-family="var(--mono)">' + s.name + '</text>' +
+                    '</g>';
+            }).join('');
+
+            container.innerHTML =
+                '<div class="card" style="padding:0; overflow:hidden;"><div class="rrg-box" style="background:#0b0e14; box-shadow:inset 0 0 30px rgba(0,0,0,0.5); aspect-ratio:7/5.5;">' +
+                '<svg viewBox="0 0 ' + CW + ' ' + CH + '">' +
+                '<rect x="' + P + '" y="' + P + '" width="' + (MX-P) + '" height="' + (MY-P) + '" fill="#16222b"/>' +
+                '<rect x="' + MX + '" y="' + P + '" width="' + (CW-P-MX) + '" height="' + (MY-P) + '" fill="#122a28"/>' +
+                '<rect x="' + P + '" y="' + MY + '" width="' + (MX-P) + '" height="' + (CH-P-MY) + '" fill="#2d1a22"/>' +
+                '<rect x="' + MX + '" y="' + MY + '" width="' + (CW-P-MX) + '" height="' + (CH-P-MY) + '" fill="#2c2214"/>' +
+                gridLines +
+                '<line x1="' + MX + '" y1="' + P + '" x2="' + MX + '" y2="' + (CH-P) + '" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>' +
+                '<line x1="' + P + '" y1="' + MY + '" x2="' + (CW-P) + '" y2="' + MY + '" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>' +
+                '<text x="' + (P+10) + '" y="' + (P+20) + '" fill="#60a5fa" font-size="11" font-weight="900" opacity="0.6">IMPROVING</text>' +
+                '<text x="' + (CW-P-60) + '" y="' + (P+20) + '" fill="#10b981" font-size="11" font-weight="900" opacity="0.6">LEADING</text>' +
+                '<text x="' + (P+10) + '" y="' + (CH-P-15) + '" fill="#ef4444" font-size="11" font-weight="900" opacity="0.6">LAGGING</text>' +
+                '<text x="' + (CW-P-75) + '" y="' + (CH-P-15) + '" fill="#f59e0b" font-size="11" font-weight="900" opacity="0.6">WEAKENING</text>' +
+                sectorG +
+                '</svg></div></div>';
+        }
+
+        function renderRankSignals(container) {
+            container.innerHTML =
+                '<div class="card">' +
+                '<div style="font-size:13px; font-weight:700; color:#f1f5f9; margin-bottom:12px;">Rotation Status Matrix</div>' +
+                '<table style="width:100%; border-collapse:collapse; font-size:11px;">' +
+                '<thead style="border-bottom:1px solid #1e293b; color:#64748b;">' +
+                '<tr><th style="padding:8px 0; text-align:left;">Sector</th><th style="text-align:left;">Signal</th><th style="text-align:right;">Momentum</th></tr>' +
+                '</thead><tbody>' +
+                SECTORS.slice().sort(function(a,b) { return b.x-a.x; }).map(function(s) {
+                    return '<tr style="border-bottom:1px solid #1e293b;">' +
+                        '<td style="padding:10px 0; font-weight:700; color:' + Q_FILL[s.q] + '">' + s.name + '</td>' +
+                        '<td style="color:' + Q_FILL[s.q] + '">' + s.q.toUpperCase() + '</td>' +
+                        '<td style="text-align:right; font-weight:700; color:' + (s.x>=100?'#22c55e':'#ef4444') + '">' + s.x.toFixed(1) + '</td></tr>';
+                }).join('') +
+                '</tbody></table></div>';
+        }
+
+        function renderFlows(container) {
+            var maxFlow = Math.max.apply(null, SECTORS.map(function(s) { return Math.abs(s.flow); }));
+            container.innerHTML =
+                '<div class="card">' +
+                '<div style="font-size:13px; font-weight:700; color:#f1f5f9; margin-bottom:12px;">Institutional Fund Flow ($M)</div>' +
+                SECTORS.slice().sort(function(a,b) { return b.flow-a.flow; }).map(function(s) {
+                    var pct = Math.abs(s.flow)/maxFlow * 100;
+                    return '<div style="margin-bottom:12px;">' +
+                        '<div style="display:flex; justify-content:space-between; font-size:10px; margin-bottom:4px;">' +
+                        '<span style="font-weight:700;">' + s.name + '</span>' +
+                        '<span style="color:' + (s.flow>0?'#22c55e':'#ef4444') + '; font-weight:800;">' + (s.flow>0?'+':'') + s.flow + 'M</span></div>' +
+                        '<div style="height:6px; background:#1e293b; border-radius:3px; overflow:hidden;">' +
+                        '<div style="width:' + pct + '%; height:100%; background:' + (s.flow>0?'#22c55e':'#ef4444') + '; opacity:0.8;"></div></div></div>';
+                }).join('') +
+                '</div>';
+        }
+
+        // =============================================
+        // TOP CONTRIBUTING STOCKS (from web_data.json)
+        // =============================================
+        function fmtVol(v) { if (!v) return 'N/A'; if (v >= 1e6) return (v/1e6).toFixed(1)+'M'; if (v >= 1e3) return (v/1e3).toFixed(0)+'K'; return ''+v; }
+
+        function renderSectorStocks() {
+            if (!webData) return;
+            var rawAll = (webData.all_stocks || []).concat(webData.stocks || []).concat(webData.pulse || []);
+            var unq = {};
+            rawAll.forEach(function(s) { if (!unq[s.ticker] || s.rs > unq[s.ticker].rs) unq[s.ticker] = s; });
+            var allStocks = Object.keys(unq).map(function(k) { return unq[k]; });
+            var leading = SECTORS.filter(function(s) { return s.q === 'leading'; });
+            var improving = SECTORS.filter(function(s) { return s.q === 'improving'; });
+
+            var ETF_MAPPING = {
+                "XLK": { s: "Technology", i: null },
+                "XLE": { s: "Energy", i: null },
+                "XLF": { s: "Financial Services", i: null },
+                "XLV": { s: "Healthcare", i: null },
+                "XLY": { s: "Consumer Cyclical", i: null },
+                "XLP": { s: "Consumer Defensive", i: null },
+                "XLI": { s: "Industrials", i: null },
+                "XLU": { s: "Utilities", i: null },
+                "XLRE": { s: "Real Estate", i: null },
+                "XLB": { s: "Basic Materials", i: null },
+                "XLC": { s: "Communication Services", i: null },
+                "SMH": { s: null, i: ["Semiconductors", "Semiconductor Equipment & Materials"] },
+                "XBI": { s: null, i: ["Biotechnology"] },
+                "XHB": { s: null, i: ["Residential Construction", "Home Improvement Retail", "Building Products & Equipment"] },
+                "XRT": { s: null, i: ["Specialty Retail", "Apparel Retail", "Department Stores", "Internet Retail", "Luxury Goods"] },
+                "XME": { s: null, i: ["Other Industrial Metals & Mining", "Gold", "Steel", "Aluminum", "Copper", "Other Precious Metals & Mining"] }
+            };
+
+            var seenTickers = {};
+            function getTopStocks(sectorList, max) {
+                var pool = [];
+                sectorList.forEach(function(sec) {
+                    var mapping = ETF_MAPPING[sec.ticker];
+                    if (!mapping) return;
+                    var matches = allStocks.filter(function(s) {
+                        if (s.is_speculative || seenTickers[s.ticker] || s.sector === 'unknown') return false;
+                        if (mapping.i) return mapping.i.indexOf(s.industry) !== -1;
+                        return s.sector === mapping.s;
+                    });
+                    matches.sort(function(a, b) { return b.rs - a.rs; });
+                    matches.slice(0, 3).forEach(function(s) {
+                        if (!seenTickers[s.ticker]) {
+                            s._etf = sec.name;
+                            seenTickers[s.ticker] = true;
+                            pool.push(s);
+                        }
+                    });
+                });
+                pool.sort(function(a, b) { return b.rs - a.rs; });
+                return pool.slice(0, max || 12);
+            }
+
+            var leadStocks = getTopStocks(leading, 9);
+            var impStocks = getTopStocks(improving, 9);
+            var allPicked = leadStocks.concat(impStocks);
+
+            function copyCSV(stocks, btnId) {
+                var csv = stocks.map(function(s) { return s.ticker; }).join(', ');
+                navigator.clipboard.writeText(csv).then(function() {
+                    var btn = document.getElementById(btnId);
+                    btn.classList.add('copied');
+                    btn.innerHTML = '✅ Copied!';
+                    setTimeout(function() { btn.classList.remove('copied'); btn.innerHTML = '📋 Copy CSV'; }, 2000);
+                });
+            }
+            // Make copy functions available globally
+            window.copyLeading = function() { copyCSV(leadStocks, 'copy-leading'); };
+            window.copyImproving = function() { copyCSV(impStocks, 'copy-improving'); };
+            window.copyAll = function() { copyCSV(allPicked, 'copy-all'); };
+
+            function computeRotation(s) {
+                var mom1w = s.rs_1w_pct || s.rs;
+                var mom1m = s.rs_1m_pct || s.rs;
+                var yMom = mom1w - mom1m;
+                var vel = s.rs - mom1w;
+                return yMom * 0.7 + vel * 0.3;
+            }
+
+            function renderStockCard(s, idx) {
+                var volStyle = 'font-size:0.65rem;color:var(--text2);padding:2px 6px;border-radius:4px;border:1px solid var(--border);background:var(--surface);display:inline-block;';
+                if (s.volume > s.avg_volume) {
+                    volStyle = s.is_up ?
+                        'font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:4px;border:1px solid rgba(0,230,118,0.3);background:rgba(0,230,118,0.1);color:var(--green);display:inline-block;' :
+                        'font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:4px;border:1px solid rgba(255,145,0,0.3);background:rgba(255,145,0,0.1);color:var(--orange);display:inline-block;';
+                }
+                var chartUrl = s.finviz_chart_url ? s.finviz_chart_url + '&t=' + Date.now() : '';
+                var hiTags = s.highlights ? s.highlights.split(', ').map(function(h) { return '<span class="highlight-tag">' + h + '</span>'; }).join('') : '';
+                var canslimHtml = '';
+                if (s.canslim) {
+                    var letters = ['C','A','N','S','L','I','M'];
+                    canslimHtml = '<div class="canslim-tray">' + letters.map(function(l) {
+                        var active = s.canslim[l.toLowerCase()];
+                        return '<div class="canslim-letter ' + (active ? 'active' : '') + '">' + l + '</div>';
+                    }).join('') + '</div>';
+                }
+                var earningsBadge = (s.days_to_earnings >= 0 && s.days_to_earnings <= 14)
+                    ? '<div class="earnings-alert">\ud83d\udcc5 EARNINGS IN ' + s.days_to_earnings + 'D</div>' : '';
+                var yComp = computeRotation(s);
+                var outlook = yComp > 0 ? (s.rs >= 90 ? 'rallying' : 'recovering') : (s.rs >= 90 ? 'curling' : 'declining');
+                var outlookLabel = outlook === 'rallying' ? '\u279a Momentum Rallying' :
+                    outlook === 'curling' ? '\u2939 Momentum Curling' :
+                    outlook === 'declining' ? '\u2198 Momentum Declining' : '\u2197 Momentum Recovering';
+                var outlookClass = (outlook === 'rallying' || outlook === 'recovering') ? 'outlook-rallying' :
+                    outlook === 'curling' ? 'outlook-curling' : 'outlook-declining';
+
+                return '<div class="stock-card" data-ticker="' + s.ticker + '" style="animation-delay:' + ((idx||0)*0.05) + 's">' +
+                    '<div style="display:flex;justify-content:space-between;align-items:flex-start;">' +
+                        '<div>' +
+                            '<div style="display:flex;align-items:center;gap:8px;">' +
+                                '<a href="' + (s.tradingview_url || '#') + '" target="_blank" class="ticker" style="font-size:1.3rem;">' + s.ticker + '</a>' +
+                                '<span class="rs-pct-badge">1W: ' + (s.rs_1w_pct || 'N/A') + '%</span>' +
+                            '</div>' +
+                            '<div class="company-name">' + (s.name || '') + '</div>' +
+                            '<div style="font-size:0.7rem;color:var(--text2);margin-top:2px;">' + (s.industry || '') + ' &bull; ' + (s.sector || '') + '</div>' +
+                            canslimHtml +
+                        '</div>' +
+                        '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;">' +
+                            '<span style="font-size:0.6rem;color:var(--text2);">#' + (s.rank || '') + '</span>' +
+                            '<span style="font-size:0.6rem;padding:2px 6px;border-radius:4px;background:var(--surface);border:1px solid var(--border);color:var(--text2);">' + (s._etf || '') + '</span>' +
+                            (s.flip ? '<div class="flip-badge">\u26a1 PRIME FLIP</div>' : '') +
+                            '<div class="source-badge">' + (s.source || '') + '</div>' +
+                            '<span style="' + volStyle + '">$' + (s.price ? s.price.toFixed(2) : 'N/A') + '</span>' +
+                            '<span style="' + volStyle + '" title="Avg: ' + fmtVol(s.avg_volume) + '">Vol: ' + fmtVol(s.volume) + '</span>' +
+                        '</div>' +
+                    '</div>' +
+                    earningsBadge +
+                    (chartUrl ? '<a href="' + (s.tradingview_url || '#') + '" target="_blank" class="chart-link"><img src="' + chartUrl + '" class="chart-img" loading="lazy" alt="' + s.ticker + '"><div class="chart-overlay"><span>Open Chart</span><span>\u2197\ufe0f</span></div></a>' : '') +
+                    '<div class="metrics">' +
+                        '<div class="metric"><span class="metric-label">RS Rank</span><span class="metric-value" style="color:var(--cyan);">' + s.rs + '</span></div>' +
+                        '<div class="metric"><span class="metric-label">RMV</span><span class="metric-value">' + (s.rmv != null ? s.rmv.toFixed(1) : 'N/A') + '</span></div>' +
+                        '<div class="metric"><span class="metric-label">1W Pct</span><span class="metric-value">' + (s.rs_1w_pct || 'N/A') + '</span></div>' +
+                        '<div class="metric"><span class="metric-label">1M Pct</span><span class="metric-value">' + (s.rs_1m_pct || 'N/A') + '</span></div>' +
+                    '</div>' +
+                    (hiTags ? '<div class="highlights">' + hiTags + '</div>' : '') +
+                    '<div style="display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--border);padding-top:8px;">' +
+                        '<span class="outlook-tag ' + outlookClass + '">' + outlookLabel + '</span>' +
+                    '</div>' +
+                '</div>';
+            }
+
+            document.getElementById('sector-stocks').innerHTML =
+                '<div class="section-label" style="color:#22c55e;">🟢 Leading Sector Contributors' +
+                    '<button class="copy-csv-btn" id="copy-leading" onclick="copyLeading()" style="margin-left:auto;">📋 Copy CSV</button>' +
+                '</div>' +
+                '<div class="stock-grid">' + leadStocks.map(renderStockCard).join('') + '</div>' +
+
+                '<div class="section-label" style="color:#60a5fa;">🔵 Improving Sector Contributors' +
+                    '<button class="copy-csv-btn" id="copy-improving" onclick="copyImproving()" style="margin-left:auto;">📋 Copy CSV</button>' +
+                '</div>' +
+                '<div class="stock-grid">' + impStocks.map(renderStockCard).join('') + '</div>' +
+
+                '<div style="text-align:center;margin-top:16px;">' +
+                    '<button class="copy-csv-btn" id="copy-all" onclick="copyAll()">📋 Copy All Tickers (CSV)</button>' +
+                '</div>';
+        }
+
+        window.onload = function() {
+            init();
+        };
+    </script>
+</body>
+</html>
