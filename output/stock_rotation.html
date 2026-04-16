@@ -180,6 +180,13 @@
             }).catch(e => { document.getElementById('rrg-container').innerHTML = '<div style="padding:100px;text-align:center;">Data Load Error.</div>'; });
         }
 
+        function median(arr) {
+            var s = arr.slice().sort((a,b) => a-b);
+            if(!s.length) return 0;
+            var m = Math.floor(s.length/2);
+            return s.length % 2 ? s[m] : (s[m-1] + s[m])/2;
+        }
+
         function render() {
             if(!webData || !allStocks.length) return;
             var hidden = getHiddenTickers();
@@ -196,18 +203,28 @@
                 return true;
             });
 
+            // Calculate Dynamic Universe Median for centering
+            var universeRS = filteredPool.map(s => s.rs || 0);
+            var medRS = median(universeRS) || 50;
+            
+            var universeY = filteredPool.map(s => {
+                var h = (history[s.ticker] || []).slice(0, 10);
+                return ( (s.rs || 0) - (h[h.length-1] || (s.rs||0)) ) * 10;
+            });
+            var medY = median(universeY) || 0;
+
             var processed = filteredPool.map(s => {
                 var h = (history[s.ticker] || []).slice(0, 20);
                 var rs = s.rs || 0;
-                var x = rs - 50; 
+                var x = rs - medRS; 
                 var prevRS = h.length > 5 ? h[h.length - 5] : rs;
-                var y = (rs - prevRS) * 10;
+                var y = ((rs - prevRS) * 10) - medY;
                 var q = x >= 0 ? (y >= 0 ? 'leading' : 'weakening') : (y >= 0 ? 'improving' : 'lagging');
                 var trail = [];
                 for(var i=Math.max(0, h.length-15); i<h.length; i++) {
                     var trRS = h[i];
                     var trPrev = h[i-5] || trRS;
-                    trail.push({ x: trRS - 50, y: (trRS - trPrev) * 10 });
+                    trail.push({ x: trRS - medRS, y: ((trRS - trPrev) * 10) - medY });
                 }
                 return { s, x, y, q, trail };
             }).sort((a,b) => b.s.rs - a.s.rs).slice(0, 40);
@@ -223,8 +240,10 @@
 
             var allX = [], allY = [];
             visible.forEach(d => { allX.push(d.x); allY.push(d.y); d.trail.forEach(p => { allX.push(p.x); allY.push(p.y); }); });
-            var maxAbsX = Math.max(...allX.map(Math.abs), 5) * 1.15;
+            var maxAbsX = Math.max(...allX.map(Math.abs), 2) * 1.15;
             var maxAbsY = Math.max(...allY.map(Math.abs), 2) * 1.15;
+            if (maxAbsX < 2) maxAbsX = 2; // Prevent zero scale
+            
             var CW = 900, CH = 600, P = 60;
             var tX = v => (CW/2) + (v/maxAbsX) * (CW/2 - P);
             var tY = v => (CH/2) - (v/maxAbsY) * (CH/2 - P);
