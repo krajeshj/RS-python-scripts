@@ -189,31 +189,33 @@
 
             const getBestRS = (s) => (stockHist[s.ticker] && stockHist[s.ticker].length) ? stockHist[s.ticker][0] : (s.rs || 50);
 
-            // Universe Statistics for Dynamic Centering
-            var universeRS = pool.map(s => getBestRS(s));
-            var medRS = median(universeRS) || 50;
-            
-            var universeMom = pool.map(s => {
-                var h = stockHist[s.ticker];
-                if(!h || h.length < 5) return 0;
-                return (h[0] - h[4]) * 5; // 5-day delta scaled
-            });
-            var medMom = median(universeMom) || 0;
-
+            // 1. SELECT TOP 40 FIRST
             pool.sort((a,b) => b.rs - a.rs);
             var top40 = pool.slice(0, 40);
 
+            const getBestRS = (s) => (stockHist[s.ticker] && stockHist[s.ticker].length) ? stockHist[s.ticker][0] : (s.rs || 50);
+
+            // 2. DYNAMIC CENTERING (Calculated specifically on the shown Top 40)
+            var visibleRS = top40.map(s => getBestRS(s));
+            var medRS = median(visibleRS) || 50;
+            
+            var visibleMom = top40.map(s => {
+                var h = stockHist[s.ticker] || [];
+                return h.length >= 5 ? (h[0] - h[4]) * 8 : 0;
+            });
+            var medMom = median(visibleMom) || 0;
+
+            // 3. MAP COORDIANTES
             var candidates = top40.map(s => {
                 var hRaw = (stockHist[s.ticker] || []).slice(0, 15);
                 if(!hRaw.length) hRaw = [s.rs];
-                // Reverse so index [last] is LATEST for the SVG trail drawing logic
                 var h = [...hRaw].reverse(); 
                 
                 var curRS = h[h.length - 1];
                 var prevRS = h[Math.max(0, h.length - 5)];
                 
                 var x = curRS - medRS; 
-                var y = ((curRS - prevRS) * 5) - medMom;
+                var y = ((curRS - prevRS) * 8) - medMom;
 
                 var q = x >= 0 ? (y >= 0 ? 'leading' : 'weakening') : (y >= 0 ? 'improving' : 'lagging');
                 var trail = [];
@@ -222,7 +224,7 @@
                     var trPrev = h[Math.max(0, i-4)];
                     trail.push({ 
                         x: trVal - medRS, 
-                        y: ((trVal - trPrev) * 5) - medMom 
+                        y: ((trVal - trPrev) * 8) - medMom 
                     });
                 }
                 return { s, x, y, q, trail };
