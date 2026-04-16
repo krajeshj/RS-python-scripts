@@ -161,7 +161,7 @@
                 var unq = {};
                 allStocks.forEach(function(s) { if (!unq[s.ticker] || s.rs > (unq[s.ticker].rs || 0)) unq[s.ticker] = s; });
                 allStocks = Object.keys(unq).map(function(k) { return unq[k]; });
-                stockHist = res[1] || {};
+                stockHist = res[1].data || res[1] || {};
                 wireSliders(); render();
             }).catch(function(e) {
                 document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:red;">Data sync error.</div>';
@@ -332,25 +332,23 @@
 
             visible.forEach(function(s) {
                     var trailPts = s.trail.map(function(tp) { return { x: tX(tp.x), y: tY(tp.y) }; });
-                    if (trailPts.length < 2) return;
-                    var jcx = trailPts[trailPts.length - 1].x;
-                    var jcy = trailPts[trailPts.length - 1].y;
+                    var jcx = tX(s.xVal), jcy = tY(s.yVal);
                     
                     var dPaths = '';
-                    for (var i = 0; i < trailPts.length - 1; i++) {
-                        var p0 = i === 0 ? trailPts[0] : trailPts[i - 1];
-                        var p1 = trailPts[i];
-                        var p2 = trailPts[i + 1];
-                        var p3 = i + 2 < trailPts.length ? trailPts[i + 2] : p2;
-                        
-                        var cp1x = p1.x + (p2.x - p0.x) / 6;
-                        var cp1y = p1.y + (p2.y - p0.y) / 6;
-                        var cp2x = p2.x - (p3.x - p1.x) / 6;
-                        var cp2y = p2.y - (p3.y - p1.y) / 6;
-                        
-                        var segD = "M " + p1.x.toFixed(1) + "," + p1.y.toFixed(1) + " C " + cp1x.toFixed(1) + "," + cp1y.toFixed(1) + " " + cp2x.toFixed(1) + "," + cp2y.toFixed(1) + " " + p2.x.toFixed(1) + "," + p2.y.toFixed(1);
-                        var segOp = 0.1 + 0.6 * ((i + 1) / trailPts.length);
-                        dPaths += '<path d="' + segD + '" fill="none" stroke="' + s.color + '" stroke-width="2.5" stroke-linecap="round" opacity="' + segOp + '"/>';
+                    if (trailPts.length >= 2) {
+                        for (var i = 0; i < trailPts.length - 1; i++) {
+                            var p0 = i === 0 ? trailPts[0] : trailPts[i - 1];
+                            var p1 = trailPts[i];
+                            var p2 = trailPts[i + 1];
+                            var p3 = i + 2 < trailPts.length ? trailPts[i + 2] : p2;
+                            var cp1x = p1.x + (p2.x - p0.x) / 6;
+                            var cp1y = p1.y + (p2.y - p0.y) / 6;
+                            var cp2x = p2.x - (p3.x - p1.x) / 6;
+                            var cp2y = p2.y - (p3.y - p1.y) / 6;
+                            var segD = "M " + p1.x.toFixed(1) + "," + p1.y.toFixed(1) + " C " + cp1x.toFixed(1) + "," + cp1y.toFixed(1) + " " + cp2x.toFixed(1) + "," + cp2y.toFixed(1) + " " + p2.x.toFixed(1) + "," + p2.y.toFixed(1);
+                            var segOp = 0.1 + 0.6 * ((i + 1) / trailPts.length);
+                            dPaths += '<path d="' + segD + '" fill="none" stroke="' + s.color + '" stroke-width="2.5" stroke-linecap="round" opacity="' + segOp + '"/>';
+                        }
                     }
                     
                     var dots = trailPts.map(function(p, i) {
@@ -359,8 +357,8 @@
                         return '<circle cx="'+p.x+'" cy="'+p.y+'" r="2.5" fill="'+s.color+'" opacity="'+op+'"/>';
                     }).join('');
 
-                    var tailX = trailPts.length > 1 ? trailPts[trailPts.length - 2].x : jcx;
-                    var tailY = trailPts.length > 1 ? trailPts[trailPts.length - 2].y : jcy;
+                    var tailX = trailPts.length > 1 ? trailPts[trailPts.length - 2].x : jcx - 1;
+                    var tailY = trailPts.length > 1 ? trailPts[trailPts.length - 2].y : jcy - 1;
                     var angle = Math.atan2(jcy - tailY, jcx - tailX) * 180 / Math.PI;
                     var arrow = '<polygon points="-5,-4 7,0 -5,4" fill="' + s.color + '" transform="translate(' + jcx + ',' + jcy + ') rotate(' + angle + ')" />';
 
