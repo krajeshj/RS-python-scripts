@@ -219,10 +219,11 @@
             var totalAvailable = filtered.length;
             var rawData = filtered.map(function(s) {
                 var h = (stockHist[s.ticker] || []).slice(0, 17);
-                var xRaw = s.rs_raw || 0;
-                var mom1w = s.rs_1w_pct || s.rs;
-                var mom1m = s.rs_1m_pct || s.rs;
-                var yComposite = (mom1w - mom1m) * 0.7 + (s.rs - mom1w) * 0.3;
+                var xRaw = +(s.rs_raw || 0);
+                var rsVal = +(s.rs || 0);
+                var mom1w = +(s.rs_1w_pct || rsVal);
+                var mom1m = +(s.rs_1m_pct || rsVal);
+                var yComposite = (mom1w - mom1m) * 0.7 + (rsVal - mom1w) * 0.3;
 
                 var acc = 0;
                 if (h.length >= 9) {
@@ -255,8 +256,8 @@
 
             var processed = rawData.map(function(d) {
                 var s = d.s;
-                var xVal = d.xRaw - medX;
-                var yVal = d.yComposite - medY;
+                var xVal = (+d.xRaw) - medX;
+                var yVal = (+d.yComposite) - medY;
                 var q = xVal >= 0 ? (yVal >= 0 ? "leading" : "weakening") : (yVal >= 0 ? "improving" : "lagging");
 
                 // Normalize trail relative to medians
