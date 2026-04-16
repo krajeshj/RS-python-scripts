@@ -189,7 +189,13 @@
                 setTimeout(function() { btn.classList.remove('active'); btn.innerHTML = '<div class="toggle-dot"></div> 📋 Copy Tickers'; }, 2000);
             });
         }
-        function median(arr) { if (!arr.length) return 0; var s = arr.slice().sort(function(a, b) { return a - b; }); var m = Math.floor(s.length / 2); return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; }
+        function median(arr) { 
+            var clean = arr.filter(function(v) { return typeof v === 'number' && !isNaN(v); });
+            if (!clean.length) return 0; 
+            var s = clean.slice().sort(function(a, b) { return a - b; }); 
+            var m = Math.floor(s.length / 2); 
+            return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; 
+        }
         function catmullRom2bezier(pts) { var d = ""; if (pts.length === 0) return d; d += "M " + pts[0].x.toFixed(1) + "," + pts[0].y.toFixed(1) + " "; if (pts.length === 1) return d; for (var i = 0; i < pts.length - 1; i++) { var p0 = i === 0 ? pts[0] : pts[i - 1]; var p1 = pts[i]; var p2 = pts[i + 1]; var p3 = i + 2 < pts.length ? pts[i + 2] : p2; var cp1x = p1.x + (p2.x - p0.x) / 6; var cp1y = p1.y + (p2.y - p0.y) / 6; var cp2x = p2.x - (p3.x - p1.x) / 6; var cp2y = p2.y - (p3.y - p1.y) / 6; d += "C " + cp1x.toFixed(1) + "," + cp1y.toFixed(1) + " " + cp2x.toFixed(1) + "," + cp2y.toFixed(1) + " " + p2.x.toFixed(1) + "," + p2.y.toFixed(1) + " "; } return d; }
 
         function render() {
@@ -298,8 +304,8 @@
                 s.trail.forEach(function(tp) { allX.push(tp.x); allY.push(tp.y); });
             });
 
-            var maxAbsX = Math.max.apply(null, allX.map(Math.abs)) || 1;
-            var maxAbsY = Math.max.apply(null, allY.map(Math.abs)) || 1;
+            var maxAbsX = allX.reduce(function(acc, v) { return (!isNaN(v) && Math.abs(v) > acc) ? Math.abs(v) : acc; }, 0.1);
+            var maxAbsY = allY.reduce(function(acc, v) { return (!isNaN(v) && Math.abs(v) > acc) ? Math.abs(v) : acc; }, 0.1);
 
             var tX = function(v) { return P + ((v + maxAbsX) / (maxAbsX * 2)) * (CW - P * 2); };
             var tY = function(v) { return (CH - P) - ((v + maxAbsY) / (maxAbsY * 2)) * (CH - P * 2); };
