@@ -302,17 +302,16 @@
             // =====================================================================
             // SVG RENDERING
             // =====================================================================
-            // STABLE VIEWPORT: Calculate bounds from ALL processed stocks (top 40)
-            // so the zoom level doesn't jump as you flip quadrants or sliders.
+            // MATCHING SECTOR ROTATION LOGIC: Calculate bounds from only visible stocks
+            // to allow the chart to auto-zoom and adjust as filters change.
             var allX = [], allY = [];
-            processed.forEach(function(s) {
+            visible.forEach(function(s) {
                 allX.push(s.xVal); allY.push(s.yVal);
-                s.trail.forEach(function(tp) { allX.push(tp.x); allY.push(tp.y); });
+                s.trail.forEach(function(tp) { allX.push(tp.x || 0); allY.push(tp.y || 0); });
             });
 
-            var maxAbsX = 0.1, maxAbsY = 0.1;
-            allX.forEach(function(v) { var av = Math.abs(v); if (!isNaN(av) && av > maxAbsX) maxAbsX = av; });
-            allY.forEach(function(v) { var av = Math.abs(v); if (!isNaN(av) && av > maxAbsY) maxAbsY = av; });
+            var maxAbsX = Math.max.apply(null, allX.map(Math.abs)) || 1;
+            var maxAbsY = Math.max.apply(null, allY.map(Math.abs)) || 1;
 
             var tX = function(v) { 
                 var val = +v || 0;
