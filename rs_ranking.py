@@ -889,12 +889,12 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
         print("No stocks data to rank.")
         return dfs
 
-    # Percentile bins
-    df[TITLE_PERCENTILE] = pd.qcut(df[TITLE_RS], 100, precision=64, labels=False, duplicates='drop') + 1
-    df["rs_1w_pct"] = pd.qcut(df["RS_1W"], 100, precision=64, labels=False, duplicates='drop') + 1
-    df["rs_1m_pct"] = pd.qcut(df[TITLE_1M], 100, precision=64, labels=False, duplicates='drop') + 1
-    df[TITLE_3M] = pd.qcut(df[TITLE_3M], 100, precision=64, labels=False, duplicates='drop') + 1
-    df[TITLE_6M] = pd.qcut(df[TITLE_6M], 100, precision=64, labels=False, duplicates='drop') + 1
+    # High-precision floating point percentiles (0-100)
+    df[TITLE_PERCENTILE] = df[TITLE_RS].rank(pct=True) * 100
+    df["rs_1w_pct"] = df["RS_1W"].rank(pct=True) * 100
+    df["rs_1m_pct"] = df[TITLE_1M].rank(pct=True) * 100
+    df[TITLE_3M] = df[TITLE_3M].rank(pct=True) * 100
+    df[TITLE_6M] = df[TITLE_6M].rank(pct=True) * 100
 
     # Finalize CANSLIM 'L' — Leader requires RS >= 80 AND an upward-sloping RS line
     # (1W RS pct >= 1M RS pct ensures sustained trend, not a one-day spike)

@@ -157,14 +157,12 @@
                 fetch('stock_history.json?v=' + ts).then(function(r) { return r.json(); })
             ]).then(function(res) {
                 webData = res[0]; 
-                allStocks = (res[0].all_stocks || []).concat(res[0].stocks || []).concat(res[0].pulse || []);
+                // Restore Morning Selection: Curated Leaders (stocks) + Market Pulse
+                allStocks = (res[0].stocks || []).concat(res[0].pulse || []);
                 var unq = {};
                 allStocks.forEach(function(s) { if (!unq[s.ticker] || s.rs > (unq[s.ticker].rs || 0)) unq[s.ticker] = s; });
                 allStocks = Object.keys(unq).map(function(k) { return unq[k]; });
                 stockHist = res[1].data || res[1] || {};
-                
-                // Set the horizontal median for RRG (usually 1.0 in RS Ratio models)
-                medianX = median(allStocks.map(function(s) { return +(s.rs_raw || 0); })) || 1.0;
                 
                 wireSliders(); render();
             }).catch(function(e) {
@@ -219,69 +217,71 @@
                 if (getHiddenTickers().indexOf(s.ticker) !== -1) return false;
                 return true;
             });
-            var totalAvailable = filtered.length;
-            var universeSize = allStocks.length || 1500;
+            filtered.sort(function(a, b) { return b.rs - a.rs; });
+            filtered = filtered.slice(0, 40); // Elite Top 40
             
-            // 1. PROCESS ALL FILTERED STOCKS
-            var processedAll = filtered.map(function(s) {
+            var totalAvailable = filtered.length;
+            
+            // 1. CALCULATE RAW COORDINATES (Using Morning Logic)
+            var rawData = filtered.map(function(s) {
                 var h = (stockHist[s.ticker] || []).slice(0, 20);
-                var xRaw = +(s.rs_raw || 0);
-                var todayRank = +(s.rank || 0);
+                var xRaw = s.rs_raw || 0;
+                var todayRS = s.rs || 0; // Floating point RS now from seeder
+                var rs1w = s.rs_1w_pct || todayRS;
+                var rs1m = s.rs_1m_pct || todayRS;
                 
-                // UNITS SYNC: h[t] is Percentile (1-100), todayRank is Absolute (1-1447)
-                // We must project Percentile -> Rank to prevent math collision
-                var getProjectedRank = function(pct, fallback) {
-                    if (pct == null) return fallback;
-                    // Project 100% -> Rank 1, 0% -> Rank universeSize
-                    return universeSize - ((universeSize * pct) / 100) + 1;
-                };
+                // RESTORE MORNING FORMULA: Weighted Momentum
+                var yValRaw = (rs1w - rs1m) * 0.7 + (todayRS - rs1w) * 0.3;
 
-                var histRank7 = getProjectedRank(h[7], todayRank);
-                
-                // Y = CHANGE IN PROJECTED RANK 
-                var yVelocity = (histRank7 - todayRank) * 2.0;
-
-                var rawTrail = [];
+                var trail = [];
                 for (var t = 0; t < 10; t++) {
-                    var trRank = getProjectedRank(h[t], todayRank);
-                    // Synthesize RS Raw for the trail 
-                    var trX = xRaw * ((universeSize + 1 - trRank) / (universeSize + 1 - todayRank));
+                    var trRS = h[t] || todayRS;
+                    var tr1w = h[t+5] || h[t] || todayRS;
+                    var tr1m = h[t+20] || h[t] || todayRS;
                     
-                    var trPrevRank = getProjectedRank(h[t+1], trRank);
-                    var trY = (trPrevRank - trRank) * 2.0;
-                    rawTrail.push({ x: trX, y: trY });
+                    // Approximate relative X (Percentile scale)
+                    var trX = trRS; 
+                    var trY = (tr1w - tr1m) * 0.7 + (trRS - tr1w) * 0.3;
+                    trail.push({ x: trX, y: trY });
                 }
-                var trail = rawTrail.reverse(); // oldest to youngest
-                
-                // Determine Quadrant
-                var q = xRaw >= medianX ? (yVelocity >= 0 ? "leading" : "weakening") : (yVelocity >= 0 ? "improving" : "lagging");
                 
                 return {
-                    ticker: s.ticker, name: s.name, rs: s.rs, rs_raw: xRaw, rmv: s.rmv,
+                    s: s, x: todayRS, y: yValRaw, trail: trail
+                };
+            });
+
+            // CENTER ON GROUP MEDIANS (Correct Morning Behavior)
+            var medX = median(rawData.map(function(d) { return d.x; })) || 90;
+            var medY = median(rawData.map(function(d) { return d.y; })) || 0;
+
+            var processedAll = rawData.map(function(d) {
+                var s = d.s;
+                var xRel = d.x - medX;
+                var yRel = d.y - medY;
+                
+                // Determine Quadrant
+                var q = xRel >= 0 ? (yRel >= 0 ? "leading" : "weakening") : (yRel >= 0 ? "improving" : "lagging");
+                
+                var trailRel = d.trail.map(function(t) {
+                    return { x: t.x - medX, y: t.y - medY };
+                });
+
+                return {
+                    ticker: s.ticker, name: s.name, rs: s.rs, rs_raw: s.rs_raw, rmv: s.rmv,
                     rank: s.rank, industry: s.industry, sector: s.sector,
                     finviz_chart_url: s.finviz_chart_url, canslim: s.canslim,
                     price: s.price, volume: s.volume, avg_volume: s.avg_volume,
                     is_up: s.is_up, flip: s.flip, source: s.source,
                     highlights: s.highlights, days_to_earnings: s.days_to_earnings, 
                     tradingview_url: s.tradingview_url,
-                    xVal: xRaw, yVal: yVelocity, trail: trail,
+                    xVal: xRel, yVal: yRel, trail: trailRel,
                     q: q, color: Q_FILL[q]
                 };
             });
 
-            // 2. QUADRANT BALANCING: PICK TOP 10 FROM EACH
-            var quads = { leading: [], weakening: [], lagging: [], improving: [] };
-            processedAll.forEach(function(p) { quads[p.q].push(p); });
-            
-            var balancedVisible = [];
-            ['leading','improving','weakening','lagging'].forEach(function(qName) {
-                var sorted = quads[qName].sort(function(a,b) { return b.rs_raw - a.rs_raw; });
-                balancedVisible = balancedVisible.concat(sorted.slice(0, 10));
-            });
-
-            // Filter by active quadrants toggle
-            var visible = balancedVisible.filter(function(s) { return activeQuadrants[s.q]; });
-            document.getElementById('filter-count').textContent = visible.length + ' shown (Top 10 per quad / ' + allStocks.length + ' total)';
+            // Filter by active quadrants toggle (Showing Elite set)
+            var visible = processedAll.filter(function(s) { return activeQuadrants[s.q]; });
+            document.getElementById('filter-count').textContent = visible.length + ' shown (' + webData.stocks.length + ' Elite leaders analyzed)';
 
             if (!visible.length) {
                 document.getElementById('rrg-container').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text2);">No stocks in selected quadrants.</div>';

@@ -75,9 +75,10 @@ def process_day(day_offset, all_data, tickers):
         return {}
         
     df = pd.DataFrame({"symbol": symbols, "score": scores})
-    df["rank"] = pd.qcut(df["score"], 100, labels=False, duplicates='drop', precision=64) + 1
+    # Use rank(pct=True) for high-precision floating point percentiles (0-100)
+    df["rank"] = df["score"].rank(pct=True) * 100
     
-    return dict(zip(df["symbol"], df["rank"].astype(int)))
+    return dict(zip(df["symbol"], df["rank"].round(4)))
 
 def main():
     print(f"Loading {PRICE_DATA}...")
