@@ -338,25 +338,31 @@
             svgContent += `<line x1="${MX}" y1="${P}" x2="${MX}" y2="${CH-P}" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>`;
             svgContent += `<line x1="${P}" y1="${MY}" x2="${CW-P}" y2="${MY}" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>`;
 
-            data.forEach(d => {
+            data.forEach((d, idx) => {
                 var color = Q_FILL[d.q];
+                // De-clustering Jitter
+                var jX = Math.sin(idx * 1.5) * 1.5;
+                var jY = Math.cos(idx * 1.5) * 1.5;
+                
+                var cx = tX(d.x + jX), cy = tY(d.y + jY);
+
                 if(d.trail.length > 1) {
-                    var pathData = `M ${tX(d.trail[0].x)} ${tY(d.trail[0].y)}`;
+                    var pathData = `M ${tX(d.trail[0].x + jX)} ${tY(d.trail[0].y + jY)}`;
                     for(var i=1; i<d.trail.length; i++) {
-                        var p0 = d.trail[i-1], p1 = d.trail[i];
-                        var cx = tX(p0.x + (p1.x - p0.x)/2), cy = tY(p0.y + (p1.y - p0.y)/2);
-                        pathData += ` Q ${tX(p0.x)} ${tY(p0.y)} ${cx} ${cy}`;
+                        var p1 = d.trail[i];
+                        var tx = tX(p1.x + jX), ty = tY(p1.y + jY);
+                        pathData += ` L ${tx} ${ty}`;
                         
-                        // Breadcrumbs
-                        var op = (i / d.trail.length) * 0.6;
-                        svgContent += `<circle cx="${tX(p1.x)}" cy="${tY(p1.y)}" r="2" fill="${color}" opacity="${op}" />`;
+                        // Breadcrumbs on the line
+                        var op = (i / d.trail.length) * 0.7;
+                        svgContent += `<circle cx="${tx}" cy="${ty}" r="2" fill="${color}" opacity="${op}" />`;
                     }
-                    pathData += ` L ${tX(d.x)} ${tY(d.y)}`;
-                    svgContent += `<path d="${pathData}" fill="none" stroke="${color}" stroke-width="2.5" opacity="0.4" marker-end="url(#arrow)" stroke-linecap="round" />`;
+                    pathData += ` L ${cx} ${cy}`;
+                    // Unified path with Arrow
+                    svgContent += `<path d="${pathData}" fill="none" stroke="${color}" stroke-width="2.5" opacity="0.5" marker-end="url(#arrow)" stroke-linecap="round" stroke-linejoin="round" />`;
                 }
-                var cx = tX(d.x), cy = tY(d.y);
-                svgContent += `<circle cx="${cx}" cy="${cy}" r="8" fill="${color}" stroke="#fff" stroke-width="2" />`;
-                svgContent += `<text x="${cx+12}" y="${cy+4}" fill="#fff" font-weight="800" font-size="12" style="text-shadow:0 0 5px #000">${d.s.ticker}</text>`;
+                
+                svgContent += `<text x="${cx+10}" y="${cy+4}" fill="#fff" font-weight="800" font-size="12" style="text-shadow:0 0 5px #000">${d.s.ticker}</text>`;
             });
 
             container.innerHTML = `<svg viewBox="0 0 ${CW} ${CH}">${svgContent}</svg>`;
