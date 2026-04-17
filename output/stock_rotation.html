@@ -259,17 +259,18 @@
                 buckets[q].push({ s, x, y, q, h });
             });
 
-            // B. PICK TOP 10 FROM EACH QUADRANT (Balanced Selection)
-            var finalSelection = [];
-            ['leading', 'improving', 'weakening', 'lagging'].forEach(q => {
-                buckets[q].sort((a,b) => b.s.rs - a.s.rs);
-                finalSelection = finalSelection.concat(buckets[q].slice(0, 10));
+            // B. SELECTION: PICK TOP 40 ABSOLUTE LEADERS
+            pool.sort((a,b) => b.rs - a.rs);
+            var finalSelection = pool.slice(0, 40).map(s => {
+                var hRaw = (stockHist[s.ticker] || []).slice(0, 25);
+                var h = [...hRaw].reverse();
+                return { s, h };
             });
 
-            // C. RE-CENTER ON FINAL SELECTION FOR PERFECT FRAMING (With ample padding)
-            var selRS = finalSelection.map(c => c.s.rs);
+            // C. RE-CENTER ON TOP 40 (Internal Median Centering)
+            var selRS = finalSelection.map(c => getBestRS(c.s));
             var medRS = median(selRS) || medRS_Global;
-            var selMom = finalSelection.map(c => c.y);
+            var selMom = finalSelection.map(c => getWMom(c.h));
             var medMom_Local = median(selMom) || 0;
 
             var candidates = finalSelection.map((c, idx) => {
@@ -294,7 +295,7 @@
                 lagging: document.getElementById('q-lagging').checked
             };
             var visible = candidates.filter(c => qVis[c.q]);
-            document.getElementById('filter-status').textContent = visible.length + ' balanced results shown (of ' + pool.length + ' filtered)';
+            document.getElementById('filter-status').textContent = visible.length + ' leaders shown (of ' + pool.length + ' filtered)';
 
             renderSVG(visible);
             renderGrid(visible);
