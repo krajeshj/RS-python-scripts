@@ -228,13 +228,22 @@
             const getBestRS = (s) => (stockHist[s.ticker] && stockHist[s.ticker].length) ? stockHist[s.ticker][0] : (s.rs || 50);
 
             // A. MAP THE ENTIRE POOL TO QUADRANTS
+            const getWMom = (h) => { // h is reversed (latest at end)
+                if(h.length < 5) return 0;
+                var cur = h[h.length-1];
+                var d5 = cur - (h[h.length-6] || h[0]);
+                var d10 = cur - (h[h.length-11] || h[0]);
+                var d15 = cur - (h[h.length-16] || h[0]);
+                var d20 = cur - (h[h.length-21] || h[0]);
+                return (d5 * 0.4 + d10 * 0.3 + d15 * 0.2 + d20 * 0.1) * 30; // 30x scale for weighted mix
+            };
+
             var universeRS = pool.map(s => getBestRS(s));
             var medRS_Global = median(universeRS) || 50;
             
             var universeMom = pool.map(s => {
-                var h = stockHist[s.ticker] || [];
-                // Increase lookback to 10 days for smoother, more distinct momentum lines
-                return h.length >= 10 ? (h[0] - h[9]) * 15 : 0;
+                var hRaw = (stockHist[s.ticker] || []).slice(0, 25);
+                return getWMom([...hRaw].reverse());
             });
             var medMom_Global = median(universeMom) || 0;
 
@@ -243,10 +252,9 @@
                 var hRaw = (stockHist[s.ticker] || []).slice(0, 25);
                 var h = [...hRaw].reverse();
                 var curRS = h.length ? h[h.length - 1] : s.rs;
-                var prevRS = h.length >= 10 ? h[Math.max(0, h.length - 10)] : curRS;
                 
                 var x = curRS - medRS_Global;
-                var y = ((curRS - prevRS) * 15) - medMom_Global;
+                var y = getWMom(h) - medMom_Global;
                 var q = x >= 0 ? (y >= 0 ? 'leading' : 'weakening') : (y >= 0 ? 'improving' : 'lagging');
                 buckets[q].push({ s, x, y, q, h });
             });
@@ -267,17 +275,14 @@
             var candidates = finalSelection.map((c, idx) => {
                 var s = c.s, h = c.h;
                 var curRS = h.length ? h[h.length - 1] : s.rs;
-                var prevRS = h.length >= 10 ? h[Math.max(0, h.length - 10)] : curRS;
-                
                 var x = curRS - medRS;
-                var y = ((curRS - prevRS) * 15) - medMom_Local;
+                var y = getWMom(h) - medMom_Local;
 
                 var q = x >= 0 ? (y >= 0 ? 'leading' : 'weakening') : (y >= 0 ? 'improving' : 'lagging');
                 var trail = [];
                 for(var i=0; i<h.length; i++) {
-                    var trVal = h[i];
-                    var trPrev = h[Math.max(0, i-6)]; 
-                    trail.push({ x: trVal - medRS, y: ((trVal - trPrev) * 15) - medMom_Local });
+                    var subH = h.slice(0, i+1);
+                    trail.push({ x: h[i] - medRS, y: getWMom(subH) - medMom_Local });
                 }
                 return { s, x, y, q, trail };
             });
