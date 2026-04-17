@@ -221,7 +221,7 @@
                 if(s.rmv < minRMV || s.rmv > maxRMV) return false;
                 if(filters.quality && s.is_speculative) return false;
                 if(filters.minervini && !s.is_minervini) return false;
-                if(filters.top5 && topSectors.length && !top5Sectors.includes(s.sector)) return false;
+                if(filters.top5 && topSectors.length && !topSectors.includes(s.sector)) return false;
                 return true;
             });
 
@@ -230,8 +230,6 @@
             // 1. SELECT TOP 40 FIRST
             pool.sort((a,b) => b.rs - a.rs);
             var top40 = pool.slice(0, 40);
-
-            const getBestRS = (s) => (stockHist[s.ticker] && stockHist[s.ticker].length) ? stockHist[s.ticker][0] : (s.rs || 50);
 
             // 2. DYNAMIC CENTERING (Calculated specifically on the shown Top 40)
             var visibleRS = top40.map(s => getBestRS(s));
