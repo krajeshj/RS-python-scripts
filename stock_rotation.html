@@ -228,14 +228,14 @@
             const getBestRS = (s) => (stockHist[s.ticker] && stockHist[s.ticker].length) ? stockHist[s.ticker][0] : (s.rs || 50);
 
             // A. MAP THE ENTIRE POOL TO QUADRANTS
-            const getWMom = (h) => { // h is reversed (latest at end)
-                if(h.length < 5) return 0;
+            const getWMom = (h) => { // Ported from rotation.html: computeRotation logic
+                if(h.length < 11) return 0;
                 var cur = h[h.length-1];
-                var d5 = cur - (h[h.length-6] || h[0]);
-                var d10 = cur - (h[h.length-11] || h[0]);
-                var d15 = cur - (h[h.length-16] || h[0]);
-                var d20 = cur - (h[h.length-21] || h[0]);
-                return (d5 * 0.4 + d10 * 0.3 + d15 * 0.2 + d20 * 0.1) * 30; // 30x scale for weighted mix
+                var mom1w = h[h.length-6] || cur;
+                var mom1m = h[h.length-11] || mom1w;
+                var yMom = mom1w - mom1m;
+                var vel = cur - mom1w;
+                return (yMom * 0.7 + vel * 0.3) * 12; // 12x Scaling for vertical separation
             };
 
             var universeRS = pool.map(s => getBestRS(s));
@@ -266,7 +266,7 @@
                 finalSelection = finalSelection.concat(buckets[q].slice(0, 10));
             });
 
-            // C. RE-CENTER ON FINAL SELECTION FOR PERFECT FRAMING
+            // C. RE-CENTER ON FINAL SELECTION FOR PERFECT FRAMING (With ample padding)
             var selRS = finalSelection.map(c => c.s.rs);
             var medRS = median(selRS) || medRS_Global;
             var selMom = finalSelection.map(c => c.y);
@@ -314,8 +314,8 @@
                 });
             });
             
-            var maxAbsX = Math.max(...allX.map(Math.abs), 5.0) * 1.1;
-            var maxAbsY = Math.max(...allY.map(Math.abs), 5.0) * 1.1;
+            var maxAbsX = Math.max(...allX.map(Math.abs), 5.0) * 1.5;
+            var maxAbsY = Math.max(...allY.map(Math.abs), 5.0) * 1.5;
             
             var tX = v => P + ((v + maxAbsX) / (maxAbsX * 2)) * (CW - P * 2);
             var tY = v => (CH - P) - ((v + maxAbsY) / (maxAbsY * 2)) * (CH - P * 2);
