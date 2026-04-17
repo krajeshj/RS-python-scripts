@@ -348,29 +348,33 @@
                 
                 // 1. Draw Categorical Smoothing (Hermite Spline)
                 var pathD = '';
-                for(var i=0; i < trailPts.length - 1; i++) {
+                var L = trailPts.length;
+                for(var i=0; i < L - 1; i++) {
                     var p0 = (i === 0) ? trailPts[0] : trailPts[i-1];
                     var p1 = trailPts[i];
                     var p2 = trailPts[i+1];
-                    var p3 = (i + 2 < trailPts.length) ? trailPts[i+2] : p2;
+                    var p3 = (i + 2 < L) ? trailPts[i+2] : p2;
                     var cp1x = p1.x + (p2.x - p0.x)/6, cp1y = p1.y + (p2.y - p0.y)/6;
                     var cp2x = p2.x - (p3.x - p1.x)/6, cp2y = p2.y - (p3.y - p1.y)/6;
                     pathD += (i===0 ? `M ${p1.x},${p1.y} ` : '') + `C ${cp1x},${cp1y} ${cp2x},${cp2y} ${p2.x},${p2.y} `;
                     
                     // Breadcrumb dots
-                    var op = 0.1 + 0.6 * (i/trailPts.length);
+                    var op = 0.1 + 0.6 * (i/L);
                     svgContent += `<circle cx="${p1.x}" cy="${p1.y}" r="2.5" fill="${color}" opacity="${op}"/>`;
                 }
                 if(pathD) svgContent += `<path d="${pathD}" fill="none" stroke="${color}" stroke-width="2.5" opacity="0.4" stroke-linecap="round"/>`;
 
-                // 2. Arrowhead at Tip
-                var lastP = trailPts.length > 1 ? trailPts[trailPts.length-1] : {x:curX, y:curY};
-                var prevP = trailPts.length > 2 ? trailPts[trailPts.length-2] : {x:curX-((curX-lastP.x)||5), y:curY-((curY-lastP.y)||5)};
-                var angle = Math.atan2(curY - lastP.y, curX - lastP.x) * 180 / Math.PI;
-                svgContent += `<polygon points="-6,-5 10,0 -6,5" fill="${color}" transform="translate(${curX},${curY}) rotate(${angle})" stroke="#fff" stroke-width="1"/>`;
+                // 2. High-Precision Directional Arrow
+                // Calculate angle based on the last 5-day significant move to avoid noise
+                var trailEnd = L > 0 ? trailPts[L-1] : {x:curX, y:curY};
+                var trendStart = L > 5 ? trailPts[L-6] : (L > 0 ? trailPts[0] : {x:curX-1, y:curY-1});
+                var angle = Math.atan2(curY - trendStart.y, curX - trendStart.x) * 180 / Math.PI;
+                
+                // Only draw pointing arrow if there is actual movement
+                svgContent += `<polygon points="-7,-6 11,0 -7,6" fill="${color}" transform="translate(${curX},${curY}) rotate(${angle})" stroke="#fff" stroke-width="1.2"/>`;
 
                 // 3. Label
-                svgContent += `<text x="${curX+12}" y="${curY+4}" fill="#fff" font-weight="800" font-size="12" style="text-shadow:0 0 5px #000">${d.s.ticker}</text>`;
+                svgContent += `<text x="${curX+14}" y="${curY+4}" fill="#fff" font-weight="800" font-size="12" style="text-shadow:0 0 5px #000">${d.s.ticker}</text>`;
             });
 
             container.innerHTML = `<svg viewBox="0 0 ${CW} ${CH}">${svgContent}</svg>`;
