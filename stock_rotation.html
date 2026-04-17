@@ -233,7 +233,8 @@
             
             var universeMom = pool.map(s => {
                 var h = stockHist[s.ticker] || [];
-                return h.length >= 5 ? (h[0] - h[4]) * 8 : 0;
+                // Increase lookback to 10 days for smoother, more distinct momentum lines
+                return h.length >= 10 ? (h[0] - h[9]) * 15 : 0;
             });
             var medMom_Global = median(universeMom) || 0;
 
@@ -242,10 +243,10 @@
                 var hRaw = (stockHist[s.ticker] || []).slice(0, 15);
                 var h = [...hRaw].reverse();
                 var curRS = h.length ? h[h.length - 1] : s.rs;
-                var prevRS = h.length >= 5 ? h[h.length - 5] : curRS;
+                var prevRS = h.length >= 10 ? h[Math.max(0, h.length - 10)] : curRS;
                 
                 var x = curRS - medRS_Global;
-                var y = ((curRS - prevRS) * 8) - medMom_Global;
+                var y = ((curRS - prevRS) * 15) - medMom_Global;
                 var q = x >= 0 ? (y >= 0 ? 'leading' : 'weakening') : (y >= 0 ? 'improving' : 'lagging');
                 buckets[q].push({ s, x, y, q, h });
             });
@@ -263,20 +264,20 @@
             var selMom = finalSelection.map(c => c.y);
             var medMom_Local = median(selMom) || 0;
 
-            var candidates = finalSelection.map(c => {
+            var candidates = finalSelection.map((c, idx) => {
                 var s = c.s, h = c.h;
                 var curRS = h.length ? h[h.length - 1] : s.rs;
-                var prevRS = h.length >= 5 ? h[h.length-5] : curRS;
+                var prevRS = h.length >= 10 ? h[Math.max(0, h.length - 10)] : curRS;
                 
                 var x = curRS - medRS;
-                var y = ((curRS - prevRS) * 8) - medMom_Local;
+                var y = ((curRS - prevRS) * 15) - medMom_Local;
 
                 var q = x >= 0 ? (y >= 0 ? 'leading' : 'weakening') : (y >= 0 ? 'improving' : 'lagging');
                 var trail = [];
                 for(var i=0; i<h.length; i++) {
                     var trVal = h[i];
-                    var trPrev = h[Math.max(0, i-4)];
-                    trail.push({ x: trVal - medRS, y: ((trVal - trPrev) * 8) - medMom_Local });
+                    var trPrev = h[Math.max(0, i-6)]; // 6-day rolling momentum for the trail dots
+                    trail.push({ x: trVal - medRS, y: ((trVal - trPrev) * 15) - medMom_Local });
                 }
                 return { s, x, y, q, trail };
             });
