@@ -307,49 +307,59 @@
                 });
             });
             
-            // Forced Spread: Ensures we always have at least +/- 5.0 units of 'breathing room'
             var maxAbsX = Math.max(...allX.map(Math.abs), 5.0) * 1.15;
             var maxAbsY = Math.max(...allY.map(Math.abs), 5.0) * 1.15;
-            
-            // Limit scale to prevent infinite zoom on identical data
             if(maxAbsX > 100) maxAbsX = 100;
             if(maxAbsY > 100) maxAbsY = 100;
-
+            
             var tX = v => (CW/2) + (v/maxAbsX)*(CW/2 - P);
             var tY = v => (CH/2) - (v/maxAbsY)*(CH/2 - P);
             var MX = tX(0), MY = tY(0);
 
-            var svgContent = '<rect width="100%" height="100%" fill="#0b0e14"/>';
-            svgContent += '<rect x="'+P+'" y="'+P+'" width="'+(MX-P)+'" height="'+(MY-P)+'" fill="#1a2530" opacity="0.6"/>' + // Improving
-                          '<rect x="'+MX+'" y="'+P+'" width="'+(CW-P-MX)+'" height="'+(MY-P)+'" fill="#152b28" opacity="0.6"/>' + // Leading
-                          '<rect x="'+P+'" y="'+MY+'" width="'+(MX-P)+'" height="'+(CH-P-MY)+'" fill="#2d1a20" opacity="0.6"/>' + // Lagging
-                          '<rect x="'+MX+'" y="'+MY+'" width="'+(CW-P-MX)+'" height="'+(CH-P-MY)+'" fill="#2c2214" opacity="0.6"/>'; // Weakening
+            var svgContent = `
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke" />
+                    </marker>
+                </defs>
+                <rect width="100%" height="100%" fill="#0b0e14"/>
+            `;
+            
+            svgContent += '<rect x="'+P+'" y="'+P+'" width="'+(MX-P)+'" height="'+(MY-P)+'" fill="#1a2530" opacity="0.6"/>' + 
+                          '<rect x="'+MX+'" y="'+P+'" width="'+(CW-P-MX)+'" height="'+(MY-P)+'" fill="#152b28" opacity="0.6"/>' + 
+                          '<rect x="'+P+'" y="'+MY+'" width="'+(MX-P)+'" height="'+(CH-P-MY)+'" fill="#2d1a20" opacity="0.6"/>' + 
+                          '<rect x="'+MX+'" y="'+MY+'" width="'+(CW-P-MX)+'" height="'+(CH-P-MY)+'" fill="#2c2214" opacity="0.6"/>';
             
             for(var i=1;i<10;i++) {
                 var gX = P + (i/10)*(CW-P*2); var gY = P + (i/10)*(CH-P*2);
-                svgContent += '<line x1="'+gX+'" y1="'+P+'" x2="'+gX+'" y2="'+(CH-P)+'" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>';
-                svgContent += '<line x1="'+P+'" y1="'+gY+'" x2="'+(CW-P)+'" y2="'+gY+'" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>';
+                svgContent += `<line x1="${gX}" y1="${P}" x2="${gX}" y2="${CH-P}" stroke="rgba(255,255,255,0.03)" />`;
+                svgContent += `<line x1="${P}" y1="${gY}" x2="${CW-P}" y2="${gY}" stroke="rgba(255,255,255,0.03)" />`;
             }
-            svgContent += '<line x1="'+MX+'" y1="'+P+'" x2="'+MX+'" y2="'+(CH-P)+'" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>';
-            svgContent += '<line x1="'+P+'" y1="'+MY+'" x2="'+(CW-P)+'" y2="'+MY+'" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>';
-
-            svgContent += '<text x="'+(P+10)+'" y="'+(P+20)+'" fill="#60a5fa" font-size="11" font-weight="900" opacity="0.6">IMPROVING</text>' +
-                          '<text x="'+(CW-P-60)+'" y="'+(P+20)+'" fill="#10b981" font-size="11" font-weight="900" opacity="0.6">LEADING</text>' +
-                          '<text x="'+(P+10)+'" y="'+(CH-P-15)+'" fill="#ef4444" font-size="11" font-weight="900" opacity="0.6">LAGGING</text>' +
-                          '<text x="'+(CW-P-75)+'" y="'+(CH-P-15)+'" fill="#f59e0b" font-size="11" font-weight="900" opacity="0.6">WEAKENING</text>';
+            svgContent += `<line x1="${MX}" y1="${P}" x2="${MX}" y2="${CH-P}" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>`;
+            svgContent += `<line x1="${P}" y1="${MY}" x2="${CW-P}" y2="${MY}" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>`;
 
             data.forEach(d => {
                 var color = Q_FILL[d.q];
-                if(d.trail.length > 2) {
-                    var pts = d.trail.map(p => tX(p.x).toFixed(1)+','+tY(p.y).toFixed(1)).join(' ');
-                    svgContent += '<polyline points="'+pts+'" fill="none" stroke="'+color+'" stroke-width="2.5" opacity="0.3" stroke-linecap="round"/>';
+                if(d.trail.length > 1) {
+                    var pathData = `M ${tX(d.trail[0].x)} ${tY(d.trail[0].y)}`;
+                    for(var i=1; i<d.trail.length; i++) {
+                        var p0 = d.trail[i-1], p1 = d.trail[i];
+                        var cx = tX(p0.x + (p1.x - p0.x)/2), cy = tY(p0.y + (p1.y - p0.y)/2);
+                        pathData += ` Q ${tX(p0.x)} ${tY(p0.y)} ${cx} ${cy}`;
+                        
+                        // Breadcrumbs
+                        var op = (i / d.trail.length) * 0.6;
+                        svgContent += `<circle cx="${tX(p1.x)}" cy="${tY(p1.y)}" r="2" fill="${color}" opacity="${op}" />`;
+                    }
+                    pathData += ` L ${tX(d.x)} ${tY(d.y)}`;
+                    svgContent += `<path d="${pathData}" fill="none" stroke="${color}" stroke-width="2.5" opacity="0.4" marker-end="url(#arrow)" stroke-linecap="round" />`;
                 }
                 var cx = tX(d.x), cy = tY(d.y);
-                svgContent += '<circle cx="'+cx+'" cy="'+cy+'" r="8" fill="'+color+'" stroke="#fff" stroke-width="2"/>';
-                svgContent += '<text x="'+(cx+12)+'" y="'+(cy+4)+'" fill="#fff" font-weight="800" font-size="12" style="text-shadow:0 0 5px #000">'+d.s.ticker+'</text>';
+                svgContent += `<circle cx="${cx}" cy="${cy}" r="8" fill="${color}" stroke="#fff" stroke-width="2" />`;
+                svgContent += `<text x="${cx+12}" y="${cy+4}" fill="#fff" font-weight="800" font-size="12" style="text-shadow:0 0 5px #000">${d.s.ticker}</text>`;
             });
 
-            container.innerHTML = '<svg viewBox="0 0 '+CW+' '+CH+'">'+svgContent+'</svg>';
+            container.innerHTML = `<svg viewBox="0 0 ${CW} ${CH}">${svgContent}</svg>`;
         }
 
         function renderGrid(data) {
