@@ -27,23 +27,23 @@
         .nav-links { display: flex; gap: 1rem; margin: 0.5rem 0; flex-wrap: wrap; justify-content: center; }
         .nav-link { color: var(--text2); text-decoration: none; font-weight: 600; font-size: 0.85rem; padding: 6px 16px; border-radius: 20px; transition: all 0.3s ease; border: 1px solid transparent; }
         .nav-link.active { color: var(--cyan); background: rgba(0, 229, 255, 0.1); border-color: rgba(0, 229, 255, 0.2); }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
+        .container { max-width: 100%; margin: 0; padding: 10px 25px; }
 
-        .dashboard-tools { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1.5rem; background: var(--surface); padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border); }
-        .slider-group { display: flex; flex-direction: column; gap: 4px; min-width: 200px; }
-        .slider-group label { font-size: 0.82rem; font-weight: 600; color: var(--text2); }
+        .dashboard-tools { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; background: var(--surface); padding: 1rem 1.5rem; border-radius: var(--radius); border: 1px solid var(--border); }
+        .slider-group { display: flex; flex-direction: column; gap: 4px; min-width: 180px; flex: 1; }
+        .slider-group label { font-size: 0.8rem; font-weight: 600; color: var(--text2); }
         .slider-val { color: var(--cyan); font-family: var(--mono); font-weight: 700; }
-        .dual-range-container { position: relative; height: 20px; width: calc(100% - 18px); margin: 0 9px; }
-        .dual-range-bg { position: absolute; height: 6px; width: 100%; background: var(--border); border-radius: 3px; top: 6px; }
-        .dual-range-fill { position: absolute; height: 6px; background: linear-gradient(90deg, var(--accent), var(--cyan)); border-radius: 3px; top: 6px; }
-        .dual-range { position: absolute; width: 100%; pointer-events: none; -webkit-appearance: none; background: none; top: 0; left: 0; outline: none; }
-        .dual-range::-webkit-slider-thumb { pointer-events: auto; -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--cyan); cursor: pointer; border: 2px solid var(--surface); box-shadow: 0 0 10px rgba(0,229,255,0.3); }
-        .toggle-btn { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 7px 14px; border-radius: var(--radius-sm); background: var(--surface); border: 1px solid var(--border); color: var(--text); font-size: 0.8rem; font-weight: 600; transition: all 0.2s; user-select: none; }
+        .dual-range-container { position: relative; height: 16px; width: calc(100% - 18px); margin: 0 9px; }
+        .dual-range-bg { position: absolute; height: 4px; width: 100%; background: var(--border); border-radius: 2px; top: 6px; }
+        .dual-range-fill { position: absolute; height: 4px; background: linear-gradient(90deg, var(--accent), var(--cyan)); border-radius: 2px; top: 6px; }
+        .dual-range { position: absolute; width: 100%; pointer-events: none; -webkit-appearance: none; background: none; top: -1px; left: 0; outline: none; }
+        .dual-range::-webkit-slider-thumb { pointer-events: auto; -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--cyan); cursor: pointer; border: 2px solid var(--surface); box-shadow: 0 0 10px rgba(0,229,255,0.3); }
+        .toggle-btn { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; border-radius: var(--radius-sm); background: var(--surface); border: 1px solid var(--border); color: var(--text); font-size: 0.75rem; font-weight: 600; transition: all 0.2s; user-select: none; }
         .toggle-btn.active { background: rgba(0,230,118,0.1); border-color: var(--green); color: var(--green); }
-        .toggle-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--text2); transition: all 0.2s; }
+        .toggle-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text2); transition: all 0.2s; }
         .toggle-btn.active .toggle-dot { background: var(--green); box-shadow: 0 0 8px rgba(0,230,118,0.5); }
 
-        .rrg-box { background: #0a1120; border: 1px solid #1e293b; border-radius: 12px; position: relative; width: 100%; aspect-ratio: 1.5/1; box-shadow: var(--shadow); overflow: hidden; }
+        .rrg-box { background: #0a1120; border: 1px solid #1e293b; border-radius: 12px; position: relative; width: 100%; height: calc(100vh - 380px); min-height: 500px; box-shadow: var(--shadow); overflow: hidden; }
         svg { width: 100%; height: 100%; display: block; }
         .stock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem; margin-top: 30px; }
         .stock-card { background: var(--glass); backdrop-filter: blur(var(--glass-b)); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; transition: all 0.3s; position: relative; }
@@ -315,8 +315,8 @@
                 });
             });
             
-            var maxAbsX = Math.max(...allX.map(Math.abs), 5.0) * 1.5;
-            var maxAbsY = Math.max(...allY.map(Math.abs), 5.0) * 1.5;
+            var maxAbsX = Math.max(...allX.map(Math.abs), 5.0) * 1.1;
+            var maxAbsY = Math.max(...allY.map(Math.abs), 5.0) * 1.1;
             
             var tX = v => P + ((v + maxAbsX) / (maxAbsX * 2)) * (CW - P * 2);
             var tY = v => (CH - P) - ((v + maxAbsY) / (maxAbsY * 2)) * (CH - P * 2);
