@@ -240,7 +240,7 @@
 
             var buckets = { leading: [], improving: [], weakening: [], lagging: [] };
             pool.forEach(s => {
-                var hRaw = (stockHist[s.ticker] || []).slice(0, 15);
+                var hRaw = (stockHist[s.ticker] || []).slice(0, 25);
                 var h = [...hRaw].reverse();
                 var curRS = h.length ? h[h.length - 1] : s.rs;
                 var prevRS = h.length >= 10 ? h[Math.max(0, h.length - 10)] : curRS;
@@ -276,7 +276,7 @@
                 var trail = [];
                 for(var i=0; i<h.length; i++) {
                     var trVal = h[i];
-                    var trPrev = h[Math.max(0, i-6)]; // 6-day rolling momentum for the trail dots
+                    var trPrev = h[Math.max(0, i-6)]; 
                     trail.push({ x: trVal - medRS, y: ((trVal - trPrev) * 15) - medMom_Local });
                 }
                 return { s, x, y, q, trail };
