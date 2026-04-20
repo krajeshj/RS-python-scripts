@@ -365,11 +365,13 @@
                 }
                 if(pathD) svgContent += `<path d="${pathD}" fill="none" stroke="${color}" stroke-width="2.5" opacity="0.3" stroke-linecap="round"/>`;
 
-                // 2. High-Precision Directional Arrow
-                // Point from LAST trail point to CURRENT point
-                var lastP = L > 0 ? trailPts[L-1] : {x:curX-0.1, y:curY};
-                var angle = Math.atan2(curY - lastP.y, curX - lastP.x) * 180 / Math.PI;
-                svgContent += `<polygon points="-7,-6 11,0 -7,6" fill="${color}" transform="translate(${curX},${curY}) rotate(${angle})" stroke="#fff" stroke-width="1"/>`;
+                // 2. High-Precision Directional Arrow (Synced Style)
+                // Establish heading from PREVIOUS point to CURRENT point
+                var headX = curX, headY = curY;
+                var tailP = L > 1 ? trailPts[L-2] : {x: headX - 0.1, y: headY};
+                var heading = Math.atan2(headY - tailP.y, headX - tailP.x) * 180 / Math.PI;
+                
+                svgContent += `<polygon points="-6,-5 8,0 -6,5" fill="${color}" transform="translate(${headX},${headY}) rotate(${heading})" />`;
 
                 // 3. Label
                 svgContent += `<text x="${curX+15}" y="${curY+4}" fill="#fff" font-weight="900" font-size="12" style="text-shadow:0 0 5px #000">${d.s.ticker}</text>`;
