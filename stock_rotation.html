@@ -289,7 +289,11 @@
                 var q = x >= 0 ? (y >= 0 ? 'leading' : 'weakening') : (y >= 0 ? 'improving' : 'lagging');
                 // --- SCIENTIFIC RRG ENGINE (JdK Inspired) ---
                 var raw = h.slice(0, 25); // oldest first
-                if (raw.length < 15) return null;
+                
+                // FALLBACK: If history is too thin for RRG math, return the stock as a static dot
+                if (raw.length < 10) {
+                    return { s, x, y: 0, q, trail: [{x, y: 0}] };
+                }
 
                 // 1. Ratio Smoothing (SMA 5) - "RS-Ratio"
                 const sms = (arr, n) => arr.map((_, i) => i < n-1 ? null : arr.slice(i-n+1, i+1).reduce((a,b)=>a+b,0)/n);
@@ -343,11 +347,12 @@
             });
             
             // SCIENTIFIC VIEWPORT SCALING (Z-Score)
-            // Use mean-standard deviation logic to fill the viewport and clip outliers
             var meanX = allX.reduce((a,b)=>a+b,0)/allX.length || 0;
             var meanY = allY.reduce((a,b)=>a+b,0)/allY.length || 0;
-            var stdX = stdDev(allX) || 10;
-            var stdY = stdDev(allY) || 10;
+            
+            // MINIMUM SIGMA: Ensures the viewport remains "full" even if most stocks have zero momentum
+            var stdX = Math.max(stdDev(allX), 5.0);
+            var stdY = Math.max(stdDev(allY), 5.0);
 
             // Map screen boundaries to +/- 2.5 Sigma
             var maxAbsX = stdX * 2.5; 
