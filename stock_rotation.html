@@ -238,6 +238,11 @@
                 return (yMom * 0.7 + vel * 0.3) * 12; // 12x Scaling for vertical separation
             };
 
+            function stdDev(arr) {
+                const mean = arr.reduce((a, b) => a + b, 0) / arr.length;
+                return Math.sqrt(arr.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b, 0) / arr.length);
+            }
+
             var universeRS = pool.map(s => getBestRS(s));
             var medRS_Global = median(universeRS) || 50;
             
@@ -280,20 +285,30 @@
                 var y = getWMom(h) - medMom_Local;
 
                 var q = x >= 0 ? (y >= 0 ? 'leading' : 'weakening') : (y >= 0 ? 'improving' : 'lagging');
-                var rawTrail = [];
-                for(var i=0; i<h.length; i++) {
-                    var subH = h.slice(0, i+1);
-                    rawTrail.push({ x: h[i] - medRS, y: getWMom(subH) - medMom_Local });
-                }
-                
-                // DATA SMOOTHING (SMA 3): Creates "calmer" lines and emphasizes the rotational arc
-                var trail = rawTrail.map((p, i, arr) => {
-                    if (i < 2) return p;
-                    return {
-                        x: (arr[i].x + arr[i-1].x + arr[i-2].x) / 3,
-                        y: (arr[i].y + arr[i-1].y + arr[i-2].y) / 3
-                    };
+                // --- SCIENTIFIC RRG ENGINE (JdK Inspired) ---
+                var raw = h.slice(0, 25); // oldest first
+                if (raw.length < 15) return null;
+
+                // 1. Ratio Smoothing (SMA 5) - "RS-Ratio"
+                const sms = (arr, n) => arr.map((_, i) => i < n-1 ? null : arr.slice(i-n+1, i+1).reduce((a,b)=>a+b,0)/n);
+                let rs_ratio = sms(raw, 5);
+
+                // 2. Momentum Calculation (ROC 5) - "RS-Momentum"
+                let rs_mom = rs_ratio.map((v, i, arr) => {
+                    if (i < 5 || v === null || arr[i-5] === null) return null;
+                    return (v / arr[i-5] - 1) * 400; // Technical scaling
                 });
+
+                // 3. Final Momentum Smoothing (SMA 3)
+                let rs_mom_smooth = sms(rs_mom.map(v => v === null ? 0 : v), 3);
+
+                // 4. Trail Construction (Truncated to stable data)
+                let trail = [];
+                for (let i = Math.max(0, rs_ratio.length - 12); i < rs_ratio.length; i++) {
+                    if (rs_ratio[i] === null) continue;
+                    // x is Ratio component, y is smoothed Momentum component
+                    trail.push({ x: rs_ratio[i] - medRS, y: (rs_mom_smooth[i] || 0) });
+                }
                 
                 return { s, x, y, q, trail };
             });
@@ -325,19 +340,19 @@
                 });
             });
             
-            // OUTLIER CLIPPING: Use 95th percentile to ensure the bulk of stocks fill the viewport
-            var allValsX = allX.map(Math.abs).sort((a,b) => a-b);
-            var allValsY = allY.map(Math.abs).sort((a,b) => a-b);
+            // SCIENTIFIC VIEWPORT SCALING (Z-Score)
+            // Use mean-standard deviation logic to fill the viewport and clip outliers
+            var meanX = allX.reduce((a,b)=>a+b,0)/allX.length || 0;
+            var meanY = allY.reduce((a,b)=>a+b,0)/allY.length || 0;
+            var stdX = stdDev(allX) || 10;
+            var stdY = stdDev(allY) || 10;
+
+            // Map screen boundaries to +/- 2.5 Sigma
+            var maxAbsX = stdX * 2.5; 
+            var maxAbsY = stdY * 2.5;
             
-            var maxAbsX = (allValsX.length > 0) ? allValsX[Math.floor(allValsX.length * 0.95)] * 1.05 : 5.0;
-            var maxAbsY = (allValsY.length > 0) ? allValsY[Math.floor(allValsY.length * 0.95)] * 1.05 : 5.0;
-            
-            // Ensure min bounds
-            maxAbsX = Math.max(maxAbsX, 3.0);
-            maxAbsY = Math.max(maxAbsY, 3.0);
-            
-            var tX = v => P + ((v + maxAbsX) / (maxAbsX * 2)) * (CW - P * 2);
-            var tY = v => (CH - P) - ((v + maxAbsY) / (maxAbsY * 2)) * (CH - P * 2);
+            var tX = v => P + ((v - (meanX - maxAbsX)) / (maxAbsX * 2)) * (CW - P * 2);
+            var tY = v => (CH - P) - ((v - (meanY - maxAbsY)) / (maxAbsY * 2)) * (CH - P * 2);
             var MX = tX(0), MY = tY(0);
 
             var svgContent = `<rect width="100%" height="100%" fill="#0b0e14"/>`;
@@ -373,8 +388,9 @@
                     var p1 = trailPts[i];
                     var p2 = trailPts[i+1];
                     var p3 = (i + 2 < L) ? trailPts[i+2] : p2;
-                    var cp1x = p1.x + (p2.x - p0.x)/6, cp1y = p1.y + (p2.y - p0.y)/6;
-                    var cp2x = p2.x - (p3.x - p1.x)/6, cp2y = p2.y - (p3.y - p1.y)/6;
+                    // TENSION 3.5: Stronger curvature for rotational sense
+                    var cp1x = p1.x + (p2.x - p0.x)/3.5, cp1y = p1.y + (p2.y - p0.y)/3.5;
+                    var cp2x = p2.x - (p3.x - p1.x)/3.5, cp2y = p2.y - (p3.y - p1.y)/3.5;
                     pathD += (i===0 ? `M ${p1.x},${p1.y} ` : '') + `C ${cp1x},${cp1y} ${cp2x},${cp2y} ${p2.x},${p2.y} `;
                     
                     // Breadcrumb dots
