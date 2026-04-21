@@ -136,6 +136,12 @@
             return s.length % 2 ? s[m] : (s[m-1] + s[m])/2;
         }
 
+        function stdDev(arr) {
+            if(!arr || !arr.length) return 0;
+            const mean = arr.reduce((a, b) => a + b, 0) / arr.length;
+            return Math.sqrt(arr.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b, 0) / arr.length);
+        }
+
         function init() {
             var ts = Date.now();
             var container = document.getElementById('rrg-container');
@@ -238,10 +244,6 @@
                 return (yMom * 0.7 + vel * 0.3) * 12; // 12x Scaling for vertical separation
             };
 
-            function stdDev(arr) {
-                const mean = arr.reduce((a, b) => a + b, 0) / arr.length;
-                return Math.sqrt(arr.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b, 0) / arr.length);
-            }
 
             var universeRS = pool.map(s => getBestRS(s));
             var medRS_Global = median(universeRS) || 50;
