@@ -319,7 +319,7 @@
                 weakening: document.getElementById('q-weakening').checked,
                 lagging: document.getElementById('q-lagging').checked
             };
-            var visible = candidates.filter(c => qVis[c.q]);
+            var visible = candidates.filter(c => c && qVis[c.q]);
             document.getElementById('filter-status').textContent = visible.length + ' leaders shown (of ' + pool.length + ' filtered)';
 
             renderSVG(visible);
