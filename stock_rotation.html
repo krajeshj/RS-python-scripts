@@ -280,11 +280,21 @@
                 var y = getWMom(h) - medMom_Local;
 
                 var q = x >= 0 ? (y >= 0 ? 'leading' : 'weakening') : (y >= 0 ? 'improving' : 'lagging');
-                var trail = [];
+                var rawTrail = [];
                 for(var i=0; i<h.length; i++) {
                     var subH = h.slice(0, i+1);
-                    trail.push({ x: h[i] - medRS, y: getWMom(subH) - medMom_Local });
+                    rawTrail.push({ x: h[i] - medRS, y: getWMom(subH) - medMom_Local });
                 }
+                
+                // DATA SMOOTHING (SMA 3): Creates "calmer" lines and emphasizes the rotational arc
+                var trail = rawTrail.map((p, i, arr) => {
+                    if (i < 2) return p;
+                    return {
+                        x: (arr[i].x + arr[i-1].x + arr[i-2].x) / 3,
+                        y: (arr[i].y + arr[i-1].y + arr[i-2].y) / 3
+                    };
+                });
+                
                 return { s, x, y, q, trail };
             });
 
@@ -315,8 +325,16 @@
                 });
             });
             
-            var maxAbsX = Math.max(...allX.map(Math.abs), 5.0) * 1.1;
-            var maxAbsY = Math.max(...allY.map(Math.abs), 5.0) * 1.1;
+            // OUTLIER CLIPPING: Use 95th percentile to ensure the bulk of stocks fill the viewport
+            var allValsX = allX.map(Math.abs).sort((a,b) => a-b);
+            var allValsY = allY.map(Math.abs).sort((a,b) => a-b);
+            
+            var maxAbsX = (allValsX.length > 0) ? allValsX[Math.floor(allValsX.length * 0.95)] * 1.05 : 5.0;
+            var maxAbsY = (allValsY.length > 0) ? allValsY[Math.floor(allValsY.length * 0.95)] * 1.05 : 5.0;
+            
+            // Ensure min bounds
+            maxAbsX = Math.max(maxAbsX, 3.0);
+            maxAbsY = Math.max(maxAbsY, 3.0);
             
             var tX = v => P + ((v + maxAbsX) / (maxAbsX * 2)) * (CW - P * 2);
             var tY = v => (CH - P) - ((v + maxAbsY) / (maxAbsY * 2)) * (CH - P * 2);
