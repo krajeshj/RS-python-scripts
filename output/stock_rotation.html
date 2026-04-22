@@ -105,6 +105,14 @@
             <div id="top5-btn" class="toggle-btn" onclick="toggleFilter('top5')">
                 <div class="toggle-dot"></div>🏆 Top 5 Sectors
             </div>
+            <div class="slider-group" style="max-width:160px;">
+                <label>Zoom: <span id="zoom-val" class="slider-val">1.0</span>x</label>
+                <div class="dual-range-container">
+                    <div class="dual-range-bg"></div>
+                    <div id="zoom-fill" class="dual-range-fill" style="left:0%;right:0%"></div>
+                    <input type="range" id="zoom-slider" min="10" max="50" value="10" class="dual-range" style="pointer-events:auto;" oninput="onZoom(this.value)">
+                </div>
+            </div>
         </div>
 
         <!-- Quadrant Filters (Styled like Sector Rotation) -->
@@ -127,6 +135,7 @@
         var webData = null, stockHist = null, allStocks = [];
         var minRS = 75, maxRS = 100, minRMV = 10, maxRMV = 45;
         var filters = { quality: true, minervini: false, top5: false };
+        var zoomLevel = 1.0;
         var Q_FILL = { leading: '#22c55e', weakening: '#f59e0b', lagging: '#ef4444', improving: '#60a5fa' };
 
         function median(arr) {
@@ -207,6 +216,15 @@
         }
 
         function toggleFilter(k) { filters[k] = !filters[k]; document.getElementById(k+'-btn').classList.toggle('active', filters[k]); render(); }
+
+        function onZoom(v) {
+            zoomLevel = +v / 10;  // slider 10-50 → zoomLevel 1.0-5.0
+            document.getElementById('zoom-val').textContent = zoomLevel.toFixed(1);
+            var pct = ((+v - 10) / 40 * 100).toFixed(1);
+            var zf = document.getElementById('zoom-fill');
+            if(zf) { zf.style.left = '0%'; zf.style.right = (100 - pct) + '%'; }
+            render();
+        }
         
         function updateSliderUI() {
             var rsF = document.getElementById('rs-fill');
@@ -368,8 +386,8 @@
 
             var centerX = (p05x + p95x) / 2;
             var centerY = (p05y + p95y) / 2;
-            var rangeX = Math.max((p95x - p05x) * 1.2, 20); // Min range of 20
-            var rangeY = Math.max((p95y - p05y) * 1.2, 20); // Min range of 20
+            var rangeX = Math.max((p95x - p05x) * 1.2, 20) / zoomLevel; // zoom tightens window
+            var rangeY = Math.max((p95y - p05y) * 1.2, 20) / zoomLevel;
 
             var maxAbsX = rangeX / 2; 
             var maxAbsY = rangeY / 2;
