@@ -875,7 +875,7 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
         industries[industry]["stock_names"][ticker] = name
 
     dfs = []
-    suffix = ''
+    suffix = '_quick' if quick else ''
 
     df = pd.DataFrame(relative_strengths, columns=[
         TITLE_RANK, TITLE_TICKER, TITLE_MINERVINI, TITLE_SECTOR, TITLE_INDUSTRY, TITLE_UNIVERSE,

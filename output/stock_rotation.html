@@ -62,6 +62,28 @@
         .chart-img { width: 100%; height: 100%; object-fit: contain; }
         .q-toggles { display: flex; gap: 15px; margin-bottom: 25px; background: var(--surface); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); justify-content: center; }
         .q-label { font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+
+        .canslim-tray { display: flex; gap: 4px; margin-top: 4px; }
+        .canslim-letter { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; border-radius: 4px; background: rgba(255, 255, 255, 0.05); color: var(--text2); border: 1px solid var(--border); }
+        .canslim-letter.active { background: var(--green); color: var(--bg); border-color: var(--green); box-shadow: 0 0 10px rgba(0, 230, 118, 0.3); }
+        .canslim-letter.inactive-m { background: rgba(255, 82, 82, 0.15); color: var(--red); border-color: rgba(255, 82, 82, 0.3); box-shadow: 0 0 10px rgba(255, 82, 82, 0.2); }
+        .outlook-tag { padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; border: 1px solid; }
+        .outlook-rallying { background: rgba(0,230,118,0.1); color: #00e676; border-color: rgba(0,230,118,0.25); }
+        .outlook-curling { background: rgba(255,145,0,0.1); color: #ff9100; border-color: rgba(255,145,0,0.25); }
+        .outlook-declining { background: rgba(255,82,82,0.1); color: #ff5252; border-color: rgba(255,82,82,0.25); }
+        .earnings-alert { background: rgba(255, 145, 0, 0.1); color: var(--orange); border: 1px solid rgba(255, 145, 0, 0.2); padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; display: flex; align-items: center; gap: 6px; margin-top: -4px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; transform: scale(1.02); } 100% { opacity: 0.8; } }
+        .rs-pct-badge { font-size: 0.65rem; background: rgba(0, 229, 255, 0.1); color: var(--cyan); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(0, 229, 255, 0.2); font-weight: 700; display: inline-block; }
+        .flip-badge { background: rgba(255, 215, 0, 0.15); color: #FFD700; padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; border: 1px solid rgba(255, 215, 0, 0.3); text-transform: uppercase; letter-spacing: 0.05em; animation: glow 2s infinite; }
+        @keyframes glow { 0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.2); } 50% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); } 100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.2); } }
+        .source-badge { font-size: 0.6rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; opacity: 0.7; }
+        .highlights { display: flex; flex-wrap: wrap; gap: 6px; }
+        .highlight-tag { background: rgba(0, 229, 255, 0.05); color: var(--cyan); padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 600; border: 1px solid rgba(0, 229, 255, 0.15); }
+        .chart-overlay { position: absolute; inset: 0; background: rgba(108, 92, 231, 0.2); opacity: 0; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: white; gap: 8px; backdrop-filter: blur(2px); }
+        .chart-link:hover .chart-overlay { opacity: 1; }
+        .chart-link:hover .chart-img { transform: scale(1.05); }
+        .card-delete { position: absolute; top: 10px; right: 10px; background: rgba(255, 82, 82, 0.15); border: 1px solid rgba(255, 82, 82, 0.3); color: var(--red); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.75rem; opacity: 1; transition: all 0.2s; z-index: 2; }
+        .card-delete:hover { background: rgba(255, 82, 82, 0.3); transform: scale(1.1); border-color: var(--red); }
     </style>
 </head>
 <body>
@@ -573,29 +595,112 @@
                 '</div>';
         }
 
+        function createCanslimTray(canslim) {
+            if (!canslim) return '';
+            const letters = ['C', 'A', 'N', 'S', 'L', 'I', 'M'];
+            return `<div class="canslim-tray">
+                ${letters.map(l => {
+                const active = canslim[l.toLowerCase()];
+                let extraClass = active ? 'active' : '';
+                if (l === 'M' && !active) { extraClass = 'inactive-m'; }
+                return `<div class="canslim-letter ${extraClass}" title="${l}">${l}</div>`;
+            }).join('')}
+            </div>`;
+        }
+
         function renderGrid(data) {
-            document.getElementById('stock-grid').innerHTML = data.map(d => {
+            document.getElementById('stock-grid').innerHTML = data.map((d, idx) => {
                 var s = d.s, qC = Q_FILL[d.q];
                 var outlook = d.y > 0 ? (d.x > 0 ? 'rallying' : 'recovering') : (d.x > 0 ? 'curling' : 'declining');
                 var outClass = (outlook==='rallying'||outlook==='recovering') ? 'outlook-rallying' : (outlook==='curling'?'outlook-curling':'outlook-declining');
-                return '<div class="stock-card">' +
-                    '<div style="display:flex;justify-content:space-between;align-items:flex-start;">' +
-                        '<div>' +
-                            '<div style="display:flex;align-items:center;gap:8px;"><a href="'+s.tradingview_url+'" target="_blank" class="ticker">'+s.ticker+'</a><span style="font-size:0.65rem;padding:2px 8px;border-radius:4px;background:'+qC+'22;color:'+qC+';border:1px solid '+qC+'44;font-weight:800;">'+d.q.toUpperCase()+'</span></div>' +
-                            '<div class="company-name">'+s.name+'</div>' +
-                            '<div class="meta-info">'+s.industry+' &bull; '+s.sector+'</div>' +
-                        '</div>' +
-                        '<div style="text-align:right;"><div style="font-size:0.7rem;color:var(--cyan);font-weight:700;">$'+(s.price?s.price.toFixed(2):'N/A')+'</div><div style="font-size:0.6rem;color:var(--text2);">Rank #'+(s.rank||'N/A')+'</div></div>' +
-                    '</div>' +
-                    '<a href="'+s.tradingview_url+'" target="_blank" class="chart-link"><img src="'+s.finviz_chart_url+'" class="chart-img" loading="lazy"></a>' +
-                    '<div class="metrics">' +
-                        '<div class="metric"><span class="metric-label">RS Pct</span><span class="metric-value" style="color:var(--cyan)">'+s.rs+'</span></div>' +
-                        '<div class="metric"><span class="metric-label">RMV</span><span class="metric-value">'+(s.rmv?s.rmv.toFixed(1):'N/A')+'</span></div>' +
-                        '<div class="metric"><span class="metric-label">1W RS</span><span class="metric-value">'+(s.rs_1w_pct||'N/A')+'</span></div>' +
-                        '<div class="metric"><span class="metric-label">1M RS</span><span class="metric-value">'+(s.rs_1m_pct||'N/A')+'</span></div>' +
-                    '</div>' +
-                    '<div style="border-top:1px solid var(--border);padding-top:10px;"><span class="outlook-tag '+outClass+'">MOMENTUM '+outlook.toUpperCase()+'</span></div>' +
-                '</div>';
+                const outlookLabel = outlook === 'rallying' ? '➚ Momentum Rallying' :
+                    outlook === 'curling' ? '⤹ Momentum Curling' :
+                    outlook === 'declining' ? '↘ Momentum Declining' : '↗ Momentum Recovering';
+
+                const earningsBadge = (s.days_to_earnings >= 0 && s.days_to_earnings <= 14)
+                    ? `<div class="earnings-alert">📅 EARNINGS IN ${s.days_to_earnings}D</div>`
+                    : '';
+
+                function fmtVol(v) {
+                    if (!v) return 'N/A';
+                    if (v >= 1000000) return (v / 1000000).toFixed(1) + 'M';
+                    if (v >= 1000) return (v / 1000).toFixed(0) + 'K';
+                    return v.toString();
+                }
+
+                let volStyle = "font-size: 0.65rem; color: var(--text2); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface); display: inline-block;";
+                if (s.volume > s.avg_volume) {
+                    if (s.is_up) {
+                        volStyle = "font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(0,230,118,0.3); background: rgba(0,230,118,0.1); color: var(--green); display: inline-block;";
+                    } else {
+                        volStyle = "font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255,145,0,0.3); background: rgba(255,145,0,0.1); color: var(--orange); display: inline-block;";
+                    }
+                }
+                const volBadge = `<div style="${volStyle}" title="Avg Vol: ${fmtVol(s.avg_volume)}">Vol: ${fmtVol(s.volume)}</div>`;
+                const priceBadge = s.price ? `<div style="${volStyle}">$${s.price.toFixed(2)}</div>` : '';
+                const qBadge = `<span style="font-size:0.65rem;padding:2px 8px;border-radius:4px;background:${qC}22;color:${qC};border:1px solid ${qC}44;font-weight:800;">${d.q.toUpperCase()}</span>`;
+
+                return `
+                    <div class="card stock-card" style="animation-delay: ${idx * 0.05}s">
+                        <div style="display:flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <a href="${s.tradingview_url}" target="_blank" class="ticker">${s.ticker}</a>
+                                    <div class="rs-pct-badge" style="color: var(--cyan)">1W: ${s.rs_1w_pct || 'N/A'}%</div>
+                                </div>
+                                <div class="company-name">${s.name}</div>
+                                <div class="meta-info" style="margin-top: 4px; font-size: 0.75rem;">${s.industry} &bull; ${s.sector}</div>
+                                ${createCanslimTray(s.canslim)}
+                            </div>
+                            <div style="display:flex; flex-direction: column; align-items: flex-end; gap:4px;">
+                                <div style="font-size:0.7rem; color:var(--text2); opacity:0.8;">#${s.rank}</div>
+                                ${qBadge}
+                                ${s.flip ? `<div class="flip-badge">⚡ PRIME FLIP</div>` : ''}
+                                <div class="source-badge" style="margin-bottom: 4px;">${s.source}</div>
+                                <div style="display:flex; flex-direction: column; gap:4px; align-items: flex-end;">
+                                    ${priceBadge}
+                                    ${volBadge}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        ${earningsBadge}
+
+                        <a href="${s.tradingview_url}" target="_blank" class="chart-link">
+                            <img src="${s.finviz_chart_url}&t=${Date.now()}" class="chart-img" loading="lazy">
+                            <div class="chart-overlay">
+                                <span>Open Live Chart</span>
+                                <span>↗️</span>
+                            </div>
+                        </a>
+
+                        <div class="metrics">
+                            <div class="metric">
+                                <span class="metric-label">RS Rank</span>
+                                <span class="metric-value" style="color: var(--cyan)">${s.rs}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">RMV</span>
+                                <span class="metric-value">${s.rmv}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">1W Pct</span>
+                                <span class="metric-value">${s.rs_1w_pct || 'N/A'}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">1M Pct</span>
+                                <span class="metric-value">${s.rs_1m_pct || 'N/A'}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="highlights">
+                            ${(s.highlights || '').split(', ').map(h => `<span class="highlight-tag">${h}</span>`).filter(h => h.indexOf('undefined')===-1 && h.indexOf('></span>')===-1).join('')}
+                        </div>
+                        <div style="display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--border);padding-top:8px;">
+                            <span class="outlook-tag ${outClass}">${outlookLabel}</span>
+                        </div>
+                    </div>
+                `;
             }).join('');
         }
 
