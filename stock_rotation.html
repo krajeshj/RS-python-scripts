@@ -390,10 +390,10 @@
             // Uses mean of trail heads for center, 5th-95th percentile for range.
             // This ensures all visible stocks' trails stay on screen regardless of outliers.
             var heads = data.map(d => d.trail.length ? d.trail[d.trail.length-1] : {x:0,y:0});
-            var hxSum = heads.reduce((s,p)=>s+p.x,0), hySum = heads.reduce((s,p)=>s+p.y,0);
-            var centerX = hxSum / heads.length;
-            var centerY = hySum / heads.length;
-
+            var hxs = heads.map(p => p.x).sort((a,b)=>a-b);
+            var hys = heads.map(p => p.y).sort((a,b)=>a-b);
+            var centerX = hxs.length ? hxs[Math.floor(hxs.length/2)] : 0;
+            var centerY = hys.length ? hys[Math.floor(hys.length/2)] : 0;
             allX.sort((a,b)=>a-b); allY.sort((a,b)=>a-b);
             var p05x = allX[Math.floor(allX.length*0.05)] || (centerX-10);
             var p95x = allX[Math.floor(allX.length*0.95)] || (centerX+10);
