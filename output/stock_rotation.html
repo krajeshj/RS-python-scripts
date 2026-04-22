@@ -456,13 +456,35 @@
                 var tailP = L > 1 ? trailPts[L-2] : {x: headX - 1, y: headY};
                 var dxA = headX - tailP.x, dyA = headY - tailP.y;
                 var disp = Math.sqrt(dxA*dxA + dyA*dyA);
-                if(disp >= 0.5) {  // skip arrow on flat/locked stocks (screen-pixel threshold)
+                
+                var anyInView = trailPts.some(p => p.x >= P && p.x <= CW-P && p.y >= P && p.y <= CH-P);
+                var isOffScreen = headX < P || headX > CW-P || headY < P || headY > CH-P;
+                var arrX = headX, arrY = headY;
+                var showArrow = disp >= 0.5 && anyInView;
+
+                if (showArrow && isOffScreen) {
+                    var lastIn = trailPts.slice().reverse().find(p => p.x >= P && p.x <= CW-P && p.y >= P && p.y <= CH-P);
+                    var t = 1;
+                    if(headX < P)       t = Math.min(t, (P - lastIn.x) / (headX - lastIn.x));
+                    if(headX > CW-P)    t = Math.min(t, ((CW-P) - lastIn.x) / (headX - lastIn.x));
+                    if(headY < P)       t = Math.min(t, (P - lastIn.y) / (headY - lastIn.y));
+                    if(headY > CH-P)    t = Math.min(t, ((CH-P) - lastIn.y) / (headY - lastIn.y));
+                    arrX = lastIn.x + (headX - lastIn.x) * t;
+                    arrY = lastIn.y + (headY - lastIn.y) * t;
+                }
+
+                if(showArrow) {
                     var heading = Math.atan2(dyA, dxA) * 180 / Math.PI;
-                    svgContent += `<polygon points="-7,-5 9,0 -7,5" fill="${color}" opacity="1" transform="translate(${headX.toFixed(1)},${headY.toFixed(1)}) rotate(${heading.toFixed(1)})"/>`;
+                    svgContent += `<polygon points="-7,-5 9,0 -7,5" fill="${color}" opacity="1" transform="translate(${arrX.toFixed(1)},${arrY.toFixed(1)}) rotate(${heading.toFixed(1)})"/>`;
                 }
 
                 // 3. Label follows trail tip
-                svgContent += `<text x="${(headX+14).toFixed(1)}" y="${(headY+4).toFixed(1)}" fill="#fff" font-weight="900" font-size="12" style="text-shadow:0 0 6px #000,0 0 3px #000">${d.s.ticker}</text>`;
+                if (anyInView) {
+                    var labelOp = isOffScreen ? 0.7 : 1;
+                    var textX = arrX + (arrX > CW-P-40 ? -35 : 14); 
+                    var textY = arrY + (arrY > CH-P-15 ? -10 : 4);
+                    svgContent += `<text x="${textX.toFixed(1)}" y="${textY.toFixed(1)}" fill="#fff" opacity="${labelOp}" font-weight="900" font-size="12" style="text-shadow:0 0 6px #000,0 0 3px #000">${d.s.ticker}</text>`;
+                }
             });
 
             container.innerHTML = `<svg viewBox="0 0 ${CW} ${CH}">${svgContent}</svg>`;
