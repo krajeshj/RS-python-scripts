@@ -680,6 +680,13 @@
             box-shadow: 0 0 10px rgba(0, 230, 118, 0.3);
         }
 
+        .canslim-letter.inactive-m {
+            background: rgba(255, 82, 82, 0.15);
+            color: var(--red);
+            border-color: rgba(255, 82, 82, 0.3);
+            box-shadow: 0 0 10px rgba(255, 82, 82, 0.2);
+        }
+
         .metrics {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -1121,7 +1128,9 @@
             return `<div class="canslim-tray">
                 ${letters.map(l => {
                 const active = canslim[l.toLowerCase()];
-                return `<div class="canslim-letter ${active ? 'active' : ''}" title="${l}">${l}</div>`;
+                let extraClass = active ? 'active' : '';
+                if (l === 'M' && !active) { extraClass = 'inactive-m'; }
+                return `<div class="canslim-letter ${extraClass}" title="${l}">${l}</div>`;
             }).join('')}
             </div>`;
         }

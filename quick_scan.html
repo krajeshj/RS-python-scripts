@@ -637,6 +637,19 @@
             box-shadow: 0 0 10px rgba(0, 230, 118, 0.3);
         }
 
+        .canslim-letter.inactive-m {
+            background: rgba(255, 82, 82, 0.15);
+            color: var(--red);
+            border-color: rgba(255, 82, 82, 0.3);
+            box-shadow: 0 0 10px rgba(255, 82, 82, 0.2);
+        }
+
+        .outlook-tag { padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; border: 1px solid; }
+        .outlook-rallying { background: rgba(0,230,118,0.1); color: #00e676; border-color: rgba(0,230,118,0.25); }
+        .outlook-curling { background: rgba(255,145,0,0.1); color: #ff9100; border-color: rgba(255,145,0,0.25); }
+        .outlook-declining { background: rgba(255,82,82,0.1); color: #ff5252; border-color: rgba(255,82,82,0.25); }
+
+
         .metrics {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -1128,15 +1141,27 @@
             return `<div class="canslim-tray">
                 ${letters.map(l => {
                 const active = canslim[l.toLowerCase()];
-                return `<div class="canslim-letter ${active ? 'active' : ''}" title="${l}">${l}</div>`;
+                let extraClass = active ? 'active' : '';
+                if (l === 'M' && !active) { extraClass = 'inactive-m'; }
+                return `<div class="canslim-letter ${extraClass}" title="${l}">${l}</div>`;
             }).join('')}
             </div>`;
+        }
+
+        function computeRotation(s) {
+            const mom1w = s.rs_1w_pct || s.rs;
+            const mom1m = s.rs_1m_pct || s.rs;
+            const yMom = mom1w - mom1m;
+            const vel = s.rs - mom1w;
+            const yComp = yMom * 0.7 + vel * 0.3;
+            return { yComp, mom1w, mom1m };
         }
 
         function renderStock(s, idx) {
             const earningsBadge = (s.days_to_earnings >= 0 && s.days_to_earnings <= 14)
                 ? `<div class="earnings-alert">📅 EARNINGS IN ${s.days_to_earnings}D</div>`
                 : '';
+            const priceStr = s.price ? `$${s.price.toFixed(2)}` : '';
 
             function fmtVol(v) {
                 if (!v) return 'N/A';
@@ -1146,7 +1171,7 @@
             }
 
             let volStyle = "font-size: 0.65rem; color: var(--text2); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface); display: inline-block;";
-            if (s.volume && s.volume > s.avg_volume) {
+            if (s.volume > s.avg_volume) {
                 if (s.is_up) {
                     volStyle = "font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(0,230,118,0.3); background: rgba(0,230,118,0.1); color: var(--green); display: inline-block;";
                 } else {
@@ -1155,6 +1180,27 @@
             }
             const volBadge = `<div style="${volStyle}" title="Avg Vol: ${fmtVol(s.avg_volume)}">Vol: ${fmtVol(s.volume)}</div>`;
             const priceBadge = s.price ? `<div style="${volStyle}">$${s.price.toFixed(2)}</div>` : '';
+
+            // Rotation quadrant & outlook
+            const rot = computeRotation(s);
+            const Q_FILL = { leading: '#22c55e', weakening: '#f59e0b', lagging: '#ef4444', improving: '#60a5fa' };
+            const xSign = (s.rs >= s._medRS) ? 1 : -1;
+            const ySign = (rot.yComp >= s._medY) ? 1 : -1;
+            const q = xSign >= 0 ? (ySign >= 0 ? 'leading' : 'weakening') : (ySign >= 0 ? 'improving' : 'lagging');
+            const qColor = Q_FILL[q];
+            const qBadge = `<span style="font-size:0.65rem;padding:2px 8px;border-radius:4px;background:${qColor}22;color:${qColor};border:1px solid ${qColor}44;font-weight:800;">${q.toUpperCase()}</span>`;
+
+            let outlook = 'neutral';
+            if (rot.yComp > s._medY && rot.yComp >= 0) outlook = 'rallying';
+            else if (rot.yComp > s._medY && rot.yComp < 0) outlook = 'recovering';
+            else if (rot.yComp <= s._medY && rot.yComp < 0) outlook = 'declining';
+            else outlook = 'curling';
+            const outlookLabel = outlook === 'rallying' ? '➚ Momentum Rallying' :
+                outlook === 'curling' ? '⤹ Momentum Curling' :
+                outlook === 'declining' ? '↘ Momentum Declining' :
+                outlook === 'recovering' ? '↗ Momentum Recovering' : '→ Neutral';
+            const outlookClass = (outlook === 'rallying' || outlook === 'recovering') ? 'outlook-rallying' :
+                outlook === 'curling' ? 'outlook-curling' : 'outlook-declining';
 
             return `
                 <div class="card" style="animation-delay: ${idx * 0.05}s">
@@ -1171,6 +1217,7 @@
                         </div>
                         <div style="display:flex; flex-direction: column; align-items: flex-end; gap:4px; padding-right: 28px;">
                             <div style="font-size:0.7rem; color:var(--text2); opacity:0.8;">#${s.rank}</div>
+                            ${qBadge}
                             ${s.flip ? `<div class="flip-badge">⚡ PRIME FLIP</div>` : ''}
                             <div class="source-badge" style="margin-bottom: 4px;">${s.source}</div>
                             <div style="display:flex; flex-direction: column; gap:4px; align-items: flex-end;">
@@ -1181,7 +1228,7 @@
                     </div>
                     
                     ${earningsBadge}
-    
+
                     <a href="${s.tradingview_url}" target="_blank" class="chart-link">
                         <img src="${s.finviz_chart_url}&t=${Date.now()}" class="chart-img" loading="lazy" alt="${s.ticker}">
                         <div class="chart-overlay">
@@ -1192,17 +1239,28 @@
 
                     <div class="metrics">
                         <div class="metric">
-                            <span class="metric-label">RS Rank (1-99)</span>
+                            <span class="metric-label">RS Rank</span>
                             <span class="metric-value" style="color: var(--cyan)">${s.rs}</span>
                         </div>
                         <div class="metric">
-                            <span class="metric-label">Volatility (RMV)</span>
+                            <span class="metric-label">RMV</span>
                             <span class="metric-value">${s.rmv}</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">1W Pct</span>
+                            <span class="metric-value">${s.rs_1w_pct || 'N/A'}</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">1M Pct</span>
+                            <span class="metric-value">${s.rs_1m_pct || 'N/A'}</span>
                         </div>
                     </div>
                     
                     <div class="highlights">
                         ${s.highlights.split(', ').map(h => `<span class="highlight-tag">${h}</span>`).join('')}
+                    </div>
+                    <div style="display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--border);padding-top:8px;">
+                        <span class="outlook-tag ${outlookClass}">${outlookLabel}</span>
                     </div>
                 </div>
             `;
@@ -1228,6 +1286,13 @@
                 (s.rs >= minRS && s.rs <= maxRS) &&
                 (s.rmv >= minRMV && s.rmv <= maxRMV)
             );
+            // Compute group medians for rotation quadrant assignment
+            const rsVals = stocksFiltered.map(s => s.rs).sort((a,b) => a-b);
+            const yVals = stocksFiltered.map(s => computeRotation(s).yComp).sort((a,b) => a-b);
+            const mid = Math.floor(rsVals.length / 2);
+            const medRS = rsVals.length % 2 ? rsVals[mid] : (rsVals[mid-1] + rsVals[mid]) / 2;
+            const medY = yVals.length % 2 ? yVals[mid] : (yVals[mid-1] + yVals[mid]) / 2;
+            stocksFiltered.forEach(s => { s._medRS = medRS; s._medY = medY; });
             stocksGrid.innerHTML = stocksFiltered.map((s, i) => renderStock(s, i)).join('');
 
             // Render Tips Section
@@ -1242,6 +1307,14 @@
                 (s.rmv >= minRMV && s.rmv <= maxRMV)
             );
             if (tipsFiltered.length > 0) {
+                // Compute medians for tips
+                const tRsVals = tipsFiltered.map(s => s.rs).sort((a,b) => a-b);
+                const tYVals = tipsFiltered.map(s => computeRotation(s).yComp).sort((a,b) => a-b);
+                const tMid = Math.floor(tRsVals.length / 2);
+                const tMedRS = tRsVals.length % 2 ? tRsVals[tMid] : (tRsVals[tMid-1] + tRsVals[tMid]) / 2;
+                const tMedY = tYVals.length % 2 ? tYVals[tMid] : (tYVals[tMid-1] + tYVals[tMid]) / 2;
+                tipsFiltered.forEach(s => { s._medRS = tMedRS; s._medY = tMedY; });
+                
                 tipsSection.classList.remove('hidden');
                 document.getElementById('tips-grid').innerHTML = tipsFiltered.map((s, i) => renderStock(s, i)).join('');
             } else {
