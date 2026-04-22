@@ -42,6 +42,9 @@
         .toggle-btn.active { background: rgba(0,230,118,0.1); border-color: var(--green); color: var(--green); }
         .toggle-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text2); transition: all 0.2s; }
         .toggle-btn.active .toggle-dot { background: var(--green); box-shadow: 0 0 8px rgba(0,230,118,0.5); }
+        .tab-btn { padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 700; border: 1px solid #1e293b; background: rgba(15,23,42,0.8); color: #64748b; transition: all 0.2s; }
+        .tab-btn.active { border-color: var(--cyan); background: rgba(0, 229, 255, 0.1); color: var(--text); box-shadow: 0 0 10px rgba(0,229,255,0.2); }
+
 
         .rrg-box { background: #0a1120; border: 1px solid #1e293b; border-radius: 12px; position: relative; width: 100%; aspect-ratio: 1.5/1; box-shadow: var(--shadow); overflow: hidden; }
         svg { width: 100%; height: 100%; display: block; }
@@ -118,6 +121,13 @@
             </div>
         </div>
 
+        <!-- Tabs -->
+        <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;" id="tabs">
+            <button class="tab-btn active" onclick="setTab('rrg')">Rotation Map</button>
+            <button class="tab-btn" onclick="setTab('rank')">Rank Signals</button>
+            <button class="tab-btn" onclick="setTab('flow')">Fund Flows</button>
+        </div>
+
         <!-- Quadrant Filters (Styled like Sector Rotation) -->
         <div class="q-toggles">
             <label class="q-label" style="color: var(--q-leading);"><input type="checkbox" id="q-leading" checked onchange="render()"> Leading</label>
@@ -127,8 +137,10 @@
             <span id="filter-status" style="margin-left:auto; font-size:0.75rem; color:var(--text2); font-weight:700;">Loading...</span>
         </div>
 
-        <div class="rrg-box" id="rrg-container">
-            <div style="padding:100px; text-align:center;">Analyzing Universe...</div>
+        <div id="content">
+            <div class="rrg-box">
+                <div style="padding:100px; text-align:center;">Analyzing Universe...</div>
+            </div>
         </div>
 
         <div class="stock-grid" id="stock-grid"></div>
@@ -140,7 +152,16 @@
         var filters = { quality: true, minervini: false, top5: false };
         var zoomLevel = 1.0;
         var rotatingOnly = false;
+        var activeTab = 'rrg';
         var Q_FILL = { leading: '#22c55e', weakening: '#f59e0b', lagging: '#ef4444', improving: '#60a5fa' };
+
+        function setTab(t) {
+            activeTab = t;
+            var map = {'rrg':'rotation', 'rank':'rank', 'flow':'flow'};
+            var btns = document.querySelectorAll('.tab-btn');
+            btns.forEach(b => b.classList.toggle('active', b.innerText.toLowerCase().indexOf(map[t]) >= 0));
+            render();
+        }
 
         function median(arr) {
             var s = arr.slice().sort((a,b) => a-b);
@@ -369,13 +390,22 @@
             }
             document.getElementById('filter-status').textContent = visible.length + ' leaders shown (of ' + pool.length + ' filtered)';
 
-            renderSVG(visible);
-            renderGrid(visible);
+            var container = document.getElementById('content');
+            if (activeTab === 'rrg') {
+                document.getElementById('stock-grid').style.display = 'grid';
+                renderSVG(container, visible);
+                renderGrid(visible);
+            } else if (activeTab === 'rank') {
+                document.getElementById('stock-grid').style.display = 'none';
+                renderRankSignals(container, visible);
+            } else if (activeTab === 'flow') {
+                document.getElementById('stock-grid').style.display = 'none';
+                renderFlows(container, visible);
+            }
         }
 
-        function renderSVG(data) {
-            var container = document.getElementById('rrg-container');
-            if(!data.length) { container.innerHTML = '<div style="padding:100px;text-align:center;">No results match selection.</div>'; return; }
+        function renderSVG(container, data) {
+            if(!data.length) { container.innerHTML = '<div class="rrg-box" style="padding:100px;text-align:center;">No results match selection.</div>'; return; }
             
             var CW=900, CH=600, P=60;
             var allX = [], allY = [];
@@ -487,7 +517,60 @@
                 }
             });
 
-            container.innerHTML = `<svg viewBox="0 0 ${CW} ${CH}">${svgContent}</svg>`;
+            container.innerHTML = `<div class="rrg-box" style="width:100%; height:auto;"><svg viewBox="0 0 ${CW} ${CH}">${svgContent}</svg></div>`;
+        }
+
+        function renderRankSignals(container, data) {
+            container.innerHTML =
+                '<div class="card" style="background:var(--glass); border:1px solid var(--border); border-radius:var(--radius); padding:20px;">' +
+                '<div style="font-size:16px; font-weight:800; color:#f1f5f9; margin-bottom:12px;">Rotation Status Matrix</div>' +
+                '<table style="width:100%; border-collapse:collapse; font-size:13px;">' +
+                '<thead style="border-bottom:1px solid #1e293b; color:#64748b;">' +
+                '<tr><th style="padding:12px 0; text-align:left;">Ticker</th><th style="text-align:left;">Signal</th><th style="text-align:right;">Momentum Score</th></tr>' +
+                '</thead><tbody>' +
+                data.slice().sort((a,b) => b.x-a.x).map(s => {
+                    return '<tr style="border-bottom:1px solid #1e293b;">' +
+                        '<td style="padding:12px 0; font-weight:800; color:' + Q_FILL[s.q] + '">' + s.s.ticker + ' <span style="font-size:11px; font-weight:600; color:var(--text2); margin-left:8px;">'+s.s.name+'</span></td>' +
+                        '<td style="font-weight:700; color:' + Q_FILL[s.q] + '">' + s.q.toUpperCase() + '</td>' +
+                        '<td style="text-align:right; font-weight:800; font-family:var(--mono); color:' + (s.x>=0?'#22c55e':'#ef4444') + '">' + s.x.toFixed(2) + '</td></tr>';
+                }).join('') +
+                '</tbody></table></div>';
+        }
+
+        function renderFlows(container, data) {
+            var flows = data.map(d => {
+                // Determine raw volume and price
+                var vol = d.s.volume || 0;
+                var prc = d.s.price || 1;
+                var rawFlow = (vol * prc) / 1000000;
+                // Sign matching is_up
+                var isUp = d.s.is_up !== undefined ? d.s.is_up : (d.q === 'leading' || d.q === 'improving');
+                return { s: d.s, flow: isUp ? rawFlow : -rawFlow };
+            });
+            
+            var maxFlow = Math.max(...flows.map(f => Math.abs(f.flow))) || 1;
+
+            container.innerHTML =
+                '<div class="card" style="background:var(--glass); border:1px solid var(--border); border-radius:var(--radius); padding:20px;">' +
+                '<div style="font-size:16px; font-weight:800; color:#f1f5f9; margin-bottom:20px;">Estimated Institutional Fund Flow ($M)</div>' +
+                flows.slice().sort((a,b) => b.flow-a.flow).map(f => {
+                    var pct = (Math.abs(f.flow) / maxFlow) * 100;
+                    var c = f.flow > 0 ? '#22c55e' : '#ef4444';
+                    var sgn = f.flow > 0 ? '+' : '';
+                    
+                    var leftBar = f.flow < 0 ? `<div style="width:${pct}%; height:100%; background:${c}; margin-left:auto; border-radius:4px 0 0 4px;"></div>` : '';
+                    var rightBar = f.flow >= 0 ? `<div style="width:${pct}%; height:100%; background:${c}; border-radius:0 4px 4px 0;"></div>` : '';
+                    
+                    return '<div style="margin-bottom:12px;">' +
+                        '<div style="display:flex; justify-content:space-between; align-items:flex-end; font-size:13px; margin-bottom:6px;">' +
+                        '<span style="font-weight:700;">' + f.s.ticker + ' <span style="font-size:10px; font-weight:500; color:var(--text2); margin-left:6px;">'+f.s.name+'</span></span>' +
+                        '<span style="color:' + c + '; font-weight:800; font-family:var(--mono);">' + sgn + f.flow.toFixed(1) + 'M</span></div>' +
+                        '<div style="display:flex; width:100%; height:10px; background:rgba(0,0,0,0.3); border-radius:4px; border:1px solid #1e293b; overflow:hidden;">' +
+                            '<div style="width:50%; border-right:1px solid #334155;">' + leftBar + '</div>' + 
+                            '<div style="width:50%;">' + rightBar + '</div>' +
+                        '</div></div>';
+                }).join('') +
+                '</div>';
         }
 
         function renderGrid(data) {
