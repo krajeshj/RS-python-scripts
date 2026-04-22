@@ -290,23 +290,29 @@
                 // --- SCIENTIFIC RRG ENGINE (JdK Inspired) ---
                 var raw = h.slice(0, 25); // oldest first
                 
-                // FALLBACK: If history is too thin for RRG math, return the stock as a static dot
+                // --- MOMENTUM PROXY & FALLBACK ---
+                // If history is too thin for full RRG math, we use short-term vs mid-term RS delta
+                // to estimate a vertical position so the dashboard isn't a flat line.
                 if (raw.length < 10) {
-                    return { s, x, y: 0, q, trail: [{x, y: 0}] };
+                    var proxyY = (s.rs_1w_pct - s.rs_1m_pct) * 1.5; 
+                    // Add a tiny deterministic jitter based on ticker to prevent overlap
+                    var jitter = (s.ticker.charCodeAt(0) % 10 - 5) * 0.5;
+                    var qProx = x >= 0 ? (proxyY + jitter >= 0 ? 'leading' : 'weakening') : (proxyY + jitter >= 0 ? 'improving' : 'lagging');
+                    return { s, x, y: proxyY + jitter, q: qProx, trail: [{x, y: proxyY + jitter}] };
                 }
 
-                // 1. Ratio Smoothing (SMA 5) - "RS-Ratio"
+                // 1. Ratio Smoothing (SMA 3 for 20-day history)
                 const sms = (arr, n) => arr.map((_, i) => i < n-1 ? null : arr.slice(i-n+1, i+1).reduce((a,b)=>a+b,0)/n);
-                let rs_ratio = sms(raw, 5);
-
-                // 2. Momentum Calculation (ROC 5) - "RS-Momentum"
-                let rs_mom = rs_ratio.map((v, i, arr) => {
-                    if (i < 5 || v === null || arr[i-5] === null) return null;
-                    return (v / arr[i-5] - 1) * 400; // Technical scaling
+                var rs_ratio = sms(raw, 3);
+                
+                // 2. Velocity (3-day ROC)
+                var rs_mom = rs_ratio.map((v, i, arr) => {
+                    if (i < 3 || v === null || arr[i-3] === null) return null;
+                    return (v / arr[i-3] - 1) * 200;
                 });
-
-                // 3. Final Momentum Smoothing (SMA 3)
-                let rs_mom_smooth = sms(rs_mom.map(v => v === null ? 0 : v), 3);
+                
+                // 3. Final Smoothing
+                var rs_mom_smooth = sms(rs_mom.map(v => v === null ? 0 : v), 3);
 
                 // 4. Trail Construction (Truncated to stable data)
                 let trail = [];
@@ -316,6 +322,9 @@
                     trail.push({ x: rs_ratio[i] - medRS, y: (rs_mom_smooth[i] || 0) });
                 }
                 
+                // Derive q from visual trail position — consistent with what's rendered
+                var headTrl = trail.length > 0 ? trail[trail.length-1] : {x, y};
+                q = headTrl.x >= 0 ? (headTrl.y >= 0 ? 'leading' : 'weakening') : (headTrl.y >= 0 ? 'improving' : 'lagging');
                 return { s, x, y, q, trail };
             });
 
@@ -346,20 +355,27 @@
                 });
             });
             
-            // SCIENTIFIC VIEWPORT SCALING (Z-Score)
-            var meanX = allX.reduce((a,b)=>a+b,0)/allX.length || 0;
-            var meanY = allY.reduce((a,b)=>a+b,0)/allY.length || 0;
+            // ADAPTIVE VIEWPORT SCALING (85th Percentile Zoom)
+            // This ensures the 'core' of the market fills the screen, 
+            // while extreme movers are naturally clipped if they are too far out.
+            allX.sort((a,b) => a-b);
+            allY.sort((a,b) => a-b);
             
-            // MINIMUM SIGMA: Ensures the viewport remains "full" even if most stocks have zero momentum
-            var stdX = Math.max(stdDev(allX), 5.0);
-            var stdY = Math.max(stdDev(allY), 5.0);
+            var p05x = allX[Math.floor(allX.length * 0.05)];
+            var p95x = allX[Math.floor(allX.length * 0.95)];
+            var p05y = allY[Math.floor(allY.length * 0.05)];
+            var p95y = allY[Math.floor(allY.length * 0.95)];
 
-            // Map screen boundaries to +/- 2.5 Sigma
-            var maxAbsX = stdX * 2.5; 
-            var maxAbsY = stdY * 2.5;
+            var centerX = (p05x + p95x) / 2;
+            var centerY = (p05y + p95y) / 2;
+            var rangeX = Math.max((p95x - p05x) * 1.2, 20); // Min range of 20
+            var rangeY = Math.max((p95y - p05y) * 1.2, 20); // Min range of 20
+
+            var maxAbsX = rangeX / 2; 
+            var maxAbsY = rangeY / 2;
             
-            var tX = v => P + ((v - (meanX - maxAbsX)) / (maxAbsX * 2)) * (CW - P * 2);
-            var tY = v => (CH - P) - ((v - (meanY - maxAbsY)) / (maxAbsY * 2)) * (CH - P * 2);
+            var tX = v => P + ((v - (centerX - maxAbsX)) / (maxAbsX * 2)) * (CW - P * 2);
+            var tY = v => (CH - P) - ((v - (centerY - maxAbsY)) / (maxAbsY * 2)) * (CH - P * 2);
             var MX = tX(0), MY = tY(0);
 
             var svgContent = `<rect width="100%" height="100%" fill="#0b0e14"/>`;
@@ -385,37 +401,37 @@
                 var color = Q_FILL[d.q];
                 var jX = Math.sin(idx * 1.5) * 1.0, jY = Math.cos(idx * 1.5) * 1.0;
                 var trailPts = d.trail.map(tp => ({ x: tX(tp.x + jX), y: tY(tp.y + jY) }));
-                var curX = tX(d.x + jX), curY = tY(d.y + jY);
-                
-                // 1. Draw Categorical Smoothing (Hermite Spline)
-                var pathD = '';
                 var L = trailPts.length;
+
+                // 1. Per-segment fading Hermite Spline (oldest=dim → newest=bright)
                 for(var i=0; i < L - 1; i++) {
                     var p0 = (i === 0) ? trailPts[0] : trailPts[i-1];
                     var p1 = trailPts[i];
                     var p2 = trailPts[i+1];
                     var p3 = (i + 2 < L) ? trailPts[i+2] : p2;
-                    // TENSION 3.5: Stronger curvature for rotational sense
                     var cp1x = p1.x + (p2.x - p0.x)/3.5, cp1y = p1.y + (p2.y - p0.y)/3.5;
                     var cp2x = p2.x - (p3.x - p1.x)/3.5, cp2y = p2.y - (p3.y - p1.y)/3.5;
-                    pathD += (i===0 ? `M ${p1.x},${p1.y} ` : '') + `C ${cp1x},${cp1y} ${cp2x},${cp2y} ${p2.x},${p2.y} `;
-                    
-                    // Breadcrumb dots
-                    var op = 0.05 + 0.5 * (i/L);
-                    svgContent += `<circle cx="${p1.x}" cy="${p1.y}" r="2" fill="${color}" opacity="${op}"/>`;
+                    var segD = `M ${p1.x.toFixed(1)},${p1.y.toFixed(1)} C ${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
+                    var segOp = (L > 1 ? 0.08 + 0.77 * ((i + 1) / (L - 1)) : 0.85).toFixed(3);
+                    svgContent += `<path d="${segD}" fill="none" stroke="${color}" stroke-width="2.5" opacity="${segOp}" stroke-linecap="round"/>`;
+                    // Breadcrumb dots — fade from dim past to bright present
+                    var dotOp = (L > 1 ? 0.08 + 0.92 * (i / (L - 1)) : 1.0).toFixed(3);
+                    svgContent += `<circle cx="${p1.x.toFixed(1)}" cy="${p1.y.toFixed(1)}" r="2.5" fill="${color}" opacity="${dotOp}"/>`;
                 }
-                if(pathD) svgContent += `<path d="${pathD}" fill="none" stroke="${color}" stroke-width="2.5" opacity="0.3" stroke-linecap="round"/>`;
 
-                // 2. High-Precision Directional Arrow (Synced Style)
-                // Establish heading from PREVIOUS point to CURRENT point
-                var headX = curX, headY = curY;
-                var tailP = L > 1 ? trailPts[L-2] : {x: headX - 0.1, y: headY};
-                var heading = Math.atan2(headY - tailP.y, headX - tailP.x) * 180 / Math.PI;
-                
-                svgContent += `<polygon points="-6,-5 8,0 -6,5" fill="${color}" transform="translate(${headX},${headY}) rotate(${heading})" />`;
+                // 2. Arrow: tip AND tail both from trailPts — same coordinate system, fixes disconnect + direction
+                var headX = L > 0 ? trailPts[L-1].x : 0;
+                var headY = L > 0 ? trailPts[L-1].y : 0;
+                var tailP = L > 1 ? trailPts[L-2] : {x: headX - 1, y: headY};
+                var dxA = headX - tailP.x, dyA = headY - tailP.y;
+                var disp = Math.sqrt(dxA*dxA + dyA*dyA);
+                if(disp >= 0.5) {  // skip arrow on flat/locked stocks (screen-pixel threshold)
+                    var heading = Math.atan2(dyA, dxA) * 180 / Math.PI;
+                    svgContent += `<polygon points="-7,-5 9,0 -7,5" fill="${color}" opacity="1" transform="translate(${headX.toFixed(1)},${headY.toFixed(1)}) rotate(${heading.toFixed(1)})"/>`;
+                }
 
-                // 3. Label
-                svgContent += `<text x="${curX+15}" y="${curY+4}" fill="#fff" font-weight="900" font-size="12" style="text-shadow:0 0 5px #000">${d.s.ticker}</text>`;
+                // 3. Label follows trail tip
+                svgContent += `<text x="${(headX+14).toFixed(1)}" y="${(headY+4).toFixed(1)}" fill="#fff" font-weight="900" font-size="12" style="text-shadow:0 0 6px #000,0 0 3px #000">${d.s.ticker}</text>`;
             });
 
             container.innerHTML = `<svg viewBox="0 0 ${CW} ${CH}">${svgContent}</svg>`;
