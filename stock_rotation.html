@@ -105,6 +105,9 @@
             <div id="top5-btn" class="toggle-btn" onclick="toggleFilter('top5')">
                 <div class="toggle-dot"></div>🏆 Top 5 Sectors
             </div>
+            <div id="rotating-btn" class="toggle-btn" onclick="toggleRotating()">
+                <div class="toggle-dot"></div>🔄 Rotating
+            </div>
             <div class="slider-group" style="max-width:160px;">
                 <label>Zoom: <span id="zoom-val" class="slider-val">1.0</span>x</label>
                 <div class="dual-range-container">
@@ -136,6 +139,7 @@
         var minRS = 75, maxRS = 100, minRMV = 10, maxRMV = 45;
         var filters = { quality: true, minervini: false, top5: false };
         var zoomLevel = 1.0;
+        var rotatingOnly = false;
         var Q_FILL = { leading: '#22c55e', weakening: '#f59e0b', lagging: '#ef4444', improving: '#60a5fa' };
 
         function median(arr) {
@@ -216,6 +220,7 @@
         }
 
         function toggleFilter(k) { filters[k] = !filters[k]; document.getElementById(k+'-btn').classList.toggle('active', filters[k]); render(); }
+        function toggleRotating() { rotatingOnly = !rotatingOnly; document.getElementById('rotating-btn').classList.toggle('active', rotatingOnly); render(); }
 
         function onZoom(v) {
             zoomLevel = +v / 10;  // slider 10-50 → zoomLevel 1.0-5.0
@@ -353,6 +358,15 @@
                 lagging: document.getElementById('q-lagging').checked
             };
             var visible = candidates.filter(c => c && qVis[c.q]);
+            // Rotating-only filter: hide stocks with flat momentum (ySpread < 5.9 = bottom 25%)
+            if(rotatingOnly) {
+                visible = visible.filter(c => {
+                    if(!c.trail || c.trail.length < 2) return false;
+                    var ys = c.trail.map(p => p.y);
+                    var ySpread = Math.max.apply(null,ys) - Math.min.apply(null,ys);
+                    return ySpread >= 5.9;
+                });
+            }
             document.getElementById('filter-status').textContent = visible.length + ' leaders shown (of ' + pool.length + ' filtered)';
 
             renderSVG(visible);
@@ -366,28 +380,27 @@
             var CW=900, CH=600, P=60;
             var allX = [], allY = [];
             data.forEach(d => {
-                allX.push(d.x); allY.push(d.y);
-                d.trail.forEach(t => { 
-                    if(!isNaN(t.x)) allX.push(t.x); 
-                    if(!isNaN(t.y)) allY.push(t.y); 
+                d.trail.forEach(t => {
+                    if(!isNaN(t.x)) allX.push(t.x);
+                    if(!isNaN(t.y)) allY.push(t.y);
                 });
             });
-            
-            // ADAPTIVE VIEWPORT SCALING (85th Percentile Zoom)
-            // This ensures the 'core' of the market fills the screen, 
-            // while extreme movers are naturally clipped if they are too far out.
-            allX.sort((a,b) => a-b);
-            allY.sort((a,b) => a-b);
-            
-            var p05x = allX[Math.floor(allX.length * 0.05)];
-            var p95x = allX[Math.floor(allX.length * 0.95)];
-            var p05y = allY[Math.floor(allY.length * 0.05)];
-            var p95y = allY[Math.floor(allY.length * 0.95)];
 
-            var centerX = (p05x + p95x) / 2;
-            var centerY = (p05y + p95y) / 2;
-            var rangeX = Math.max((p95x - p05x) * 1.2, 20) / zoomLevel; // zoom tightens window
-            var rangeY = Math.max((p95y - p05y) * 1.2, 20) / zoomLevel;
+            // FOLLOW-CAM VIEWPORT: center on the actual trail data being rendered
+            // Uses mean of trail heads for center, 5th-95th percentile for range.
+            // This ensures all visible stocks' trails stay on screen regardless of outliers.
+            var heads = data.map(d => d.trail.length ? d.trail[d.trail.length-1] : {x:0,y:0});
+            var hxSum = heads.reduce((s,p)=>s+p.x,0), hySum = heads.reduce((s,p)=>s+p.y,0);
+            var centerX = hxSum / heads.length;
+            var centerY = hySum / heads.length;
+
+            allX.sort((a,b)=>a-b); allY.sort((a,b)=>a-b);
+            var p05x = allX[Math.floor(allX.length*0.05)] || (centerX-10);
+            var p95x = allX[Math.floor(allX.length*0.95)] || (centerX+10);
+            var p05y = allY[Math.floor(allY.length*0.05)] || (centerY-10);
+            var p95y = allY[Math.floor(allY.length*0.95)] || (centerY+10);
+            var rangeX = Math.max((p95x - p05x) * 1.2, 10) / zoomLevel;
+            var rangeY = Math.max((p95y - p05y) * 1.2, 10) / zoomLevel;
 
             var maxAbsX = rangeX / 2; 
             var maxAbsY = rangeY / 2;
