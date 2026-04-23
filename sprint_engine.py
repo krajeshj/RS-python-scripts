@@ -1,10 +1,8 @@
 """
-Sprint Trading Engine - High Conviction Edition
-Tweaked for higher win-rate and returns via:
-1. Weighted Relative Strength (40/20/20/20)
-2. Immediate Momentum Filter (Price > 10 EMA)
-3. Volume Confirmation (> 90% of 50-day average)
-4. ATR-Adjusted Stops (Adaptive Risk)
+Sprint Trading Engine - RRG Historical Validation Edition
+1. Backtest strictly uses Improving/Leading sectors at EACH point in time.
+2. UI displays sector ETF tickers (XLK, XLP, etc.) for clarity.
+3. High Conviction filters maintained (Price > 10EMA, Vol > 90%).
 """
 import json, os, random, sys
 import pandas as pd
@@ -28,7 +26,15 @@ NUM_BACKTESTS = 11
 # --- Sector Mapping ---
 ETFS = ["XLK", "XLE", "XLF", "XLV", "XLY", "XLC", "XLP", "XLU", "XLI", "XLRE", "XLB"]
 ETF_NAMES = {"XLK":"Technology","XLE":"Energy","XLF":"Financials","XLV":"Healthcare","XLY":"Consumer Discretionary","XLC":"Communication Services","XLP":"Consumer Staples","XLU":"Utilities","XLI":"Industrials","XLRE":"Real Estate","XLB":"Materials"}
-SECTOR_MAP = {"Technology":"Technology","Energy":"Energy","Financials":"Financial Services","Healthcare":"Healthcare","Consumer Discretionary":"Consumer Cyclical","Communication Services":"Communication Services","Consumer Staples":"Consumer Defensive","Utilities":"Utilities","Industrials":"Industrials","Real Estate":"Real Estate","Materials":"Basic Materials"}
+# Map Sector Name -> ETF Ticker
+SECTOR_TO_ETF = {v: k for k, v in ETF_NAMES.items()}
+# Map Stock DB Sector -> ETF Ticker
+DB_SECTOR_MAP = {
+    "Technology": "XLK", "Energy": "XLE", "Financial Services": "XLF",
+    "Healthcare": "XLV", "Consumer Cyclical": "XLY", "Communication Services": "XLC",
+    "Consumer Defensive": "XLP", "Utilities": "XLU", "Industrials": "XLI",
+    "Real Estate": "XLRE", "Basic Materials": "XLB"
+}
 
 def calc_ema(values, span):
     return pd.Series(values).ewm(span=span, adjust=False).mean()
@@ -46,11 +52,36 @@ def weighted_rs(closes, ref):
         except: return 0
     return 0.4*qr(1) + 0.2*qr(2) + 0.2*qr(3) + 0.2*qr(4)
 
-def find_top_stocks(all_data, spy_candles, target_sectors, max_candle_idx):
+def calc_rrg_quadrants(all_data, spy_candles, end_idx):
+    spy_closes = pd.Series([c["close"] for c in spy_candles])
+    results = {}
+    for pt in ETFS:
+        t_candles = all_data.get(pt, {}).get("candles", [])[:end_idx]
+        if len(t_candles) < 30: continue
+        try:
+            min_len = min(len(t_candles), len(spy_closes))
+            tc = pd.Series([c["close"] for c in t_candles[-min_len:]])
+            sc = spy_closes.tail(min_len).reset_index(drop=True)
+            rs_raw = tc / sc
+            sma_r = rs_raw.rolling(14).mean()
+            rs_ratio = 100 + ((sma_r - sma_r.rolling(14).mean()) / sma_r.rolling(14).std().replace(0, 1)) * 5
+            roc = rs_ratio.diff(10)
+            rs_mom = 100 + ((roc - roc.rolling(10).mean()) / roc.rolling(10).std().replace(0, 1)) * 5
+            x, y = rs_ratio.iloc[-1] - 100, rs_mom.iloc[-1] - 100
+            q = "Leading" if x > 0 and y > 0 else "Improving" if x < 0 and y > 0 else "Weakening" if x > 0 and y < 0 else "Lagging"
+            results[ETF_NAMES[pt]] = q
+        except: pass
+    return results
+
+def find_top_stocks(all_data, spy_candles, target_etfs, max_candle_idx):
     ref = pd.Series([c["close"] for c in spy_candles])
     candidates = []
+    # Convert ETF tickers back to Stock DB sectors
+    inv_map = {v: k for k, v in DB_SECTOR_MAP.items()}
+    target_sectors = {inv_map[etf] for etf in target_etfs if etf in inv_map}
+    
     for ticker, data in all_data.items():
-        if ticker=="SPY" or data.get("skip_calc",1)==1: continue
+        if ticker=="SPY" or ticker in ETFS or data.get("skip_calc",1)==1: continue
         if data.get("sector","") not in target_sectors: continue
         candles = data.get("candles", [])[:max_candle_idx]
         if len(candles) < 200: continue
@@ -59,16 +90,13 @@ def find_top_stocks(all_data, spy_candles, target_sectors, max_candle_idx):
         price = candles[-1]["close"]
         ema10 = closes.ewm(span=10, adjust=False).mean().iloc[-1]
         
-        # Tweak 1: Price > 10 EMA (Immediate Momentum)
         if price < ema10: continue
-        
-        # Tweak 2: Volume > 90% of 50-day Avg
         avg_vol = np.mean([c["volume"] for c in candles[-50:]])
         if candles[-1]["volume"] < avg_vol * 0.9: continue
         
         rs = weighted_rs(closes, ref)
         atr = calc_atr(candles)
-        candidates.append({"ticker":ticker, "sector":data.get("sector",""), "rs":rs, "price":price, "atr":atr, "highlights":data.get("highlights","")})
+        candidates.append({"ticker":ticker, "sector":data.get("sector",""), "rs":rs, "price":price, "atr":atr})
     
     candidates.sort(key=lambda x: -x["rs"])
     return candidates[:NUM_PICKS]
@@ -81,10 +109,8 @@ def simulate_sprint(all_data, picks, capital, entry_idx):
     for p in picks:
         ticker, price, atr = p["ticker"], p["price"], p["atr"]
         candles = all_data[ticker]["candles"]
-        # Tweak 3: ATR-Based Stop (1.5x ATR or min 2%)
         stop_dist = max(atr * 1.5, price * 0.02)
-        stop_loss = round(price - stop_dist, 2)
-        target = round(price + stop_dist * TARGET_R, 2)
+        stop_loss, target = round(price - stop_dist, 2), round(price + stop_dist * TARGET_R, 2)
         shares = max(1, int(risk_per / stop_dist))
         
         exit_price, result = price, "EXPIRED"
@@ -111,23 +137,25 @@ def main():
     backtests, capital, wins, losses, sat_out = [], PORTFOLIO_START, 0, 0, 0
     for idx in test_indices:
         spy_slice = spy_all[:idx]
-        ema21 = calc_ema([c["close"] for c in spy_slice], 21).iloc[-1]
-        sma50 = pd.Series([c["close"] for c in spy_slice]).rolling(50).mean().iloc[-1]
+        closes = [c["close"] for c in spy_slice]
+        ema21 = calc_ema(closes, 21).iloc[-1]
+        sma50 = pd.Series(closes).rolling(50).mean().iloc[-1]
         
         if ema21 < sma50:
             sat_out += 1
-            backtests.append({"sprint":len(backtests)+1, "date":datetime.fromtimestamp(spy_all[idx]["datetime"],tz=timezone.utc).strftime("%Y-%m-%d"), "action":"SAT OUT", "pnl":0, "capital_after":capital, "ema21":round(ema21,2), "sma50":round(sma50,2)})
+            backtests.append({"sprint":len(backtests)+1, "date":datetime.fromtimestamp(spy_all[idx]["datetime"],tz=timezone.utc).strftime("%Y-%m-%d"), "action":"SAT OUT", "pnl":0, "capital_after":capital})
             continue
             
-        rrg = {ETF_NAMES[pt]: "Leading" for pt in ETFS} # Simplified for speed in backtest loop, can be expanded
-        target_sectors = {SECTOR_MAP[s] for s in ETF_NAMES.values() if s in SECTOR_MAP}
-        picks = find_top_stocks(all_data, spy_slice, target_sectors, idx)
+        # Tweak: Dynamic RRG for EACH backtest date
+        rrg_hist = calc_rrg_quadrants(all_data, spy_slice, idx)
+        target_etfs = {SECTOR_TO_ETF[s] for s, q in rrg_hist.items() if q in ("Leading", "Improving")}
         
+        picks = find_top_stocks(all_data, spy_slice, target_etfs, idx)
         trades, pnl = simulate_sprint(all_data, picks, capital, idx)
         wins += sum(1 for t in trades if t["pnl"] > 0)
         losses += sum(1 for t in trades if t["pnl"] <= 0)
         capital += pnl
-        backtests.append({"sprint":len(backtests)+1, "date":datetime.fromtimestamp(spy_all[idx]["datetime"],tz=timezone.utc).strftime("%Y-%m-%d"), "action":"TRADED", "pnl":pnl, "capital_after":capital, "wins":sum(1 for t in trades if t["pnl"] > 0), "losses":sum(1 for t in trades if t["pnl"] <= 0)})
+        backtests.append({"sprint":len(backtests)+1, "date":datetime.fromtimestamp(spy_all[idx]["datetime"],tz=timezone.utc).strftime("%Y-%m-%d"), "action":"TRADED", "pnl":pnl, "capital_after":capital, "wins":sum(1 for t in trades if t["pnl"] > 0), "losses":sum(1 for t in trades if t["pnl"] <= 0), "sectors":list(target_etfs)})
 
     # Current
     with open(WEB_DATA, "r") as f: web_data = json.load(f)
@@ -136,19 +164,22 @@ def main():
     
     current_sprint = {"date":web_data.get("last_updated","")[:10], "market":"FAVORABLE" if ema21_now > sma50_now else "UNFAVORABLE", "ema21":round(ema21_now,2), "sma50":round(sma50_now,2), "orders":[]}
     if ema21_now > sma50_now:
-        # Use full universe
-        candidates = [s for s in web_data.get("all_stocks", [])]
-        # Weighted RS ranking
+        rrg_now = calc_rrg_quadrants(all_data, spy_all, len(spy_all))
+        winning_etfs = {SECTOR_TO_ETF[s] for s, q in rrg_now.items() if q in ("Leading", "Improving")}
+        target_db_sectors = {inv for db, etf in DB_SECTOR_MAP.items() for inv, target in [(db, etf)] if target in winning_etfs}
+        
+        candidates = [s for s in web_data.get("all_stocks", []) if s.get("sector") in target_db_sectors]
         candidates.sort(key=lambda x: -x.get("rs", 0))
         risk_per = (capital * MAX_RISK_PCT) / NUM_PICKS
         for p in candidates[:NUM_PICKS]:
-            price, ticker = p["price"], p["ticker"]
+            price, ticker, db_sector = p["price"], p["ticker"], p.get("sector","")
+            etf_ticker = DB_SECTOR_MAP.get(db_sector, "???")
             candles = all_data.get(ticker,{}).get("candles",[])
             atr = calc_atr(candles) if candles else price * 0.03
             stop_dist = max(atr * 1.5, price * 0.02)
             stop_loss = round(price - stop_dist, 2)
             current_sprint["orders"].append({
-                "ticker":ticker, "name":p.get("name",""), "sector":p.get("sector",""), "price":price,
+                "ticker":ticker, "name":p.get("name",""), "sector":f"{db_sector} ({etf_ticker})", "price":price,
                 "highlights":p.get("highlights",""), "buy_stop":price, "buy_limit":round(price*1.002,2),
                 "stop":stop_loss, "stop_limit":round(stop_loss*0.998,2), "target":round(price+stop_dist*TARGET_R,2),
                 "shares":max(1, int(risk_per/stop_dist)), "sl_pct":round((stop_dist/price)*100,1), "target_pct":round((stop_dist*TARGET_R/price)*100,1),
@@ -170,6 +201,6 @@ def main():
         with open(template_path, "r", encoding="utf-8") as f: html = f.read()
         html = html.replace("'__SPRINT_DATA_PLACEHOLDER__'", "'" + json.dumps(output).replace("'", "\\'") + "'")
         with open(html_path, "w", encoding="utf-8") as f: f.write(html)
-        print("Sprints optimized for conviction.")
+        print("Sprints updated with RRG historical validation.")
 
 if __name__ == "__main__": main()
