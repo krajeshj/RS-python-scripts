@@ -26,6 +26,7 @@ jobs:
 
       - name: Run Quick Scan
         run: |
+          python rs_data.py --test
           python rs_ranking.py --test --quick
 
       - name: Commit and push changes
