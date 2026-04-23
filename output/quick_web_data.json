@@ -1,12 +1,12 @@
 {
-    "last_updated": "2026-04-23T02:13:30Z",
+    "last_updated": "2026-04-23T02:40:47Z",
     "stocks": [
         {
             "rank": 1,
             "ticker": "SNDK",
             "name": "Sandisk Corporation",
             "rs": 100,
-            "rs_raw": 11.28,
+            "rs_raw": 10.85,
             "rs_1w_pct": 100,
             "rs_1m_pct": 100,
             "rmv": 44.89,
@@ -218,7 +218,7 @@
             "ticker": "SNDK",
             "name": "Sandisk Corporation",
             "rs": 100,
-            "rs_raw": 11.28,
+            "rs_raw": 10.85,
             "rs_1w_pct": 100,
             "rs_1m_pct": 100,
             "rmv": 44.89,
@@ -4739,61 +4739,6 @@
             "health": "Healthy"
         },
         {
-            "sector": "Healthcare",
-            "count": 11,
-            "s1": 27,
-            "s2": 36,
-            "s3": 0,
-            "s4": 36,
-            "tickers": [
-                {
-                    "t": "TEVA",
-                    "n": "Teva Pharmaceutical Industries Limited"
-                },
-                {
-                    "t": "INSM",
-                    "n": "Insmed Incorporated"
-                },
-                {
-                    "t": "REGN",
-                    "n": "Regeneron Pharmaceuticals, Inc."
-                },
-                {
-                    "t": "GILD",
-                    "n": "Gilead Sciences, Inc."
-                },
-                {
-                    "t": "AMGN",
-                    "n": "Amgen Inc."
-                },
-                {
-                    "t": "IDXX",
-                    "n": "IDEXX Laboratories, Inc."
-                },
-                {
-                    "t": "ISRG",
-                    "n": "Intuitive Surgical, Inc."
-                },
-                {
-                    "t": "VRTX",
-                    "n": "Vertex Pharmaceuticals Incorporated"
-                },
-                {
-                    "t": "GEHC",
-                    "n": "GE HealthCare Technologies Inc."
-                },
-                {
-                    "t": "ALNY",
-                    "n": "Alnylam Pharmaceuticals, Inc."
-                },
-                {
-                    "t": "DXCM",
-                    "n": "DexCom, Inc."
-                }
-            ],
-            "health": "Healthy"
-        },
-        {
             "sector": "Consumer Cyclical",
             "count": 11,
             "s1": 18,
@@ -4844,6 +4789,61 @@
                 {
                     "t": "DASH",
                     "n": "DoorDash, Inc."
+                }
+            ],
+            "health": "Healthy"
+        },
+        {
+            "sector": "Healthcare",
+            "count": 11,
+            "s1": 27,
+            "s2": 36,
+            "s3": 0,
+            "s4": 36,
+            "tickers": [
+                {
+                    "t": "TEVA",
+                    "n": "Teva Pharmaceutical Industries Limited"
+                },
+                {
+                    "t": "INSM",
+                    "n": "Insmed Incorporated"
+                },
+                {
+                    "t": "REGN",
+                    "n": "Regeneron Pharmaceuticals, Inc."
+                },
+                {
+                    "t": "GILD",
+                    "n": "Gilead Sciences, Inc."
+                },
+                {
+                    "t": "AMGN",
+                    "n": "Amgen Inc."
+                },
+                {
+                    "t": "IDXX",
+                    "n": "IDEXX Laboratories, Inc."
+                },
+                {
+                    "t": "ISRG",
+                    "n": "Intuitive Surgical, Inc."
+                },
+                {
+                    "t": "VRTX",
+                    "n": "Vertex Pharmaceuticals Incorporated"
+                },
+                {
+                    "t": "GEHC",
+                    "n": "GE HealthCare Technologies Inc."
+                },
+                {
+                    "t": "ALNY",
+                    "n": "Alnylam Pharmaceuticals, Inc."
+                },
+                {
+                    "t": "DXCM",
+                    "n": "DexCom, Inc."
                 }
             ],
             "health": "Healthy"
