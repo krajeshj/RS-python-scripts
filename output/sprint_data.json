@@ -1,23 +1,195 @@
 {
-  "generated": "2026-04-23 05:09 UTC",
+  "generated": "2026-04-23 05:12 UTC",
   "summary": {
     "portfolio_start": 17000.0,
-    "portfolio_current": 17000.0,
+    "portfolio_current": 18610.56,
     "portfolio_target": 51000.0,
     "target_r": 3,
-    "next_sprint_reminder": "Cycle every 15 trading days. Review next cycle in 15 days."
+    "win_rate": 35.0,
+    "total_return_pct": 9.5,
+    "traded": 8,
+    "total_backtests": 11,
+    "sat_out": 3,
+    "next_sprint_reminder": "Cycle every 15 trading days."
   },
+  "backtests": [
+    {
+      "sprint": 1,
+      "date": "2025-12-10",
+      "action": "TRADED",
+      "pnl": -69.57820167541591,
+      "capital_after": 16930.421798324584,
+      "wins": 1,
+      "losses": 4,
+      "sectors": [
+        "Consumer Cyclical",
+        "Communication Services"
+      ]
+    },
+    {
+      "sprint": 2,
+      "date": "2025-12-18",
+      "action": "TRADED",
+      "pnl": 1477.198244724274,
+      "capital_after": 18407.620043048857,
+      "wins": 5,
+      "losses": 0,
+      "sectors": [
+        "Healthcare",
+        "Utilities",
+        "Consumer Cyclical",
+        "Industrials",
+        "Technology",
+        "Real Estate",
+        "Consumer Defensive",
+        "Communication Services"
+      ]
+    },
+    {
+      "sprint": 3,
+      "date": "2025-12-29",
+      "action": "TRADED",
+      "pnl": -115.05365234374972,
+      "capital_after": 18292.566390705106,
+      "wins": 1,
+      "losses": 4,
+      "sectors": [
+        "Healthcare",
+        "Utilities",
+        "Consumer Cyclical",
+        "Industrials",
+        "Technology",
+        "Real Estate",
+        "Financial Services",
+        "Consumer Defensive",
+        "Communication Services"
+      ]
+    },
+    {
+      "sprint": 4,
+      "date": "2026-01-15",
+      "action": "TRADED",
+      "pnl": 331.1103572082518,
+      "capital_after": 18623.676747913356,
+      "wins": 2,
+      "losses": 3,
+      "sectors": [
+        "Healthcare",
+        "Consumer Cyclical",
+        "Industrials",
+        "Technology",
+        "Real Estate",
+        "Communication Services"
+      ]
+    },
+    {
+      "sprint": 5,
+      "date": "2026-01-26",
+      "action": "TRADED",
+      "pnl": 340.96987915992764,
+      "capital_after": 18964.646627073285,
+      "wins": 2,
+      "losses": 3,
+      "sectors": [
+        "Healthcare",
+        "Utilities",
+        "Consumer Cyclical",
+        "Industrials",
+        "Technology",
+        "Real Estate",
+        "Financial Services",
+        "Consumer Defensive",
+        "Communication Services"
+      ]
+    },
+    {
+      "sprint": 6,
+      "date": "2026-02-03",
+      "action": "TRADED",
+      "pnl": 342.3139417648311,
+      "capital_after": 19306.960568838116,
+      "wins": 2,
+      "losses": 3,
+      "sectors": [
+        "Healthcare",
+        "Consumer Cyclical",
+        "Industrials",
+        "Technology",
+        "Real Estate",
+        "Consumer Defensive",
+        "Communication Services"
+      ]
+    },
+    {
+      "sprint": 7,
+      "date": "2026-02-11",
+      "action": "TRADED",
+      "pnl": -584.1012262821198,
+      "capital_after": 18722.859342555996,
+      "wins": 0,
+      "losses": 5,
+      "sectors": [
+        "Healthcare",
+        "Consumer Cyclical",
+        "Industrials",
+        "Technology",
+        "Real Estate",
+        "Consumer Defensive",
+        "Communication Services"
+      ]
+    },
+    {
+      "sprint": 8,
+      "date": "2026-02-20",
+      "action": "TRADED",
+      "pnl": -112.29983122825553,
+      "capital_after": 18610.55951132774,
+      "wins": 1,
+      "losses": 4,
+      "sectors": [
+        "Healthcare",
+        "Consumer Cyclical",
+        "Industrials",
+        "Technology",
+        "Real Estate",
+        "Consumer Defensive",
+        "Communication Services"
+      ]
+    },
+    {
+      "sprint": 9,
+      "date": "2026-03-10",
+      "action": "SAT OUT",
+      "pnl": 0,
+      "capital_after": 18610.55951132774,
+      "ema21": 682.52,
+      "sma50": 685.98
+    },
+    {
+      "sprint": 10,
+      "date": "2026-03-18",
+      "action": "SAT OUT",
+      "pnl": 0,
+      "capital_after": 18610.55951132774,
+      "ema21": 676.21,
+      "sma50": 684.01
+    },
+    {
+      "sprint": 11,
+      "date": "2026-03-26",
+      "action": "SAT OUT",
+      "pnl": 0,
+      "capital_after": 18610.55951132774,
+      "ema21": 667.03,
+      "sma50": 679.91
+    }
+  ],
   "current_sprint": {
     "date": "2026-04-22",
     "market": "FAVORABLE",
     "ema21": 682.11,
     "sma50": 674.84,
-    "winning_sectors": [
-      "Consumer Discretionary",
-      "Consumer Staples",
-      "Technology",
-      "Communication Services"
-    ],
+    "action": "ENTER NEW SPRINT",
     "orders": [
       {
         "ticker": "SNDK",
@@ -26,14 +198,14 @@
         "price": 903.49,
         "buy_stop": 903.49,
         "buy_limit": 905.3,
-        "stop": 824.87,
-        "stop_limit": 823.22,
-        "target": 1139.36,
-        "shares": 1,
-        "sl_pct": 8.7,
-        "target_pct": 26.1,
-        "risk": 78.62,
-        "potential": 235.87
+        "stop": 876.39,
+        "stop_limit": 874.64,
+        "target": 984.8,
+        "shares": 4,
+        "sl_pct": 3.0,
+        "target_pct": 9.0,
+        "risk": 111.66,
+        "potential": 334.99
       },
       {
         "ticker": "WDC",
@@ -42,14 +214,14 @@
         "price": 383.81,
         "buy_stop": 383.81,
         "buy_limit": 384.58,
-        "stop": 359.02,
-        "stop_limit": 358.3,
-        "target": 458.19,
-        "shares": 4,
-        "sl_pct": 6.5,
-        "target_pct": 19.4,
-        "risk": 99.17,
-        "potential": 297.52
+        "stop": 372.3,
+        "stop_limit": 371.56,
+        "target": 418.35,
+        "shares": 9,
+        "sl_pct": 3.0,
+        "target_pct": 9.0,
+        "risk": 111.66,
+        "potential": 334.99
       },
       {
         "ticker": "STX",
@@ -58,14 +230,14 @@
         "price": 559.9,
         "buy_stop": 559.9,
         "buy_limit": 561.02,
-        "stop": 525.41,
-        "stop_limit": 524.36,
-        "target": 663.36,
-        "shares": 2,
-        "sl_pct": 6.2,
-        "target_pct": 18.5,
-        "risk": 68.97,
-        "potential": 206.92
+        "stop": 543.1,
+        "stop_limit": 542.01,
+        "target": 610.29,
+        "shares": 6,
+        "sl_pct": 3.0,
+        "target_pct": 9.0,
+        "risk": 111.66,
+        "potential": 334.99
       },
       {
         "ticker": "MRVL",
@@ -74,14 +246,14 @@
         "price": 151.31,
         "buy_stop": 151.31,
         "buy_limit": 151.61,
-        "stop": 142.62,
-        "stop_limit": 142.33,
-        "target": 177.39,
-        "shares": 11,
-        "sl_pct": 5.7,
-        "target_pct": 17.2,
-        "risk": 95.63,
-        "potential": 286.88
+        "stop": 146.77,
+        "stop_limit": 146.48,
+        "target": 164.93,
+        "shares": 24,
+        "sl_pct": 3.0,
+        "target_pct": 9.0,
+        "risk": 111.66,
+        "potential": 334.99
       },
       {
         "ticker": "LRCX",
@@ -90,16 +262,15 @@
         "price": 258.37,
         "buy_stop": 258.37,
         "buy_limit": 258.89,
-        "stop": 245.85,
-        "stop_limit": 245.36,
-        "target": 295.93,
-        "shares": 8,
-        "sl_pct": 4.8,
-        "target_pct": 14.5,
-        "risk": 100.15,
-        "potential": 300.46
+        "stop": 250.62,
+        "stop_limit": 250.12,
+        "target": 281.62,
+        "shares": 14,
+        "sl_pct": 3.0,
+        "target_pct": 9.0,
+        "risk": 111.66,
+        "potential": 334.99
       }
     ]
-  },
-  "backtests": []
+  }
 }
