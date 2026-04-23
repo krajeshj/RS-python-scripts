@@ -959,7 +959,7 @@ def rankings(test_mode=False, test_tickers=None, quick=False):
     if not df_setups.empty:
         df_setups = df_setups.sort_values(TITLE_RS, ascending=False)
         df_setups[TITLE_RANK] = range(1, len(df_setups) + 1)
-        df_setups.to_csv(os.path.join(DIR, "output", "rs_setups.csv"), index=False)
+        df_setups.to_csv(os.path.join(DIR, "output", f"rs_setups{suffix}.csv"), index=False)
         print(f"\nSetups (RS>=75, RMV<={CONTROLLED_RMV_MAX}): {len(df_setups)} stocks")
 
 
