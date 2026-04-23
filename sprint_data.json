@@ -1,170 +1,106 @@
 {
-  "generated": "2026-04-23 05:32 UTC",
+  "generated": "2026-04-23 05:37 UTC",
   "summary": {
     "portfolio_start": 17000.0,
-    "portfolio_current": 18026.16,
+    "portfolio_current": 17713.43,
     "portfolio_target": 51000.0,
-    "win_rate": 40.0,
-    "total_return_pct": 6.0,
-    "next_sprint_reminder": "Cycle every 15 days. Strategy: Unified Sector Rotation Leaders."
+    "win_rate": 27.5,
+    "total_return_pct": 4.2,
+    "next_sprint_reminder": "Rajesh_Alpha: 5 Picks | 15-Day Cycle | 3R Target."
   },
   "backtests": [
     {
       "sprint": 1,
       "date": "2025-12-10",
       "action": "TRADED",
-      "pnl": -515.4085960197448,
-      "capital_after": 16484.591403980256,
-      "wins": 1,
-      "losses": 4,
-      "sectors": [
-        "XLY",
-        "XLK"
-      ]
+      "pnl": -472.4184650230412,
+      "capital_after": 16527.58153497696,
+      "wins": 0,
+      "losses": 5
     },
     {
       "sprint": 2,
       "date": "2025-12-18",
       "action": "TRADED",
-      "pnl": 448.7800810432434,
-      "capital_after": 16933.371485023497,
-      "wins": 2,
-      "losses": 3,
-      "sectors": [
-        "XLB",
-        "XLE",
-        "XLY",
-        "XLK",
-        "XLRE",
-        "XLU",
-        "XLI",
-        "XLF"
-      ]
+      "pnl": -98.0698360252382,
+      "capital_after": 16429.51169895172,
+      "wins": 1,
+      "losses": 4
     },
     {
       "sprint": 3,
-      "date": "2026-01-07",
+      "date": "2025-12-29",
       "action": "TRADED",
-      "pnl": 499.5501292419434,
-      "capital_after": 17432.92161426544,
-      "wins": 3,
-      "losses": 2,
-      "sectors": [
-        "XLE",
-        "XLV"
-      ]
+      "pnl": -102.30006439209018,
+      "capital_after": 16327.21163455963,
+      "wins": 1,
+      "losses": 4
     },
     {
       "sprint": 4,
-      "date": "2026-01-15",
+      "date": "2026-01-26",
       "action": "TRADED",
-      "pnl": 133.61998264312734,
-      "capital_after": 17566.541596908566,
-      "wins": 2,
-      "losses": 3,
-      "sectors": [
-        "XLB",
-        "XLE",
-        "XLP",
-        "XLK",
-        "XLRE",
-        "XLI"
-      ]
+      "pnl": -387.02016921997097,
+      "capital_after": 15940.191465339658,
+      "wins": 0,
+      "losses": 5
     },
     {
       "sprint": 5,
-      "date": "2026-01-26",
+      "date": "2026-02-03",
       "action": "TRADED",
-      "pnl": -189.81004867553713,
-      "capital_after": 17376.73154823303,
+      "pnl": 373.40977737426704,
+      "capital_after": 16313.601242713925,
       "wins": 2,
-      "losses": 3,
-      "sectors": [
-        "XLB",
-        "XLV",
-        "XLC",
-        "XLY",
-        "XLP",
-        "XLRE",
-        "XLU"
-      ]
+      "losses": 3
     },
     {
       "sprint": 6,
-      "date": "2026-02-03",
+      "date": "2026-02-11",
       "action": "TRADED",
-      "pnl": 732.9899693489074,
-      "capital_after": 18109.721517581936,
+      "pnl": 781.3702314567565,
+      "capital_after": 17094.97147417068,
       "wins": 3,
-      "losses": 2,
-      "sectors": [
-        "XLU",
-        "XLF",
-        "XLK",
-        "XLC"
-      ]
+      "losses": 2
     },
     {
       "sprint": 7,
-      "date": "2026-02-11",
+      "date": "2026-02-20",
       "action": "TRADED",
-      "pnl": 149.41006293296817,
-      "capital_after": 18259.131580514906,
+      "pnl": 276.17974609374994,
+      "capital_after": 17371.15122026443,
       "wins": 2,
-      "losses": 3,
-      "sectors": [
-        "XLB",
-        "XLV",
-        "XLC",
-        "XLE",
-        "XLI",
-        "XLF"
-      ]
+      "losses": 3
     },
     {
       "sprint": 8,
-      "date": "2026-02-20",
+      "date": "2026-03-02",
       "action": "TRADED",
-      "pnl": -322.9600739574433,
-      "capital_after": 17936.171506557464,
-      "wins": 1,
-      "losses": 4,
-      "sectors": [
-        "XLB",
-        "XLV",
-        "XLY",
-        "XLP",
-        "XLK",
-        "XLRE",
-        "XLI"
-      ]
+      "pnl": 342.27990711212124,
+      "capital_after": 17713.431127376552,
+      "wins": 2,
+      "losses": 3
     },
     {
       "sprint": 9,
-      "date": "2026-03-02",
-      "action": "TRADED",
-      "pnl": 89.9900142669677,
-      "capital_after": 18026.161520824433,
-      "wins": 2,
-      "losses": 3,
-      "sectors": [
-        "XLY",
-        "XLK"
-      ]
-    },
-    {
-      "sprint": 10,
       "date": "2026-03-10",
       "action": "SAT OUT",
       "pnl": 0,
-      "capital_after": 18026.161520824433
+      "capital_after": 17713.431127376552
     },
     {
-      "sprint": 11,
+      "sprint": 10,
       "date": "2026-03-18",
       "action": "SAT OUT",
       "pnl": 0,
-      "capital_after": 18026.161520824433
+      "capital_after": 17713.431127376552
+    },
+    {
+      "sprint": 11,
+      "date": "2026-03-26",
+      "action": "SAT OUT",
+      "pnl": 0,
+      "capital_after": 17713.431127376552
     }
   ],
   "current_sprint": {
@@ -174,79 +110,79 @@
     "sma50": 674.84,
     "orders": [
       {
+        "ticker": "QMMM",
+        "name": "",
+        "sector": "Communication Services (XLC)",
+        "highlights": "",
+        "price": 119.4000015258789,
+        "buy_stop": 119.4000015258789,
+        "buy_limit": 119.64,
+        "stop": 115.82,
+        "stop_limit": 115.58,
+        "target": 130.15,
+        "shares": 29,
+        "sl_pct": 3.0,
+        "target_pct": 9.0
+      },
+      {
+        "ticker": "AXTI",
+        "name": "",
+        "sector": "Technology (XLK)",
+        "highlights": "",
+        "price": 74.97000122070312,
+        "buy_stop": 74.97000122070312,
+        "buy_limit": 75.12,
+        "stop": 72.72,
+        "stop_limit": 72.57,
+        "target": 81.72,
+        "shares": 47,
+        "sl_pct": 3.0,
+        "target_pct": 9.0
+      },
+      {
         "ticker": "SNDK",
-        "name": "Sandisk Corporation",
+        "name": "",
         "sector": "Technology (XLK)",
-        "highlights": "VCP Contraction, Strong Trend Alignment, Controlled Volatility",
-        "price": 903.49,
-        "buy_stop": 903.49,
+        "highlights": "",
+        "price": 903.489990234375,
+        "buy_stop": 903.489990234375,
         "buy_limit": 905.3,
-        "stop": 782.83,
-        "stop_limit": 781.26,
-        "target": 1265.48,
-        "shares": 1,
-        "sl_pct": 13.4,
-        "target_pct": 40.1
+        "stop": 876.39,
+        "stop_limit": 874.58,
+        "target": 984.8,
+        "shares": 3,
+        "sl_pct": 3.0,
+        "target_pct": 9.0
       },
       {
-        "ticker": "WDC",
-        "name": "Western Digital Corporation",
+        "ticker": "BVC",
+        "name": "",
         "sector": "Technology (XLK)",
-        "highlights": "VCP Contraction, Strong Trend Alignment, Controlled Volatility",
-        "price": 383.81,
-        "buy_stop": 383.81,
-        "buy_limit": 384.58,
-        "stop": 344.11,
-        "stop_limit": 343.42,
-        "target": 502.91,
-        "shares": 2,
-        "sl_pct": 10.3,
-        "target_pct": 31.0
+        "highlights": "",
+        "price": 10.6899995803833,
+        "buy_stop": 10.6899995803833,
+        "buy_limit": 10.71,
+        "stop": 10.37,
+        "stop_limit": 10.35,
+        "target": 11.65,
+        "shares": 331,
+        "sl_pct": 3.0,
+        "target_pct": 9.0
       },
       {
-        "ticker": "STX",
-        "name": "Seagate Technology Holdings plc",
+        "ticker": "AAOI",
+        "name": "",
         "sector": "Technology (XLK)",
-        "highlights": "VCP Contraction, Strong Trend Alignment, Ultra Low Volatility",
-        "price": 559.9,
-        "buy_stop": 559.9,
-        "buy_limit": 561.02,
-        "stop": 503.82,
-        "stop_limit": 502.81,
-        "target": 728.14,
-        "shares": 1,
-        "sl_pct": 10.0,
-        "target_pct": 30.0
-      },
-      {
-        "ticker": "MRVL",
-        "name": "Marvell Technology, Inc.",
-        "sector": "Technology (XLK)",
-        "highlights": "Strong Trend Alignment, Ultra Low Volatility",
-        "price": 151.31,
-        "buy_stop": 151.31,
-        "buy_limit": 151.61,
-        "stop": 137.63,
-        "stop_limit": 137.35,
-        "target": 192.35,
-        "shares": 7,
-        "sl_pct": 9.0,
-        "target_pct": 27.1
-      },
-      {
-        "ticker": "LRCX",
-        "name": "Lam Research Corporation",
-        "sector": "Technology (XLK)",
-        "highlights": "VCP Contraction, Strong Trend Alignment, Ultra Low Volatility",
-        "price": 258.37,
-        "buy_stop": 258.37,
-        "buy_limit": 258.89,
-        "stop": 237.52,
-        "stop_limit": 237.04,
-        "target": 320.93,
-        "shares": 5,
-        "sl_pct": 8.1,
-        "target_pct": 24.2
+        "highlights": "",
+        "price": 150.57000732421875,
+        "buy_stop": 150.57000732421875,
+        "buy_limit": 150.87,
+        "stop": 146.05,
+        "stop_limit": 145.75,
+        "target": 164.12,
+        "shares": 23,
+        "sl_pct": 3.0,
+        "target_pct": 9.0
       }
     ]
   }
