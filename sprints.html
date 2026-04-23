@@ -18,7 +18,9 @@ header{margin-bottom:2rem;text-align:center;display:flex;flex-direction:column;a
 .nav-link:hover{color:var(--text);background:var(--surface)}
 .nav-link.active{color:var(--cyan);background:rgba(0,229,255,0.1);border-color:rgba(0,229,255,0.2)}
 .hero{background:var(--glass);backdrop-filter:blur(var(--glass-b));border:1px solid var(--border);border-radius:var(--radius);padding:2.5rem;margin-bottom:2.5rem;box-shadow:var(--shadow);position:relative;overflow:hidden;text-align:center}
-.hero h1{font-size:2.5rem;font-weight:800;background:linear-gradient(135deg,var(--text) 30%,var(--accent2));background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.hero h1{font-size:clamp(1.5rem, 5vw, 2.5rem);font-weight:800;background:linear-gradient(135deg,var(--text) 30%,var(--accent2));background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;line-height:1.2}
+.tiny-sector{font-size:0.6rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
+.characteristic{display:inline-block;font-size:0.65rem;color:var(--cyan);background:rgba(0,229,255,0.08);padding:2px 6px;border-radius:4px;border:1px solid rgba(0,229,255,0.2);margin-right:4px;margin-top:4px;font-weight:600}
 .hero .subtitle{color:var(--text2);font-size:1rem;font-weight:500}
 .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:24px}
 .metric{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;transition:all 0.2s}
@@ -38,18 +40,10 @@ header{margin-bottom:2rem;text-align:center;display:flex;flex-direction:column;a
 .chart-card{background:var(--glass);backdrop-filter:blur(var(--glass-b));border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all 0.3s;box-shadow:var(--shadow)}
 .chart-card:hover{transform:translateY(-5px);border-color:var(--accent)}
 .chart-card img{width:100%;height:180px;object-fit:cover;display:block;border-bottom:1px solid var(--border);filter:brightness(0.9) contrast(1.1)}
-.chart-card .info{padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+.chart-card .info{flex:1;padding:12px 20px}
 .chart-card .ticker-name{font-weight:800;color:var(--cyan);font-size:1.25rem;font-family:var(--mono)}
-.chart-card .sector-name{font-size:0.75rem;color:var(--text2);font-weight:600}
 .chart-card a{background:var(--surface);color:var(--text);padding:8px 14px;border-radius:10px;text-decoration:none;font-size:0.75rem;font-weight:700;transition:all 0.2s;border:1px solid var(--border)}
 .chart-card a:hover{background:var(--accent);border-color:var(--accent);color:white}
-.oco-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin:0 1px 1px 1px}
-.oco-part{background:var(--bg2);padding:15px;text-align:center}
-.part-label{font-size:0.6rem;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:6px;font-weight:700}
-.part-val{font-size:1.1rem;font-weight:700;font-family:var(--mono)}
-.oco-part.buy .part-val{color:var(--cyan)}
-.oco-part.profit .part-val{color:var(--green)}
-.oco-part.stop .part-val{color:var(--red)}
 .card-table{background:var(--glass);backdrop-filter:blur(var(--glass-b));border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-top:1.5rem}
 table{width:100%;border-collapse:collapse;font-size:0.9rem}
 th{background:rgba(255,255,255,0.03);padding:14px 16px;text-align:left;font-weight:700;font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--text2);border-bottom:1px solid var(--border)}
@@ -70,9 +64,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 .et-row{display:flex;justify-content:space-between;font-size:0.9rem;font-family:var(--mono)}
 .et-row span{color:var(--text2);font-size:0.75rem}
 .chart-card{display:flex;flex-direction:column}
-.chart-card .info{flex:1}
 .reminder{background:rgba(108,92,231,0.08);border:1px solid rgba(108,92,231,0.2);border-radius:12px;padding:20px 24px;margin-top:2rem;font-size:0.9rem;color:var(--accent2);line-height:1.6;font-weight:500}
-@media (max-width:768px){.hero h1{font-size:1.75rem}.nav-link{font-size:0.75rem;padding:5px 10px}.metrics{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:768px){.hero{padding:1.5rem}.hero h1{font-size:1.8rem}.nav-link{font-size:0.7rem;padding:5px 8px}.metrics{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -110,19 +103,18 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 <div class="reminder" id="reminder"></div>
 </div>
 <script>
-const SPRINT_DATA = '{"generated": "2026-04-23 05:12 UTC", "summary": {"portfolio_start": 17000.0, "portfolio_current": 18610.56, "portfolio_target": 51000.0, "target_r": 3, "win_rate": 35.0, "total_return_pct": 9.5, "traded": 8, "total_backtests": 11, "sat_out": 3, "next_sprint_reminder": "Cycle every 15 trading days."}, "backtests": [{"sprint": 1, "date": "2025-12-10", "action": "TRADED", "pnl": -69.57820167541591, "capital_after": 16930.421798324584, "wins": 1, "losses": 4, "sectors": ["Consumer Cyclical", "Communication Services"]}, {"sprint": 2, "date": "2025-12-18", "action": "TRADED", "pnl": 1477.198244724274, "capital_after": 18407.620043048857, "wins": 5, "losses": 0, "sectors": ["Healthcare", "Utilities", "Consumer Cyclical", "Industrials", "Technology", "Real Estate", "Consumer Defensive", "Communication Services"]}, {"sprint": 3, "date": "2025-12-29", "action": "TRADED", "pnl": -115.05365234374972, "capital_after": 18292.566390705106, "wins": 1, "losses": 4, "sectors": ["Healthcare", "Utilities", "Consumer Cyclical", "Industrials", "Technology", "Real Estate", "Financial Services", "Consumer Defensive", "Communication Services"]}, {"sprint": 4, "date": "2026-01-15", "action": "TRADED", "pnl": 331.1103572082518, "capital_after": 18623.676747913356, "wins": 2, "losses": 3, "sectors": ["Healthcare", "Consumer Cyclical", "Industrials", "Technology", "Real Estate", "Communication Services"]}, {"sprint": 5, "date": "2026-01-26", "action": "TRADED", "pnl": 340.96987915992764, "capital_after": 18964.646627073285, "wins": 2, "losses": 3, "sectors": ["Healthcare", "Utilities", "Consumer Cyclical", "Industrials", "Technology", "Real Estate", "Financial Services", "Consumer Defensive", "Communication Services"]}, {"sprint": 6, "date": "2026-02-03", "action": "TRADED", "pnl": 342.3139417648311, "capital_after": 19306.960568838116, "wins": 2, "losses": 3, "sectors": ["Healthcare", "Consumer Cyclical", "Industrials", "Technology", "Real Estate", "Consumer Defensive", "Communication Services"]}, {"sprint": 7, "date": "2026-02-11", "action": "TRADED", "pnl": -584.1012262821198, "capital_after": 18722.859342555996, "wins": 0, "losses": 5, "sectors": ["Healthcare", "Consumer Cyclical", "Industrials", "Technology", "Real Estate", "Consumer Defensive", "Communication Services"]}, {"sprint": 8, "date": "2026-02-20", "action": "TRADED", "pnl": -112.29983122825553, "capital_after": 18610.55951132774, "wins": 1, "losses": 4, "sectors": ["Healthcare", "Consumer Cyclical", "Industrials", "Technology", "Real Estate", "Consumer Defensive", "Communication Services"]}, {"sprint": 9, "date": "2026-03-10", "action": "SAT OUT", "pnl": 0, "capital_after": 18610.55951132774, "ema21": 682.52, "sma50": 685.98}, {"sprint": 10, "date": "2026-03-18", "action": "SAT OUT", "pnl": 0, "capital_after": 18610.55951132774, "ema21": 676.21, "sma50": 684.01}, {"sprint": 11, "date": "2026-03-26", "action": "SAT OUT", "pnl": 0, "capital_after": 18610.55951132774, "ema21": 667.03, "sma50": 679.91}], "current_sprint": {"date": "2026-04-22", "market": "FAVORABLE", "ema21": 682.11, "sma50": 674.84, "action": "ENTER NEW SPRINT", "orders": [{"ticker": "SNDK", "name": "Sandisk Corporation", "sector": "Technology", "price": 903.49, "buy_stop": 903.49, "buy_limit": 905.3, "stop": 876.39, "stop_limit": 874.64, "target": 984.8, "shares": 4, "sl_pct": 3.0, "target_pct": 9.0, "risk": 111.66, "potential": 334.99}, {"ticker": "WDC", "name": "Western Digital Corporation", "sector": "Technology", "price": 383.81, "buy_stop": 383.81, "buy_limit": 384.58, "stop": 372.3, "stop_limit": 371.56, "target": 418.35, "shares": 9, "sl_pct": 3.0, "target_pct": 9.0, "risk": 111.66, "potential": 334.99}, {"ticker": "STX", "name": "Seagate Technology Holdings plc", "sector": "Technology", "price": 559.9, "buy_stop": 559.9, "buy_limit": 561.02, "stop": 543.1, "stop_limit": 542.01, "target": 610.29, "shares": 6, "sl_pct": 3.0, "target_pct": 9.0, "risk": 111.66, "potential": 334.99}, {"ticker": "MRVL", "name": "Marvell Technology, Inc.", "sector": "Technology", "price": 151.31, "buy_stop": 151.31, "buy_limit": 151.61, "stop": 146.77, "stop_limit": 146.48, "target": 164.93, "shares": 24, "sl_pct": 3.0, "target_pct": 9.0, "risk": 111.66, "potential": 334.99}, {"ticker": "LRCX", "name": "Lam Research Corporation", "sector": "Technology", "price": 258.37, "buy_stop": 258.37, "buy_limit": 258.89, "stop": 250.62, "stop_limit": 250.12, "target": 281.62, "shares": 14, "sl_pct": 3.0, "target_pct": 9.0, "risk": 111.66, "potential": 334.99}]}}';
+const SPRINT_DATA = '{"generated": "2026-04-23 05:17 UTC", "summary": {"portfolio_start": 17000.0, "portfolio_current": 19067.0, "portfolio_target": 51000.0, "target_r": 3, "win_rate": 37.5, "total_return_pct": 12.2, "traded": 8, "total_backtests": 11, "sat_out": 3, "next_sprint_reminder": "Cycle every 15 trading days."}, "backtests": [{"sprint": 1, "date": "2025-12-10", "action": "TRADED", "pnl": -69.57820167541591, "capital_after": 16930.421798324584, "wins": 1, "losses": 4, "sectors": ["Communication Services", "Consumer Cyclical"]}, {"sprint": 2, "date": "2025-12-18", "action": "TRADED", "pnl": 1477.198244724274, "capital_after": 18407.620043048857, "wins": 5, "losses": 0, "sectors": ["Communication Services", "Consumer Defensive", "Industrials", "Consumer Cyclical", "Utilities", "Technology", "Real Estate", "Healthcare"]}, {"sprint": 3, "date": "2025-12-29", "action": "TRADED", "pnl": -115.05365234374972, "capital_after": 18292.566390705106, "wins": 1, "losses": 4, "sectors": ["Communication Services", "Consumer Defensive", "Industrials", "Consumer Cyclical", "Utilities", "Technology", "Financial Services", "Real Estate", "Healthcare"]}, {"sprint": 4, "date": "2026-01-15", "action": "TRADED", "pnl": 331.1103572082518, "capital_after": 18623.676747913356, "wins": 2, "losses": 3, "sectors": ["Communication Services", "Industrials", "Consumer Cyclical", "Technology", "Real Estate", "Healthcare"]}, {"sprint": 5, "date": "2026-01-26", "action": "TRADED", "pnl": 340.96987915992764, "capital_after": 18964.646627073285, "wins": 2, "losses": 3, "sectors": ["Communication Services", "Consumer Defensive", "Industrials", "Consumer Cyclical", "Utilities", "Technology", "Financial Services", "Real Estate", "Healthcare"]}, {"sprint": 6, "date": "2026-02-03", "action": "TRADED", "pnl": 342.3139417648311, "capital_after": 19306.960568838116, "wins": 2, "losses": 3, "sectors": ["Communication Services", "Consumer Defensive", "Industrials", "Consumer Cyclical", "Technology", "Real Estate", "Healthcare"]}, {"sprint": 7, "date": "2026-02-20", "action": "TRADED", "pnl": -115.89982589244772, "capital_after": 19191.06074294567, "wins": 1, "losses": 4, "sectors": ["Communication Services", "Consumer Defensive", "Industrials", "Consumer Cyclical", "Technology", "Real Estate", "Healthcare"]}, {"sprint": 8, "date": "2026-03-02", "action": "TRADED", "pnl": -124.06019632339456, "capital_after": 19067.000546622276, "wins": 1, "losses": 4, "sectors": ["Communication Services", "Consumer Defensive", "Industrials", "Consumer Cyclical", "Technology", "Real Estate", "Healthcare"]}, {"sprint": 9, "date": "2026-03-10", "action": "SAT OUT", "pnl": 0, "capital_after": 19067.000546622276, "ema21": 682.52, "sma50": 685.98}, {"sprint": 10, "date": "2026-03-18", "action": "SAT OUT", "pnl": 0, "capital_after": 19067.000546622276, "ema21": 676.21, "sma50": 684.01}, {"sprint": 11, "date": "2026-03-26", "action": "SAT OUT", "pnl": 0, "capital_after": 19067.000546622276, "ema21": 667.03, "sma50": 679.91}], "current_sprint": {"date": "2026-04-22", "market": "FAVORABLE", "ema21": 682.11, "sma50": 674.84, "action": "ENTER NEW SPRINT", "orders": [{"ticker": "SNDK", "name": "Sandisk Corporation", "sector": "Technology", "price": 903.49, "highlights": "VCP Contraction, Strong Trend Alignment, Controlled Volatility", "buy_stop": 903.49, "buy_limit": 905.3, "stop": 876.39, "stop_limit": 874.64, "target": 984.8, "shares": 4, "sl_pct": 3.0, "target_pct": 9.0, "risk": 114.4, "potential": 343.21}, {"ticker": "WDC", "name": "Western Digital Corporation", "sector": "Technology", "price": 383.81, "highlights": "VCP Contraction, Strong Trend Alignment, Controlled Volatility", "buy_stop": 383.81, "buy_limit": 384.58, "stop": 372.3, "stop_limit": 371.56, "target": 418.35, "shares": 9, "sl_pct": 3.0, "target_pct": 9.0, "risk": 114.4, "potential": 343.21}, {"ticker": "STX", "name": "Seagate Technology Holdings plc", "sector": "Technology", "price": 559.9, "highlights": "VCP Contraction, Strong Trend Alignment, Ultra Low Volatility", "buy_stop": 559.9, "buy_limit": 561.02, "stop": 543.1, "stop_limit": 542.01, "target": 610.29, "shares": 6, "sl_pct": 3.0, "target_pct": 9.0, "risk": 114.4, "potential": 343.21}, {"ticker": "MRVL", "name": "Marvell Technology, Inc.", "sector": "Technology", "price": 151.31, "highlights": "Strong Trend Alignment, Ultra Low Volatility", "buy_stop": 151.31, "buy_limit": 151.61, "stop": 146.77, "stop_limit": 146.48, "target": 164.93, "shares": 25, "sl_pct": 3.0, "target_pct": 9.0, "risk": 114.4, "potential": 343.21}, {"ticker": "LRCX", "name": "Lam Research Corporation", "sector": "Technology", "price": 258.37, "highlights": "VCP Contraction, Strong Trend Alignment, Ultra Low Volatility", "buy_stop": 258.37, "buy_limit": 258.89, "stop": 250.62, "stop_limit": 250.12, "target": 281.62, "shares": 14, "sl_pct": 3.0, "target_pct": 9.0, "risk": 114.4, "potential": 343.21}]}}';
 const d = JSON.parse(SPRINT_DATA);
 render(d);
 function render(d){
 const s=d.summary,c=d.current_sprint,bt=d.backtests;
 const pnlClass=s.total_pnl>=0?'green':'red';
 document.getElementById('metrics').innerHTML=`
-<div class="metric"><div class="val">$${s.portfolio_start.toLocaleString()}</div><div class="label">Starting Capital</div></div>
-<div class="metric"><div class="val ${pnlClass}">$${s.portfolio_current.toLocaleString()}</div><div class="label">Current Capital</div></div>
-<div class="metric"><div class="val yellow">$${s.portfolio_target.toLocaleString()}</div><div class="label">Annual Target (3x)</div></div>
+<div class="metric"><div class="val">$${s.portfolio_start.toLocaleString()}</div><div class="label">Starting</div></div>
+<div class="metric"><div class="val ${pnlClass}">$${s.portfolio_current.toLocaleString()}</div><div class="label">Current</div></div>
+<div class="metric"><div class="val yellow">$${s.portfolio_target.toLocaleString()}</div><div class="label">3x Target</div></div>
 <div class="metric"><div class="val">${s.win_rate}%</div><div class="label">Win Rate</div></div>
-<div class="metric"><div class="val ${pnlClass}">${s.total_return_pct>0?'+':''}${s.total_return_pct}%</div><div class="label">Total Return</div></div>
-<div class="metric"><div class="val">${s.traded}/${s.total_backtests}</div><div class="label">Sprints</div></div>`;
+<div class="metric"><div class="val ${pnlClass}">${s.total_return_pct>0?'+':''}${s.total_return_pct}%</div><div class="label">Return</div></div>`;
 const pct=Math.max(0,Math.min(100,((s.portfolio_current-s.portfolio_start)/(s.portfolio_target-s.portfolio_start))*100));
 document.getElementById('progress').style.width=pct+'%';
 const aa=document.getElementById('action-area');
@@ -142,7 +134,8 @@ const cls=isSat?'bt-card satout':'bt-card';
 const pnlC=b.pnl>0?'win':b.pnl<0?'loss':'';
 return `<div class="${cls}"><div class="sprint-num">Sprint ${b.sprint}</div><div class="date">${b.date}</div>
 ${isSat?`<div class="pnl" style="color:var(--orange)">SAT OUT</div><div class="detail">Market Unfavorable</div>`
-:`<div class="pnl ${pnlC}">${b.pnl>0?'+':''}$${b.pnl.toFixed(0)}</div><div class="detail">W:${b.wins||0} L:${b.losses||0}</div><div class="detail" style="font-size:0.6rem">${(b.sectors||[]).join(', ')}</div>`}</div>`;
+:`<div class="pnl ${pnlC}">${b.pnl>0?'+':''}$${b.pnl.toFixed(0)}</div><div class="detail">W:${b.wins||0} L:${b.losses||0}</div>
+<div class="tiny-sector">${(b.sectors||[]).slice(0,3).join(', ')}</div>`}</div>`;
 }).join('');
 document.getElementById('reminder').innerHTML=`<strong>Next Sprint Review:</strong> ${s.next_sprint_reminder}<br><small style="opacity:0.6">Generated: ${d.generated}</small>`;
 }
@@ -150,7 +143,8 @@ function renderOrders(orders){
 document.getElementById('orders-section').style.display='block';
 document.getElementById('orders-charts').innerHTML=orders.map(o=>`
 <div class="chart-card"><img src="https://finviz.com/chart.ashx?t=${o.ticker}&ty=c&ta=1&p=d&s=l" alt="${o.ticker}" loading="lazy">
-<div class="info"><div class="left"><div class="ticker-name">${o.ticker}</div><div class="sector-name">${o.sector}</div></div>
+<div class="info"><div class="left"><div class="ticker-name">${o.ticker}</div><div class="tiny-sector">${o.sector}</div>
+<div class="highlights">${(o.highlights || '').split(',').map(h=>`<span class="characteristic">${h.trim()}</span>`).join('')}</div></div>
 <a href="https://www.tradingview.com/chart/?symbol=${o.ticker}" target="_blank">View Chart</a></div>
 <div class="etrade-box">
 <div class="et-step">Part 1: Buy Stop-Limit</div>
@@ -163,8 +157,8 @@ document.getElementById('orders-charts').innerHTML=orders.map(o=>`
 <div class="et-row"><span>Limit Price:</span> <strong>$${o.stop_limit}</strong></div>
 </div></div>`).join('');
 document.getElementById('orders-table-container').innerHTML=`<div class="card-table"><table>
-<tr><th>Ticker</th><th>Shares</th><th>Entry Stop</th><th>Entry Limit</th><th>Target</th><th>Stop Price</th><th>Stop Limit</th></tr>
-${orders.map(o=>`<tr><td class="ticker-cell">${o.ticker}</td><td>${o.shares}</td><td>$${o.buy_stop}</td><td>$${o.buy_limit}</td><td class="win">$${o.target}</td><td class="loss">$${o.stop}</td><td class="loss">$${o.stop_limit}</td></tr>`).join('')}
+<tr><th>Ticker</th><th>Sector</th><th>Shares</th><th>Entry Stop</th><th>Entry Limit</th><th>Target</th><th>Stop Price</th></tr>
+${orders.map(o=>`<tr><td class="ticker-cell">${o.ticker}</td><td style="font-size:0.6rem; opacity:0.7">${o.sector}</td><td>${o.shares}</td><td>$${o.buy_stop}</td><td>$${o.buy_limit}</td><td class="win">$${o.target}</td><td class="loss">$${o.stop}</td></tr>`).join('')}
 </table></div>`;
 }
 </script>
