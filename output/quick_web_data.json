@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-04-23T05:33:15Z",
+    "last_updated": "2026-04-23T05:38:29Z",
     "stocks": [
         {
             "rank": 1,
@@ -3313,24 +3313,6 @@
         },
         {
             "rank": 13,
-            "industry": "Drug Manufacturers - General",
-            "sector": "Healthcare",
-            "rs": 50,
-            "rs_1w_pct": 64,
-            "rs_1m_pct": 68,
-            "tickers": [
-                {
-                    "t": "GILD",
-                    "n": "Gilead Sciences, Inc."
-                },
-                {
-                    "t": "AMGN",
-                    "n": "Amgen Inc."
-                }
-            ]
-        },
-        {
-            "rank": 14,
             "industry": "Utilities - Regulated Electric",
             "sector": "Utilities",
             "rs": 50,
@@ -3352,6 +3334,24 @@
                 {
                     "t": "EXC",
                     "n": "Exelon Corporation"
+                }
+            ]
+        },
+        {
+            "rank": 14,
+            "industry": "Drug Manufacturers - General",
+            "sector": "Healthcare",
+            "rs": 50,
+            "rs_1w_pct": 64,
+            "rs_1m_pct": 68,
+            "tickers": [
+                {
+                    "t": "GILD",
+                    "n": "Gilead Sciences, Inc."
+                },
+                {
+                    "t": "AMGN",
+                    "n": "Amgen Inc."
                 }
             ]
         },
@@ -4739,61 +4739,6 @@
             "health": "Healthy"
         },
         {
-            "sector": "Consumer Cyclical",
-            "count": 11,
-            "s1": 18,
-            "s2": 36,
-            "s3": 9,
-            "s4": 36,
-            "tickers": [
-                {
-                    "t": "ROST",
-                    "n": "Ross Stores, Inc."
-                },
-                {
-                    "t": "MAR",
-                    "n": "Marriott International, Inc."
-                },
-                {
-                    "t": "AMZN",
-                    "n": "Amazon.com, Inc."
-                },
-                {
-                    "t": "SBUX",
-                    "n": "Starbucks Corporation"
-                },
-                {
-                    "t": "ABNB",
-                    "n": "Airbnb, Inc."
-                },
-                {
-                    "t": "TSLA",
-                    "n": "Tesla, Inc."
-                },
-                {
-                    "t": "ORLY",
-                    "n": "O'Reilly Automotive, Inc."
-                },
-                {
-                    "t": "PDD",
-                    "n": "PDD Holdings Inc."
-                },
-                {
-                    "t": "BKNG",
-                    "n": "Booking Holdings Inc."
-                },
-                {
-                    "t": "MELI",
-                    "n": "MercadoLibre, Inc."
-                },
-                {
-                    "t": "DASH",
-                    "n": "DoorDash, Inc."
-                }
-            ],
-            "health": "Healthy"
-        },
-        {
             "sector": "Healthcare",
             "count": 11,
             "s1": 27,
@@ -4844,6 +4789,61 @@
                 {
                     "t": "DXCM",
                     "n": "DexCom, Inc."
+                }
+            ],
+            "health": "Healthy"
+        },
+        {
+            "sector": "Consumer Cyclical",
+            "count": 11,
+            "s1": 18,
+            "s2": 36,
+            "s3": 9,
+            "s4": 36,
+            "tickers": [
+                {
+                    "t": "ROST",
+                    "n": "Ross Stores, Inc."
+                },
+                {
+                    "t": "MAR",
+                    "n": "Marriott International, Inc."
+                },
+                {
+                    "t": "AMZN",
+                    "n": "Amazon.com, Inc."
+                },
+                {
+                    "t": "SBUX",
+                    "n": "Starbucks Corporation"
+                },
+                {
+                    "t": "ABNB",
+                    "n": "Airbnb, Inc."
+                },
+                {
+                    "t": "TSLA",
+                    "n": "Tesla, Inc."
+                },
+                {
+                    "t": "ORLY",
+                    "n": "O'Reilly Automotive, Inc."
+                },
+                {
+                    "t": "PDD",
+                    "n": "PDD Holdings Inc."
+                },
+                {
+                    "t": "BKNG",
+                    "n": "Booking Holdings Inc."
+                },
+                {
+                    "t": "MELI",
+                    "n": "MercadoLibre, Inc."
+                },
+                {
+                    "t": "DASH",
+                    "n": "DoorDash, Inc."
                 }
             ],
             "health": "Healthy"
