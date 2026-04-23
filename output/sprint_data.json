@@ -1,12 +1,12 @@
 {
-  "generated": "2026-04-23 05:12 UTC",
+  "generated": "2026-04-23 05:17 UTC",
   "summary": {
     "portfolio_start": 17000.0,
-    "portfolio_current": 18610.56,
+    "portfolio_current": 19067.0,
     "portfolio_target": 51000.0,
     "target_r": 3,
-    "win_rate": 35.0,
-    "total_return_pct": 9.5,
+    "win_rate": 37.5,
+    "total_return_pct": 12.2,
     "traded": 8,
     "total_backtests": 11,
     "sat_out": 3,
@@ -22,8 +22,8 @@
       "wins": 1,
       "losses": 4,
       "sectors": [
-        "Consumer Cyclical",
-        "Communication Services"
+        "Communication Services",
+        "Consumer Cyclical"
       ]
     },
     {
@@ -35,14 +35,14 @@
       "wins": 5,
       "losses": 0,
       "sectors": [
-        "Healthcare",
-        "Utilities",
-        "Consumer Cyclical",
+        "Communication Services",
+        "Consumer Defensive",
         "Industrials",
+        "Consumer Cyclical",
+        "Utilities",
         "Technology",
         "Real Estate",
-        "Consumer Defensive",
-        "Communication Services"
+        "Healthcare"
       ]
     },
     {
@@ -54,15 +54,15 @@
       "wins": 1,
       "losses": 4,
       "sectors": [
-        "Healthcare",
-        "Utilities",
-        "Consumer Cyclical",
-        "Industrials",
-        "Technology",
-        "Real Estate",
-        "Financial Services",
+        "Communication Services",
         "Consumer Defensive",
-        "Communication Services"
+        "Industrials",
+        "Consumer Cyclical",
+        "Utilities",
+        "Technology",
+        "Financial Services",
+        "Real Estate",
+        "Healthcare"
       ]
     },
     {
@@ -74,12 +74,12 @@
       "wins": 2,
       "losses": 3,
       "sectors": [
-        "Healthcare",
-        "Consumer Cyclical",
+        "Communication Services",
         "Industrials",
+        "Consumer Cyclical",
         "Technology",
         "Real Estate",
-        "Communication Services"
+        "Healthcare"
       ]
     },
     {
@@ -91,15 +91,15 @@
       "wins": 2,
       "losses": 3,
       "sectors": [
-        "Healthcare",
-        "Utilities",
-        "Consumer Cyclical",
-        "Industrials",
-        "Technology",
-        "Real Estate",
-        "Financial Services",
+        "Communication Services",
         "Consumer Defensive",
-        "Communication Services"
+        "Industrials",
+        "Consumer Cyclical",
+        "Utilities",
+        "Technology",
+        "Financial Services",
+        "Real Estate",
+        "Healthcare"
       ]
     },
     {
@@ -111,49 +111,49 @@
       "wins": 2,
       "losses": 3,
       "sectors": [
-        "Healthcare",
-        "Consumer Cyclical",
+        "Communication Services",
+        "Consumer Defensive",
         "Industrials",
+        "Consumer Cyclical",
         "Technology",
         "Real Estate",
-        "Consumer Defensive",
-        "Communication Services"
+        "Healthcare"
       ]
     },
     {
       "sprint": 7,
-      "date": "2026-02-11",
+      "date": "2026-02-20",
       "action": "TRADED",
-      "pnl": -584.1012262821198,
-      "capital_after": 18722.859342555996,
-      "wins": 0,
-      "losses": 5,
+      "pnl": -115.89982589244772,
+      "capital_after": 19191.06074294567,
+      "wins": 1,
+      "losses": 4,
       "sectors": [
-        "Healthcare",
-        "Consumer Cyclical",
+        "Communication Services",
+        "Consumer Defensive",
         "Industrials",
+        "Consumer Cyclical",
         "Technology",
         "Real Estate",
-        "Consumer Defensive",
-        "Communication Services"
+        "Healthcare"
       ]
     },
     {
       "sprint": 8,
-      "date": "2026-02-20",
+      "date": "2026-03-02",
       "action": "TRADED",
-      "pnl": -112.29983122825553,
-      "capital_after": 18610.55951132774,
+      "pnl": -124.06019632339456,
+      "capital_after": 19067.000546622276,
       "wins": 1,
       "losses": 4,
       "sectors": [
-        "Healthcare",
-        "Consumer Cyclical",
+        "Communication Services",
+        "Consumer Defensive",
         "Industrials",
+        "Consumer Cyclical",
         "Technology",
         "Real Estate",
-        "Consumer Defensive",
-        "Communication Services"
+        "Healthcare"
       ]
     },
     {
@@ -161,7 +161,7 @@
       "date": "2026-03-10",
       "action": "SAT OUT",
       "pnl": 0,
-      "capital_after": 18610.55951132774,
+      "capital_after": 19067.000546622276,
       "ema21": 682.52,
       "sma50": 685.98
     },
@@ -170,7 +170,7 @@
       "date": "2026-03-18",
       "action": "SAT OUT",
       "pnl": 0,
-      "capital_after": 18610.55951132774,
+      "capital_after": 19067.000546622276,
       "ema21": 676.21,
       "sma50": 684.01
     },
@@ -179,7 +179,7 @@
       "date": "2026-03-26",
       "action": "SAT OUT",
       "pnl": 0,
-      "capital_after": 18610.55951132774,
+      "capital_after": 19067.000546622276,
       "ema21": 667.03,
       "sma50": 679.91
     }
@@ -196,6 +196,7 @@
         "name": "Sandisk Corporation",
         "sector": "Technology",
         "price": 903.49,
+        "highlights": "VCP Contraction, Strong Trend Alignment, Controlled Volatility",
         "buy_stop": 903.49,
         "buy_limit": 905.3,
         "stop": 876.39,
@@ -204,14 +205,15 @@
         "shares": 4,
         "sl_pct": 3.0,
         "target_pct": 9.0,
-        "risk": 111.66,
-        "potential": 334.99
+        "risk": 114.4,
+        "potential": 343.21
       },
       {
         "ticker": "WDC",
         "name": "Western Digital Corporation",
         "sector": "Technology",
         "price": 383.81,
+        "highlights": "VCP Contraction, Strong Trend Alignment, Controlled Volatility",
         "buy_stop": 383.81,
         "buy_limit": 384.58,
         "stop": 372.3,
@@ -220,14 +222,15 @@
         "shares": 9,
         "sl_pct": 3.0,
         "target_pct": 9.0,
-        "risk": 111.66,
-        "potential": 334.99
+        "risk": 114.4,
+        "potential": 343.21
       },
       {
         "ticker": "STX",
         "name": "Seagate Technology Holdings plc",
         "sector": "Technology",
         "price": 559.9,
+        "highlights": "VCP Contraction, Strong Trend Alignment, Ultra Low Volatility",
         "buy_stop": 559.9,
         "buy_limit": 561.02,
         "stop": 543.1,
@@ -236,30 +239,32 @@
         "shares": 6,
         "sl_pct": 3.0,
         "target_pct": 9.0,
-        "risk": 111.66,
-        "potential": 334.99
+        "risk": 114.4,
+        "potential": 343.21
       },
       {
         "ticker": "MRVL",
         "name": "Marvell Technology, Inc.",
         "sector": "Technology",
         "price": 151.31,
+        "highlights": "Strong Trend Alignment, Ultra Low Volatility",
         "buy_stop": 151.31,
         "buy_limit": 151.61,
         "stop": 146.77,
         "stop_limit": 146.48,
         "target": 164.93,
-        "shares": 24,
+        "shares": 25,
         "sl_pct": 3.0,
         "target_pct": 9.0,
-        "risk": 111.66,
-        "potential": 334.99
+        "risk": 114.4,
+        "potential": 343.21
       },
       {
         "ticker": "LRCX",
         "name": "Lam Research Corporation",
         "sector": "Technology",
         "price": 258.37,
+        "highlights": "VCP Contraction, Strong Trend Alignment, Ultra Low Volatility",
         "buy_stop": 258.37,
         "buy_limit": 258.89,
         "stop": 250.62,
@@ -268,8 +273,8 @@
         "shares": 14,
         "sl_pct": 3.0,
         "target_pct": 9.0,
-        "risk": 111.66,
-        "potential": 334.99
+        "risk": 114.4,
+        "potential": 343.21
       }
     ]
   }

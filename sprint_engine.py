@@ -170,6 +170,7 @@ def main():
             stop_loss = round(price - stop_dist, 2)
             current_sprint["orders"].append({
                 "ticker": p["ticker"], "name": p.get("name", ""), "sector": p.get("sector", ""), "price": price,
+                "highlights": p.get("highlights", ""),
                 "buy_stop": price, "buy_limit": round(price * 1.002, 2),
                 "stop": stop_loss, "stop_limit": round(stop_loss * 0.998, 2),
                 "target": round(price + stop_dist * TARGET_R, 2),
