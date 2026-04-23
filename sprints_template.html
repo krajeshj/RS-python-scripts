@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
+<title>Sprint Trading System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#06060f;--bg2:#0d0d1a;--surface:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);--text:#e4e4ef;--text2:#8888a8;--accent:#6c5ce7;--accent2:#a29bfe;--green:#00e676;--cyan:#00e5ff;--orange:#ff9100;--red:#ff5252;--glass:rgba(18,18,40,.72);--glass-b:12px;--radius:16px;--radius-sm:10px;--font:'Outfit',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;--shadow:0 8px 32px rgba(0,0,0,.45)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;background-image:radial-gradient(ellipse 80% 60% at 50% -20%,rgba(108,92,231,.15),transparent),radial-gradient(ellipse 60% 50% at 80% 110%,rgba(0,229,255,.08),transparent);padding-bottom:3rem}
+.container{max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
+header{margin-bottom:2rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;position:sticky;top:0;z-index:1000;width:100%;background:rgba(6,6,15,0.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:1rem 0}
+.nav-links{display:flex;gap:1rem;margin:0.5rem 0;flex-wrap:wrap;justify-content:center}
+.nav-link{color:var(--text2);text-decoration:none;font-weight:600;font-size:0.9rem;padding:6px 14px;border-radius:20px;transition:all 0.3s ease;border:1px solid transparent}
+.nav-link:hover{color:var(--text);background:var(--surface)}
+.nav-link.active{color:var(--cyan);background:rgba(0,229,255,0.1);border-color:rgba(0,229,255,0.2)}
+.hero{background:var(--glass);backdrop-filter:blur(var(--glass-b));border:1px solid var(--border);border-radius:var(--radius);padding:2.5rem;margin-bottom:2.5rem;box-shadow:var(--shadow);position:relative;overflow:hidden;text-align:center}
+.hero h1{font-size:2.5rem;font-weight:800;background:linear-gradient(135deg,var(--text) 30%,var(--accent2));background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.hero .subtitle{color:var(--text2);font-size:1rem;font-weight:500}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:24px}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;transition:all 0.2s}
+.metric:hover{border-color:var(--accent)}
+.metric .val{font-size:1.25rem;font-weight:700;margin-bottom:4px;font-family:var(--mono)}
+.metric .label{font-size:0.65rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;font-weight:700}
+.val.green{color:var(--green)}.val.red{color:var(--red)}.val.blue{color:var(--cyan)}.val.yellow{color:var(--orange)}
+.progress-wrap{background:var(--surface);border-radius:99px;height:12px;overflow:hidden;margin-top:24px;border:1px solid var(--border)}
+.progress-bar{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--cyan));transition:width 0.8s cubic-bezier(0.4,0,0.2,1);box-shadow:0 0 15px rgba(108,92,231,0.4)}
+.action-banner{padding:20px 24px;border-radius:12px;margin-bottom:2.5rem;font-weight:700;font-size:1.05rem;display:flex;align-items:center;gap:15px;box-shadow:var(--shadow)}
+.action-banner.enter{background:rgba(0,230,118,0.1);border:1px solid rgba(0,230,118,0.3);color:var(--green)}
+.action-banner.sitout{background:rgba(255,145,0,0.1);border:1px solid rgba(255,145,0,0.3);color:var(--orange)}
+.section{margin-bottom:3rem}
+.section h2{font-size:1.5rem;font-weight:800;margin-bottom:1.5rem;display:flex;align-items:center;gap:12px;color:var(--text)}
+.badge{background:var(--accent);color:#fff;font-size:0.65rem;padding:3px 10px;border-radius:99px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
+.chart-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;margin-top:1.5rem}
+.chart-card{background:var(--glass);backdrop-filter:blur(var(--glass-b));border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all 0.3s;box-shadow:var(--shadow)}
+.chart-card:hover{transform:translateY(-5px);border-color:var(--accent)}
+.chart-card img{width:100%;height:180px;object-fit:cover;display:block;border-bottom:1px solid var(--border);filter:brightness(0.9) contrast(1.1)}
+.chart-card .info{padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+.chart-card .ticker-name{font-weight:800;color:var(--cyan);font-size:1.25rem;font-family:var(--mono)}
+.chart-card .sector-name{font-size:0.75rem;color:var(--text2);font-weight:600}
+.chart-card a{background:var(--surface);color:var(--text);padding:8px 14px;border-radius:10px;text-decoration:none;font-size:0.75rem;font-weight:700;transition:all 0.2s;border:1px solid var(--border)}
+.chart-card a:hover{background:var(--accent);border-color:var(--accent);color:white}
+.oco-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin:0 1px 1px 1px}
+.oco-part{background:var(--bg2);padding:15px;text-align:center}
+.part-label{font-size:0.6rem;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:6px;font-weight:700}
+.part-val{font-size:1.1rem;font-weight:700;font-family:var(--mono)}
+.oco-part.buy .part-val{color:var(--cyan)}
+.oco-part.profit .part-val{color:var(--green)}
+.oco-part.stop .part-val{color:var(--red)}
+.card-table{background:var(--glass);backdrop-filter:blur(var(--glass-b));border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-top:1.5rem}
+table{width:100%;border-collapse:collapse;font-size:0.9rem}
+th{background:rgba(255,255,255,0.03);padding:14px 16px;text-align:left;font-weight:700;font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--text2);border-bottom:1px solid var(--border)}
+td{padding:14px 16px;border-bottom:1px solid var(--border);font-family:var(--mono);font-weight:500}
+tr:hover td{background:rgba(255,255,255,0.02)}
+.ticker-cell{font-weight:800;color:var(--cyan)}
+.win{color:var(--green)}.loss{color:var(--red)}
+.bt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:15px}
+.bt-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:all 0.3s}
+.bt-card:hover{border-color:var(--accent);transform:translateY(-3px)}
+.bt-card.satout{opacity:0.6;border-style:dashed}
+.bt-card .sprint-num{font-size:0.65rem;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;font-weight:800}
+.bt-card .date{font-size:0.95rem;font-weight:700;margin-bottom:12px;color:var(--text)}
+.bt-card .pnl{font-size:1.75rem;font-weight:800;margin-bottom:8px;font-family:var(--mono)}
+.bt-card .detail{font-size:0.75rem;color:var(--text2);font-weight:600;margin-top:4px}
+.reminder{background:rgba(108,92,231,0.08);border:1px solid rgba(108,92,231,0.2);border-radius:12px;padding:20px 24px;margin-top:2rem;font-size:0.9rem;color:var(--accent2);line-height:1.6;font-weight:500}
+@media (max-width:768px){.hero h1{font-size:1.75rem}.nav-link{font-size:0.75rem;padding:5px 10px}.metrics{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<header>
+    <h1>Sprint System 🏆</h1>
+    <div class="nav-links">
+        <a href="index.html" class="nav-link">Dashboard 🚀</a>
+        <a href="stages.html" class="nav-link">Sector Analysis 🏗️</a>
+        <a href="industries.html" class="nav-link">Industry Momentum 📊</a>
+        <a href="quick_scan.html" class="nav-link">Quick Scan ⚡</a>
+        <a href="pulse.html" class="nav-link">Market Pulse 📡</a>
+        <a href="tips.html" class="nav-link">Stock Tips 🎯</a>
+        <a href="rotation.html" class="nav-link">Sector Rotation 🔄</a>
+        <a href="stock_rotation.html" class="nav-link">Stock Rotation 💹</a>
+        <a href="sprints.html" class="nav-link active">Sprints 🏆</a>
+    </div>
+</header>
+<div class="container" id="app">
+<div class="hero">
+<h1>Sprint Trading System</h1>
+<p class="subtitle">3R OCO Strategy • 15-Day Cycles • Market-Filtered • Sector Rotation Driven</p>
+<div class="metrics" id="metrics"></div>
+<div class="progress-wrap"><div class="progress-bar" id="progress"></div></div>
+</div>
+<div id="action-area"></div>
+<div class="section" id="orders-section" style="display:none">
+<h2>Current Sprint Orders <span class="badge">One Triggers OCO</span></h2>
+<div id="orders-charts" class="chart-row"></div>
+<div id="orders-table-container"></div>
+</div>
+<div class="section">
+<h2>Backtest Proof <span class="badge" id="bt-count"></span></h2>
+<div class="bt-grid" id="bt-grid"></div>
+</div>
+<div class="reminder" id="reminder"></div>
+</div>
+<script>
+const SPRINT_DATA = '__SPRINT_DATA_PLACEHOLDER__';
+const d = JSON.parse(SPRINT_DATA);
+render(d);
+function render(d){
+const s=d.summary,c=d.current_sprint,bt=d.backtests;
+const pnlClass=s.total_pnl>=0?'green':'red';
+document.getElementById('metrics').innerHTML=`
+<div class="metric"><div class="val">$${s.portfolio_start.toLocaleString()}</div><div class="label">Starting Capital</div></div>
+<div class="metric"><div class="val ${pnlClass}">$${s.portfolio_current.toLocaleString()}</div><div class="label">Current Capital</div></div>
+<div class="metric"><div class="val yellow">$${s.portfolio_target.toLocaleString()}</div><div class="label">Annual Target (3x)</div></div>
+<div class="metric"><div class="val">${s.win_rate}%</div><div class="label">Win Rate</div></div>
+<div class="metric"><div class="val ${pnlClass}">${s.total_return_pct>0?'+':''}${s.total_return_pct}%</div><div class="label">Total Return</div></div>
+<div class="metric"><div class="val">${s.traded}/${s.total_backtests}</div><div class="label">Sprints</div></div>`;
+const pct=Math.max(0,Math.min(100,((s.portfolio_current-s.portfolio_start)/(s.portfolio_target-s.portfolio_start))*100));
+document.getElementById('progress').style.width=pct+'%';
+const aa=document.getElementById('action-area');
+if(c.market==='UNFAVORABLE'){
+aa.innerHTML=`<div class="action-banner sitout">⚠️ SIT OUT — Market Unfavorable (SPY 21 EMA $${c.ema21} < 50 SMA $${c.sma50}). No new orders.</div>`;
+}else if(c.orders&&c.orders.length>0){
+aa.innerHTML=`<div class="action-banner enter">✅ ENTER NEW SPRINT — Market Favorable (SPY 21 EMA $${c.ema21} > 50 SMA $${c.sma50}). ${c.orders.length} orders ready.</div>`;
+renderOrders(c.orders);
+}else{
+aa.innerHTML=`<div class="action-banner sitout">⚠️ ${c.action}</div>`;
+}
+document.getElementById('bt-count').textContent=bt.length+' Sprints';
+const bg=document.getElementById('bt-grid');
+bg.innerHTML=bt.map(b=>{
+const isSat=b.action==='SAT OUT'||b.action==='NO PICKS';
+const cls=isSat?'bt-card satout':'bt-card';
+const pnlC=b.pnl>0?'win':b.pnl<0?'loss':'';
+return `<div class="${cls}"><div class="sprint-num">Sprint ${b.sprint}</div><div class="date">${b.date}</div>
+${isSat?`<div class="pnl" style="color:var(--orange)">SAT OUT</div><div class="detail">Market Unfavorable</div>`
+:`<div class="pnl ${pnlC}">${b.pnl>0?'+':''}$${b.pnl.toFixed(0)}</div><div class="detail">W:${b.wins||0} L:${b.losses||0}</div><div class="detail" style="font-size:0.6rem">${(b.sectors||[]).join(', ')}</div>`}</div>`;
+}).join('');
+document.getElementById('reminder').innerHTML=`<strong>Next Sprint Review:</strong> ${s.next_sprint_reminder}<br><small style="opacity:0.6">Generated: ${d.generated}</small>`;
+}
+function renderOrders(orders){
+document.getElementById('orders-section').style.display='block';
+document.getElementById('orders-charts').innerHTML=orders.map(o=>`
+<div class="chart-card"><img src="https://finviz.com/chart.ashx?t=${o.ticker}&ty=c&ta=1&p=d&s=l" alt="${o.ticker}" loading="lazy">
+<div class="info"><div class="left"><div class="ticker-name">${o.ticker}</div><div class="sector-name">${o.sector}</div></div>
+<a href="https://www.tradingview.com/chart/?symbol=${o.ticker}" target="_blank">View Chart</a></div>
+<div class="oco-grid">
+<div class="oco-part buy"><div class="part-label">Buy Limit</div><div class="part-val">$${o.price}</div></div>
+<div class="oco-part profit"><div class="part-label">Profit (3R)</div><div class="part-val">$${o.target}</div></div>
+<div class="oco-part stop"><div class="part-label">Stop (Loss)</div><div class="part-val">$${o.stop}</div></div>
+</div></div>`).join('');
+document.getElementById('orders-table-container').innerHTML=`<div class="card-table"><table>
+<tr><th>Ticker</th><th>Shares</th><th>Entry</th><th>Stop</th><th>Target</th><th>Risk</th><th>Potential</th></tr>
+${orders.map(o=>`<tr><td class="ticker-cell">${o.ticker}</td><td>${o.shares}</td><td>$${o.price}</td><td class="loss">$${o.stop}</td><td class="win">$${o.target}</td><td>$${o.risk}</td><td class="win">$${o.potential}</td></tr>`).join('')}
+</table></div>`;
+}
+</script>
+</body>
+</html>
