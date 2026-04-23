@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-04-23T01:46:51Z",
+    "last_updated": "2026-04-23T02:13:30Z",
     "stocks": [
         {
             "rank": 1,
@@ -3313,6 +3313,24 @@
         },
         {
             "rank": 13,
+            "industry": "Drug Manufacturers - General",
+            "sector": "Healthcare",
+            "rs": 50,
+            "rs_1w_pct": 64,
+            "rs_1m_pct": 68,
+            "tickers": [
+                {
+                    "t": "GILD",
+                    "n": "Gilead Sciences, Inc."
+                },
+                {
+                    "t": "AMGN",
+                    "n": "Amgen Inc."
+                }
+            ]
+        },
+        {
+            "rank": 14,
             "industry": "Utilities - Regulated Electric",
             "sector": "Utilities",
             "rs": 50,
@@ -3334,24 +3352,6 @@
                 {
                     "t": "EXC",
                     "n": "Exelon Corporation"
-                }
-            ]
-        },
-        {
-            "rank": 14,
-            "industry": "Drug Manufacturers - General",
-            "sector": "Healthcare",
-            "rs": 50,
-            "rs_1w_pct": 64,
-            "rs_1m_pct": 68,
-            "tickers": [
-                {
-                    "t": "GILD",
-                    "n": "Gilead Sciences, Inc."
-                },
-                {
-                    "t": "AMGN",
-                    "n": "Amgen Inc."
                 }
             ]
         },
