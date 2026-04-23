@@ -94,21 +94,22 @@
             <button class="tab-btn" onclick="setTab('flow')">Fund Flows</button>
         </div>
 
-        <div style="display: flex; gap: 15px; margin-bottom: 18px; justify-content: center; flex-wrap: wrap; background: var(--surface); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border);" id="q-toggles">
-            <label style="color: var(--q-leading); font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+        <div class="q-toggles" id="q-toggles">
+            <label class="q-label" style="color: var(--q-leading);">
                 <input type="checkbox" id="toggle-leading" checked onchange="render()"> Leading
             </label>
-            <label style="color: var(--q-improving); font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+            <label class="q-label" style="color: var(--q-improving);">
                 <input type="checkbox" id="toggle-improving" checked onchange="render()"> Improving
             </label>
-            <label style="color: var(--q-weakening); font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+            <label class="q-label" style="color: var(--q-weakening);">
                 <input type="checkbox" id="toggle-weakening" checked onchange="render()"> Weakening
             </label>
-            <label style="color: var(--q-lagging); font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+            <label class="q-label" style="color: var(--q-lagging);">
                 <input type="checkbox" id="toggle-lagging" checked onchange="render()"> Lagging
             </label>
         </div>
 
+        <div id="ticker-tape-container" style="display:none;"></div>
         <div id="content"></div>
 
         <!-- Top Contributing Stocks for Leading & Improving Sectors -->
@@ -368,7 +369,7 @@
             function getTopStocks(sectorList, max) {
                 var pool = [];
                 sectorList.forEach(function(sec) {
-                    var mapping = ETF_MAPPING[sec.ticker];
+                    var mapping = ETF_MAPPING[sec.name] || ETF_MAPPING[sec.ticker];
                     if (!mapping) return;
                     var matches = allStocks.filter(function(s) {
                         if (s.is_speculative || seenTickers[s.ticker] || s.sector === 'unknown') return false;
@@ -391,6 +392,26 @@
             var leadStocks = getTopStocks(leading, 9);
             var impStocks = getTopStocks(improving, 9);
             var allPicked = leadStocks.concat(impStocks);
+
+            // Render Ticker Tape
+            var combinedTapePool = leadStocks.concat(impStocks).sort(function(a, b) { return b.rs - a.rs; }).slice(0, 15);
+            var tapeItems = combinedTapePool.map(function(s) {
+                var isLead = leadStocks.indexOf(s) !== -1;
+                var color = isLead ? "var(--q-leading)" : "var(--q-improving)";
+                var arrow = isLead ? "↗" : "↖";
+                return '<span class="tape-item" style="color:' + color + ';">' + arrow + ' ' + s.ticker + ' $' + (s.price?s.price.toFixed(2):'N/A') + '</span>';
+            });
+
+            var tCont = document.getElementById('ticker-tape-container');
+            if (tCont) {
+                if (tapeItems.length > 0) {
+                    tCont.style.display = 'flex';
+                    var tapeHtml = tapeItems.join('') + tapeItems.join('');
+                    tCont.innerHTML = '<div class="ticker-scroll" style="width: max-content;">' + tapeHtml + '</div>';
+                } else {
+                    tCont.style.display = 'none';
+                }
+            }
 
             function copyCSV(stocks, btnId) {
                 var csv = stocks.map(function(s) { return s.ticker; }).join(', ');
