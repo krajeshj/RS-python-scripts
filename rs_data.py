@@ -560,7 +560,7 @@ def load_prices_from_yahoo(securities, info = {}):
     print("*** Loading Stocks from Yahoo Finance (Batch mode) ***")
     today = date.today()
     start = time.time()
-    start_date = today - dt.timedelta(days=1*365+183) # 18 months
+    start_date = today - dt.timedelta(days=430) # ~14 months (430 days) to guarantee 272 trading days
     
     tickers_dict = {}
     all_tickers = [sec["ticker"] for sec in securities]
