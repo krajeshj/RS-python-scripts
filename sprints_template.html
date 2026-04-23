@@ -65,6 +65,12 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 .bt-card .date{font-size:0.95rem;font-weight:700;margin-bottom:12px;color:var(--text)}
 .bt-card .pnl{font-size:1.75rem;font-weight:800;margin-bottom:8px;font-family:var(--mono)}
 .bt-card .detail{font-size:0.75rem;color:var(--text2);font-weight:600;margin-top:4px}
+.etrade-box{background:var(--bg2);padding:15px;display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--border)}
+.et-step{font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent2);font-weight:800;margin-top:4px}
+.et-row{display:flex;justify-content:space-between;font-size:0.9rem;font-family:var(--mono)}
+.et-row span{color:var(--text2);font-size:0.75rem}
+.chart-card{display:flex;flex-direction:column}
+.chart-card .info{flex:1}
 .reminder{background:rgba(108,92,231,0.08);border:1px solid rgba(108,92,231,0.2);border-radius:12px;padding:20px 24px;margin-top:2rem;font-size:0.9rem;color:var(--accent2);line-height:1.6;font-weight:500}
 @media (max-width:768px){.hero h1{font-size:1.75rem}.nav-link{font-size:0.75rem;padding:5px 10px}.metrics{grid-template-columns:repeat(2,1fr)}}
 </style>
@@ -146,14 +152,19 @@ document.getElementById('orders-charts').innerHTML=orders.map(o=>`
 <div class="chart-card"><img src="https://finviz.com/chart.ashx?t=${o.ticker}&ty=c&ta=1&p=d&s=l" alt="${o.ticker}" loading="lazy">
 <div class="info"><div class="left"><div class="ticker-name">${o.ticker}</div><div class="sector-name">${o.sector}</div></div>
 <a href="https://www.tradingview.com/chart/?symbol=${o.ticker}" target="_blank">View Chart</a></div>
-<div class="oco-grid">
-<div class="oco-part buy"><div class="part-label">Buy Limit</div><div class="part-val">$${o.price}</div></div>
-<div class="oco-part profit"><div class="part-label">Profit (3R)</div><div class="part-val">$${o.target}</div></div>
-<div class="oco-part stop"><div class="part-label">Stop (Loss)</div><div class="part-val">$${o.stop}</div></div>
+<div class="etrade-box">
+<div class="et-step">Part 1: Buy Stop-Limit</div>
+<div class="et-row"><span>Stop Price:</span> <strong>$${o.buy_stop}</strong></div>
+<div class="et-row"><span>Limit Price:</span> <strong>$${o.buy_limit}</strong></div>
+<div class="et-step">Part 2: OCO Sell Limit (Profit)</div>
+<div class="et-row"><span>Limit Price:</span> <strong>$${o.target}</strong></div>
+<div class="et-step">Part 3: OCO Sell Stop-Limit (Loss)</div>
+<div class="et-row"><span>Stop Price:</span> <strong>$${o.stop}</strong></div>
+<div class="et-row"><span>Limit Price:</span> <strong>$${o.stop_limit}</strong></div>
 </div></div>`).join('');
 document.getElementById('orders-table-container').innerHTML=`<div class="card-table"><table>
-<tr><th>Ticker</th><th>Shares</th><th>Entry</th><th>Stop</th><th>Target</th><th>Risk</th><th>Potential</th></tr>
-${orders.map(o=>`<tr><td class="ticker-cell">${o.ticker}</td><td>${o.shares}</td><td>$${o.price}</td><td class="loss">$${o.stop}</td><td class="win">$${o.target}</td><td>$${o.risk}</td><td class="win">$${o.potential}</td></tr>`).join('')}
+<tr><th>Ticker</th><th>Shares</th><th>Entry Stop</th><th>Entry Limit</th><th>Target</th><th>Stop Price</th><th>Stop Limit</th></tr>
+${orders.map(o=>`<tr><td class="ticker-cell">${o.ticker}</td><td>${o.shares}</td><td>$${o.buy_stop}</td><td>$${o.buy_limit}</td><td class="win">$${o.target}</td><td class="loss">$${o.stop}</td><td class="loss">$${o.stop_limit}</td></tr>`).join('')}
 </table></div>`;
 }
 </script>

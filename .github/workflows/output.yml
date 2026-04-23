@@ -73,6 +73,7 @@ jobs:
           python relative-strength.py true false true
           python seed_history.py
           python rrg.py
+          python sprint_engine.py
 
       - name: commit and push results
         run: |
