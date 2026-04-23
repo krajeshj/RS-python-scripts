@@ -71,6 +71,15 @@
         .outlook-declining { background: rgba(255,82,82,0.1); color: #ff5252; border-color: rgba(255,82,82,0.25); }
 
         @media (max-width: 480px) { .stock-grid { grid-template-columns: 1fr; } .metrics { grid-template-columns: repeat(2, 1fr); } }
+
+        #ticker-tape-container { width: 100%; overflow: hidden; background: rgba(255, 255, 255, 0.02); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-top: 15px; margin-bottom: 5px; height: 38px; position: relative; white-space: nowrap; }
+        #ticker-tape-container:hover .ticker-scroll { animation-play-state: paused; }
+        .ticker-scroll { display: inline-flex; align-items: center; white-space: nowrap; animation: ticker 50s linear infinite; height: 100%; width: max-content; }
+        @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
+        .tape-item { display: inline-flex; align-items: center; gap: 8px; padding-right: 60px; font-family: var(--mono); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.5px; }
+
+        .q-toggles { display: flex; gap: 15px; margin-bottom: 15px; background: var(--surface); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); justify-content: center; }
+        .q-label { font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
     </style>
 </head>
 <body>
@@ -162,7 +171,12 @@
                     var yVal = d.yComposite - medY;
                     var q = xVal >= 0 ? (yVal >= 0 ? "leading" : "weakening") : (yVal >= 0 ? "improving" : "lagging");
                     var trailNorm = d.trail.map(function(tp) { return { x: tp.x - medX, y: tp.y - medY }; });
-                    return { name: d.s.ticker, q: q, x: xVal, y: yVal, color: Q_FILL[q], trail: trailNorm, flow: d.s.volume || 0, sector: d.s.industry || d.s.sector };
+                    var angle = 0;
+                    if (trailNorm.length > 1) {
+                        var pT = trailNorm[trailNorm.length - 1], pB = trailNorm[trailNorm.length - 2];
+                        angle = Math.atan2(-(pT.y - pB.y), pT.x - pB.x) * 180 / Math.PI;
+                    }
+                    return { name: d.s.ticker, q: q, x: xVal, y: yVal, color: Q_FILL[q], trail: trailNorm, flow: d.s.volume || 0, sector: d.s.industry || d.s.sector, angle: angle };
                 });
                 
                 render();
@@ -398,8 +412,12 @@
             var tapeItems = combinedTapePool.map(function(s) {
                 var isLead = leadStocks.indexOf(s) !== -1;
                 var color = isLead ? "var(--q-leading)" : "var(--q-improving)";
-                var arrow = isLead ? "↗" : "↖";
-                return '<span class="tape-item" style="color:' + color + ';">' + arrow + ' ' + s.ticker + ' $' + (s.price?s.price.toFixed(2):'N/A') + '</span>';
+                var angle = 0;
+                var secObj = SECTORS.find(function(sc) { return sc.name === s._etf; });
+                if (secObj) angle = secObj.angle;
+                var arrowSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate('+angle+'deg)"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>';
+                
+                return '<span class="tape-item" style="color:' + color + ';">' + arrowSvg + ' ' + s.ticker + ' $' + (s.price?s.price.toFixed(2):'N/A') + '</span>';
             });
 
             var tCont = document.getElementById('ticker-tape-container');
