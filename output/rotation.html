@@ -412,12 +412,9 @@
             var tapeItems = combinedTapePool.map(function(s) {
                 var isLead = leadStocks.indexOf(s) !== -1;
                 var color = isLead ? "var(--q-leading)" : "var(--q-improving)";
-                var angle = 0;
-                var secObj = SECTORS.find(function(sc) { return sc.name === s._etf; });
-                if (secObj) angle = secObj.angle;
-                var arrowSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate('+angle+'deg)"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>';
+                var sectorTag = '<span style="font-size: 0.6rem; color: rgba(255,255,255,0.4); margin-left: 2px;">[' + s._etf + ']</span>';
                 
-                return '<span class="tape-item" style="color:' + color + ';">' + arrowSvg + ' ' + s.ticker + ' $' + (s.price?s.price.toFixed(2):'N/A') + '</span>';
+                return '<span class="tape-item" style="color:' + color + ';">' + s.ticker + sectorTag + ' $' + (s.price?s.price.toFixed(2):'N/A') + '</span>';
             });
 
             var tCont = document.getElementById('ticker-tape-container');
