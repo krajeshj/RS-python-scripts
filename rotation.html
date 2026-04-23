@@ -93,7 +93,8 @@
             <a href="quick_scan.html" class="nav-link">Quick Scan ⚡</a>
             <a href="rotation.html" class="nav-link active">Sector Rotation 🔄</a>
             <a href="stock_rotation.html" class="nav-link">Stock Rotation 💹</a>
-        </div>
+                    <a href="sprints.html" class="nav-link">Sprints ??</a>
+</div>
     </header>
 
     <div class="container">
@@ -414,7 +415,13 @@
                 var color = isLead ? "var(--q-leading)" : "var(--q-improving)";
                 var sectorTag = '<span style="font-size: 0.6rem; color: rgba(255,255,255,0.4); margin-left: 2px;">[' + s._etf + ']</span>';
                 
-                return '<span class="tape-item" style="color:' + color + ';">' + s.ticker + sectorTag + ' $' + (s.price?s.price.toFixed(2):'N/A') + '</span>';
+                var angle = 0;
+                var secObj = SECTORS.find(function(sc) { return sc.name === s._etf; });
+                if (secObj && typeof secObj.angle === 'number' && !isNaN(secObj.angle)) angle = secObj.angle;
+                
+                var arrowSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate('+angle+'deg); margin-right: 4px; display: inline-block; vertical-align: middle;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>';
+                
+                return '<span class="tape-item" style="color:' + color + ';">' + arrowSvg + s.ticker + sectorTag + ' $' + (s.price?s.price.toFixed(2):'N/A') + '</span>';
             });
 
             var tCont = document.getElementById('ticker-tape-container');
