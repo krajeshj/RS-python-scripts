@@ -182,7 +182,7 @@ function renderOrders(orders, startDate){
         
         return `
         <div class="chart-card ${isSell ? 'expired' : ''}" id="card-${o.ticker}">
-            <div class="watermark">SELL</div>
+            <div class="watermark" style="display: ${isSell ? 'block' : 'none'}">SELL</div>
             <img src="https://finviz.com/chart.ashx?t=${o.ticker}&ty=c&ta=1&p=d&s=l" alt="${o.ticker}">
             <div class="info">
                 <div class="price-row">
@@ -193,6 +193,7 @@ function renderOrders(orders, startDate){
                             ${state.bought ? 'Entry Lock' : 'Entry Target'}: $${basePrice.toFixed(2)}
                         </div>
                         <div style="font-size:0.85rem; color:var(--cyan); font-weight:800; margin-top:4px">${o.shares} SHARES</div>
+                        <div style="font-size:0.65rem; color:var(--red); font-weight:600">Risk: $${o.risk.toFixed(2)}</div>
                     </div>
                 </div>
                 <div class="highlights" style="margin-top:6px">${o.highlights.split('•').map(h=>`<span class="characteristic">${h.trim()}</span>`).join('')}</div>
