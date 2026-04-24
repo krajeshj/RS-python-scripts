@@ -34,7 +34,7 @@ header{margin-bottom:2rem;text-align:center;display:flex;flex-direction:column;a
 .section{margin-bottom:3rem}
 .section h2{font-size:1.5rem;font-weight:800;margin-bottom:1.5rem;display:flex;align-items:center;gap:12px;color:var(--text)}
 .badge{background:var(--accent);color:#fff;font-size:0.65rem;padding:3px 10px;border-radius:99px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
-.chart-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(450px,1fr));gap:25px;margin-top:1.5rem}
+.chart-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px;margin-top:1.5rem}
 .chart-card{background:var(--glass);backdrop-filter:blur(var(--glass-b));border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all 0.3s;box-shadow:var(--shadow);position:relative;display:flex;flex-direction:column}
 .chart-card:hover{border-color:var(--accent)}
 .watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:5rem;font-weight:900;color:rgba(255,82,82,0.1);pointer-events:none;z-index:5;text-transform:uppercase;border:10px solid rgba(255,82,82,0.1);padding:10px 30px;border-radius:20px;display:none}
@@ -156,12 +156,30 @@ function render(d){
     document.getElementById('reminder').innerHTML=`<strong>Strategy Guide:</strong> ${s.next_sprint_reminder}<br><small style="opacity:0.6">Updated: ${d.generated}</small>`;
 }
 
+function getOCO(price) {
+    const stopDist = price * 0.03;
+    const stop = price - stopDist;
+    const target = price + (stopDist * 3.5);
+    return {
+        buy_stop: price,
+        buy_limit: price * 1.002,
+        target: target,
+        stop: stop,
+        stop_limit: stop * 0.998
+    };
+}
+
 function renderOrders(orders, startDate){
     document.getElementById('orders-section').style.display = 'block';
     document.getElementById('orders-charts').innerHTML = orders.map(o => {
-        const isSell = o.today_price < o.stop_limit;
         const storageKey = `sprint_${startDate}_${o.ticker}`;
         const state = JSON.parse(localStorage.getItem(storageKey) || '{"bought":false,"sold":false}');
+        
+        // Dynamic Pricing: Use today_price if not bought yet
+        const basePrice = state.bought ? o.price : o.today_price;
+        const oco = getOCO(basePrice);
+        const isSell = state.bought && (o.today_price < oco.stop_limit);
+        
         return `
         <div class="chart-card ${isSell ? 'expired' : ''}" id="card-${o.ticker}">
             <div class="watermark">SELL</div>
@@ -171,7 +189,9 @@ function renderOrders(orders, startDate){
                     <div class="ticker-name">${o.ticker}</div>
                     <div style="text-align:right">
                         <div class="current-price">$${o.today_price.toFixed(2)}</div>
-                        <div style="font-size:0.7rem; color:var(--text2); font-weight:600">Entry: $${o.price.toFixed(2)}</div>
+                        <div style="font-size:0.7rem; color:var(--text2); font-weight:600">
+                            ${state.bought ? 'Entry Lock' : 'Entry Target'}: $${basePrice.toFixed(2)}
+                        </div>
                         <div style="font-size:0.85rem; color:var(--cyan); font-weight:800; margin-top:4px">${o.shares} SHARES</div>
                     </div>
                 </div>
@@ -179,15 +199,15 @@ function renderOrders(orders, startDate){
             </div>
             <div class="etrade-box">
                 <div class="et-step">Part 1: Buy Stop-Limit</div>
-                <div class="et-row"><span>Stop Price:</span> <strong>$${o.buy_stop.toFixed(2)}</strong></div>
-                <div class="et-row"><span>Limit Price:</span> <strong>$${o.buy_limit.toFixed(2)}</strong></div>
+                <div class="et-row"><span>Stop Price:</span> <strong>$${oco.buy_stop.toFixed(2)}</strong></div>
+                <div class="et-row"><span>Limit Price:</span> <strong>$${oco.buy_limit.toFixed(2)}</strong></div>
                 
                 <div class="et-step">Part 2: Profit Sell Limit</div>
-                <div class="et-row"><span>Limit Price:</span> <strong class="win">$${o.target.toFixed(2)}</strong></div>
+                <div class="et-row"><span>Limit Price:</span> <strong class="win">$${oco.target.toFixed(2)}</strong></div>
                 
                 <div class="et-step">Part 3: Stop Loss Sell Stop-Limit</div>
-                <div class="et-row"><span>Stop Price:</span> <strong class="loss">$${o.stop.toFixed(2)}</strong></div>
-                <div class="et-row"><span>Limit Price:</span> <strong class="loss">$${o.stop_limit.toFixed(2)}</strong></div>
+                <div class="et-row"><span>Stop Price:</span> <strong class="loss">$${oco.stop.toFixed(2)}</strong></div>
+                <div class="et-row"><span>Limit Price:</span> <strong class="loss">$${oco.stop_limit.toFixed(2)}</strong></div>
             </div>
             <div class="tracking-btns">
                 <div class="track-group">
@@ -222,7 +242,10 @@ function toggleTrack(ticker, type, startDate) {
     const state = JSON.parse(localStorage.getItem(storageKey) || '{"bought":false,"sold":false}');
     state[type] = !state[type];
     localStorage.setItem(storageKey, JSON.stringify(state));
-    document.querySelector(`#card-${ticker} .track-btn.${type}`).classList.toggle('active');
+    
+    // Refresh the specific card to reflect price changes immediately
+    const order = d.current_sprint.orders.find(o => o.ticker === ticker);
+    if(order) renderOrders(d.current_sprint.orders, startDate);
 }
 </script>
 </body>
