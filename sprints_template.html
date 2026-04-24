@@ -159,19 +159,20 @@ function render(d){
 function renderOrders(orders, startDate){
     document.getElementById('orders-section').style.display = 'block';
     document.getElementById('orders-charts').innerHTML = orders.map(o => {
-        const isExpired = o.price < o.buy_stop * 0.99;
+        const isSell = o.today_price < o.stop_limit;
         const storageKey = `sprint_${startDate}_${o.ticker}`;
         const state = JSON.parse(localStorage.getItem(storageKey) || '{"bought":false,"sold":false}');
         return `
-        <div class="chart-card ${isExpired ? 'expired' : ''}" id="card-${o.ticker}">
+        <div class="chart-card ${isSell ? 'expired' : ''}" id="card-${o.ticker}">
             <div class="watermark">SELL</div>
             <img src="https://finviz.com/chart.ashx?t=${o.ticker}&ty=c&ta=1&p=d&s=l" alt="${o.ticker}">
             <div class="info">
                 <div class="price-row">
                     <div class="ticker-name">${o.ticker}</div>
                     <div style="text-align:right">
-                        <div class="current-price">$${o.price.toFixed(2)}</div>
-                        <div style="font-size:0.85rem; color:var(--cyan); font-weight:800">${o.shares} SHARES</div>
+                        <div class="current-price">$${o.today_price.toFixed(2)}</div>
+                        <div style="font-size:0.7rem; color:var(--text2); font-weight:600">Entry: $${o.price.toFixed(2)}</div>
+                        <div style="font-size:0.85rem; color:var(--cyan); font-weight:800; margin-top:4px">${o.shares} SHARES</div>
                     </div>
                 </div>
                 <div class="highlights" style="margin-top:6px">${o.highlights.split('•').map(h=>`<span class="characteristic">${h.trim()}</span>`).join('')}</div>
