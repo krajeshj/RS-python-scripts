@@ -19,8 +19,6 @@ header{margin-bottom:2rem;text-align:center;display:flex;flex-direction:column;a
 .nav-link.active{color:var(--cyan);background:rgba(0,229,255,0.1);border-color:rgba(0,229,255,0.2)}
 .hero{background:var(--glass);backdrop-filter:blur(var(--glass-b));border:1px solid var(--border);border-radius:var(--radius);padding:2.5rem;margin-bottom:2.5rem;box-shadow:var(--shadow);position:relative;overflow:hidden;text-align:center}
 .hero h1{font-size:clamp(1.5rem, 5vw, 2.5rem);font-weight:800;background:linear-gradient(135deg,var(--text) 30%,var(--accent2));background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;line-height:1.2}
-.tiny-sector{font-size:0.6rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
-.characteristic{display:inline-block;font-size:0.65rem;color:var(--cyan);background:rgba(0,229,255,0.08);padding:2px 6px;border-radius:4px;border:1px solid rgba(0,229,255,0.2);margin-right:4px;margin-top:4px;font-weight:600}
 .hero .subtitle{color:var(--text2);font-size:1rem;font-weight:500}
 .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:24px}
 .metric{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;transition:all 0.2s}
@@ -33,7 +31,7 @@ header{margin-bottom:2rem;text-align:center;display:flex;flex-direction:column;a
 .countdown-text{font-size:0.7rem;color:var(--text2);margin-top:8px;font-weight:600;letter-spacing:1px;text-transform:uppercase}
 .action-banner{padding:20px 24px;border-radius:12px;margin-bottom:2.5rem;font-weight:700;font-size:1.05rem;display:flex;align-items:center;gap:15px;box-shadow:var(--shadow)}
 .action-banner.enter{background:rgba(0,230,118,0.1);border:1px solid rgba(0,230,118,0.3);color:var(--green)}
-.action-banner.sitout{background:rgba(255,145,0,0.1);border:1px solid rgba(255,145,0,0.3);color:var(--orange)}
+.action-banner.sitout{background:rgba(255,82,82,0.1);border:1px solid rgba(255,82,82,0.3);color:var(--red);text-transform:uppercase;letter-spacing:1px}
 .section{margin-bottom:3rem}
 .section h2{font-size:1.5rem;font-weight:800;margin-bottom:1.5rem;display:flex;align-items:center;gap:12px;color:var(--text)}
 .badge{background:var(--accent);color:#fff;font-size:0.65rem;padding:3px 10px;border-radius:99px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
@@ -47,8 +45,8 @@ header{margin-bottom:2rem;text-align:center;display:flex;flex-direction:column;a
 .chart-card .ticker-name{font-weight:800;color:var(--cyan);font-size:1.5rem;font-family:var(--mono)}
 .chart-card .price-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .chart-card .current-price{font-size:1.1rem;font-weight:700;color:var(--text)}
-.chart-card a{background:var(--surface);color:var(--text);padding:6px 12px;border-radius:8px;text-decoration:none;font-size:0.7rem;font-weight:700;transition:all 0.2s;border:1px solid var(--border)}
-.chart-card a:hover{background:var(--accent);border-color:var(--accent);color:white}
+.chart-card .tiny-sector{font-size:0.6rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
+.characteristic{display:inline-block;font-size:0.65rem;color:var(--cyan);background:rgba(0,229,255,0.08);padding:2px 6px;border-radius:4px;border:1px solid rgba(0,229,255,0.2);margin-right:4px;margin-top:4px;font-weight:600}
 .etrade-box{background:var(--bg2);padding:15px;display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--border)}
 .et-step{font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent2);font-weight:800;margin-top:4px}
 .et-row{display:flex;justify-content:space-between;font-size:0.9rem;font-family:var(--mono)}
@@ -58,9 +56,22 @@ header{margin-bottom:2rem;text-align:center;display:flex;flex-direction:column;a
 .track-btn{padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text2);font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;cursor:pointer;transition:all 0.2s}
 .track-btn.active.bought{background:rgba(0,230,118,0.2);color:var(--green);border-color:var(--green)}
 .track-btn.active.sold{background:rgba(255,82,82,0.2);color:var(--red);border-color:var(--red)}
-.exit-price-input{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--mono);font-size:0.75rem;padding:4px 8px;width:70px;outline:none;transition:all 0.2s}
-.exit-price-input:focus{border-color:var(--cyan);background:rgba(255,255,255,0.06)}
-.exit-label{font-size:0.6rem;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.card-table{background:var(--glass);backdrop-filter:blur(var(--glass-b));border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-top:1.5rem}
+table{width:100%;border-collapse:collapse;font-size:0.9rem}
+th{background:rgba(255,255,255,0.03);padding:14px 16px;text-align:left;font-weight:700;font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--text2);border-bottom:1px solid var(--border)}
+td{padding:14px 16px;border-bottom:1px solid var(--border);font-family:var(--mono);font-weight:500}
+tr:hover td{background:rgba(255,255,255,0.02)}
+.ticker-cell{font-weight:800;color:var(--cyan)}
+.win{color:var(--green)}.loss{color:var(--red)}
+.bt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:15px;margin-top:1.5rem}
+.bt-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:all 0.3s}
+.bt-card:hover{border-color:var(--accent);transform:translateY(-3px)}
+.bt-card.satout{opacity:0.6;border-style:dashed}
+.bt-card .sprint-num{font-size:0.6rem;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;font-weight:800}
+.bt-card .date{font-size:0.9rem;font-weight:700;margin-bottom:12px;color:var(--text)}
+.bt-card .pnl{font-size:1.5rem;font-weight:800;margin-bottom:8px;font-family:var(--mono)}
+.bt-card .detail{font-size:0.7rem;color:var(--text2);font-weight:600;margin-top:4px}
+.bt-tickers{font-size:0.6rem;color:var(--cyan);font-family:var(--mono);margin-top:8px;opacity:0.8}
 .reminder{background:rgba(108,92,231,0.08);border:1px solid rgba(108,92,231,0.2);border-radius:12px;padding:20px 24px;margin-top:2rem;font-size:0.9rem;color:var(--accent2);line-height:1.6;font-weight:500}
 @media (max-width:768px){.hero{padding:1.5rem}.hero h1{font-size:1.8rem}.nav-link{font-size:0.7rem;padding:5px 8px}.metrics{grid-template-columns:repeat(2,1fr)}}
 </style>
@@ -92,20 +103,23 @@ header{margin-bottom:2rem;text-align:center;display:flex;flex-direction:column;a
 <div class="section" id="orders-section" style="display:none">
 <h2>Current Sprint Orders <span class="badge">Institutional Alpha</span></h2>
 <div id="orders-charts" class="chart-row"></div>
+<div id="orders-table-container" class="card-table" style="margin-top:2rem"></div>
+</div>
+<div class="section">
+<h2>Sprint History <span class="badge" id="bt-count"></span></h2>
+<div class="bt-grid" id="bt-grid"></div>
 </div>
 <div class="reminder" id="reminder"></div>
 </div>
 <script>
-const SPRINT_DATA = '{"generated": "2026-04-24 05:23 UTC", "summary": {"portfolio_start": 17000.0, "portfolio_current": 17000.0, "portfolio_target": 51000.0, "win_rate": 43.0, "total_return_pct": 15.4, "next_sprint_reminder": "Sprint Window: 2026-04-23 to 2026-05-08"}, "backtests": [], "current_sprint": {"start_date": "2026-04-23", "end_date": "2026-05-08", "days_remaining": 15, "market": "FAVORABLE", "ema21": 682.11, "sma50": 674.84, "orders": [{"ticker": "AXTI", "name": "AXT, Inc.", "sector": "Technology (XLK)", "highlights": "Stage 2 \u2022 RS Leader \u2022 Earnings Shielded", "price": 86.94, "buy_stop": 86.94, "buy_limit": 87.11, "stop": 84.33, "stop_limit": 84.32, "target": 94.77, "shares": 39, "sl_pct": 3.0, "target_pct": 9.0}, {"ticker": "BW", "name": "Babcock & Wilcox Enterprises, Inc.", "sector": "Industrials (XLI)", "highlights": "Stage 2 \u2022 RS Leader \u2022 Earnings Shielded", "price": 15.91, "buy_stop": 15.91, "buy_limit": 15.94, "stop": 15.43, "stop_limit": 15.42, "target": 17.35, "shares": 212, "sl_pct": 3.0, "target_pct": 9.0}, {"ticker": "SNDK", "name": "Sandisk Corporation", "sector": "Technology (XLK)", "highlights": "Stage 2 \u2022 RS Leader \u2022 Earnings Shielded", "price": 979.07, "buy_stop": 979.07, "buy_limit": 981.03, "stop": 949.7, "stop_limit": 949.69, "target": 1067.18, "shares": 3, "sl_pct": 3.0, "target_pct": 9.0}, {"ticker": "ANL", "name": "Adlai Nortye Ltd.", "sector": "Healthcare (XLV)", "highlights": "Stage 2 \u2022 RS Leader \u2022 Earnings Shielded", "price": 16.13, "buy_stop": 16.13, "buy_limit": 16.16, "stop": 15.65, "stop_limit": 15.64, "target": 17.57, "shares": 212, "sl_pct": 3.0, "target_pct": 9.0}, {"ticker": "ERAS", "name": "Erasca, Inc.", "sector": "Healthcare (XLV)", "highlights": "Stage 2 \u2022 RS Leader \u2022 Earnings Shielded", "price": 21.65, "buy_stop": 21.65, "buy_limit": 21.69, "stop": 21.0, "stop_limit": 20.99, "target": 23.6, "shares": 156, "sl_pct": 3.0, "target_pct": 9.0}]}}';
+const SPRINT_DATA = '{"generated": "2026-04-24 05:30 UTC", "summary": {"portfolio_start": 17000.0, "portfolio_current": 17965.75, "portfolio_target": 51000.0, "win_rate": 28.6, "total_return_pct": 5.7, "next_sprint_reminder": "Market Shield active. Monitoring SPY EMA21/SMA50."}, "backtests": [{"sprint": 1, "date": "2025-12-17", "action": "TRADED", "pnl": 221.54, "capital_after": 17221.54, "wins": 2, "losses": 3, "tickers": ["IGR", "VLY", "SCVL", "PSBD", "LQDA"]}, {"sprint": 2, "date": "2026-01-02", "action": "TRADED", "pnl": 1347.43, "capital_after": 18568.97, "wins": 4, "losses": 1, "tickers": ["SBFG", "TGEN", "PGY", "THFF", "KOPN"]}, {"sprint": 3, "date": "2026-01-09", "action": "TRADED", "pnl": -38.79, "capital_after": 18530.18, "wins": 1, "losses": 4, "tickers": ["PSTV", "ONFO", "ABAT", "UPXI", "EG"]}, {"sprint": 4, "date": "2026-01-16", "action": "TRADED", "pnl": -265.43, "capital_after": 18264.75, "wins": 1, "losses": 4, "tickers": ["BCRX", "COLB", "APWC", "AIMD", "FNWB"]}, {"sprint": 5, "date": "2026-02-02", "action": "TRADED", "pnl": -202.85, "capital_after": 18061.9, "wins": 0, "losses": 5, "tickers": ["GJT", "TACH", "UYSC", "CARE", "BBAI"]}, {"sprint": 6, "date": "2026-02-09", "action": "TRADED", "pnl": -61.52, "capital_after": 18000.38, "wins": 1, "losses": 4, "tickers": ["SY", "METCB", "FNB", "DNOW", "NFE"]}, {"sprint": 7, "date": "2026-02-17", "action": "TRADED", "pnl": -34.63, "capital_after": 17965.75, "wins": 1, "losses": 4, "tickers": ["UA", "INVZ", "TDF", "GAU", "ADEA"]}, {"sprint": 8, "date": "2026-02-24", "action": "SAT OUT", "pnl": 0, "capital_after": 17965.75}, {"sprint": 9, "date": "2026-03-03", "action": "SAT OUT", "pnl": 0, "capital_after": 17965.75}, {"sprint": 10, "date": "2026-03-10", "action": "SAT OUT", "pnl": 0, "capital_after": 17965.75}, {"sprint": 11, "date": "2026-03-17", "action": "SAT OUT", "pnl": 0, "capital_after": 17965.75}, {"sprint": 12, "date": "2026-03-24", "action": "SAT OUT", "pnl": 0, "capital_after": 17965.75}], "current_sprint": {"start_date": "2026-04-23", "end_date": "2026-05-08", "days_remaining": 15, "market": "FAVORABLE", "ema21": 682.11, "sma50": 674.84, "orders": []}}';
 const d = JSON.parse(SPRINT_DATA);
 render(d);
 
 function render(d){
-    const s=d.summary,c=d.current_sprint;
+    const s=d.summary,c=d.current_sprint,bt=d.backtests;
     const pnlClass=s.total_return_pct>=0?'green':'red';
-    
     document.getElementById('sprint-dates').textContent = `Cycle: ${c.start_date} to ${c.end_date} • 15-Day Sprint`;
-    
     document.getElementById('metrics').innerHTML=`
     <div class="metric"><div class="val">$${s.portfolio_start.toLocaleString()}</div><div class="label">Starting</div></div>
     <div class="metric"><div class="val blue">$${s.portfolio_current.toLocaleString()}</div><div class="label">Balance</div></div>
@@ -120,78 +134,82 @@ function render(d){
 
     const aa=document.getElementById('action-area');
     if(c.market==='UNFAVORABLE'){
-        aa.innerHTML=`<div class="action-banner sitout">⚠️ SIT OUT — Market Unfavorable (SPY 21 EMA $${c.ema21} < 50 SMA $${c.sma50}). Protect Capital.</div>`;
+        aa.innerHTML=`<div class="action-banner sitout">🛑 SHIELD ACTIVE — SIT OUT OF THE MARKET (SPY EMA21 $${c.ema21} < SMA50 $${c.sma50}). NO TRADES.</div>`;
     } else {
-        aa.innerHTML=`<div class="action-banner enter">✅ ACTIVE SPRINT — Market Favorable (SPY 21 EMA $${c.ema21} > 50 SMA $${c.sma50}). Follow OCO Rules.</div>`;
+        aa.innerHTML=`<div class="action-banner enter">✅ MARKET FAVORABLE — SPRINT ACTIVE (SPY EMA21 $${c.ema21} > SMA50 $${c.sma50}). EXECUTE OCO.</div>`;
         renderOrders(c.orders, c.start_date);
     }
-    document.getElementById('reminder').innerHTML=`<strong>Next Review:</strong> ${s.next_sprint_reminder}<br><small style="opacity:0.6">Updated: ${d.generated}</small>`;
+    
+    document.getElementById('bt-count').textContent = bt.length + ' Sprints';
+    document.getElementById('bt-grid').innerHTML = bt.map(b => {
+        const isSat = b.action === 'SAT OUT';
+        const cls = isSat ? 'bt-card satout' : 'bt-card';
+        const pnlC = b.pnl > 0 ? 'win' : b.pnl < 0 ? 'loss' : '';
+        return `
+        <div class="${cls}">
+            <div class="sprint-num">Sprint ${b.sprint}</div>
+            <div class="date">${b.date}</div>
+            ${isSat ? `<div class="pnl" style="color:var(--red)">SAT OUT</div><div class="detail">Market Shield Protected Capital</div>`
+                    : `<div class="pnl ${pnlC}">${b.pnl > 0 ? '+' : ''}$${b.pnl.toLocaleString()}</div>
+                       <div class="detail">W:${b.wins} L:${b.losses}</div>
+                       <div class="bt-tickers">${(b.tickers || []).join(', ')}</div>`}
+        </div>`;
+    }).join('');
+    
+    document.getElementById('reminder').innerHTML=`<strong>Strategy Guide:</strong> ${s.next_sprint_reminder}<br><small style="opacity:0.6">Updated: ${d.generated}</small>`;
 }
 
 function renderOrders(orders, startDate){
-    const section = document.getElementById('orders-section');
-    section.style.display = 'block';
-    
+    document.getElementById('orders-section').style.display = 'block';
     document.getElementById('orders-charts').innerHTML = orders.map(o => {
         const isExpired = o.price < o.buy_stop * 0.99;
-        const cardClass = isExpired ? 'chart-card expired' : 'chart-card';
         const storageKey = `sprint_${startDate}_${o.ticker}`;
-        const state = JSON.parse(localStorage.getItem(storageKey) || '{"bought":false,"sold":false,"exit":""}');
-        
+        const state = JSON.parse(localStorage.getItem(storageKey) || '{"bought":false,"sold":false}');
         return `
-        <div class="${cardClass}" id="card-${o.ticker}">
+        <div class="chart-card ${isExpired ? 'expired' : ''}" id="card-${o.ticker}">
             <div class="watermark">SELL</div>
-            <img src="https://finviz.com/chart.ashx?t=${o.ticker}&ty=c&ta=1&p=d&s=l" alt="${o.ticker}" loading="lazy">
+            <img src="https://finviz.com/chart.ashx?t=${o.ticker}&ty=c&ta=1&p=d&s=l" alt="${o.ticker}">
             <div class="info">
-                <div class="price-row">
-                    <div class="ticker-name">${o.ticker}</div>
-                    <div class="current-price">$${o.price.toFixed(2)}</div>
-                </div>
+                <div class="price-row"><div class="ticker-name">${o.ticker}</div><div class="current-price">$${o.price.toFixed(2)}</div></div>
                 <div class="tiny-sector">${o.sector}</div>
                 <div class="highlights" style="margin-top:8px">${o.highlights.split('•').map(h=>`<span class="characteristic">${h.trim()}</span>`).join('')}</div>
-                <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center">
-                    <a href="https://www.tradingview.com/chart/?symbol=${o.ticker}" target="_blank">TradingView</a>
-                    <div style="font-size:0.6rem; color:var(--text2); font-weight:600">3.5R Target</div>
-                </div>
             </div>
             <div class="etrade-box">
-                <div class="et-step">Primary: Buy Stop-Limit</div>
-                <div class="et-row"><span>Trigger:</span> <strong>$${o.buy_stop.toFixed(2)}</strong></div>
-                <div class="et-row"><span>Limit:</span> <strong>$${o.buy_limit.toFixed(2)}</strong></div>
-                <div class="et-step">Secondary: OCO Target</div>
-                <div class="et-row"><span>Profit:</span> <strong class="win">$${o.target.toFixed(2)}</strong></div>
-                <div class="et-step">Secondary: OCO Stop</div>
-                <div class="et-row"><span>Loss:</span> <strong class="loss">$${o.stop.toFixed(2)}</strong></div>
+                <div class="et-step">Buy Stop: <strong>$${o.buy_stop.toFixed(2)}</strong></div>
+                <div class="et-step">Target: <strong class="win">$${o.target.toFixed(2)}</strong></div>
+                <div class="et-step">Stop: <strong class="loss">$${o.stop.toFixed(2)}</strong></div>
             </div>
             <div class="tracking-btns">
                 <div class="track-group">
                     <div class="track-btn bought ${state.bought?'active':''}" onclick="toggleTrack('${o.ticker}', 'bought', '${startDate}')">BGT</div>
                     <div class="track-btn sold ${state.sold?'active':''}" onclick="toggleTrack('${o.ticker}', 'sold', '${startDate}')">SLD</div>
                 </div>
-                <div style="flex:1; display:flex; align-items:center; gap:8px; justify-content:flex-end">
-                    <span class="exit-label">Exit:</span>
-                    <input type="text" class="exit-price-input" placeholder="0.00" value="${state.exit}" 
-                           onchange="updateExitPrice('${o.ticker}', this.value, '${startDate}')">
-                </div>
+                <div style="flex:1; text-align:right; font-size:0.65rem; font-weight:700; color:var(--text2)">3.5R Alpha</div>
             </div>
         </div>`;
     }).join('');
+    
+    document.getElementById('orders-table-container').innerHTML = `
+    <table>
+        <tr><th>Ticker</th><th>Shares</th><th>Entry Stop</th><th>Risk ($)</th><th>Target Reward ($)</th><th>Target Price</th></tr>
+        ${orders.map(o => `
+        <tr>
+            <td class="ticker-cell">${o.ticker}</td>
+            <td>${o.shares}</td>
+            <td>$${o.buy_stop.toFixed(2)}</td>
+            <td class="loss">$${o.risk.toFixed(2)}</td>
+            <td class="win">$${o.reward.toFixed(2)}</td>
+            <td class="win">$${o.target.toFixed(2)}</td>
+        </tr>`).join('')}
+    </table>`;
 }
 
 function toggleTrack(ticker, type, startDate) {
     const storageKey = `sprint_${startDate}_${ticker}`;
-    const state = JSON.parse(localStorage.getItem(storageKey) || '{"bought":false,"sold":false,"exit":""}');
+    const state = JSON.parse(localStorage.getItem(storageKey) || '{"bought":false,"sold":false}');
     state[type] = !state[type];
     localStorage.setItem(storageKey, JSON.stringify(state));
-    const btn = document.querySelector(`#card-${ticker} .track-btn.${type}`);
-    btn.classList.toggle('active');
-}
-
-function updateExitPrice(ticker, value, startDate) {
-    const storageKey = `sprint_${startDate}_${ticker}`;
-    const state = JSON.parse(localStorage.getItem(storageKey) || '{"bought":false,"sold":false,"exit":""}');
-    state.exit = value;
-    localStorage.setItem(storageKey, JSON.stringify(state));
+    document.querySelector(`#card-${ticker} .track-btn.${type}`).classList.toggle('active');
 }
 </script>
 </body>
