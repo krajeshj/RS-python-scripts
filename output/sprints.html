@@ -39,8 +39,8 @@ header{margin-bottom:2rem;text-align:center;display:flex;flex-direction:column;a
 .badge{background:var(--accent);color:#fff;font-size:0.65rem;padding:3px 10px;border-radius:99px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
 .chart-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;margin-top:1.5rem}
 .chart-card{background:var(--glass);backdrop-filter:blur(var(--glass-b));border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all 0.3s;box-shadow:var(--shadow);position:relative;display:flex;flex-direction:column}
-.chart-card:hover{transform:translateY(-5px);border-color:var(--accent)}
-.watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:5rem;font-weight:900;color:rgba(255,82,82,0.15);pointer-events:none;z-index:5;text-transform:uppercase;border:10px solid rgba(255,82,82,0.15);padding:10px 30px;border-radius:20px;display:none}
+.chart-card:hover{border-color:var(--accent)}
+.watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:5rem;font-weight:900;color:rgba(255,82,82,0.1);pointer-events:none;z-index:5;text-transform:uppercase;border:10px solid rgba(255,82,82,0.1);padding:10px 30px;border-radius:20px;display:none}
 .chart-card.expired .watermark{display:block}
 .chart-card img{width:100%;height:180px;object-fit:cover;display:block;border-bottom:1px solid var(--border);filter:brightness(0.9) contrast(1.1)}
 .chart-card .info{padding:12px 20px;flex:1}
@@ -53,10 +53,14 @@ header{margin-bottom:2rem;text-align:center;display:flex;flex-direction:column;a
 .et-step{font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent2);font-weight:800;margin-top:4px}
 .et-row{display:flex;justify-content:space-between;font-size:0.9rem;font-family:var(--mono)}
 .et-row span{color:var(--text2);font-size:0.75rem}
-.tracking-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 15px;background:rgba(0,0,0,0.2)}
-.track-btn{padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text2);font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all 0.2s;text-align:center}
-.track-btn.active.bought{background:rgba(0,229,255,0.15);color:var(--cyan);border-color:var(--cyan)}
-.track-btn.active.sold{background:rgba(255,82,82,0.15);color:var(--red);border-color:var(--red)}
+.tracking-btns{display:flex;align-items:center;gap:12px;padding:12px 20px;background:rgba(0,0,0,0.2);border-top:1px solid var(--border)}
+.track-group{display:flex;gap:6px}
+.track-btn{padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text2);font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;cursor:pointer;transition:all 0.2s}
+.track-btn.active.bought{background:rgba(0,230,118,0.2);color:var(--green);border-color:var(--green)}
+.track-btn.active.sold{background:rgba(255,82,82,0.2);color:var(--red);border-color:var(--red)}
+.exit-price-input{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--mono);font-size:0.75rem;padding:4px 8px;width:70px;outline:none;transition:all 0.2s}
+.exit-price-input:focus{border-color:var(--cyan);background:rgba(255,255,255,0.06)}
+.exit-label{font-size:0.6rem;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:1px}
 .reminder{background:rgba(108,92,231,0.08);border:1px solid rgba(108,92,231,0.2);border-radius:12px;padding:20px 24px;margin-top:2rem;font-size:0.9rem;color:var(--accent2);line-height:1.6;font-weight:500}
 @media (max-width:768px){.hero{padding:1.5rem}.hero h1{font-size:1.8rem}.nav-link{font-size:0.7rem;padding:5px 8px}.metrics{grid-template-columns:repeat(2,1fr)}}
 </style>
@@ -92,7 +96,7 @@ header{margin-bottom:2rem;text-align:center;display:flex;flex-direction:column;a
 <div class="reminder" id="reminder"></div>
 </div>
 <script>
-const SPRINT_DATA = '{"generated": "2026-04-24 05:20 UTC", "summary": {"portfolio_start": 17000.0, "portfolio_current": 17000.0, "portfolio_target": 51000.0, "win_rate": 43.0, "total_return_pct": 15.4, "next_sprint_reminder": "Sprint Window: 2026-04-23 to 2026-05-08"}, "backtests": [], "current_sprint": {"start_date": "2026-04-23", "end_date": "2026-05-08", "days_remaining": 15, "market": "FAVORABLE", "ema21": 682.11, "sma50": 674.84, "orders": [{"ticker": "AXTI", "name": "AXT, Inc.", "sector": "Technology (XLK)", "highlights": "Stage 2 \u2022 RS Leader \u2022 Earnings Shielded", "price": 86.94, "buy_stop": 86.94, "buy_limit": 87.11, "stop": 84.33, "stop_limit": 84.32, "target": 94.77, "shares": 39, "sl_pct": 3.0, "target_pct": 9.0}, {"ticker": "BW", "name": "Babcock & Wilcox Enterprises, Inc.", "sector": "Industrials (XLI)", "highlights": "Stage 2 \u2022 RS Leader \u2022 Earnings Shielded", "price": 15.91, "buy_stop": 15.91, "buy_limit": 15.94, "stop": 15.43, "stop_limit": 15.42, "target": 17.35, "shares": 212, "sl_pct": 3.0, "target_pct": 9.0}, {"ticker": "SNDK", "name": "Sandisk Corporation", "sector": "Technology (XLK)", "highlights": "Stage 2 \u2022 RS Leader \u2022 Earnings Shielded", "price": 979.07, "buy_stop": 979.07, "buy_limit": 981.03, "stop": 949.7, "stop_limit": 949.69, "target": 1067.18, "shares": 3, "sl_pct": 3.0, "target_pct": 9.0}, {"ticker": "ANL", "name": "Adlai Nortye Ltd.", "sector": "Healthcare (XLV)", "highlights": "Stage 2 \u2022 RS Leader \u2022 Earnings Shielded", "price": 16.13, "buy_stop": 16.13, "buy_limit": 16.16, "stop": 15.65, "stop_limit": 15.64, "target": 17.57, "shares": 212, "sl_pct": 3.0, "target_pct": 9.0}, {"ticker": "ERAS", "name": "Erasca, Inc.", "sector": "Healthcare (XLV)", "highlights": "Stage 2 \u2022 RS Leader \u2022 Earnings Shielded", "price": 21.65, "buy_stop": 21.65, "buy_limit": 21.69, "stop": 21.0, "stop_limit": 20.99, "target": 23.6, "shares": 156, "sl_pct": 3.0, "target_pct": 9.0}]}}';
+const SPRINT_DATA = '{"generated": "2026-04-24 05:23 UTC", "summary": {"portfolio_start": 17000.0, "portfolio_current": 17000.0, "portfolio_target": 51000.0, "win_rate": 43.0, "total_return_pct": 15.4, "next_sprint_reminder": "Sprint Window: 2026-04-23 to 2026-05-08"}, "backtests": [], "current_sprint": {"start_date": "2026-04-23", "end_date": "2026-05-08", "days_remaining": 15, "market": "FAVORABLE", "ema21": 682.11, "sma50": 674.84, "orders": [{"ticker": "AXTI", "name": "AXT, Inc.", "sector": "Technology (XLK)", "highlights": "Stage 2 \u2022 RS Leader \u2022 Earnings Shielded", "price": 86.94, "buy_stop": 86.94, "buy_limit": 87.11, "stop": 84.33, "stop_limit": 84.32, "target": 94.77, "shares": 39, "sl_pct": 3.0, "target_pct": 9.0}, {"ticker": "BW", "name": "Babcock & Wilcox Enterprises, Inc.", "sector": "Industrials (XLI)", "highlights": "Stage 2 \u2022 RS Leader \u2022 Earnings Shielded", "price": 15.91, "buy_stop": 15.91, "buy_limit": 15.94, "stop": 15.43, "stop_limit": 15.42, "target": 17.35, "shares": 212, "sl_pct": 3.0, "target_pct": 9.0}, {"ticker": "SNDK", "name": "Sandisk Corporation", "sector": "Technology (XLK)", "highlights": "Stage 2 \u2022 RS Leader \u2022 Earnings Shielded", "price": 979.07, "buy_stop": 979.07, "buy_limit": 981.03, "stop": 949.7, "stop_limit": 949.69, "target": 1067.18, "shares": 3, "sl_pct": 3.0, "target_pct": 9.0}, {"ticker": "ANL", "name": "Adlai Nortye Ltd.", "sector": "Healthcare (XLV)", "highlights": "Stage 2 \u2022 RS Leader \u2022 Earnings Shielded", "price": 16.13, "buy_stop": 16.13, "buy_limit": 16.16, "stop": 15.65, "stop_limit": 15.64, "target": 17.57, "shares": 212, "sl_pct": 3.0, "target_pct": 9.0}, {"ticker": "ERAS", "name": "Erasca, Inc.", "sector": "Healthcare (XLV)", "highlights": "Stage 2 \u2022 RS Leader \u2022 Earnings Shielded", "price": 21.65, "buy_stop": 21.65, "buy_limit": 21.69, "stop": 21.0, "stop_limit": 20.99, "target": 23.6, "shares": 156, "sl_pct": 3.0, "target_pct": 9.0}]}}';
 const d = JSON.parse(SPRINT_DATA);
 render(d);
 
@@ -129,10 +133,10 @@ function renderOrders(orders, startDate){
     section.style.display = 'block';
     
     document.getElementById('orders-charts').innerHTML = orders.map(o => {
-        const isExpired = o.price < o.buy_stop * 0.99; // Expired if it dips too far before entry
+        const isExpired = o.price < o.buy_stop * 0.99;
         const cardClass = isExpired ? 'chart-card expired' : 'chart-card';
         const storageKey = `sprint_${startDate}_${o.ticker}`;
-        const state = JSON.parse(localStorage.getItem(storageKey) || '{"bought":false,"sold":false}');
+        const state = JSON.parse(localStorage.getItem(storageKey) || '{"bought":false,"sold":false,"exit":""}');
         
         return `
         <div class="${cardClass}" id="card-${o.ticker}">
@@ -160,8 +164,15 @@ function renderOrders(orders, startDate){
                 <div class="et-row"><span>Loss:</span> <strong class="loss">$${o.stop.toFixed(2)}</strong></div>
             </div>
             <div class="tracking-btns">
-                <div class="track-btn bought ${state.bought?'active':''}" onclick="toggleTrack('${o.ticker}', 'bought', '${startDate}')">Bought</div>
-                <div class="track-btn sold ${state.sold?'active':''}" onclick="toggleTrack('${o.ticker}', 'sold', '${startDate}')">Sold</div>
+                <div class="track-group">
+                    <div class="track-btn bought ${state.bought?'active':''}" onclick="toggleTrack('${o.ticker}', 'bought', '${startDate}')">BGT</div>
+                    <div class="track-btn sold ${state.sold?'active':''}" onclick="toggleTrack('${o.ticker}', 'sold', '${startDate}')">SLD</div>
+                </div>
+                <div style="flex:1; display:flex; align-items:center; gap:8px; justify-content:flex-end">
+                    <span class="exit-label">Exit:</span>
+                    <input type="text" class="exit-price-input" placeholder="0.00" value="${state.exit}" 
+                           onchange="updateExitPrice('${o.ticker}', this.value, '${startDate}')">
+                </div>
             </div>
         </div>`;
     }).join('');
@@ -169,13 +180,18 @@ function renderOrders(orders, startDate){
 
 function toggleTrack(ticker, type, startDate) {
     const storageKey = `sprint_${startDate}_${ticker}`;
-    const state = JSON.parse(localStorage.getItem(storageKey) || '{"bought":false,"sold":false}');
+    const state = JSON.parse(localStorage.getItem(storageKey) || '{"bought":false,"sold":false,"exit":""}');
     state[type] = !state[type];
     localStorage.setItem(storageKey, JSON.stringify(state));
-    
-    // Refresh UI for the specific card
     const btn = document.querySelector(`#card-${ticker} .track-btn.${type}`);
     btn.classList.toggle('active');
+}
+
+function updateExitPrice(ticker, value, startDate) {
+    const storageKey = `sprint_${startDate}_${ticker}`;
+    const state = JSON.parse(localStorage.getItem(storageKey) || '{"bought":false,"sold":false,"exit":""}');
+    state.exit = value;
+    localStorage.setItem(storageKey, JSON.stringify(state));
 }
 </script>
 </body>
