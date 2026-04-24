@@ -1,188 +1,264 @@
 {
-  "generated": "2026-04-23 21:32 UTC",
+  "generated": "2026-04-24 06:04 UTC",
   "summary": {
     "portfolio_start": 17000.0,
-    "portfolio_current": 19486.5,
+    "portfolio_current": 17211.83,
     "portfolio_target": 51000.0,
-    "win_rate": 40.0,
-    "total_return_pct": 14.6,
-    "next_sprint_reminder": "Institutional Alpha: Weinstein Stage 2 + O'Neil Grade filters active."
+    "win_rate": 17.5,
+    "total_return_pct": 1.2,
+    "next_sprint_reminder": "Institutional Alpha Restored. Deterministic RS Backtesting active."
   },
   "backtests": [
     {
       "sprint": 1,
-      "date": "2025-12-18",
+      "date": "2026-02-05",
       "action": "TRADED",
-      "pnl": 1501.6563381958003,
-      "capital_after": 18501.6563381958,
-      "wins": 5,
-      "losses": 0
+      "pnl": -406.12,
+      "capital_after": 16593.88,
+      "wins": 0,
+      "losses": 5,
+      "tickers": [
+        "TCGL",
+        "MTC",
+        "CGTL",
+        "BVC",
+        "ANL"
+      ]
     },
     {
       "sprint": 2,
-      "date": "2025-12-29",
-      "action": "TRADED",
-      "pnl": -552.6800060272219,
-      "capital_after": 17948.97633216858,
-      "wins": 0,
-      "losses": 5
+      "date": "2026-03-20",
+      "action": "SAT OUT",
+      "pnl": 0,
+      "capital_after": 16593.88
     },
     {
       "sprint": 3,
-      "date": "2026-01-07",
+      "date": "2025-02-28",
       "action": "TRADED",
-      "pnl": 319.88037673950214,
-      "capital_after": 18268.856708908083,
-      "wins": 2,
-      "losses": 3
+      "pnl": 0,
+      "capital_after": 16593.88,
+      "wins": 0,
+      "losses": 0,
+      "tickers": []
     },
     {
       "sprint": 4,
-      "date": "2026-01-15",
+      "date": "2025-04-11",
       "action": "TRADED",
-      "pnl": 748.9347547149657,
-      "capital_after": 19017.79146362305,
-      "wins": 3,
-      "losses": 2
+      "pnl": 0,
+      "capital_after": 16593.88,
+      "wins": 0,
+      "losses": 0,
+      "tickers": []
     },
     {
       "sprint": 5,
-      "date": "2026-01-26",
+      "date": "2025-05-27",
       "action": "TRADED",
-      "pnl": 335.2995137023927,
-      "capital_after": 19353.090977325443,
-      "wins": 2,
-      "losses": 3
+      "pnl": -45.86,
+      "capital_after": 16548.02,
+      "wins": 1,
+      "losses": 4,
+      "tickers": [
+        "RGC",
+        "LICN",
+        "DFDV",
+        "ASST",
+        "NAKA"
+      ]
     },
     {
       "sprint": 6,
-      "date": "2026-02-03",
+      "date": "2025-07-10",
       "action": "TRADED",
-      "pnl": -102.39043334960988,
-      "capital_after": 19250.700543975832,
+      "pnl": 47.94,
+      "capital_after": 16595.96,
       "wins": 1,
-      "losses": 4
+      "losses": 4,
+      "tickers": [
+        "TCGL",
+        "WBX",
+        "RGC",
+        "TRON",
+        "ASST"
+      ]
     },
     {
       "sprint": 7,
-      "date": "2026-02-11",
+      "date": "2025-08-21",
       "action": "TRADED",
-      "pnl": 341.4599014282222,
-      "capital_after": 19592.160445404053,
-      "wins": 2,
-      "losses": 3
+      "pnl": 50.02,
+      "capital_after": 16645.98,
+      "wins": 1,
+      "losses": 4,
+      "tickers": [
+        "TCGL",
+        "NEGG",
+        "WBX",
+        "ZEPP",
+        "TRON"
+      ]
     },
     {
       "sprint": 8,
-      "date": "2026-03-02",
+      "date": "2025-10-03",
       "action": "TRADED",
-      "pnl": -105.65678619384795,
-      "capital_after": 19486.503659210204,
-      "wins": 1,
-      "losses": 4
+      "pnl": 1045.67,
+      "capital_after": 17691.65,
+      "wins": 3,
+      "losses": 2,
+      "tickers": [
+        "QMMM",
+        "TCGL",
+        "ZEPP",
+        "OPEN",
+        "ABVX"
+      ]
     },
     {
       "sprint": 9,
-      "date": "2026-03-10",
-      "action": "SAT OUT",
-      "pnl": 0,
-      "capital_after": 19486.503659210204
+      "date": "2025-11-14",
+      "action": "TRADED",
+      "pnl": -314.76,
+      "capital_after": 17376.9,
+      "wins": 0,
+      "losses": 5,
+      "tickers": [
+        "QMMM",
+        "TCGL",
+        "SPRB",
+        "MGRT",
+        "NUAI"
+      ]
     },
     {
       "sprint": 10,
-      "date": "2026-03-18",
-      "action": "SAT OUT",
-      "pnl": 0,
-      "capital_after": 19486.503659210204
+      "date": "2025-12-30",
+      "action": "TRADED",
+      "pnl": 158.21,
+      "capital_after": 17535.11,
+      "wins": 1,
+      "losses": 4,
+      "tickers": [
+        "MGRT",
+        "TCGL",
+        "SPRB",
+        "DMRA",
+        "PRAX"
+      ]
     },
     {
       "sprint": 11,
-      "date": "2026-03-26",
+      "date": "2026-02-12",
+      "action": "TRADED",
+      "pnl": -323.27,
+      "capital_after": 17211.83,
+      "wins": 0,
+      "losses": 5,
+      "tickers": [
+        "MGRT",
+        "TCGL",
+        "SMX",
+        "BVC",
+        "VSME"
+      ]
+    },
+    {
+      "sprint": 12,
+      "date": "2026-03-27",
       "action": "SAT OUT",
       "pnl": 0,
-      "capital_after": 19486.503659210204
+      "capital_after": 17211.83
     }
   ],
   "current_sprint": {
-    "date": "2026-04-23",
+    "start_date": "2026-04-23",
+    "end_date": "2026-05-08",
+    "days_remaining": 15,
     "market": "FAVORABLE",
-    "ema21": 684.76,
-    "sma50": 675.23,
+    "ema21": 682.11,
+    "sma50": 674.84,
     "orders": [
       {
         "ticker": "AXTI",
-        "name": "",
-        "sector": "Technology (XLK)",
-        "highlights": "Weinstein Stage 2 \u2022 O'Neil Leader \u2022 Earnings Safe",
-        "price": 86.94000244140625,
-        "buy_stop": 86.94000244140625,
+        "name": "AXT, Inc.",
+        "sector": "Technology (Institutional)",
+        "highlights": "Weinstein Stage 2 \u2022 RS Alpha \u2022 Earnings Safe",
+        "price": 86.94,
+        "buy_stop": 86.94,
         "buy_limit": 87.11,
+        "target": 96.07,
         "stop": 84.33,
         "stop_limit": 84.16,
-        "target": 94.76,
-        "shares": 44,
-        "sl_pct": 3.0,
-        "target_pct": 9.0
+        "shares": 39,
+        "risk": 103.27,
+        "reward": 361.45,
+        "today_price": 74.97
+      },
+      {
+        "ticker": "BW",
+        "name": "Babcock & Wilcox Enterprises, Inc.",
+        "sector": "Industrials (Institutional)",
+        "highlights": "Weinstein Stage 2 \u2022 RS Alpha \u2022 Earnings Safe",
+        "price": 15.91,
+        "buy_stop": 15.91,
+        "buy_limit": 15.94,
+        "target": 17.58,
+        "stop": 15.43,
+        "stop_limit": 15.4,
+        "shares": 216,
+        "risk": 103.27,
+        "reward": 361.45,
+        "today_price": 16.04
       },
       {
         "ticker": "SNDK",
-        "name": "",
-        "sector": "Technology (XLK)",
-        "highlights": "Weinstein Stage 2 \u2022 O'Neil Leader \u2022 Earnings Safe",
-        "price": 979.0700073242188,
-        "buy_stop": 979.0700073242188,
+        "name": "Sandisk Corporation",
+        "sector": "Technology (Institutional)",
+        "highlights": "Weinstein Stage 2 \u2022 RS Alpha \u2022 Earnings Safe",
+        "price": 979.07,
+        "buy_stop": 979.07,
         "buy_limit": 981.03,
+        "target": 1081.87,
         "stop": 949.7,
-        "stop_limit": 947.74,
-        "target": 1067.19,
+        "stop_limit": 947.8,
         "shares": 3,
-        "sl_pct": 3.0,
-        "target_pct": 9.0
+        "risk": 103.27,
+        "reward": 361.45,
+        "today_price": 903.49
+      },
+      {
+        "ticker": "ANL",
+        "name": "Adlai Nortye Ltd.",
+        "sector": "Healthcare (Institutional)",
+        "highlights": "Weinstein Stage 2 \u2022 RS Alpha \u2022 Earnings Safe",
+        "price": 16.13,
+        "buy_stop": 16.13,
+        "buy_limit": 16.16,
+        "target": 17.82,
+        "stop": 15.65,
+        "stop_limit": 15.62,
+        "shares": 213,
+        "risk": 103.27,
+        "reward": 361.45,
+        "today_price": 15.96
       },
       {
         "ticker": "ERAS",
-        "name": "",
-        "sector": "Healthcare (XLV)",
-        "highlights": "Weinstein Stage 2 \u2022 O'Neil Leader \u2022 Earnings Safe",
-        "price": 21.649999618530273,
-        "buy_stop": 21.649999618530273,
+        "name": "Erasca, Inc.",
+        "sector": "Healthcare (Institutional)",
+        "highlights": "Weinstein Stage 2 \u2022 RS Alpha \u2022 Earnings Safe",
+        "price": 21.65,
+        "buy_stop": 21.65,
         "buy_limit": 21.69,
+        "target": 23.92,
         "stop": 21.0,
         "stop_limit": 20.96,
-        "target": 23.6,
-        "shares": 180,
-        "sl_pct": 3.0,
-        "target_pct": 9.0
-      },
-      {
-        "ticker": "TERN",
-        "name": "",
-        "sector": "Healthcare (XLV)",
-        "highlights": "Weinstein Stage 2 \u2022 O'Neil Leader \u2022 Earnings Safe",
-        "price": 52.84000015258789,
-        "buy_stop": 52.84000015258789,
-        "buy_limit": 52.95,
-        "stop": 51.25,
-        "stop_limit": 51.15,
-        "target": 57.6,
-        "shares": 73,
-        "sl_pct": 3.0,
-        "target_pct": 9.0
-      },
-      {
-        "ticker": "LITE",
-        "name": "",
-        "sector": "Technology (XLK)",
-        "highlights": "Weinstein Stage 2 \u2022 O'Neil Leader \u2022 Earnings Safe",
-        "price": 873.5999755859375,
-        "buy_stop": 873.5999755859375,
-        "buy_limit": 875.35,
-        "stop": 847.39,
-        "stop_limit": 845.64,
-        "target": 952.22,
-        "shares": 4,
-        "sl_pct": 3.0,
-        "target_pct": 9.0
+        "shares": 159,
+        "risk": 103.27,
+        "reward": 361.45,
+        "today_price": 22.41
       }
     ]
   }
