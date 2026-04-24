@@ -45,11 +45,10 @@ header{margin-bottom:2rem;text-align:center;display:flex;flex-direction:column;a
 .chart-card .ticker-name{font-weight:800;color:var(--cyan);font-size:1.5rem;font-family:var(--mono)}
 .chart-card .price-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .chart-card .current-price{font-size:1.1rem;font-weight:700;color:var(--text)}
-.chart-card .tiny-sector{font-size:0.6rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
 .characteristic{display:inline-block;font-size:0.65rem;color:var(--cyan);background:rgba(0,229,255,0.08);padding:2px 6px;border-radius:4px;border:1px solid rgba(0,229,255,0.2);margin-right:4px;margin-top:4px;font-weight:600}
 .etrade-box{background:var(--bg2);padding:15px;display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--border)}
-.et-step{font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent2);font-weight:800;margin-top:4px}
-.et-row{display:flex;justify-content:space-between;font-size:0.9rem;font-family:var(--mono)}
+.et-step{font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent2);font-weight:800;margin-top:6px;border-bottom:1px solid rgba(162,155,254,0.2);padding-bottom:2px}
+.et-row{display:flex;justify-content:space-between;font-size:0.9rem;font-family:var(--mono);margin-top:2px}
 .et-row span{color:var(--text2);font-size:0.75rem}
 .tracking-btns{display:flex;align-items:center;gap:12px;padding:12px 20px;background:rgba(0,0,0,0.2);border-top:1px solid var(--border)}
 .track-group{display:flex;gap:6px}
@@ -101,7 +100,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 </div>
 <div id="action-area"></div>
 <div class="section" id="orders-section" style="display:none">
-<h2>Current Sprint Orders <span class="badge">Institutional Alpha</span></h2>
+<h2>Power E*TRADE OTOCO <span class="badge">Institutional Alpha</span></h2>
 <div id="orders-charts" class="chart-row"></div>
 <div id="orders-table-container" class="card-table" style="margin-top:2rem"></div>
 </div>
@@ -170,36 +169,51 @@ function renderOrders(orders, startDate){
             <div class="watermark">SELL</div>
             <img src="https://finviz.com/chart.ashx?t=${o.ticker}&ty=c&ta=1&p=d&s=l" alt="${o.ticker}">
             <div class="info">
-                <div class="price-row"><div class="ticker-name">${o.ticker}</div><div class="current-price">$${o.price.toFixed(2)}</div></div>
-                <div class="tiny-sector">${o.sector}</div>
-                <div class="highlights" style="margin-top:8px">${o.highlights.split('•').map(h=>`<span class="characteristic">${h.trim()}</span>`).join('')}</div>
+                <div class="price-row">
+                    <div class="ticker-name">${o.ticker}</div>
+                    <div style="text-align:right">
+                        <div class="current-price">$${o.price.toFixed(2)}</div>
+                        <div style="font-size:0.75rem; color:var(--cyan); font-weight:700">${o.shares} SHARES</div>
+                    </div>
+                </div>
+                <div class="highlights" style="margin-top:4px">${o.highlights.split('•').map(h=>`<span class="characteristic">${h.trim()}</span>`).join('')}</div>
             </div>
             <div class="etrade-box">
-                <div class="et-step">Buy Stop: <strong>$${o.buy_stop.toFixed(2)}</strong></div>
-                <div class="et-step">Target: <strong class="win">$${o.target.toFixed(2)}</strong></div>
-                <div class="et-step">Stop: <strong class="loss">$${o.stop.toFixed(2)}</strong></div>
+                <div class="et-step">Part 1: Buy Stop-Limit</div>
+                <div class="et-row"><span>Stop Price:</span> <strong>$${o.buy_stop.toFixed(2)}</strong></div>
+                <div class="et-row"><span>Limit Price:</span> <strong>$${o.buy_limit.toFixed(2)}</strong></div>
+                
+                <div class="et-step">Part 2: Profit Sell Limit</div>
+                <div class="et-row"><span>Limit Price:</span> <strong class="win">$${o.target.toFixed(2)}</strong></div>
+                
+                <div class="et-step">Part 3: Stop Loss Sell Stop-Limit</div>
+                <div class="et-row"><span>Stop Price:</span> <strong class="loss">$${o.stop.toFixed(2)}</strong></div>
+                <div class="et-row"><span>Limit Price:</span> <strong class="loss">$${o.stop_limit.toFixed(2)}</strong></div>
             </div>
             <div class="tracking-btns">
                 <div class="track-group">
                     <div class="track-btn bought ${state.bought?'active':''}" onclick="toggleTrack('${o.ticker}', 'bought', '${startDate}')">BGT</div>
                     <div class="track-btn sold ${state.sold?'active':''}" onclick="toggleTrack('${o.ticker}', 'sold', '${startDate}')">SLD</div>
                 </div>
-                <div style="flex:1; text-align:right; font-size:0.65rem; font-weight:700; color:var(--text2)">3.5R Alpha</div>
+                <div style="flex:1; text-align:right">
+                    <a href="https://www.tradingview.com/chart/?symbol=${o.ticker}" target="_blank" style="font-size:0.6rem; padding:4px 8px">Chart</a>
+                </div>
             </div>
         </div>`;
     }).join('');
     
     document.getElementById('orders-table-container').innerHTML = `
     <table>
-        <tr><th>Ticker</th><th>Shares</th><th>Entry Stop</th><th>Risk ($)</th><th>Target Reward ($)</th><th>Target Price</th></tr>
+        <tr><th>Ticker</th><th>Shares</th><th>Entry Stop</th><th>Entry Limit</th><th>Target (Sell)</th><th>Stop (Sell)</th><th>Stop Limit</th></tr>
         ${orders.map(o => `
         <tr>
             <td class="ticker-cell">${o.ticker}</td>
             <td>${o.shares}</td>
             <td>$${o.buy_stop.toFixed(2)}</td>
-            <td class="loss">$${o.risk.toFixed(2)}</td>
-            <td class="win">$${o.reward.toFixed(2)}</td>
+            <td>$${o.buy_limit.toFixed(2)}</td>
             <td class="win">$${o.target.toFixed(2)}</td>
+            <td class="loss">$${o.stop.toFixed(2)}</td>
+            <td class="loss">$${o.stop_limit.toFixed(2)}</td>
         </tr>`).join('')}
     </table>`;
 }

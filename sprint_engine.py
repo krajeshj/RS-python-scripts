@@ -1,7 +1,9 @@
 """
-Sprint Trading Engine - Pro Edition (Restored Features)
-Goal: Full visibility into Risk/Reward, Backtest History, and Market Shield.
-Fixed: Earnings Shield logic for -1 (safe) values.
+Sprint Trading Engine - Power E*TRADE Edition
+Goal: "Brain-Dead" OTOCO Entry parameters for Power E*TRADE app.
+1. Part 1: Buy Stop-Limit (Stop: Trigger, Limit: Trigger + Buffer).
+2. Part 2: OCO Profit Sell Limit.
+3. Part 3: OCO Stop-Loss Sell Stop-Limit (Stop: SL, Limit: SL - Buffer).
 """
 import json, os, random, sys
 import pandas as pd
@@ -47,7 +49,7 @@ def simulate_sprint_full(all_data, picks, capital, entry_idx):
     return trades, total_pnl
 
 def main():
-    print("Fixing Sprint Selection Logic...")
+    print("Generating Power E*TRADE OTOCO Data...")
     with open(WEB_DATA, "r", encoding="utf-8") as f: web_data = json.load(f)
     with open(PRICE_DATA, "r", encoding="utf-8") as f: all_data = json.load(f)
     spy_all = all_data["SPY"]["candles"]
@@ -55,14 +57,11 @@ def main():
     # 1. Backtest History
     min_idx, max_idx = 210, len(spy_all) - SPRINT_DAYS - 2
     test_indices = sorted(random.sample(range(min_idx, max_idx, max(1, (max_idx-min_idx)//NUM_BACKTESTS)), NUM_BACKTESTS))
-    
     backtests, capital, wins, losses = [], PORTFOLIO_START, 0, 0
     for idx in test_indices:
         spy_slice = spy_all[:idx]
         s = pd.Series([c["close"] for c in spy_slice])
-        ema21 = s.ewm(span=21, adjust=False).mean().iloc[-1]
-        sma50 = s.rolling(50).mean().iloc[-1]
-        if ema21 < sma50:
+        if s.ewm(span=21, adjust=False).mean().iloc[-1] < s.rolling(50).mean().iloc[-1]:
             backtests.append({"sprint":len(backtests)+1, "date":datetime.fromtimestamp(spy_all[idx]["datetime"],tz=timezone.utc).strftime("%Y-%m-%d"), "action":"SAT OUT", "pnl":0, "capital_after":round(capital,2)})
             continue
         candidates = []
@@ -81,8 +80,7 @@ def main():
     # 2. Current Sprint
     last_price_date = web_data.get("last_updated", "")[:10]
     spy_closes = pd.Series([c["close"] for c in spy_all])
-    ema21_now = spy_closes.ewm(span=21, adjust=False).mean().iloc[-1]
-    sma50_now = spy_closes.rolling(50).mean().iloc[-1]
+    ema21_now, sma50_now = spy_closes.ewm(span=21, adjust=False).mean().iloc[-1], spy_closes.rolling(50).mean().iloc[-1]
     
     current_sprint = {
         "start_date": last_price_date, "end_date": (datetime.strptime(last_price_date, "%Y-%m-%d") + timedelta(days=SPRINT_DAYS)).strftime("%Y-%m-%d"),
@@ -91,31 +89,23 @@ def main():
     }
     
     if current_sprint["market"] == "FAVORABLE":
-        valid_picks = []
-        for s in web_data.get("all_stocks", []):
-            if s.get("price", 0) < 15: continue
-            if s.get("avg_volume", 0) < 500000: continue
-            if not s.get("is_minervini", False): continue
-            
-            # FIXED EARNINGS LOGIC
-            dte = s.get("days_to_earnings", -1)
-            if dte != -1 and dte < SPRINT_DAYS: continue # Only skip if date found AND it's too soon
-            
-            valid_picks.append(s)
-            
+        valid_picks = [s for s in web_data.get("all_stocks", []) if s.get("price", 0) > 15 and s.get("is_minervini", False) and (s.get("days_to_earnings", -1) >= 15 or s.get("days_to_earnings") == -1)]
         valid_picks.sort(key=lambda x: -x.get("rs", 0))
         risk_budget = capital * MAX_RISK_PCT
         risk_per = risk_budget / NUM_PICKS
         for p in valid_picks[:NUM_PICKS]:
             price = round(p["price"], 2)
-            stop_dist = round(price * 0.03, 2)
+            stop_dist = price * 0.03
+            stop_price = round(price - stop_dist, 2)
             current_sprint["orders"].append({
-                "ticker": p["ticker"], "name": p.get("name", ""),
-                "sector": f"{p['sector']} ({DB_SECTOR_MAP.get(p['sector'],'??')})",
+                "ticker": p["ticker"], "name": p.get("name", ""), "sector": f"{p['sector']} ({DB_SECTOR_MAP.get(p['sector'],'??')})",
                 "highlights": " Weinstein Stage 2 • RS Leader • Earnings Safe",
-                "price": price, "buy_stop": price, "buy_limit": round(price * 1.002, 2),
-                "stop": round(price - stop_dist, 2), "stop_limit": round(price - stop_dist - 0.01, 2),
+                "price": price,
+                "buy_stop": price,
+                "buy_limit": round(price * 1.002, 2),
                 "target": round(price + stop_dist * TARGET_R, 2),
+                "stop": stop_price,
+                "stop_limit": round(stop_price * 0.998, 2),
                 "shares": int(risk_per / stop_dist), "risk": round(risk_per, 2), "reward": round(risk_per * TARGET_R, 2)
             })
 
@@ -124,7 +114,7 @@ def main():
         "summary": {
             "portfolio_start": PORTFOLIO_START, "portfolio_current": round(capital, 2), "portfolio_target": PORTFOLIO_START * 3,
             "win_rate": round(wins/(wins+losses)*100,1) if (wins+losses)>0 else 0, "total_return_pct": round((capital-PORTFOLIO_START)/PORTFOLIO_START*100, 1),
-            "next_sprint_reminder": f"Market Shield active. Monitoring SPY EMA21/SMA50."
+            "next_sprint_reminder": "Shield Active. Power E*TRADE OTOCO profiles generated."
         },
         "backtests": backtests, "current_sprint": current_sprint
     }
@@ -133,6 +123,6 @@ def main():
     with open(template_path, "r", encoding="utf-8") as f: html = f.read()
     html = html.replace("'__SPRINT_DATA_PLACEHOLDER__'", "'" + json.dumps(output).replace("'", "\\'") + "'")
     with open(html_path, "w", encoding="utf-8") as f: f.write(html)
-    print(f"Full Dashboard Restored with {len(current_sprint['orders'])} orders.")
+    print("E*TRADE OTOCO Deployment Complete.")
 
 if __name__ == "__main__": main()

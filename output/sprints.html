@@ -45,11 +45,10 @@ header{margin-bottom:2rem;text-align:center;display:flex;flex-direction:column;a
 .chart-card .ticker-name{font-weight:800;color:var(--cyan);font-size:1.5rem;font-family:var(--mono)}
 .chart-card .price-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .chart-card .current-price{font-size:1.1rem;font-weight:700;color:var(--text)}
-.chart-card .tiny-sector{font-size:0.6rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
 .characteristic{display:inline-block;font-size:0.65rem;color:var(--cyan);background:rgba(0,229,255,0.08);padding:2px 6px;border-radius:4px;border:1px solid rgba(0,229,255,0.2);margin-right:4px;margin-top:4px;font-weight:600}
 .etrade-box{background:var(--bg2);padding:15px;display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--border)}
-.et-step{font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent2);font-weight:800;margin-top:4px}
-.et-row{display:flex;justify-content:space-between;font-size:0.9rem;font-family:var(--mono)}
+.et-step{font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent2);font-weight:800;margin-top:6px;border-bottom:1px solid rgba(162,155,254,0.2);padding-bottom:2px}
+.et-row{display:flex;justify-content:space-between;font-size:0.9rem;font-family:var(--mono);margin-top:2px}
 .et-row span{color:var(--text2);font-size:0.75rem}
 .tracking-btns{display:flex;align-items:center;gap:12px;padding:12px 20px;background:rgba(0,0,0,0.2);border-top:1px solid var(--border)}
 .track-group{display:flex;gap:6px}
@@ -101,7 +100,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 </div>
 <div id="action-area"></div>
 <div class="section" id="orders-section" style="display:none">
-<h2>Current Sprint Orders <span class="badge">Institutional Alpha</span></h2>
+<h2>Power E*TRADE OTOCO <span class="badge">Institutional Alpha</span></h2>
 <div id="orders-charts" class="chart-row"></div>
 <div id="orders-table-container" class="card-table" style="margin-top:2rem"></div>
 </div>
@@ -112,7 +111,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 <div class="reminder" id="reminder"></div>
 </div>
 <script>
-const SPRINT_DATA = '{"generated": "2026-04-24 05:33 UTC", "summary": {"portfolio_start": 17000.0, "portfolio_current": 20422.55, "portfolio_target": 51000.0, "win_rate": 50.0, "total_return_pct": 20.1, "next_sprint_reminder": "Market Shield active. Monitoring SPY EMA21/SMA50."}, "backtests": [{"sprint": 1, "date": "2025-12-17", "action": "TRADED", "pnl": 687.33, "capital_after": 17687.33, "wins": 3, "losses": 2, "tickers": ["ALX", "ADV", "PHAR", "HRTX", "TCX"]}, {"sprint": 2, "date": "2025-12-24", "action": "TRADED", "pnl": 121.61, "capital_after": 17808.95, "wins": 2, "losses": 3, "tickers": ["VKI", "LWAY", "RCI", "HBB", "IQST"]}, {"sprint": 3, "date": "2026-01-02", "action": "TRADED", "pnl": 1576.88, "capital_after": 19385.83, "wins": 5, "losses": 0, "tickers": ["CMCL", "CORT", "CWT", "GCO", "TMO"]}, {"sprint": 4, "date": "2026-01-16", "action": "TRADED", "pnl": 222.66, "capital_after": 19608.48, "wins": 2, "losses": 3, "tickers": ["SNN", "NMG", "GHC", "CAVA", "CCNE"]}, {"sprint": 5, "date": "2026-01-26", "action": "TRADED", "pnl": 307.28, "capital_after": 19915.76, "wins": 3, "losses": 2, "tickers": ["BBOT", "BTOG", "NNY", "TRTX", "CEPT"]}, {"sprint": 6, "date": "2026-02-02", "action": "TRADED", "pnl": 1198.32, "capital_after": 21114.09, "wins": 4, "losses": 1, "tickers": ["MREO", "CJMB", "CNTY", "LCUT", "PBA"]}, {"sprint": 7, "date": "2026-02-09", "action": "TRADED", "pnl": -52.57, "capital_after": 21061.51, "wins": 1, "losses": 4, "tickers": ["IWM", "ETR", "UPBD", "CCLD", "IAC"]}, {"sprint": 8, "date": "2026-02-17", "action": "TRADED", "pnl": -638.96, "capital_after": 20422.55, "wins": 0, "losses": 5, "tickers": ["PAG", "CLWT", "PLUT", "LTC", "CLDT"]}, {"sprint": 9, "date": "2026-02-24", "action": "SAT OUT", "pnl": 0, "capital_after": 20422.55}, {"sprint": 10, "date": "2026-03-10", "action": "SAT OUT", "pnl": 0, "capital_after": 20422.55}, {"sprint": 11, "date": "2026-03-17", "action": "SAT OUT", "pnl": 0, "capital_after": 20422.55}, {"sprint": 12, "date": "2026-03-24", "action": "SAT OUT", "pnl": 0, "capital_after": 20422.55}], "current_sprint": {"start_date": "2026-04-23", "end_date": "2026-05-08", "days_remaining": 15, "market": "FAVORABLE", "ema21": 682.11, "sma50": 674.84, "orders": [{"ticker": "AXTI", "name": "AXT, Inc.", "sector": "Technology (XLK)", "highlights": " Weinstein Stage 2 \u2022 RS Leader \u2022 Earnings Safe", "price": 86.94, "buy_stop": 86.94, "buy_limit": 87.11, "stop": 84.33, "stop_limit": 84.32, "target": 96.08, "shares": 46, "risk": 122.54, "reward": 428.87}, {"ticker": "BW", "name": "Babcock & Wilcox Enterprises, Inc.", "sector": "Industrials (XLI)", "highlights": " Weinstein Stage 2 \u2022 RS Leader \u2022 Earnings Safe", "price": 15.91, "buy_stop": 15.91, "buy_limit": 15.94, "stop": 15.43, "stop_limit": 15.42, "target": 17.59, "shares": 255, "risk": 122.54, "reward": 428.87}, {"ticker": "SNDK", "name": "Sandisk Corporation", "sector": "Technology (XLK)", "highlights": " Weinstein Stage 2 \u2022 RS Leader \u2022 Earnings Safe", "price": 979.07, "buy_stop": 979.07, "buy_limit": 981.03, "stop": 949.7, "stop_limit": 949.69, "target": 1081.87, "shares": 4, "risk": 122.54, "reward": 428.87}, {"ticker": "ANL", "name": "Adlai Nortye Ltd.", "sector": "Healthcare (XLV)", "highlights": " Weinstein Stage 2 \u2022 RS Leader \u2022 Earnings Safe", "price": 16.13, "buy_stop": 16.13, "buy_limit": 16.16, "stop": 15.65, "stop_limit": 15.64, "target": 17.81, "shares": 255, "risk": 122.54, "reward": 428.87}, {"ticker": "ERAS", "name": "Erasca, Inc.", "sector": "Healthcare (XLV)", "highlights": " Weinstein Stage 2 \u2022 RS Leader \u2022 Earnings Safe", "price": 21.65, "buy_stop": 21.65, "buy_limit": 21.69, "stop": 21.0, "stop_limit": 20.99, "target": 23.92, "shares": 188, "risk": 122.54, "reward": 428.87}]}}';
+const SPRINT_DATA = '{"generated": "2026-04-24 05:40 UTC", "summary": {"portfolio_start": 17000.0, "portfolio_current": 17401.69, "portfolio_target": 51000.0, "win_rate": 27.5, "total_return_pct": 2.4, "next_sprint_reminder": "Shield Active. Power E*TRADE OTOCO profiles generated."}, "backtests": [{"sprint": 1, "date": "2025-12-24", "action": "TRADED", "pnl": 398.01, "capital_after": 17398.01, "wins": 2, "losses": 3, "tickers": ["DLTH", "APPN", "BKR", "NTIC", "MOBX"]}, {"sprint": 2, "date": "2026-01-02", "action": "TRADED", "pnl": 520.48, "capital_after": 17918.48, "wins": 3, "losses": 2, "tickers": ["YETI", "CODI", "SPMC", "DGICB", "BKH"]}, {"sprint": 3, "date": "2026-01-09", "action": "TRADED", "pnl": -48.35, "capital_after": 17870.13, "wins": 1, "losses": 4, "tickers": ["ROP", "WLK", "PCG", "VABK", "COTY"]}, {"sprint": 4, "date": "2026-01-16", "action": "TRADED", "pnl": -43.88, "capital_after": 17826.25, "wins": 1, "losses": 4, "tickers": ["RJET", "BXSL", "HTH", "AJG", "IGV"]}, {"sprint": 5, "date": "2026-01-26", "action": "TRADED", "pnl": 137.26, "capital_after": 17963.51, "wins": 2, "losses": 3, "tickers": ["DAR", "CRBG", "PGEN", "XPON", "AMWD"]}, {"sprint": 6, "date": "2026-02-02", "action": "TRADED", "pnl": -52.77, "capital_after": 17910.74, "wins": 1, "losses": 4, "tickers": ["NLOP", "CLLS", "FVR", "LEG", "SEDG"]}, {"sprint": 7, "date": "2026-02-09", "action": "TRADED", "pnl": -467.02, "capital_after": 17443.72, "wins": 0, "losses": 5, "tickers": ["WKEY", "ABCB", "ETY", "IBOC", "ALEC"]}, {"sprint": 8, "date": "2026-02-17", "action": "TRADED", "pnl": -42.03, "capital_after": 17401.69, "wins": 1, "losses": 4, "tickers": ["BFC", "LRE", "POLA", "CFBK", "BSX"]}, {"sprint": 9, "date": "2026-02-24", "action": "SAT OUT", "pnl": 0, "capital_after": 17401.69}, {"sprint": 10, "date": "2026-03-10", "action": "SAT OUT", "pnl": 0, "capital_after": 17401.69}, {"sprint": 11, "date": "2026-03-17", "action": "SAT OUT", "pnl": 0, "capital_after": 17401.69}, {"sprint": 12, "date": "2026-03-24", "action": "SAT OUT", "pnl": 0, "capital_after": 17401.69}], "current_sprint": {"start_date": "2026-04-23", "end_date": "2026-05-08", "days_remaining": 15, "market": "FAVORABLE", "ema21": 682.11, "sma50": 674.84, "orders": [{"ticker": "AXTI", "name": "AXT, Inc.", "sector": "Technology (XLK)", "highlights": " Weinstein Stage 2 \u2022 RS Leader \u2022 Earnings Safe", "price": 86.94, "buy_stop": 86.94, "buy_limit": 87.11, "target": 96.07, "stop": 84.33, "stop_limit": 84.16, "shares": 40, "risk": 104.41, "reward": 365.44}, {"ticker": "BW", "name": "Babcock & Wilcox Enterprises, Inc.", "sector": "Industrials (XLI)", "highlights": " Weinstein Stage 2 \u2022 RS Leader \u2022 Earnings Safe", "price": 15.91, "buy_stop": 15.91, "buy_limit": 15.94, "target": 17.58, "stop": 15.43, "stop_limit": 15.4, "shares": 218, "risk": 104.41, "reward": 365.44}, {"ticker": "SNDK", "name": "Sandisk Corporation", "sector": "Technology (XLK)", "highlights": " Weinstein Stage 2 \u2022 RS Leader \u2022 Earnings Safe", "price": 979.07, "buy_stop": 979.07, "buy_limit": 981.03, "target": 1081.87, "stop": 949.7, "stop_limit": 947.8, "shares": 3, "risk": 104.41, "reward": 365.44}, {"ticker": "ANL", "name": "Adlai Nortye Ltd.", "sector": "Healthcare (XLV)", "highlights": " Weinstein Stage 2 \u2022 RS Leader \u2022 Earnings Safe", "price": 16.13, "buy_stop": 16.13, "buy_limit": 16.16, "target": 17.82, "stop": 15.65, "stop_limit": 15.62, "shares": 215, "risk": 104.41, "reward": 365.44}, {"ticker": "ERAS", "name": "Erasca, Inc.", "sector": "Healthcare (XLV)", "highlights": " Weinstein Stage 2 \u2022 RS Leader \u2022 Earnings Safe", "price": 21.65, "buy_stop": 21.65, "buy_limit": 21.69, "target": 23.92, "stop": 21.0, "stop_limit": 20.96, "shares": 160, "risk": 104.41, "reward": 365.44}]}}';
 const d = JSON.parse(SPRINT_DATA);
 render(d);
 
@@ -170,36 +169,51 @@ function renderOrders(orders, startDate){
             <div class="watermark">SELL</div>
             <img src="https://finviz.com/chart.ashx?t=${o.ticker}&ty=c&ta=1&p=d&s=l" alt="${o.ticker}">
             <div class="info">
-                <div class="price-row"><div class="ticker-name">${o.ticker}</div><div class="current-price">$${o.price.toFixed(2)}</div></div>
-                <div class="tiny-sector">${o.sector}</div>
-                <div class="highlights" style="margin-top:8px">${o.highlights.split('•').map(h=>`<span class="characteristic">${h.trim()}</span>`).join('')}</div>
+                <div class="price-row">
+                    <div class="ticker-name">${o.ticker}</div>
+                    <div style="text-align:right">
+                        <div class="current-price">$${o.price.toFixed(2)}</div>
+                        <div style="font-size:0.75rem; color:var(--cyan); font-weight:700">${o.shares} SHARES</div>
+                    </div>
+                </div>
+                <div class="highlights" style="margin-top:4px">${o.highlights.split('•').map(h=>`<span class="characteristic">${h.trim()}</span>`).join('')}</div>
             </div>
             <div class="etrade-box">
-                <div class="et-step">Buy Stop: <strong>$${o.buy_stop.toFixed(2)}</strong></div>
-                <div class="et-step">Target: <strong class="win">$${o.target.toFixed(2)}</strong></div>
-                <div class="et-step">Stop: <strong class="loss">$${o.stop.toFixed(2)}</strong></div>
+                <div class="et-step">Part 1: Buy Stop-Limit</div>
+                <div class="et-row"><span>Stop Price:</span> <strong>$${o.buy_stop.toFixed(2)}</strong></div>
+                <div class="et-row"><span>Limit Price:</span> <strong>$${o.buy_limit.toFixed(2)}</strong></div>
+                
+                <div class="et-step">Part 2: Profit Sell Limit</div>
+                <div class="et-row"><span>Limit Price:</span> <strong class="win">$${o.target.toFixed(2)}</strong></div>
+                
+                <div class="et-step">Part 3: Stop Loss Sell Stop-Limit</div>
+                <div class="et-row"><span>Stop Price:</span> <strong class="loss">$${o.stop.toFixed(2)}</strong></div>
+                <div class="et-row"><span>Limit Price:</span> <strong class="loss">$${o.stop_limit.toFixed(2)}</strong></div>
             </div>
             <div class="tracking-btns">
                 <div class="track-group">
                     <div class="track-btn bought ${state.bought?'active':''}" onclick="toggleTrack('${o.ticker}', 'bought', '${startDate}')">BGT</div>
                     <div class="track-btn sold ${state.sold?'active':''}" onclick="toggleTrack('${o.ticker}', 'sold', '${startDate}')">SLD</div>
                 </div>
-                <div style="flex:1; text-align:right; font-size:0.65rem; font-weight:700; color:var(--text2)">3.5R Alpha</div>
+                <div style="flex:1; text-align:right">
+                    <a href="https://www.tradingview.com/chart/?symbol=${o.ticker}" target="_blank" style="font-size:0.6rem; padding:4px 8px">Chart</a>
+                </div>
             </div>
         </div>`;
     }).join('');
     
     document.getElementById('orders-table-container').innerHTML = `
     <table>
-        <tr><th>Ticker</th><th>Shares</th><th>Entry Stop</th><th>Risk ($)</th><th>Target Reward ($)</th><th>Target Price</th></tr>
+        <tr><th>Ticker</th><th>Shares</th><th>Entry Stop</th><th>Entry Limit</th><th>Target (Sell)</th><th>Stop (Sell)</th><th>Stop Limit</th></tr>
         ${orders.map(o => `
         <tr>
             <td class="ticker-cell">${o.ticker}</td>
             <td>${o.shares}</td>
             <td>$${o.buy_stop.toFixed(2)}</td>
-            <td class="loss">$${o.risk.toFixed(2)}</td>
-            <td class="win">$${o.reward.toFixed(2)}</td>
+            <td>$${o.buy_limit.toFixed(2)}</td>
             <td class="win">$${o.target.toFixed(2)}</td>
+            <td class="loss">$${o.stop.toFixed(2)}</td>
+            <td class="loss">$${o.stop_limit.toFixed(2)}</td>
         </tr>`).join('')}
     </table>`;
 }
