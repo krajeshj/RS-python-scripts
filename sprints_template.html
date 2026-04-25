@@ -110,8 +110,14 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 </div>
 <script>
 const SPRINT_DATA = '__SPRINT_DATA_PLACEHOLDER__';
-const d = JSON.parse(SPRINT_DATA);
-render(d);
+let currentData = null;
+
+try {
+    currentData = JSON.parse(SPRINT_DATA);
+    render(currentData);
+} catch (e) {
+    console.error("Sprint Data Parse Error:", e);
+}
 
 function render(d){
     const s=d.summary,c=d.current_sprint,bt=d.backtests;
