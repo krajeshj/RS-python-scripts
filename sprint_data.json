@@ -1,68 +1,68 @@
 {
-  "generated": "2026-04-24 21:34 UTC",
+  "generated": "2026-04-25 00:41 UTC",
   "summary": {
     "portfolio_start": 17000.0,
-    "portfolio_current": 17214.47,
+    "portfolio_current": 17211.83,
     "portfolio_target": 51000.0,
     "win_rate": 17.5,
-    "total_return_pct": 1.3,
+    "total_return_pct": 1.2,
     "next_sprint_reminder": "Institutional Alpha Restored. Deterministic RS Backtesting active."
   },
   "backtests": [
     {
       "sprint": 1,
-      "date": "2026-02-11",
+      "date": "2026-02-05",
       "action": "TRADED",
-      "pnl": -413.01,
-      "capital_after": 16586.99,
+      "pnl": -406.12,
+      "capital_after": 16593.88,
       "wins": 0,
       "losses": 5,
       "tickers": [
         "TCGL",
-        "SMX",
+        "MTC",
+        "CGTL",
         "BVC",
-        "VSME",
-        "CGTL"
+        "ANL"
       ]
     },
     {
       "sprint": 2,
-      "date": "2026-03-26",
+      "date": "2026-03-20",
       "action": "SAT OUT",
       "pnl": 0,
-      "capital_after": 16586.99
+      "capital_after": 16593.88
     },
     {
       "sprint": 3,
-      "date": "2025-03-04",
+      "date": "2025-02-28",
       "action": "TRADED",
       "pnl": 0,
-      "capital_after": 16586.99,
+      "capital_after": 16593.88,
       "wins": 0,
       "losses": 0,
       "tickers": []
     },
     {
       "sprint": 4,
-      "date": "2025-04-15",
+      "date": "2025-04-11",
       "action": "TRADED",
       "pnl": 0,
-      "capital_after": 16586.99,
+      "capital_after": 16593.88,
       "wins": 0,
       "losses": 0,
       "tickers": []
     },
     {
       "sprint": 5,
-      "date": "2025-05-29",
+      "date": "2025-05-27",
       "action": "TRADED",
-      "pnl": -51.41,
-      "capital_after": 16535.58,
+      "pnl": -45.86,
+      "capital_after": 16548.02,
       "wins": 1,
       "losses": 4,
       "tickers": [
-        "LICN",
         "RGC",
+        "LICN",
         "DFDV",
         "ASST",
         "NAKA"
@@ -70,74 +70,74 @@
     },
     {
       "sprint": 6,
-      "date": "2025-07-14",
+      "date": "2025-07-10",
       "action": "TRADED",
-      "pnl": 55.04,
-      "capital_after": 16590.62,
+      "pnl": 47.94,
+      "capital_after": 16595.96,
       "wins": 1,
       "losses": 4,
       "tickers": [
         "TCGL",
-        "TRON",
-        "RGC",
         "WBX",
+        "RGC",
+        "TRON",
         "ASST"
       ]
     },
     {
       "sprint": 7,
-      "date": "2025-08-25",
+      "date": "2025-08-21",
       "action": "TRADED",
-      "pnl": 44.22,
-      "capital_after": 16634.84,
+      "pnl": 50.02,
+      "capital_after": 16645.98,
       "wins": 1,
       "losses": 4,
       "tickers": [
         "TCGL",
         "NEGG",
-        "ZEPP",
         "WBX",
-        "ABVX"
+        "ZEPP",
+        "TRON"
       ]
     },
     {
       "sprint": 8,
-      "date": "2025-10-07",
+      "date": "2025-10-03",
       "action": "TRADED",
-      "pnl": 146.44,
-      "capital_after": 16781.28,
-      "wins": 1,
-      "losses": 4,
+      "pnl": 1045.67,
+      "capital_after": 17691.65,
+      "wins": 3,
+      "losses": 2,
       "tickers": [
         "QMMM",
         "TCGL",
+        "ZEPP",
         "OPEN",
-        "ABVX",
-        "ZEPP"
+        "ABVX"
       ]
     },
     {
       "sprint": 9,
-      "date": "2025-11-18",
+      "date": "2025-11-14",
       "action": "TRADED",
-      "pnl": 584.38,
-      "capital_after": 17365.66,
-      "wins": 2,
-      "losses": 3,
+      "pnl": -314.76,
+      "capital_after": 17376.9,
+      "wins": 0,
+      "losses": 5,
       "tickers": [
         "QMMM",
         "TCGL",
-        "MGRT",
         "SPRB",
+        "MGRT",
         "NUAI"
       ]
     },
     {
       "sprint": 10,
-      "date": "2026-01-02",
+      "date": "2025-12-30",
       "action": "TRADED",
-      "pnl": 157.59,
-      "capital_after": 17523.25,
+      "pnl": 158.21,
+      "capital_after": 17535.11,
       "wins": 1,
       "losses": 4,
       "tickers": [
@@ -145,31 +145,31 @@
         "TCGL",
         "SPRB",
         "DMRA",
-        "AFJK"
+        "PRAX"
       ]
     },
     {
       "sprint": 11,
-      "date": "2026-02-17",
+      "date": "2026-02-12",
       "action": "TRADED",
-      "pnl": -308.78,
-      "capital_after": 17214.47,
+      "pnl": -323.27,
+      "capital_after": 17211.83,
       "wins": 0,
       "losses": 5,
       "tickers": [
         "MGRT",
         "TCGL",
+        "SMX",
         "BVC",
-        "VSME",
-        "SMX"
+        "VSME"
       ]
     },
     {
       "sprint": 12,
-      "date": "2026-03-31",
+      "date": "2026-03-27",
       "action": "SAT OUT",
       "pnl": 0,
-      "capital_after": 17214.47
+      "capital_after": 17211.83
     }
   ],
   "current_sprint": {
@@ -177,8 +177,8 @@
     "end_date": "2026-05-08",
     "days_remaining": 14,
     "market": "FAVORABLE",
-    "ema21": 686.91,
-    "sma50": 675.59,
+    "ema21": 682.11,
+    "sma50": 674.84,
     "orders": [
       {
         "ticker": "AXTI",
@@ -194,7 +194,7 @@
         "shares": 39,
         "risk": 103.27,
         "reward": 361.45,
-        "today_price": 75.27
+        "today_price": 74.97
       },
       {
         "ticker": "BW",
@@ -210,7 +210,7 @@
         "shares": 216,
         "risk": 103.27,
         "reward": 361.45,
-        "today_price": 15.66
+        "today_price": 16.04
       },
       {
         "ticker": "SNDK",
@@ -226,7 +226,7 @@
         "shares": 3,
         "risk": 103.27,
         "reward": 361.45,
-        "today_price": 932.43
+        "today_price": 903.49
       },
       {
         "ticker": "ANL",
@@ -242,7 +242,7 @@
         "shares": 213,
         "risk": 103.27,
         "reward": 361.45,
-        "today_price": 14.91
+        "today_price": 15.96
       },
       {
         "ticker": "ERAS",
@@ -258,7 +258,7 @@
         "shares": 159,
         "risk": 103.27,
         "reward": 361.45,
-        "today_price": 22.47
+        "today_price": 22.41
       }
     ]
   }
