@@ -118,7 +118,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 <div id="orders-table-container" class="card-table" style="margin-top:2rem"></div>
 </div>
 <div class="section" id="log-section">
-<h2>Active Trade Log <span class="badge">Persistence</span></h2>
+<h2>Active Trade Log <span class="badge" title="Click 'BUY' on any card to record a trade">Journal (Click BUY to log)</span></h2>
 <div id="trade-log-container" class="card-table"></div>
 </div>
 <div class="section">
@@ -147,7 +147,8 @@ function render(d){
     <div class="metric"><div class="val blue">$${s.portfolio_current.toLocaleString()}</div><div class="label">Balance</div></div>
     <div class="metric"><div class="val yellow">$${s.portfolio_target.toLocaleString()}</div><div class="label">3x Target</div></div>
     <div class="metric"><div class="val">${s.win_rate}%</div><div class="label">Win Rate</div></div>
-    <div class="metric"><div class="val ${pnlClass}">${s.total_return_pct>0?'+':''}${s.total_return_pct}%</div><div class="label">Return</div></div>`;
+    <div class="metric"><div class="val ${pnlClass}">${s.total_return_pct>0?'+':''}${s.total_return_pct}%</div><div class="label">Return</div></div>
+    <div class="metric"><div class="val blue">${s.sharpe_ratio || '0.00'}</div><div class="label">Sharpe Ratio</div></div>`;
     
     const remaining = c.days_remaining || 15;
     const progress = ((15 - remaining) / 15) * 100;

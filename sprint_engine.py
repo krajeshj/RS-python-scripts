@@ -303,11 +303,21 @@ def main():
     backtests.sort(key=lambda x: x["date"], reverse=True)
 
 
+    # Calculate Sharpe Ratio
+    pnl_history = [b["pnl"] for b in backtests if b["action"] == "TRADED"]
+    if len(pnl_history) > 1:
+        avg_pnl = np.mean(pnl_history)
+        std_pnl = np.std(pnl_history)
+        sharpe = (avg_pnl / std_pnl) * np.sqrt(17) if std_pnl > 0 else 0 # Annualized (approx 17 sprints/year)
+    else:
+        sharpe = 0
+
     output = {
         "generated": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         "summary": {
             "portfolio_start": PORTFOLIO_START, "portfolio_current": round(capital, 2), "portfolio_target": PORTFOLIO_START * 3,
             "win_rate": round(wins/(wins+losses)*100,1) if (wins+losses)>0 else 0, "total_return_pct": round((capital-PORTFOLIO_START)/PORTFOLIO_START*100, 1),
+            "sharpe_ratio": round(sharpe, 2),
             "next_sprint_reminder": "VIX MOMENTUM ACTIVE: Trading only if VIX < 25 and VIX < SMA20. Shield: 9/21 EMA Cross."
         },
         "backtests": backtests, "current_sprint": current_sprint
