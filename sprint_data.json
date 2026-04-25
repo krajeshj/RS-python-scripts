@@ -1,11 +1,12 @@
 {
-  "generated": "2026-04-25 23:09 UTC",
+  "generated": "2026-04-25 23:40 UTC",
   "summary": {
     "portfolio_start": 17000.0,
     "portfolio_current": 20629.66,
     "portfolio_target": 51000.0,
     "win_rate": 70.0,
     "total_return_pct": 21.4,
+    "sharpe_ratio": 3.9,
     "next_sprint_reminder": "VIX MOMENTUM ACTIVE: Trading only if VIX < 25 and VIX < SMA20. Shield: 9/21 EMA Cross."
   },
   "backtests": [
