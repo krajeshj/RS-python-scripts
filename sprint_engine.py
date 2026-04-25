@@ -22,6 +22,31 @@ SPRINT_DAYS = 15
 NUM_PICKS = 5
 NUM_BACKTESTS = 12
 
+def get_rrg_quadrant(tc, sc):
+    if len(tc) < 30: return "Unknown"
+    rs_raw = tc / sc
+    sma_ratio = rs_raw.rolling(14).mean()
+    rs_ratio = 100 + ((sma_ratio - sma_ratio.rolling(14).mean()) / sma_ratio.rolling(14).std().replace(0, 1)) * 5
+    roc = rs_ratio.diff(10)
+    rs_mom = 100 + ((roc - roc.rolling(10).mean()) / roc.rolling(10).std().replace(0, 1)) * 5
+    x, y = rs_ratio.iloc[-1] - 100, rs_mom.iloc[-1] - 100
+    if x >= 0 and y >= 0: return "Leading"
+    if x < 0 and y >= 0: return "Improving"
+    if x < 0 and y < 0: return "Lagging"
+    return "Weakening"
+
+def get_leading_sectors(idx, spy_all, all_data):
+    leading = []
+    sector_etfs = ["XLK", "XLE", "XLF", "XLV", "XLY", "XLC", "XLP", "XLU", "XLI", "XLRE", "XLB"]
+    spy_c = pd.Series([c["close"] for c in spy_all[:idx]])
+    for s in sector_etfs:
+        if s not in all_data: continue
+        tc = pd.Series([c["close"] for c in all_data[s]["candles"][:idx]])
+        if len(tc) < 63: continue
+        if get_rrg_quadrant(tc, spy_c.tail(len(tc)).reset_index(drop=True)) == "Leading":
+            leading.append(s)
+    return leading
+
 def simulate_sprint_full(all_data, picks, capital, entry_idx):
     risk_budget = capital * MAX_RISK_PCT
     risk_per = risk_budget / NUM_PICKS
@@ -29,8 +54,17 @@ def simulate_sprint_full(all_data, picks, capital, entry_idx):
     for p in picks:
         ticker, price = p["ticker"], p["price"]
         candles = all_data[ticker]["candles"]
-        stop_dist = price * 0.03
-        stop_loss, target = round(price - stop_dist, 2), round(price + stop_dist * TARGET_R, 2)
+        
+        # 21-Day Low Stop Logic
+        lookback = candles[max(0, entry_idx-21):entry_idx]
+        lows = [c["low"] for c in lookback]
+        low_21 = min(lows) if lows else price * 0.97
+        # Safety Buffer: Max 8% stop, Min 1.5% stop
+        stop_loss = max(low_21, price * 0.92)
+        stop_loss = min(stop_loss, price * 0.985)
+        stop_dist = price - stop_loss
+            
+        target = round(price + stop_dist * TARGET_R, 2)
         shares = max(1, int(risk_per / stop_dist))
         exit_price, result = price, "EXPIRED"
         for d in range(1, SPRINT_DAYS + 1):
@@ -65,14 +99,34 @@ def main():
             backtests.append({"sprint":len(backtests)+1, "date":datetime.fromtimestamp(spy_all[idx]["datetime"],tz=timezone.utc).strftime("%Y-%m-%d"), "action":"SAT OUT", "pnl":0, "capital_after":round(capital,2)})
             continue
         
+        leading_sectors = get_leading_sectors(idx, spy_all, all_data)
+        
+        # Sector Mapping
+        mapping = {"Technology": "XLK", "Energy": "XLE", "Financial": "XLF", "Healthcare": "XLV", "Consumer": "XLY", "Communication": "XLC", "Basic": "XLB", "Industrials": "XLI", "Real": "XLRE", "Utilities": "XLU"}
+        ticker_to_sector = {s["ticker"]: mapping.get(s["sector"].split(' ')[0], "NONE") for s in web_data.get("all_stocks", [])}
+
         candidates = []
         spy_bench = s_spy.iloc[-1] / s_spy.iloc[-63] if len(s_spy) > 63 else 1
         for t, d in all_data.items():
             if t in ["SPY"] or d.get("skip_calc",1)==1: continue
             cnd = d.get("candles", [])[:idx]
             if len(cnd) < 63: continue
+            
+            tc = pd.Series([c["close"] for c in cnd])
             c = cnd[-1]["close"]
-            # Actual RS calc: Performance vs SPY over 3 months
+            
+            if c < 15: continue
+
+            # Flow & RMV
+            ranges = [o["high"] - o["low"] for o in cnd[-20:]]
+            rmv = (sum(ranges)/len(ranges) / c) * 100 * 7.0
+            avg_vol = sum([o["volume"] for o in cnd[-20:]]) / 20
+            rvol = cnd[-1]["volume"] / avg_vol if avg_vol > 0 else 0
+            
+            # Experiment #4 Filter: Leading Sector + Flow > 1.2 + Low RMV < 40
+            is_leading_sec = ticker_to_sector.get(t, "NONE") in leading_sectors
+            if not (is_leading_sec and rvol > 1.2 and rmv < 40): continue
+
             rs_score = (c / cnd[-63]["close"]) / spy_bench
             candidates.append({"ticker":t, "price":c, "rs":rs_score})
         
@@ -120,16 +174,56 @@ def main():
         current_sprint = {"start_date": last_price_date, "end_date": (datetime.strptime(last_price_date, "%Y-%m-%d") + timedelta(days=SPRINT_DAYS)).strftime("%Y-%m-%d"), "days_remaining": SPRINT_DAYS, "market": "FAVORABLE" if ema21_now > sma50_now else "UNFAVORABLE", "ema21": round(ema21_now, 2), "sma50": round(sma50_now, 2), "orders": []}
         
         if current_sprint["market"] == "FAVORABLE":
-            valid_picks = [s for s in web_data.get("all_stocks", []) if s.get("price", 0) > 15 and s.get("is_minervini", False) and (s.get("days_to_earnings", -1) >= 15 or s.get("days_to_earnings") == -1)]
-            valid_picks.sort(key=lambda x: -x.get("rs", 0))
+            # Apply Experiment #4 Logic to Current Candidates
+            leading_sectors = get_leading_sectors(len(spy_all), spy_all, all_data)
+            mapping = {"Technology": "XLK", "Energy": "XLE", "Financial": "XLF", "Healthcare": "XLV", "Consumer": "XLY", "Communication": "XLC", "Basic": "XLB", "Industrials": "XLI", "Real": "XLRE", "Utilities": "XLU"}
+            
+            final_candidates = []
+            for s in web_data.get("all_stocks", []):
+                t = s["ticker"]
+                if t not in all_data: continue
+                cnd = all_data[t]["candles"]
+                if len(cnd) < 63: continue
+                
+                c = cnd[-1]["close"]
+                if c < 15: continue
+                
+                # RMV/Flow Calc
+                ranges = [o["high"] - o["low"] for o in cnd[-20:]]
+                rmv = (sum(ranges)/len(ranges) / c) * 100 * 7.0
+                avg_vol = sum([o["volume"] for o in cnd[-20:]]) / 20
+                rvol = cnd[-1]["volume"] / avg_vol if avg_vol > 0 else 0
+                
+                sector_etf = mapping.get(s["sector"].split(' ')[0], "NONE")
+                is_leading_sec = sector_etf in leading_sectors
+                
+                # Earnings Shield
+                dte = s.get("days_to_earnings", -1)
+                earnings_safe = (dte >= 15 or dte == -1)
+
+                if is_leading_sec and rvol > 1.2 and rmv < 40 and earnings_safe:
+                    final_candidates.append(s)
+            
+            final_candidates.sort(key=lambda x: -x.get("rs", 0))
             risk_budget = capital * MAX_RISK_PCT
             risk_per = risk_budget / NUM_PICKS
-            for p in valid_picks[:NUM_PICKS]:
-                price, stop_dist = round(p["price"], 2), p["price"] * 0.03
-                stop_p = round(price - stop_dist, 2)
+            
+            for p in final_candidates[:NUM_PICKS]:
+                t = p["ticker"]
+                price = round(p["price"], 2)
+                
+                # 21-Day Low Stop for Live Card
+                cnd = all_data[t]["candles"]
+                lows = [c["low"] for c in cnd[-21:]]
+                low_21 = min(lows) if lows else price * 0.97
+                stop_p = max(low_21, price * 0.92)
+                stop_p = min(stop_p, price * 0.985)
+                stop_dist = price - stop_p
+                
                 current_sprint["orders"].append({
-                    "ticker": p["ticker"], "name": p.get("name", ""), "sector": f"{p['sector']} (Institutional)", "highlights": "Weinstein Stage 2 • RS Alpha • Earnings Safe",
-                    "price": price, "buy_stop": price, "buy_limit": round(price * 1.002, 2), "target": round(price + stop_dist * TARGET_R, 2), "stop": stop_p, "stop_limit": round(stop_p * 0.998, 2),
+                    "ticker": t, "name": p.get("name", ""), "sector": f"{p['sector']} (Institutional Flow)", 
+                    "highlights": f"Leading Sector • Fund Flow: {round(p.get('rvol', 1.3), 1)}x • 21-Day Low Stop",
+                    "price": price, "buy_stop": price, "buy_limit": round(price * 1.002, 2), "target": round(price + stop_dist * TARGET_R, 2), "stop": round(stop_p, 2), "stop_limit": round(stop_p * 0.998, 2),
                     "shares": int(risk_per / stop_dist), "risk": round(risk_per, 2), "reward": round(risk_per * TARGET_R, 2)
                 })
 

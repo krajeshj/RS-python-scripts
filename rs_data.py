@@ -333,12 +333,26 @@ def _fetch_single_ticker_info(ticker, max_retries=3):
                     }
                 }
 
+            # Fetch Earnings Date
+            earnings_date = "n/a"
+            try:
+                calendar = yt.calendar
+                if calendar is not None and not calendar.empty:
+                    # calendar is a DF or Series depending on yf version
+                    if isinstance(calendar, pd.DataFrame) and "Earnings Date" in calendar.index:
+                        earnings_date = calendar.loc["Earnings Date"].iloc[0].strftime('%Y-%m-%d')
+                    elif "Earnings Date" in calendar:
+                        earnings_date = calendar["Earnings Date"][0].strftime('%Y-%m-%d')
+            except:
+                pass
+
             return ticker, {
                 "info": {
                     "name": info.get("longName", info.get("shortName", ticker)),
                     "industry": info.get("industry", "Index/ETF" if "^" in ticker else "unknown"),
                     "sector": info.get("sector", "Market Pulse" if "^" in ticker else "unknown"),
                     "marketCap": info.get("marketCap", 0),
+                    "earnings_date": earnings_date,
                     # CANSLIM screening fields
                     "eps_growth_curr": info.get("earningsQuarterlyGrowth", 0) or 0,
                     "revenue_growth": info.get("revenueGrowth", 0) or 0,
