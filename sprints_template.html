@@ -175,10 +175,14 @@ function renderOrders(orders, startDate){
         const storageKey = `sprint_${startDate}_${o.ticker}`;
         const state = JSON.parse(localStorage.getItem(storageKey) || '{"bought":false,"sold":false}');
         
-        // Dynamic Pricing: Use today_price if not bought yet
-        const basePrice = state.bought ? o.price : o.today_price;
-        const oco = getOCO(basePrice);
-        const isSell = state.bought && (o.today_price < oco.stop_limit);
+        // 1. OCO for Display: Always use the "Live" price (market or override)
+        const oco = getOCO(o.today_price);
+        
+        // 2. Fixed Reference OCO: Always use the Original Pick Price (o.price) for the "Death Line"
+        const referenceOco = getOCO(o.price);
+        
+        // 3. Watermark logic: Compare Live Price against the Fixed Stop Limit
+        const isSell = state.bought && (o.today_price < referenceOco.stop_limit);
         
         return `
         <div class="chart-card ${isSell ? 'expired' : ''}" id="card-${o.ticker}">
@@ -190,7 +194,7 @@ function renderOrders(orders, startDate){
                     <div style="text-align:right">
                         <div class="current-price">$${o.today_price.toFixed(2)}</div>
                         <div style="font-size:0.7rem; color:var(--text2); font-weight:600">
-                            ${state.bought ? 'Entry Lock' : 'Entry Target'}: $${basePrice.toFixed(2)}
+                            Pick Price: $${o.price.toFixed(2)}
                         </div>
                         <div style="margin-top:8px">
                             <label style="font-size:0.65rem; color:var(--text2); display:block; margin-bottom:2px">Live Price Override</label>
