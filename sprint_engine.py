@@ -208,6 +208,9 @@ def main():
             risk_budget = capital * MAX_RISK_PCT
             risk_per = risk_budget / NUM_PICKS
             
+            # Create lookup for web_data
+            web_lookup = {s["ticker"]: s for s in web_data.get("all_stocks", [])}
+            
             for p in final_candidates[:NUM_PICKS]:
                 t = p["ticker"]
                 price = round(p["price"], 2)
@@ -220,20 +223,58 @@ def main():
                 stop_p = min(stop_p, price * 0.985)
                 stop_dist = price - stop_p
                 
+                # Metadata lookup
+                meta = web_lookup.get(t, {})
+                sector_name = p['sector'].split(' ')[0]
+                sector_etf = mapping.get(sector_name, "SPY")
+                
+                # Industry Quadrant (approximate using sector for now if industry history not separate)
+                spy_c = pd.Series([c["close"] for c in spy_all])
+                if sector_etf in all_data:
+                    sec_c = pd.Series([c["close"] for c in all_data[sector_etf]["candles"]])
+                    quad = get_rrg_quadrant(sec_c, spy_c.tail(len(sec_c)).reset_index(drop=True))
+                else:
+                    quad = "Leading"
+
+                # Momentum Notes
+                rs_now = meta.get("rs", 50)
+                rs_1w = meta.get("rs_1w_pct", rs_now)
+                rs_1m = meta.get("rs_1m_pct", rs_now)
+                y_mom = (rs_1w - rs_1m) * 0.7 + (rs_now - rs_1w) * 0.3
+                
+                m_note = "→ Neutral"
+                if y_mom > 0: m_note = "➚ Momentum Rallying" if y_mom > 2 else "↗ Momentum Recovering"
+                elif y_mom < 0: m_note = "↘ Momentum Declining" if y_mom < -2 else "⤹ Momentum Curling"
+
                 current_sprint["orders"].append({
-                    "ticker": t, "name": p.get("name", ""), "sector": f"{p['sector']} (Institutional Flow)", 
+                    "ticker": t, "name": p.get("name", ""), 
+                    "sector": f"{p['sector']} (Institutional Flow)",
+                    "sector_symbol": sector_etf,
+                    "industry": meta.get("industry", "Unknown"),
+                    "industry_quadrant": quad,
+                    "momentum_notes": m_note,
+                    "rs": rs_now,
+                    "rmv": meta.get("rmv", 40),
+                    "canslim": meta.get("canslim", {"c":False,"a":False,"n":False,"s":False,"l":False,"i":False,"m":False}),
+                    "avg_volume": meta.get("avg_volume", 0),
                     "highlights": f"Leading Sector • Fund Flow: {round(p.get('rvol', 1.3), 1)}x • 21-Day Low Stop",
                     "price": price, "buy_stop": price, "buy_limit": round(price * 1.002, 2), "target": round(price + stop_dist * TARGET_R, 2), "stop": round(stop_p, 2), "stop_limit": round(stop_p * 0.998, 2),
                     "shares": int(risk_per / stop_dist), "risk": round(risk_per, 2), "reward": round(risk_per * TARGET_R, 2)
                 })
 
-    # Add/Update Today's Price for all orders
+    # Add/Update Today's Price and Volume for all orders
     for o in current_sprint["orders"]:
         t = o["ticker"]
         if t in all_data and "candles" in all_data[t] and len(all_data[t]["candles"]) > 0:
-            o["today_price"] = round(all_data[t]["candles"][-1]["close"], 2)
+            last_c = all_data[t]["candles"][-1]
+            o["today_price"] = round(last_c["close"], 2)
+            o["volume"] = last_c.get("volume", 0)
+            o["is_up"] = last_c["close"] > (all_data[t]["candles"][-2]["close"] if len(all_data[t]["candles"]) > 1 else last_c["close"])
         else:
             o["today_price"] = o.get("today_price", o["price"])
+            o["volume"] = 0
+            o["is_up"] = True
+
 
     output = {
         "generated": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
