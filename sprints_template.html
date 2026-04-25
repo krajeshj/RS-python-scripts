@@ -186,13 +186,13 @@ function renderOrders(orders, startDate){
         
         return `
         <div class="chart-card ${isSell ? 'expired' : ''}" id="card-${o.ticker}">
-            <div class="watermark" style="display: ${isSell ? 'block' : 'none'}">SELL</div>
+            <div class="watermark" id="watermark-${o.ticker}" style="display: ${isSell ? 'block' : 'none'}">SELL</div>
             <img src="https://finviz.com/chart.ashx?t=${o.ticker}&ty=c&ta=1&p=d&s=l" alt="${o.ticker}">
             <div class="info">
                 <div class="price-row">
                     <div class="ticker-name">${o.ticker}</div>
                     <div style="text-align:right">
-                        <div class="current-price">$${o.today_price.toFixed(2)}</div>
+                        <div class="current-price" id="price-display-${o.ticker}">$${o.today_price.toFixed(2)}</div>
                         <div style="font-size:0.7rem; color:var(--text2); font-weight:600">
                             Pick Price: $${o.price.toFixed(2)}
                         </div>
@@ -208,17 +208,17 @@ function renderOrders(orders, startDate){
                 </div>
                 <div class="highlights" style="margin-top:6px">${o.highlights.split('•').map(h=>`<span class="characteristic">${h.trim()}</span>`).join('')}</div>
             </div>
-            <div class="etrade-box">
+            <div class="etrade-box" id="oco-box-${o.ticker}">
                 <div class="et-step">Part 1: Buy Stop-Limit</div>
-                <div class="et-row"><span>Stop Price:</span> <strong>$${oco.buy_stop.toFixed(2)}</strong></div>
-                <div class="et-row"><span>Limit Price:</span> <strong>$${oco.buy_limit.toFixed(2)}</strong></div>
+                <div class="et-row"><span>Stop Price:</span> <strong id="part1-stop-${o.ticker}">$${oco.buy_stop.toFixed(2)}</strong></div>
+                <div class="et-row"><span>Limit Price:</span> <strong id="part1-limit-${o.ticker}">$${oco.buy_limit.toFixed(2)}</strong></div>
                 
                 <div class="et-step">Part 2: Profit Sell Limit</div>
-                <div class="et-row"><span>Limit Price:</span> <strong class="win">$${oco.target.toFixed(2)}</strong></div>
+                <div class="et-row"><span>Limit Price:</span> <strong class="win" id="part2-limit-${o.ticker}">$${oco.target.toFixed(2)}</strong></div>
                 
                 <div class="et-step">Part 3: Stop Loss Sell Stop-Limit</div>
-                <div class="et-row"><span>Stop Price:</span> <strong class="loss">$${oco.stop.toFixed(2)}</strong></div>
-                <div class="et-row"><span>Limit Price:</span> <strong class="loss">$${oco.stop_limit.toFixed(2)}</strong></div>
+                <div class="et-row"><span>Stop Price:</span> <strong class="loss" id="part3-stop-${o.ticker}">$${oco.stop.toFixed(2)}</strong></div>
+                <div class="et-row"><span>Limit Price:</span> <strong class="loss" id="part3-limit-${o.ticker}">$${oco.stop_limit.toFixed(2)}</strong></div>
             </div>
             <div class="tracking-btns">
                 <div class="track-group">
@@ -259,11 +259,35 @@ function toggleTrack(ticker, type, startDate) {
 function updateLivePrice(ticker, val) {
     const price = parseFloat(val);
     if (isNaN(price)) return;
-    const idx = currentData.current_sprint.orders.findIndex(o => o.ticker === ticker);
-    if (idx !== -1) {
-        currentData.current_sprint.orders[idx].today_price = price;
-        renderOrders(currentData.current_sprint.orders);
-    }
+    
+    // 1. Update the local data
+    const o = currentData.current_sprint.orders.find(ord => ord.ticker === ticker);
+    if (!o) return;
+    o.today_price = price;
+
+    // 2. Recalculate OCOs
+    const newOco = getOCO(price);
+    const refOco = getOCO(o.price);
+
+    // 3. Check Watermark State
+    const storageKey = `sprint_${currentData.current_sprint.start_date}_${ticker}`;
+    const state = JSON.parse(localStorage.getItem(storageKey) || '{"bought":false,"sold":false}');
+    const isSell = state.bought && (price < refOco.stop_limit);
+
+    // 4. Update UI Surgically (No re-render of the whole card)
+    document.getElementById(`price-display-${ticker}`).textContent = `$${price.toFixed(2)}`;
+    document.getElementById(`part1-stop-${ticker}`).textContent = `$${newOco.buy_stop.toFixed(2)}`;
+    document.getElementById(`part1-limit-${ticker}`).textContent = `$${newOco.buy_limit.toFixed(2)}`;
+    document.getElementById(`part2-limit-${ticker}`).textContent = `$${newOco.target.toFixed(2)}`;
+    document.getElementById(`part3-stop-${ticker}`).textContent = `$${newOco.stop.toFixed(2)}`;
+    document.getElementById(`part3-limit-${ticker}`).textContent = `$${newOco.stop_limit.toFixed(2)}`;
+    
+    const wm = document.getElementById(`watermark-${ticker}`);
+    wm.style.display = isSell ? 'block' : 'none';
+    
+    const card = document.getElementById(`card-${ticker}`);
+    if (isSell) card.classList.add('expired');
+    else card.classList.remove('expired');
 }
 </script>
 </body>
