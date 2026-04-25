@@ -117,6 +117,10 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 <div id="orders-charts" class="chart-row"></div>
 <div id="orders-table-container" class="card-table" style="margin-top:2rem"></div>
 </div>
+<div class="section" id="log-section">
+<h2>Active Trade Log <span class="badge">Persistence</span></h2>
+<div id="trade-log-container" class="card-table"></div>
+</div>
 <div class="section">
 <h2>Sprint History <span class="badge" id="bt-count"></span></h2>
 <div class="bt-grid" id="bt-grid"></div>
@@ -124,7 +128,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 <div class="reminder" id="reminder"></div>
 </div>
 <script>
-const SPRINT_DATA = '{"generated": "2026-04-25 20:08 UTC", "summary": {"portfolio_start": 17000.0, "portfolio_current": 20629.66, "portfolio_target": 51000.0, "win_rate": 70.0, "total_return_pct": 21.4, "next_sprint_reminder": "VIX MOMENTUM ACTIVE: Trading only if VIX < 25 and VIX < SMA20. Shield: 9/21 EMA Cross."}, "backtests": [{"sprint": 13, "date": "2026-04-11", "action": "TRADED", "pnl": 425.5, "capital_after": 20629.66, "wins": 4, "losses": 1, "tickers": ["AMKR", "SITM", "FORM", "BELFA", "AIP"]}, {"sprint": 12, "date": "2026-03-27", "action": "SAT OUT", "pnl": 0, "capital_after": 20204.16}, {"sprint": 2, "date": "2026-03-20", "action": "SAT OUT", "pnl": 0, "capital_after": 17658.47}, {"sprint": 11, "date": "2026-02-12", "action": "TRADED", "pnl": 205.22, "capital_after": 20204.16, "wins": 2, "losses": 3, "tickers": ["CC", "WLK", "FET", "TEX", "UNF"]}, {"sprint": 1, "date": "2026-02-05", "action": "TRADED", "pnl": 658.47, "capital_after": 17658.47, "wins": 3, "losses": 2, "tickers": ["VOD", "ATEX", "SPHR", "VZ", "GOOGL"]}, {"sprint": 10, "date": "2025-12-30", "action": "TRADED", "pnl": 1231.23, "capital_after": 19998.94, "wins": 5, "losses": 0, "tickers": ["ARIS", "ERO", "PAAS", "SKE", "RIO"]}, {"sprint": 9, "date": "2025-11-14", "action": "TRADED", "pnl": 152.56, "capital_after": 18767.71, "wins": 2, "losses": 3, "tickers": ["VTVT", "TCMD", "GPCR", "DK", "APGE"]}, {"sprint": 8, "date": "2025-10-03", "action": "TRADED", "pnl": 162.29, "capital_after": 18615.15, "wins": 4, "losses": 1, "tickers": ["ENLT", "ELLO", "IDA", "CDZIP", "AEP"]}, {"sprint": 7, "date": "2025-08-21", "action": "TRADED", "pnl": 414.4, "capital_after": 18452.86, "wins": 4, "losses": 1, "tickers": ["W", "VC", "VIK", "FLXS", "FIVE"]}, {"sprint": 6, "date": "2025-07-10", "action": "TRADED", "pnl": 379.99, "capital_after": 18038.46, "wins": 4, "losses": 1, "tickers": ["STX", "WDC", "ALNT", "ALGM", "SIMO"]}, {"sprint": 5, "date": "2025-05-27", "action": "TRADED", "pnl": 0, "capital_after": 17658.47, "wins": 0, "losses": 0, "tickers": []}, {"sprint": 4, "date": "2025-04-11", "action": "TRADED", "pnl": 0, "capital_after": 17658.47, "wins": 0, "losses": 0, "tickers": []}, {"sprint": 3, "date": "2025-02-28", "action": "TRADED", "pnl": 0, "capital_after": 17658.47, "wins": 0, "losses": 0, "tickers": []}], "current_sprint": {"start_date": "2026-04-24", "end_date": "2026-05-09", "days_remaining": 14, "market": "FAVORABLE", "ema21": 703.23, "sma50": 679.28, "orders": [{"ticker": "FORM", "name": "FormFactor, Inc.", "sector": "Technology (Institutional Flow)", "highlights": "Leading Sector \u2022 Fund Flow: 1.3x \u2022 21-Day Low Stop", "price": 148.37, "buy_stop": 148.37, "buy_limit": 148.67, "target": 189.91, "stop": 136.5, "stop_limit": 136.23, "shares": 10, "risk": 121.22, "reward": 424.29, "today_price": 142.04, "volume": 2185600, "is_up": false, "sector_symbol": "XLK", "industry": "Semiconductor Equipment & Materials", "industry_quadrant": "Leading", "momentum_notes": "\u2192 Neutral", "rs": 98, "rmv": 38.35, "canslim": {"c": true, "a": false, "n": true, "s": false, "l": false, "i": true, "m": true}, "avg_volume": 1698450.0}, {"ticker": "AMKR", "name": "Amkor Technology, Inc.", "sector": "Technology (Institutional Flow)", "highlights": "Leading Sector \u2022 Fund Flow: 1.3x \u2022 21-Day Low Stop", "price": 72.91, "buy_stop": 72.91, "buy_limit": 73.06, "target": 93.32, "stop": 67.08, "stop_limit": 66.94, "shares": 20, "risk": 121.22, "reward": 424.29, "today_price": 70.21, "volume": 4161300, "is_up": true, "sector_symbol": "XLK", "industry": "Semiconductor Equipment & Materials", "industry_quadrant": "Leading", "momentum_notes": "\u2197 Momentum Recovering", "rs": 97, "rmv": 37.54, "canslim": {"c": true, "a": false, "n": true, "s": true, "l": true, "i": true, "m": true}, "avg_volume": 2944550.0}, {"ticker": "SITM", "name": "SiTime Corporation", "sector": "Technology (Institutional Flow)", "highlights": "Leading Sector \u2022 Fund Flow: 1.3x \u2022 21-Day Low Stop", "price": 556.13, "buy_stop": 556.13, "buy_limit": 557.24, "target": 711.85, "stop": 511.64, "stop_limit": 510.62, "shares": 2, "risk": 121.22, "reward": 424.29, "today_price": 523.57, "volume": 485300, "is_up": false, "sector_symbol": "XLK", "industry": "Semiconductors", "industry_quadrant": "Leading", "momentum_notes": "\u279a Momentum Rallying", "rs": 97, "rmv": 36.67, "canslim": {"c": true, "a": false, "n": true, "s": true, "l": true, "i": false, "m": true}, "avg_volume": 333930.0}, {"ticker": "AIP", "name": "Arteris, Inc.", "sector": "Technology (Institutional Flow)", "highlights": "Leading Sector \u2022 Fund Flow: 1.3x \u2022 21-Day Low Stop", "price": 24.31, "buy_stop": 24.31, "buy_limit": 24.36, "target": 31.12, "stop": 22.37, "stop_limit": 22.32, "shares": 62, "risk": 121.22, "reward": 424.29, "today_price": 23.58, "volume": 725900, "is_up": true, "sector_symbol": "XLK", "industry": "Semiconductors", "industry_quadrant": "Leading", "momentum_notes": "\u279a Momentum Rallying", "rs": 96, "rmv": 31.71, "canslim": {"c": true, "a": false, "n": true, "s": true, "l": true, "i": true, "m": true}, "avg_volume": 430290.0}, {"ticker": "BELFA", "name": "Bel Fuse Inc.", "sector": "Technology (Institutional Flow)", "highlights": "Leading Sector \u2022 Fund Flow: 1.3x \u2022 21-Day Low Stop", "price": 245.81, "buy_stop": 245.81, "buy_limit": 246.3, "target": 314.64, "stop": 226.15, "stop_limit": 225.69, "shares": 6, "risk": 121.22, "reward": 424.29, "today_price": 234.65, "volume": 118000, "is_up": false, "sector_symbol": "XLK", "industry": "Electronic Components", "industry_quadrant": "Leading", "momentum_notes": "\u2939 Momentum Curling", "rs": 95, "rmv": 26.82, "canslim": {"c": false, "a": false, "n": true, "s": false, "l": false, "i": false, "m": true}, "avg_volume": 102310.0}]}}';
+const SPRINT_DATA = '{"generated": "2026-04-25 23:09 UTC", "summary": {"portfolio_start": 17000.0, "portfolio_current": 20629.66, "portfolio_target": 51000.0, "win_rate": 70.0, "total_return_pct": 21.4, "next_sprint_reminder": "VIX MOMENTUM ACTIVE: Trading only if VIX < 25 and VIX < SMA20. Shield: 9/21 EMA Cross."}, "backtests": [{"sprint": 13, "date": "2026-04-11", "action": "TRADED", "pnl": 425.5, "capital_after": 20629.66, "wins": 4, "losses": 1, "tickers": ["AMKR", "SITM", "FORM", "BELFA", "AIP"]}, {"sprint": 12, "date": "2026-03-27", "action": "SAT OUT", "pnl": 0, "capital_after": 20204.16}, {"sprint": 2, "date": "2026-03-20", "action": "SAT OUT", "pnl": 0, "capital_after": 17658.47}, {"sprint": 11, "date": "2026-02-12", "action": "TRADED", "pnl": 205.22, "capital_after": 20204.16, "wins": 2, "losses": 3, "tickers": ["CC", "WLK", "FET", "TEX", "UNF"]}, {"sprint": 1, "date": "2026-02-05", "action": "TRADED", "pnl": 658.47, "capital_after": 17658.47, "wins": 3, "losses": 2, "tickers": ["VOD", "ATEX", "SPHR", "VZ", "GOOGL"]}, {"sprint": 10, "date": "2025-12-30", "action": "TRADED", "pnl": 1231.23, "capital_after": 19998.94, "wins": 5, "losses": 0, "tickers": ["ARIS", "ERO", "PAAS", "SKE", "RIO"]}, {"sprint": 9, "date": "2025-11-14", "action": "TRADED", "pnl": 152.56, "capital_after": 18767.71, "wins": 2, "losses": 3, "tickers": ["VTVT", "TCMD", "GPCR", "DK", "APGE"]}, {"sprint": 8, "date": "2025-10-03", "action": "TRADED", "pnl": 162.29, "capital_after": 18615.15, "wins": 4, "losses": 1, "tickers": ["ENLT", "ELLO", "IDA", "CDZIP", "AEP"]}, {"sprint": 7, "date": "2025-08-21", "action": "TRADED", "pnl": 414.4, "capital_after": 18452.86, "wins": 4, "losses": 1, "tickers": ["W", "VC", "VIK", "FLXS", "FIVE"]}, {"sprint": 6, "date": "2025-07-10", "action": "TRADED", "pnl": 379.99, "capital_after": 18038.46, "wins": 4, "losses": 1, "tickers": ["STX", "WDC", "ALNT", "ALGM", "SIMO"]}, {"sprint": 5, "date": "2025-05-27", "action": "TRADED", "pnl": 0, "capital_after": 17658.47, "wins": 0, "losses": 0, "tickers": []}, {"sprint": 4, "date": "2025-04-11", "action": "TRADED", "pnl": 0, "capital_after": 17658.47, "wins": 0, "losses": 0, "tickers": []}, {"sprint": 3, "date": "2025-02-28", "action": "TRADED", "pnl": 0, "capital_after": 17658.47, "wins": 0, "losses": 0, "tickers": []}], "current_sprint": {"start_date": "2026-04-24", "end_date": "2026-05-09", "days_remaining": 14, "market": "FAVORABLE", "ema21": 703.23, "sma50": 679.28, "orders": [{"ticker": "FORM", "name": "FormFactor, Inc.", "sector": "Technology (Institutional Flow)", "highlights": "Leading Sector \u2022 Fund Flow: 1.3x \u2022 21-Day Low Stop", "price": 148.37, "buy_stop": 148.37, "buy_limit": 148.67, "target": 189.91, "stop": 136.5, "stop_limit": 136.23, "shares": 10, "risk": 121.22, "reward": 424.29, "today_price": 142.04, "volume": 2185600, "is_up": false, "sector_symbol": "XLK", "industry": "Semiconductor Equipment & Materials", "industry_quadrant": "Leading", "momentum_notes": "\u2192 Neutral", "rs": 98, "rmv": 38.35, "canslim": {"c": true, "a": false, "n": true, "s": false, "l": false, "i": true, "m": true}, "avg_volume": 1698450.0}, {"ticker": "AMKR", "name": "Amkor Technology, Inc.", "sector": "Technology (Institutional Flow)", "highlights": "Leading Sector \u2022 Fund Flow: 1.3x \u2022 21-Day Low Stop", "price": 72.91, "buy_stop": 72.91, "buy_limit": 73.06, "target": 93.32, "stop": 67.08, "stop_limit": 66.94, "shares": 20, "risk": 121.22, "reward": 424.29, "today_price": 70.21, "volume": 4161300, "is_up": true, "sector_symbol": "XLK", "industry": "Semiconductor Equipment & Materials", "industry_quadrant": "Leading", "momentum_notes": "\u2197 Momentum Recovering", "rs": 97, "rmv": 37.54, "canslim": {"c": true, "a": false, "n": true, "s": true, "l": true, "i": true, "m": true}, "avg_volume": 2944550.0}, {"ticker": "SITM", "name": "SiTime Corporation", "sector": "Technology (Institutional Flow)", "highlights": "Leading Sector \u2022 Fund Flow: 1.3x \u2022 21-Day Low Stop", "price": 556.13, "buy_stop": 556.13, "buy_limit": 557.24, "target": 711.85, "stop": 511.64, "stop_limit": 510.62, "shares": 2, "risk": 121.22, "reward": 424.29, "today_price": 523.57, "volume": 485300, "is_up": false, "sector_symbol": "XLK", "industry": "Semiconductors", "industry_quadrant": "Leading", "momentum_notes": "\u279a Momentum Rallying", "rs": 97, "rmv": 36.67, "canslim": {"c": true, "a": false, "n": true, "s": true, "l": true, "i": false, "m": true}, "avg_volume": 333930.0}, {"ticker": "AIP", "name": "Arteris, Inc.", "sector": "Technology (Institutional Flow)", "highlights": "Leading Sector \u2022 Fund Flow: 1.3x \u2022 21-Day Low Stop", "price": 24.31, "buy_stop": 24.31, "buy_limit": 24.36, "target": 31.12, "stop": 22.37, "stop_limit": 22.32, "shares": 62, "risk": 121.22, "reward": 424.29, "today_price": 23.58, "volume": 725900, "is_up": true, "sector_symbol": "XLK", "industry": "Semiconductors", "industry_quadrant": "Leading", "momentum_notes": "\u279a Momentum Rallying", "rs": 96, "rmv": 31.71, "canslim": {"c": true, "a": false, "n": true, "s": true, "l": true, "i": true, "m": true}, "avg_volume": 430290.0}, {"ticker": "BELFA", "name": "Bel Fuse Inc.", "sector": "Technology (Institutional Flow)", "highlights": "Leading Sector \u2022 Fund Flow: 1.3x \u2022 21-Day Low Stop", "price": 245.81, "buy_stop": 245.81, "buy_limit": 246.3, "target": 314.64, "stop": 226.15, "stop_limit": 225.69, "shares": 6, "risk": 121.22, "reward": 424.29, "today_price": 234.65, "volume": 118000, "is_up": false, "sector_symbol": "XLK", "industry": "Electronic Components", "industry_quadrant": "Leading", "momentum_notes": "\u2939 Momentum Curling", "rs": 95, "rmv": 26.82, "canslim": {"c": false, "a": false, "n": true, "s": false, "l": false, "i": false, "m": true}, "avg_volume": 102310.0}]}}';
 let currentData = null;
 
 try {
@@ -175,6 +179,7 @@ function render(d){
     }).join('');
     
     document.getElementById('reminder').innerHTML=`<strong>Strategy Guide:</strong> ${s.next_sprint_reminder}<br><small style="opacity:0.6">Updated: ${d.generated}</small>`;
+    renderTradeLog();
 }
 
 function getOCO(price) {
@@ -285,8 +290,8 @@ function renderOrders(orders, startDate){
 
             <div class="tracking-btns">
                 <div class="track-group">
-                    <div class="track-btn bought ${state.bought?'active':''}" onclick="toggleTrack('${o.ticker}', 'bought', '${startDate}')">BGT</div>
-                    <div class="track-btn sold ${state.sold?'active':''}" onclick="toggleTrack('${o.ticker}', 'sold', '${startDate}')">SLD</div>
+                    <div class="track-btn bought ${state.bought?'active':''}" onclick="toggleTrack('${o.ticker}', 'bought', '${startDate}', ${o.today_price})">${state.bought ? 'OWNED' : 'BUY'}</div>
+                    <div class="track-btn sold ${state.sold?'active':''}" onclick="toggleTrack('${o.ticker}', 'sold', '${startDate}')">SELL</div>
                 </div>
                 <div style="flex:1; text-align:right">
                     <a href="https://www.tradingview.com/chart/?symbol=${o.ticker}" target="_blank" style="font-size:0.6rem; color:var(--cyan); text-decoration:none; font-weight:700">CHART ↗</a>
@@ -310,12 +315,52 @@ function renderOrders(orders, startDate){
 }
 
 
-function toggleTrack(ticker, type, startDate) {
+function toggleTrack(ticker, type, startDate, currentPrice = 0) {
     const storageKey = `sprint_${startDate}_${ticker}`;
-    const state = JSON.parse(localStorage.getItem(storageKey) || '{"bought":false,"sold":false}');
+    const state = JSON.parse(localStorage.getItem(storageKey) || '{"bought":false,"sold":false,"price":0,"date":""}');
     state[type] = !state[type];
+    
+    if (type === 'bought' && state.bought) {
+        state.price = currentPrice || state.price;
+        state.date = new Date().toISOString().split('T')[0];
+    } else if (type === 'sold' && state.sold) {
+        state.sell_date = new Date().toISOString().split('T')[0];
+    }
+    
     localStorage.setItem(storageKey, JSON.stringify(state));
     renderOrders(currentData.current_sprint.orders, startDate);
+    renderTradeLog();
+}
+
+function renderTradeLog() {
+    const orders = currentData.current_sprint.orders;
+    const startDate = currentData.current_sprint.start_date;
+    let logHtml = `<table><tr><th>Ticker</th><th>Entry Date</th><th>Entry Price</th><th>Shares</th><th>Current PnL</th><th>Status</th></tr>`;
+    
+    let activeAny = false;
+    orders.forEach(o => {
+        const state = JSON.parse(localStorage.getItem(`sprint_${startDate}_${o.ticker}`) || 'null');
+        if (state && state.bought) {
+            activeAny = true;
+            const pnl = (o.today_price - state.price) * o.shares;
+            const pnlClass = pnl >= 0 ? 'win' : 'loss';
+            logHtml += `<tr>
+                <td class="ticker-cell">${o.ticker}</td>
+                <td>${state.date}</td>
+                <td>$${state.price.toFixed(2)}</td>
+                <td>${o.shares}</td>
+                <td class="${pnlClass}">$${pnl.toFixed(2)}</td>
+                <td>${state.sold ? '<span class="loss">CLOSED</span>' : '<span class="win">OPEN</span>'}</td>
+            </tr>`;
+        }
+    });
+    
+    if (!activeAny) {
+        logHtml += `<tr><td colspan="6" style="text-align:center; color:var(--text2); padding:2rem">No active trades recorded in browser storage.</td></tr>`;
+    }
+    
+    logHtml += `</table>`;
+    document.getElementById('trade-log-container').innerHTML = logHtml;
 }
 
 function updateLivePrice(ticker, val) {

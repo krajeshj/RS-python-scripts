@@ -117,6 +117,10 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 <div id="orders-charts" class="chart-row"></div>
 <div id="orders-table-container" class="card-table" style="margin-top:2rem"></div>
 </div>
+<div class="section" id="log-section">
+<h2>Active Trade Log <span class="badge">Persistence</span></h2>
+<div id="trade-log-container" class="card-table"></div>
+</div>
 <div class="section">
 <h2>Sprint History <span class="badge" id="bt-count"></span></h2>
 <div class="bt-grid" id="bt-grid"></div>
@@ -175,6 +179,7 @@ function render(d){
     }).join('');
     
     document.getElementById('reminder').innerHTML=`<strong>Strategy Guide:</strong> ${s.next_sprint_reminder}<br><small style="opacity:0.6">Updated: ${d.generated}</small>`;
+    renderTradeLog();
 }
 
 function getOCO(price) {
@@ -285,8 +290,8 @@ function renderOrders(orders, startDate){
 
             <div class="tracking-btns">
                 <div class="track-group">
-                    <div class="track-btn bought ${state.bought?'active':''}" onclick="toggleTrack('${o.ticker}', 'bought', '${startDate}')">BGT</div>
-                    <div class="track-btn sold ${state.sold?'active':''}" onclick="toggleTrack('${o.ticker}', 'sold', '${startDate}')">SLD</div>
+                    <div class="track-btn bought ${state.bought?'active':''}" onclick="toggleTrack('${o.ticker}', 'bought', '${startDate}', ${o.today_price})">${state.bought ? 'OWNED' : 'BUY'}</div>
+                    <div class="track-btn sold ${state.sold?'active':''}" onclick="toggleTrack('${o.ticker}', 'sold', '${startDate}')">SELL</div>
                 </div>
                 <div style="flex:1; text-align:right">
                     <a href="https://www.tradingview.com/chart/?symbol=${o.ticker}" target="_blank" style="font-size:0.6rem; color:var(--cyan); text-decoration:none; font-weight:700">CHART ↗</a>
@@ -310,12 +315,52 @@ function renderOrders(orders, startDate){
 }
 
 
-function toggleTrack(ticker, type, startDate) {
+function toggleTrack(ticker, type, startDate, currentPrice = 0) {
     const storageKey = `sprint_${startDate}_${ticker}`;
-    const state = JSON.parse(localStorage.getItem(storageKey) || '{"bought":false,"sold":false}');
+    const state = JSON.parse(localStorage.getItem(storageKey) || '{"bought":false,"sold":false,"price":0,"date":""}');
     state[type] = !state[type];
+    
+    if (type === 'bought' && state.bought) {
+        state.price = currentPrice || state.price;
+        state.date = new Date().toISOString().split('T')[0];
+    } else if (type === 'sold' && state.sold) {
+        state.sell_date = new Date().toISOString().split('T')[0];
+    }
+    
     localStorage.setItem(storageKey, JSON.stringify(state));
     renderOrders(currentData.current_sprint.orders, startDate);
+    renderTradeLog();
+}
+
+function renderTradeLog() {
+    const orders = currentData.current_sprint.orders;
+    const startDate = currentData.current_sprint.start_date;
+    let logHtml = `<table><tr><th>Ticker</th><th>Entry Date</th><th>Entry Price</th><th>Shares</th><th>Current PnL</th><th>Status</th></tr>`;
+    
+    let activeAny = false;
+    orders.forEach(o => {
+        const state = JSON.parse(localStorage.getItem(`sprint_${startDate}_${o.ticker}`) || 'null');
+        if (state && state.bought) {
+            activeAny = true;
+            const pnl = (o.today_price - state.price) * o.shares;
+            const pnlClass = pnl >= 0 ? 'win' : 'loss';
+            logHtml += `<tr>
+                <td class="ticker-cell">${o.ticker}</td>
+                <td>${state.date}</td>
+                <td>$${state.price.toFixed(2)}</td>
+                <td>${o.shares}</td>
+                <td class="${pnlClass}">$${pnl.toFixed(2)}</td>
+                <td>${state.sold ? '<span class="loss">CLOSED</span>' : '<span class="win">OPEN</span>'}</td>
+            </tr>`;
+        }
+    });
+    
+    if (!activeAny) {
+        logHtml += `<tr><td colspan="6" style="text-align:center; color:var(--text2); padding:2rem">No active trades recorded in browser storage.</td></tr>`;
+    }
+    
+    logHtml += `</table>`;
+    document.getElementById('trade-log-container').innerHTML = logHtml;
 }
 
 function updateLivePrice(ticker, val) {
