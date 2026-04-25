@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-25 16:07 UTC",
+  "generated": "2026-04-25 18:36 UTC",
   "summary": {
     "portfolio_start": 17000.0,
     "portfolio_current": 20204.16,
@@ -169,7 +169,7 @@
   "current_sprint": {
     "start_date": "2026-04-24",
     "end_date": "2026-05-09",
-    "days_remaining": 15,
+    "days_remaining": 14,
     "market": "FAVORABLE",
     "ema21": 682.11,
     "sma50": 674.84,
@@ -188,7 +188,9 @@
         "shares": 10,
         "risk": 121.22,
         "reward": 424.29,
-        "today_price": 142.04
+        "today_price": 142.04,
+        "volume": 2185600,
+        "is_up": false
       },
       {
         "ticker": "AMKR",
@@ -204,7 +206,9 @@
         "shares": 20,
         "risk": 121.22,
         "reward": 424.29,
-        "today_price": 70.21
+        "today_price": 70.21,
+        "volume": 4161300,
+        "is_up": true
       },
       {
         "ticker": "SITM",
@@ -220,7 +224,9 @@
         "shares": 2,
         "risk": 121.22,
         "reward": 424.29,
-        "today_price": 523.57
+        "today_price": 523.57,
+        "volume": 485300,
+        "is_up": false
       },
       {
         "ticker": "AIP",
@@ -236,7 +242,9 @@
         "shares": 62,
         "risk": 121.22,
         "reward": 424.29,
-        "today_price": 23.58
+        "today_price": 23.58,
+        "volume": 725900,
+        "is_up": true
       },
       {
         "ticker": "BELFA",
@@ -252,7 +260,9 @@
         "shares": 6,
         "risk": 121.22,
         "reward": 424.29,
-        "today_price": 234.65
+        "today_price": 234.65,
+        "volume": 118000,
+        "is_up": false
       }
     ]
   }
