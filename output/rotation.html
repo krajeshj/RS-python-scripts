@@ -134,12 +134,25 @@
         var webData = null;
         var stockHist = null;
 
-        function init() {
-            var ts = Date.now();
-            Promise.all([
-                fetch('web_data.json?v=' + ts).then(function(r) { return r.json(); }),
-                fetch('rrg.json?v=' + ts).then(function(r) { return r.json(); })
-            ]).then(function(res) {
+            const ts = Date.now();
+            async function fetchData(url) {
+                const r = await fetch(`${url}?v=${ts}`);
+                if (!r.ok) throw new Error(`Fail: ${url}`);
+                return r.json();
+            }
+
+            async function loadData() {
+                let web;
+                try {
+                    web = await fetchData('web_data.json');
+                } catch(e) {
+                    web = await fetchData('quick_web_data.json');
+                }
+                const rrg = await fetchData('rrg.json');
+                return [web, rrg];
+            }
+
+            loadData().then(function(res) {
                 webData = res[0]; 
                 stockHist = res[1].data || res[1] || {};
                 

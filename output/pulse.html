@@ -497,7 +497,13 @@
     <script>
         async function init() {
             try {
-                const response = await fetch(`web_data.json?t=${Date.now()}`);
+                let response;
+                try {
+                    response = await fetch(`web_data.json?t=${Date.now()}`);
+                    if (!response.ok) throw new Error();
+                } catch(e) {
+                    response = await fetch(`quick_web_data.json?t=${Date.now()}`);
+                }
                 const data = await response.json();
 
                 if (data.pulse && data.pulse.length > 0) {

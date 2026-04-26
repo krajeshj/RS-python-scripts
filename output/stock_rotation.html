@@ -199,25 +199,25 @@
             return Math.sqrt(arr.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b, 0) / arr.length);
         }
 
-        function init() {
-            var ts = Date.now();
-            var container = document.getElementById('rrg-container');
-            updateSliderUI();
-            
-            console.log("🚀 Starting Data Load...");
-            
-            Promise.all([
-                fetch('web_data.json?v=' + ts).then(r => { 
-                    if(!r.ok) throw new Error("Could not load web_data.json");
-                    console.log("✅ web_data.json received");
-                    return r.json(); 
-                }),
-                fetch('stock_history.json?v=' + ts).then(r => { 
-                    if(!r.ok) throw new Error("Could not load stock_history.json");
-                    console.log("✅ stock_history.json received");
-                    return r.json(); 
-                })
-            ]).then(res => {
+            const ts = Date.now();
+            async function fetchData(url) {
+                const r = await fetch(`${url}?v=${ts}`);
+                if (!r.ok) throw new Error(`Fail: ${url}`);
+                return r.json();
+            }
+
+            async function loadData() {
+                let web;
+                try {
+                    web = await fetchData('web_data.json');
+                } catch(e) {
+                    web = await fetchData('quick_web_data.json');
+                }
+                const hist = await fetchData('stock_history.json');
+                return [web, hist];
+            }
+
+            loadData().then(res => {
                 console.log("📦 Processing data points...");
                 webData = res[0]; 
                 stockHist = res[1] || {};
