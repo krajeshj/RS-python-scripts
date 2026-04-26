@@ -115,10 +115,26 @@ Value: `{"bought": true, "sold": false, "price": 850.25, "date": "2026-04-25"}`
 
 ---
 
-## 6. System Requirements for Replication
-- **Precision**: Floating point math (64-bit).
-- **Data Frequency**: Daily (EOD) for selection; Intraday for dashboard updates.
-- **Concurrency**: Thread-safe access to `price_history.json` if used for real-time calculations.
+## 6. Data Availability Architecture
+
+### 6.1 Priority Fetching (Resilience Pattern)
+To ensure the dashboard is never stale, all client-side pages implement a dual-fetch fallback:
+1.  **Primary**: `web_data.json` (Daily Full Scan - triggered at market close).
+2.  **Fallback**: `quick_web_data.json` (Intraday/Quick Scan - triggered manually or on code push).
+
+### 6.2 Automation Schedule
+- **Full Scan**: Weekdays at 21:07 UTC (4:07 PM ET).
+- **Quick Scan**: On-demand (User-initiated via Dashboard).
 
 ---
-*Last Updated: 2026-04-25*
+
+## 7. Versioning & Snapshots
+- **Current Stable**: `v1.0-institutional-alpha`
+- **Definition of Done**:
+    - [x] Automated Daily Refresh via GitHub Actions.
+    - [x] Sharpe Ratio > 2.0 displayed on Sprints.
+    - [x] Persistent Active Trade Log via localStorage.
+    - [x] Data-aware fallbacks (Daily > Quick) across all 7 dashboard pages.
+
+---
+*Last Updated: 2026-04-26 (v1.0 Final)*
