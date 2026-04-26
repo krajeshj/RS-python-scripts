@@ -1,89 +1,51 @@
-# Product Requirements Document (PRD) - Rajesh's Stock Screener
+# PRD: Institutional Relative Strength (RS) Trading System
 
-## 1. Vision & Core Objective
-To provide a high-fidelity, institutional-grade workspace for tracking Relative Strength (RS) and Sector/Stock Rotation. The system must catch trend exhaustion ("Rotating Out") early using advanced weighted momentum and predictive visual cues.
+## 1. Product Overview
+The **Institutional RS Trading System** is a high-velocity swing trading platform designed to identify and exploit momentum in market leaders. It utilizes a "Sprint" methodology (15-day cycles) combined with institutional-grade risk management and market regime filtering.
 
----
+## 2. Core Strategy: "The Sprint"
+- **Duration**: 15 Trading Days (3 Weeks).
+- **Frequency**: New sprint begins every 15 days, or when the previous sprint completes.
+- **Selection Universe**: Top 40 stocks by Relative Strength (RS) within leading sectors.
+- **Filters**:
+    - **Sector Alignment**: Must belong to a "Leading" sector ETF (XLK, XLE, etc.) according to RRG analysis.
+    - **Institutional Flow**: Relative Volume (RVOL) > 1.2x.
+    - **Volatility Control**: RMV (Relative Measured Volatility) < 40 (Optimal: 30).
+    - **Earnings Shield**: No earnings announcements within the next 15 days.
 
-## 2. Dashboard Ecosystem (Features)
+## 3. Risk Management Engine
+- **Equal Opportunity Risk**: 
+    - Total Sprint Risk: 3.0% of Portfolio Capital.
+    - Per Trade Risk: 0.6% of Portfolio Capital (Total Risk / 5).
+- **Exit Logic**:
+    - **Terminal Velocity (Target)**: 3.5R (Profit = 3.5x Risk).
+    - **Hard Stop**: 21-Day Low or 15-Day Low (whichever is tighter, but not more than 8%).
+- **Position Sizing**: `Shares = (Risk Budget) / (Entry Price - Stop Price)`.
 
-### A. Sector Rotation Dashboard (`rotation.html`)
-*   **Visual Map:** RRG-style (Relative Rotation Graph) using Native SVG. quadrants: Leading (Green), Weakening (Orange), Lagging (Red), Improving (Blue).
-*   **Breadcrumb Trails:** Trajectories showing the path of the sector over the last 5-10 weeks with increasing opacity.
-*   **Multi-Tab Analytics:**
-    1.  **Rotation Map:** The primary trajectory graph.
-    2.  **Rank Signals:** A matrix view showing Sector Name, Signal (Quadrant), Momentum Score, and Trend Status (Strength/Weakness).
-    3.  **Fund Flows:** Visualization of institutional money flow in $M (inferred/imported).
-*   **Data Source:** Hardcoded high-fidelity baseline for core sectors (XLK, XLE, etc.).
+## 4. Market Regime Shields (The "Gatekeeper")
+Trades are only executed if the **Market Shield** is "FAVORABLE":
+- **VIX Momentum**: VIX must be < 25 AND VIX must be < its 20-day SMA (Fear is declining).
+- **Trend Alignment**: SPY 9-day EMA must be > 21-day SMA.
 
-### B. Stock Rotation Dashboard (`stock_rotation.html`)
-*   **Neural Momentum Radar:** Dynamic RRG tracking for individual stocks.
-*   **Relative Normalization (Median Centering):** The X-axis (RS) is normalized around the **Group Median**. Half the selected stocks populate the left quadrants (Lagging/Improving) and half the right (Leading/Weakening), providing a true relative-performance view among leaders.
-*   **Anti-Clustering Jitter:** Ticker-based deterministic offsets (dx, dy) are applied to labels to ensure 100% readability in dense performance clusters.
-*   **Front-Weighted Lookback:** Momentum calculations carry a **65% weight on the most recent 3 days** of action to catch trend-exits quickly.
-*   **Historical Catmull-Rom Trajectories:** Render true historical trailing points over smoothed percentiles (SMA-3 period) instead of predictive curl projections.
-*   **Fade Breadcrumbs & Vectors:** Line opacity drops to 10% on the oldest node and scales linearly to 100% at the tip. Terminal nodes possess a directional trigonometric svg arrowhead mapping actual historical entrance vectors.
-*   **Filtering Controls:**
-    *   **RS Slider:** Real-time filtering by Relative Strength score (0-99).
-    *   **VCP/Minervini:** Boolean filter for stocks meeting Stage 2 / Mark Minervini criteria.
-    *   **Leaders Only:** Filter for tickers with positive trend alignment.
-*   **Traversal Trails:** High-fidelity "circular crumbs" showing the historical path.
+## 5. System Architecture
+- **Engine (`sprint_engine.py`)**: The core logic that processes market data, applies filters, and generates trade recommendations.
+- **Data Pipeline**: Uses `yfinance` for real-time and historical price data.
+- **Frontend Dashboards**:
+    - **Sprints (`sprints.html`)**: The primary execution cockpit with OTOCO order parameters.
+    - **Sector Rotation (`rotation.html`)**: RRG trajectories for major ETFs.
+    - **Industry Momentum (`industries.html`)**: Top-down heatmaps.
+    - **Trade Journal**: Browser-persistent (localStorage) logging for active trades.
 
-### C. Sector Stage Analysis (`stages.html`)
-*   **Market Breath:** Top-level bar showing the % distribution of the total market across Stages 1, 2, 3, and 4.
-*   **Sector-Specific health:** Health badges and stock distribution bars for every major sector.
+## 6. Key Performance Indicators (KPIs)
+- **Win Rate**: Target > 50% (Current Recent: 70%).
+- **Total Return**: Target > 20% Annualized alpha over SPY.
+- **Sharpe Ratio**: Target > 1.5.
 
-### D. Landing Page Dashboard (`index.html`)
-*   **Visual Ticker Banner:** Scrolled institutional status bar at top.
-*   **Stock Cards:** Comprehensive metadata (RS, Sector, Industry, CANSLIM status, ATR, and RMV).
-
----
-
-## 3. Technical Architecture (Zero-Regression Policy)
-
-### **Frontend Development Rules:**
-*   **Zero-Babel/Zero-React:** To prevent "Blank Page" regressions, all dashboards MUST use **Native Vanilla JavaScript**.
-*   **No Heavy Libraries:** Charting must be done via **Native SVG** or Canvas to ensure instant load and cross-browser reliability.
-*   **Persistence:** Use `?v=timestamp` on JSON fetches to bust cache.
-
-### **Backend Data Pipeline:**
-*   **relative-strength.py:** Core data fetcher.
-*   **rs_ranking.py:** Logic engine for calculating RS percentiles and exporting `web_data.json`.
-*   **seed_history.py:** Generates `stock_history.json` for path/trail rendering.
-
-### **GitHub Actions (Scan Scopes):**
-1.  **Quick Scan (Commit/Push Trigger):** Scans only **Nasdaq 100** tickers + Manual Tips. Designed for speed and instant dashboard feedback.
-2.  **Full Scan (Scheduled Trigger):** Scans the full **5,000+ ticker** universe.
-
-### **Git & Deployment Policies:**
-*   **Data Integrity:** **NEVER** deploy local `.json` or `.csv` files to the repository. Remote data files are generated by daily automated scans on the server/GitHub Actions and must be preserved. 
-*   **Seeding Exception:** Manual seeding via `seed_history.py` is allowed ONLY when the remote history is confirmed broken (flat/missing) and requires a "rescue" restoration of historical momentum. In this case, local data may be committed once.
+## 7. Operational Workflow
+1. **Daily Quick Scan**: Automated via GitHub Actions to update RRG and RS scores.
+2. **Sprint Generation**: On Day 1, the `sprint_engine.py` identifies 5 high-conviction targets.
+3. **Execution**: Trader enters OTOCO (One-Cancels-the-Other) orders in Power E*TRADE using the provided parameters.
+4. **Monitoring**: Track active trades in the dashboard journal; exit on Target or Stop.
 
 ---
-
-## 4. Key Algorithms & UI Logic
-
-| **Feature** | **Logic / Math** |
-| :--- | :--- |
-| **RRG Base (Sectors)** | True **JdK** computation: RS-Ratio via 14-period strictly mapped against *SPY benchmark closes*, normalized via standard deviations against a rolling Z-score. Center crosshair represents exactly `100` relative SPY parity. |
-| **RRG Base (Stocks)**| Baseline Mansfield RS% (1-99), 3-Period SMA overlay applied spatially to force chronological fluidity (Anti-Jitter). Center crosshair relies on dynamic group median centering (`[0, 0]` mapped dynamically). |
-| **Pathing Engine**| `Catmull-Rom` splines traversing `[t-14]` continuously to `[t0]`. |
-| **Design Style** | Deep Dark Mode (`#06060f`), Outfit/JetBrains fonts, Glassmorphism, Fading Breadcrumbs (`opacity: 0.1 -> 1.0`). |
-
----
-
-## 5. Maintenance Checklist (Aids AI in Context)
-*   [ ] Does the page use `<script type="text/babel">`? (If yes: **Fail**. Convert to Vanilla).
-*   [ ] Does the commit scan the full 5000 universe? (If yes: **Fail**. Ensure Quick Scan is on push).
-*   [ ] Are breadcrumbs visible on Stock Rotation?
-*   [ ] Does the "Fund Flow" tab exist on Sector Rotation?
-*   [ ] Is the header sticky on all pages?
-
----
-
-## 6. Change Log & Annotations
-*   **v5.6 Restoration (Current):**
-    *   **Predictive Arrows**: Restored high-fidelity "8921c31" path logic. Re-implemented quadratic Bezier trajectories using velocity and second-derivative acceleration. 
-    *   **History Seeding**: Manually triggered `seed_history.py` to restore 20-day momentum history for 5,700+ stocks, fixing the "missing arrow" issue caused by flat remote data.
-    *   **Quadrant Spread**: Centered RRG medians on the **currently filtered group** (rawData level) to ensure a dynamic 4-quadrant spread among leaders.
-    *   **Card Unification**: Unified the `stock-card` component across `index.html`, `rotation.html`, and `stock_rotation.html`.
+*Last Updated: 2026-04-25*
