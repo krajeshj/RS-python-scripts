@@ -199,6 +199,7 @@
             return Math.sqrt(arr.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b, 0) / arr.length);
         }
 
+        function init() {
             const ts = Date.now();
             async function fetchData(url) {
                 const r = await fetch(`${url}?v=${ts}`);

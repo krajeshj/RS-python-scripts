@@ -134,6 +134,7 @@
         var webData = null;
         var stockHist = null;
 
+        function init() {
             const ts = Date.now();
             async function fetchData(url) {
                 const r = await fetch(`${url}?v=${ts}`);
