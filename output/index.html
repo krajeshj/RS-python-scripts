@@ -1039,10 +1039,10 @@
 
                 let response;
                 try {
-                    response = await fetch(`quick_web_data.json?t=${Date.now()}`);
+                    response = await fetch(`web_data.json?t=${Date.now()}`);
                     if (!response.ok) throw new Error();
                 } catch(e) {
-                    response = await fetch(`web_data.json?t=${Date.now()}`);
+                    response = await fetch(`quick_web_data.json?t=${Date.now()}`);
                 }
                 allData = await response.json();
 
