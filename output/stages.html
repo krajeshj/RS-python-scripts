@@ -672,7 +672,13 @@
         async function init() {
             try {
                 const ts = Date.now();
-                const response = await fetch(`web_data.json?t=${ts}`);
+                let response;
+                try {
+                    response = await fetch(`quick_web_data.json?t=${Date.now()}`);
+                    if (!response.ok) throw new Error();
+                } catch(e) {
+                    response = await fetch(`web_data.json?t=${Date.now()}`);
+                }
                 const data = await response.json();
                 
                 try {
