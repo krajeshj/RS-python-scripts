@@ -1029,22 +1029,25 @@
         let top5On = false;
 
         async function init() {
+            const ts = Date.now();
             try {
-                // Load saved PAT from local storage if exists
-                const savedPat = localStorage.getItem('gh_pat');
-                if (savedPat) {
-                    const patInput = document.getElementById('gh-pat');
-                    if (patInput) patInput.value = savedPat;
-                }
+                const [resp1, resp2] = await Promise.allSettled([
+                    fetch(`web_data.json?t=${ts}`).then(r => r.ok ? r.json() : null),
+                    fetch(`quick_web_data.json?t=${ts}`).then(r => r.ok ? r.json() : null)
+                ]);
 
-                let response;
-                try {
-                    response = await fetch(`web_data.json?t=${Date.now()}`);
-                    if (!response.ok) throw new Error();
-                } catch(e) {
-                    response = await fetch(`quick_web_data.json?t=${Date.now()}`);
+                const data1 = resp1.status === 'fulfilled' ? resp1.value : null;
+                const data2 = resp2.status === 'fulfilled' ? resp2.value : null;
+
+                let data = data1;
+                if (data2) {
+                    if (!data || (data2.last_updated && new Date(data2.last_updated) > new Date(data.last_updated))) {
+                        data = data2;
+                    }
                 }
-                allData = await response.json();
+                const histResponse = await fetch(`stock_history.json?t=${ts}`);
+                const hist = await histResponse.json();
+                allData = data;
 
                 const lastUpdated = new Date(allData.last_updated);
                 document.getElementById('last-updated').textContent = `Sync: ${lastUpdated.toLocaleString()}`;
